@@ -27,8 +27,8 @@
 // ---- SETTINGS ----------------------------------------------------------------
 // Address of your course site, WITH the final slash. Used to read the list of
 // quizzes (assets/quiz_index.json) to check level scores. Leave "" to skip checks.
-const SITE_URL = "";                         // e.g. "https://edu-aroo.github.io/intro-statR/"
-const ALERT_EMAIL = "aroofalinirina@gmail.com";   // receives "needs help" and "level passed" e-mails
+const SITE_URL = "https://edu-aroo.github.io/R-stat-introduction/";                         // e.g. "https://edu-aroo.github.io/intro-statR/"
+const ALERT_EMAIL = "aroo.madaeducation@gmail.com";   // receives "needs help" and "level passed" e-mails
 const MAX_ATTEMPTS = 2;                      // same value as maxAttempts in config.js
 const PASS = 0.75;                           // same value as passThreshold in config.js
 const LEVELS = ["stats"];                    // same ids as "levels" in assets/config.js

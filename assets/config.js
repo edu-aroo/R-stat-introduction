@@ -34,7 +34,7 @@ window.COURSE_CONFIG = {
   // Google Apps Script web-app URL. Empty "" = DEMO MODE (accounts below,
   // progress saved only in the browser). Use a NEW Google Sheet + script for this
   // course (see README, section 4), not the one of the R course.
-  scriptUrl: "",
+  scriptUrl: "https://script.google.com/macros/s/AKfycbxWKbIIjGOwlsHT8QGxQQO4A5Me7pTpgbM4wTmT5aim1p_JhoXlmYqHHQNkSdkmPoVD_A/exec",
 
   // DEMO MODE only (real accounts are in the Google Sheet, never here: this file is public)
   demoUsers: [
