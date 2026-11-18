@@ -13,8 +13,8 @@
 
 <title>R4Marine Stats · Session 2</title>
 
-<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
-<script src="site_libs/jquery-3.6.1/jquery-3.6.1.min.js"></script>
+<script src="site_libs/header-attrs-2.32/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -70,7 +70,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -513,20 +513,13 @@ poissons (poissons par 250 m²), richesse spécifique, biomasse totale
 reef_fish_sites.csv</a></p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>rf <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/reef_fish_sites.csv&quot;</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">head</span>(rf)</span></code></pre></div>
-<pre><code>#&gt;   site management region depth_m coral_cover rugosity biomass_kg_ha
-#&gt; 1  R01    No-take  North     4.6        42.1     1.80           772
-#&gt; 2  R02    No-take  North    10.5        35.7     1.95           380
-#&gt; 3  R03    No-take  North    11.5        39.8     2.00           943
-#&gt; 4  R04    No-take  North     6.2        54.1     1.98           827
-#&gt; 5  R05    No-take  North     5.4        46.1     1.99          1102
-#&gt; 6  R06    No-take  North     4.3        35.6     1.89           507
-#&gt;   fish_density species_richness herbivore_pct
-#&gt; 1          104               41          25.8
-#&gt; 2           44               40          38.4
-#&gt; 3          157               45          24.7
-#&gt; 4          144               51          21.9
-#&gt; 5          129               48          35.0
-#&gt; 6           81               42          20.4</code></pre>
+<pre><code>#&gt;   site management region depth_m coral_cover rugosity biomass_kg_ha fish_density species_richness herbivore_pct
+#&gt; 1  R01    No-take  North     4.6        42.1     1.80           772          104               41          25.8
+#&gt; 2  R02    No-take  North    10.5        35.7     1.95           380           44               40          38.4
+#&gt; 3  R03    No-take  North    11.5        39.8     2.00           943          157               45          24.7
+#&gt; 4  R04    No-take  North     6.2        54.1     1.98           827          144               51          21.9
+#&gt; 5  R05    No-take  North     5.4        46.1     1.99          1102          129               48          35.0
+#&gt; 6  R06    No-take  North     4.3        35.6     1.89           507           81               42          20.4</code></pre>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">summary</span>(rf<span class="sc">$</span>biomass_kg_ha)</span></code></pre></div>
 <pre><code>#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 #&gt;   108.0   275.0   415.0   484.8   597.2  1485.0</code></pre>

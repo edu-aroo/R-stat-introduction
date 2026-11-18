@@ -13,8 +13,8 @@
 
 <title>R4Marine Stats · Session 5</title>
 
-<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
-<script src="site_libs/jquery-3.6.1/jquery-3.6.1.min.js"></script>
+<script src="site_libs/header-attrs-2.32/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -70,7 +70,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -514,7 +514,7 @@ asymétrique).</p>
 <span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> mu, <span class="at">colour =</span> <span class="st">&quot;#d9694a&quot;</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
 <span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> n, <span class="at">nrow =</span> <span class="dv">1</span>, <span class="at">scales =</span> <span class="st">&quot;free_y&quot;</span>) <span class="sc">+</span></span>
 <span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;sample mean (urchins per cell)&quot;</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span> <span class="fu">theme_c</span>(<span class="dv">11</span>)</span></code></pre></div>
-<p><img src="05-estimation_files/figure-html/unnamed-chunk-1-1.png" width="85%" style="display: block; margin: auto;" /></p>
+<p><img src="05-estimation_files/figure-html/unnamed-chunk-1-1.png" alt="" width="85%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>sims <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(n) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">sd_of_means =</span> <span class="fu">sd</span>(mean)) <span class="sc">%&gt;%</span></span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sigma_over_sqrt_n =</span> sigma <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">20</span>, <span class="dv">80</span>)))</span></code></pre></div>
 <pre><code>#&gt; # A tibble: 4 × 3
@@ -806,7 +806,12 @@ orange).</p>
 <span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>  <span class="fu">geom_errorbarh</span>(<span class="at">height =</span> <span class="dv">0</span>) <span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> mu_cov) <span class="sc">+</span></span>
 <span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>  <span class="fu">scale_colour_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">`</span><span class="at">TRUE</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&quot;#1b7f8c&quot;</span>, <span class="st">`</span><span class="at">FALSE</span><span class="st">`</span> <span class="ot">=</span> <span class="st">&quot;#d9694a&quot;</span>), <span class="at">guide =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
 <span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;95 % CI of mean seagrass cover (%)&quot;</span>, <span class="at">y =</span> <span class="st">&quot;sample&quot;</span>) <span class="sc">+</span> <span class="fu">theme_c</span>(<span class="dv">11</span>)</span></code></pre></div>
-<p><img src="05-estimation_files/figure-html/unnamed-chunk-6-1.png" width="85%" style="display: block; margin: auto;" /></p>
+<pre><code>#&gt; Warning: `geom_errorbarh()` was deprecated in ggplot2 4.0.0.
+#&gt; ℹ Please use the `orientation` argument of `geom_errorbar()` instead.
+#&gt; This warning is displayed once per session.
+#&gt; Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.</code></pre>
+<pre><code>#&gt; `height` was translated to `width`.</code></pre>
+<p><img src="05-estimation_files/figure-html/unnamed-chunk-6-1.png" alt="" width="85%" style="display: block; margin: auto;" /></p>
 <div class="fa-box">
 <div class="en">
 <p><strong>Functions and arguments used here</strong></p>
@@ -916,16 +921,16 @@ fonctions donnent directement l’IC : <code>binom.test()</code>
 (<em>exact</em>, conseillé pour un petit n ou un p̂ proche de 0 ou 1) et
 <code>prop.test()</code> (approché, avec correction de continuité).</p>
 </div>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>under <span class="ot">&lt;-</span> <span class="fu">sum</span>(oc<span class="sc">$</span>weight_g[oc<span class="sc">$</span>area <span class="sc">==</span> <span class="st">&quot;open&quot;</span>] <span class="sc">&lt;</span> <span class="dv">350</span>)</span>
-<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>n_open <span class="ot">&lt;-</span> <span class="fu">sum</span>(oc<span class="sc">$</span>area <span class="sc">==</span> <span class="st">&quot;open&quot;</span>)</span>
-<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a><span class="fu">c</span>(<span class="at">x =</span> under, <span class="at">n =</span> n_open, <span class="at">p_hat =</span> under <span class="sc">/</span> n_open)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a>under <span class="ot">&lt;-</span> <span class="fu">sum</span>(oc<span class="sc">$</span>weight_g[oc<span class="sc">$</span>area <span class="sc">==</span> <span class="st">&quot;open&quot;</span>] <span class="sc">&lt;</span> <span class="dv">350</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>n_open <span class="ot">&lt;-</span> <span class="fu">sum</span>(oc<span class="sc">$</span>area <span class="sc">==</span> <span class="st">&quot;open&quot;</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a><span class="fu">c</span>(<span class="at">x =</span> under, <span class="at">n =</span> n_open, <span class="at">p_hat =</span> under <span class="sc">/</span> n_open)</span></code></pre></div>
 <pre><code>#&gt;         x         n     p_hat 
 #&gt;  25.00000 160.00000   0.15625</code></pre>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="fu">binom.test</span>(under, n_open)<span class="sc">$</span>conf.int</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="fu">binom.test</span>(under, n_open)<span class="sc">$</span>conf.int</span></code></pre></div>
 <pre><code>#&gt; [1] 0.1037418 0.2219562
 #&gt; attr(,&quot;conf.level&quot;)
 #&gt; [1] 0.95</code></pre>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="fu">prop.test</span>(under, n_open)<span class="sc">$</span>conf.int</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="fu">prop.test</span>(under, n_open)<span class="sc">$</span>conf.int</span></code></pre></div>
 <pre><code>#&gt; [1] 0.1055211 0.2239739
 #&gt; attr(,&quot;conf.level&quot;)
 #&gt; [1] 0.95</code></pre>
@@ -1017,11 +1022,11 @@ chacun de taille n. La dispersion de la statistique sur ces
 ré-échantillons estime sa variabilité d’échantillonnage ; les quantiles
 2,5 % et 97,5 % donnent un <strong>IC percentile</strong> à 95 %.</p>
 </div>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a>boot_med <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">5000</span>, <span class="fu">median</span>(<span class="fu">sample</span>(w, <span class="at">replace =</span> <span class="cn">TRUE</span>)))</span>
-<span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a><span class="fu">median</span>(w)</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a>boot_med <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">5000</span>, <span class="fu">median</span>(<span class="fu">sample</span>(w, <span class="at">replace =</span> <span class="cn">TRUE</span>)))</span>
+<span id="cb23-3"><a href="#cb23-3" tabindex="-1"></a><span class="fu">median</span>(w)</span></code></pre></div>
 <pre><code>#&gt; [1] 890</code></pre>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a><span class="fu">quantile</span>(boot_med, <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="fu">quantile</span>(boot_med, <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))</span></code></pre></div>
 <pre><code>#&gt;  2.5% 97.5% 
 #&gt;   830   960</code></pre>
 <div class="en">
@@ -1112,20 +1117,20 @@ for comparing means, and show the raw points when n is small.</p>
 les IC pour comparer des moyennes, et montrez les points bruts quand n
 est petit.</p>
 </div>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a>ci_tab <span class="ot">&lt;-</span> oc <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(area) <span class="sc">%&gt;%</span></span>
-<span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>(), <span class="at">mean =</span> <span class="fu">mean</span>(weight_g), <span class="at">se =</span> <span class="fu">sd</span>(weight_g) <span class="sc">/</span> <span class="fu">sqrt</span>(n),</span>
-<span id="cb25-3"><a href="#cb25-3" tabindex="-1"></a>            <span class="at">lower =</span> mean <span class="sc">-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, n <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> se, <span class="at">upper =</span> mean <span class="sc">+</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, n <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> se)</span>
-<span id="cb25-4"><a href="#cb25-4" tabindex="-1"></a>ci_tab</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a>ci_tab <span class="ot">&lt;-</span> oc <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(area) <span class="sc">%&gt;%</span></span>
+<span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>(), <span class="at">mean =</span> <span class="fu">mean</span>(weight_g), <span class="at">se =</span> <span class="fu">sd</span>(weight_g) <span class="sc">/</span> <span class="fu">sqrt</span>(n),</span>
+<span id="cb27-3"><a href="#cb27-3" tabindex="-1"></a>            <span class="at">lower =</span> mean <span class="sc">-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, n <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> se, <span class="at">upper =</span> mean <span class="sc">+</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, n <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> se)</span>
+<span id="cb27-4"><a href="#cb27-4" tabindex="-1"></a>ci_tab</span></code></pre></div>
 <pre><code>#&gt; # A tibble: 2 × 6
 #&gt;   area         n  mean    se lower upper
 #&gt;   &lt;chr&gt;    &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
 #&gt; 1 open       160  631.  25.0  581.  680.
 #&gt; 2 reopened   185  980.  37.6  906. 1054.</code></pre>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a><span class="fu">ggplot</span>(ci_tab, <span class="fu">aes</span>(area, mean)) <span class="sc">+</span></span>
-<span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">data =</span> oc, <span class="fu">aes</span>(area, weight_g), <span class="at">width =</span> <span class="fl">0.15</span>, <span class="at">alpha =</span> <span class="fl">0.25</span>, <span class="at">colour =</span> <span class="st">&quot;#8a969e&quot;</span>) <span class="sc">+</span></span>
-<span id="cb27-3"><a href="#cb27-3" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> lower, <span class="at">ymax =</span> upper), <span class="at">colour =</span> <span class="st">&quot;#0b3d5c&quot;</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb27-4"><a href="#cb27-4" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">&quot;weight (g): mean and 95 % CI&quot;</span>) <span class="sc">+</span> <span class="fu">theme_c</span>()</span></code></pre></div>
-<p><img src="05-estimation_files/figure-html/unnamed-chunk-11-1.png" width="85%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a><span class="fu">ggplot</span>(ci_tab, <span class="fu">aes</span>(area, mean)) <span class="sc">+</span></span>
+<span id="cb29-2"><a href="#cb29-2" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">data =</span> oc, <span class="fu">aes</span>(area, weight_g), <span class="at">width =</span> <span class="fl">0.15</span>, <span class="at">alpha =</span> <span class="fl">0.25</span>, <span class="at">colour =</span> <span class="st">&quot;#8a969e&quot;</span>) <span class="sc">+</span></span>
+<span id="cb29-3"><a href="#cb29-3" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> lower, <span class="at">ymax =</span> upper), <span class="at">colour =</span> <span class="st">&quot;#0b3d5c&quot;</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb29-4"><a href="#cb29-4" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">&quot;weight (g): mean and 95 % CI&quot;</span>) <span class="sc">+</span> <span class="fu">theme_c</span>()</span></code></pre></div>
+<p><img src="05-estimation_files/figure-html/unnamed-chunk-11-1.png" alt="" width="85%" style="display: block; margin: auto;" /></p>
 <div class="fa-box">
 <div class="en">
 <p><strong>Functions and arguments used here</strong></p>
@@ -1262,17 +1267,17 @@ data-q="W3sidHlwZSI6Im51bSIsImVuIjoiMS4gU0Ugb2YgdGhlIG1lYW4gd2VpZ2h0LCBvcGVuIGFy
 
 </div>
 <div class="solution" data-quiz="t05">
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a>oc <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/octopus_catch.csv&quot;</span>)</span>
-<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a>wo <span class="ot">&lt;-</span> oc<span class="sc">$</span>weight_g[oc<span class="sc">$</span>area <span class="sc">==</span> <span class="st">&quot;open&quot;</span>]</span>
-<span id="cb28-3"><a href="#cb28-3" tabindex="-1"></a><span class="fu">sd</span>(wo) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">length</span>(wo))                                 <span class="co"># 1</span></span>
-<span id="cb28-4"><a href="#cb28-4" tabindex="-1"></a><span class="fu">t.test</span>(wo)<span class="sc">$</span>conf.int                                       <span class="co"># 2, 3</span></span>
-<span id="cb28-5"><a href="#cb28-5" tabindex="-1"></a><span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> <span class="dv">9</span>)                                         <span class="co"># 4</span></span>
-<span id="cb28-6"><a href="#cb28-6" tabindex="-1"></a>sex_r <span class="ot">&lt;-</span> oc<span class="sc">$</span>sex[oc<span class="sc">$</span>area <span class="sc">==</span> <span class="st">&quot;reopened&quot;</span>]</span>
-<span id="cb28-7"><a href="#cb28-7" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="fu">sum</span>(sex_r <span class="sc">==</span> <span class="st">&quot;F&quot;</span>), <span class="fu">length</span>(sex_r))<span class="sc">$</span>conf.int     <span class="co"># 5, 6</span></span>
-<span id="cb28-8"><a href="#cb28-8" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>); bm <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">5000</span>, <span class="fu">median</span>(<span class="fu">sample</span>(wo, <span class="at">replace =</span> <span class="cn">TRUE</span>)))</span>
-<span id="cb28-9"><a href="#cb28-9" tabindex="-1"></a><span class="fu">quantile</span>(bm, <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))                             <span class="co"># 7</span></span>
-<span id="cb28-10"><a href="#cb28-10" tabindex="-1"></a><span class="fu">diff</span>(<span class="fu">t.test</span>(wo, <span class="at">conf.level =</span> <span class="fl">0.99</span>)<span class="sc">$</span>conf.int)              <span class="co"># 8</span></span>
-<span id="cb28-11"><a href="#cb28-11" tabindex="-1"></a><span class="co"># 9: divided by 2 (sqrt(4) = 2)   10: the method captures mu in 95 % of samples</span></span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a>oc <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/octopus_catch.csv&quot;</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" tabindex="-1"></a>wo <span class="ot">&lt;-</span> oc<span class="sc">$</span>weight_g[oc<span class="sc">$</span>area <span class="sc">==</span> <span class="st">&quot;open&quot;</span>]</span>
+<span id="cb30-3"><a href="#cb30-3" tabindex="-1"></a><span class="fu">sd</span>(wo) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">length</span>(wo))                                 <span class="co"># 1</span></span>
+<span id="cb30-4"><a href="#cb30-4" tabindex="-1"></a><span class="fu">t.test</span>(wo)<span class="sc">$</span>conf.int                                       <span class="co"># 2, 3</span></span>
+<span id="cb30-5"><a href="#cb30-5" tabindex="-1"></a><span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> <span class="dv">9</span>)                                         <span class="co"># 4</span></span>
+<span id="cb30-6"><a href="#cb30-6" tabindex="-1"></a>sex_r <span class="ot">&lt;-</span> oc<span class="sc">$</span>sex[oc<span class="sc">$</span>area <span class="sc">==</span> <span class="st">&quot;reopened&quot;</span>]</span>
+<span id="cb30-7"><a href="#cb30-7" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="fu">sum</span>(sex_r <span class="sc">==</span> <span class="st">&quot;F&quot;</span>), <span class="fu">length</span>(sex_r))<span class="sc">$</span>conf.int     <span class="co"># 5, 6</span></span>
+<span id="cb30-8"><a href="#cb30-8" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>); bm <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">5000</span>, <span class="fu">median</span>(<span class="fu">sample</span>(wo, <span class="at">replace =</span> <span class="cn">TRUE</span>)))</span>
+<span id="cb30-9"><a href="#cb30-9" tabindex="-1"></a><span class="fu">quantile</span>(bm, <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))                             <span class="co"># 7</span></span>
+<span id="cb30-10"><a href="#cb30-10" tabindex="-1"></a><span class="fu">diff</span>(<span class="fu">t.test</span>(wo, <span class="at">conf.level =</span> <span class="fl">0.99</span>)<span class="sc">$</span>conf.int)              <span class="co"># 8</span></span>
+<span id="cb30-11"><a href="#cb30-11" tabindex="-1"></a><span class="co"># 9: divided by 2 (sqrt(4) = 2)   10: the method captures mu in 95 % of samples</span></span></code></pre></div>
 </div>
 </div>
 

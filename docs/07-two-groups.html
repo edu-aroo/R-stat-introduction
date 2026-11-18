@@ -13,8 +13,8 @@
 
 <title>R4Marine Stats · Session 7</title>
 
-<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
-<script src="site_libs/jquery-3.6.1/jquery-3.6.1.min.js"></script>
+<script src="site_libs/header-attrs-2.32/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -70,7 +70,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -536,7 +536,7 @@ Gardez-la.</li>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(oc, <span class="fu">aes</span>(<span class="at">sample =</span> <span class="fu">log</span>(weight_g))) <span class="sc">+</span> <span class="fu">stat_qq</span>(<span class="at">colour =</span> <span class="st">&quot;#1b7f8c&quot;</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span> <span class="fu">stat_qq_line</span>() <span class="sc">+</span></span>
 <span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> area) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;theoretical&quot;</span>, <span class="at">y =</span> <span class="st">&quot;log(weight)&quot;</span>) <span class="sc">+</span> <span class="fu">theme_c</span>(<span class="dv">11</span>)</span>
 <span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>p1 <span class="sc">+</span> p2 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span></code></pre></div>
-<p><img src="07-two-groups_files/figure-html/unnamed-chunk-1-1.png" width="85%" style="display: block; margin: auto;" /></p>
+<p><img src="07-two-groups_files/figure-html/unnamed-chunk-1-1.png" alt="" width="85%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>oc <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(area) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>(), <span class="at">mean =</span> <span class="fu">mean</span>(weight_g), <span class="at">sd =</span> <span class="fu">sd</span>(weight_g), <span class="at">median =</span> <span class="fu">median</span>(weight_g))</span></code></pre></div>
 <pre><code>#&gt; # A tibble: 2 × 5
 #&gt;   area         n  mean    sd median
@@ -732,17 +732,13 @@ décimales : la correction de Welch.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>oc<span class="sc">$</span>area <span class="ot">&lt;-</span> <span class="fu">factor</span>(oc<span class="sc">$</span>area, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;reopened&quot;</span>, <span class="st">&quot;open&quot;</span>))</span>
 <span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>tA <span class="ot">&lt;-</span> <span class="fu">t.test</span>(weight_g <span class="sc">~</span> area, <span class="at">data =</span> oc)</span>
 <span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">c</span>(<span class="at">diff =</span> <span class="fu">diff</span>(<span class="fu">rev</span>(tA<span class="sc">$</span>estimate)), <span class="at">lower =</span> tA<span class="sc">$</span>conf.int[<span class="dv">1</span>], <span class="at">upper =</span> tA<span class="sc">$</span>conf.int[<span class="dv">2</span>]), <span class="dv">1</span>)</span></code></pre></div>
-<pre><code>#&gt; diff.mean in group reopened                       lower 
-#&gt;                       349.3                       260.5 
-#&gt;                       upper 
-#&gt;                       438.1</code></pre>
+<pre><code>#&gt; diff.mean in group reopened                       lower                       upper 
+#&gt;                       349.3                       260.5                       438.1</code></pre>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>tB <span class="ot">&lt;-</span> <span class="fu">t.test</span>(<span class="fu">log</span>(weight_g) <span class="sc">~</span> area, <span class="at">data =</span> oc)</span>
 <span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>ratio <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">diff</span>(<span class="fu">rev</span>(tB<span class="sc">$</span>estimate)))            <span class="co"># ratio of geometric means reopened / open</span></span>
 <span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">c</span>(<span class="at">ratio =</span> ratio, <span class="at">lower =</span> <span class="fu">exp</span>(tB<span class="sc">$</span>conf.int[<span class="dv">1</span>]), <span class="at">upper =</span> <span class="fu">exp</span>(tB<span class="sc">$</span>conf.int[<span class="dv">2</span>])), <span class="dv">2</span>)</span></code></pre></div>
-<pre><code>#&gt; ratio.mean in group reopened                        lower 
-#&gt;                         1.54                         1.38 
-#&gt;                        upper 
-#&gt;                         1.71</code></pre>
+<pre><code>#&gt; ratio.mean in group reopened                        lower                        upper 
+#&gt;                         1.54                         1.38                         1.71</code></pre>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>tB<span class="sc">$</span>p.value</span></code></pre></div>
 <pre><code>#&gt; [1] 8.812121e-14</code></pre>
 <div class="en">
@@ -806,7 +802,7 @@ d’un groupe tendent à être plus grandes (un « décalage »), pas si les
 #&gt;  Wilcoxon rank sum test with continuity correction
 #&gt; 
 #&gt; data:  weight_g by area
-#&gt; W = 21494, p-value = 4.296e-13
+#&gt; W = 21494, p-value = 4.297e-13
 #&gt; alternative hypothesis: true location shift is not equal to 0
 #&gt; 95 percent confidence interval:
 #&gt;  220 380
@@ -961,7 +957,7 @@ chaque colonie</strong>. Un <strong>test apparié</strong> analyse les 20
 <span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a><span class="fu">ggplot</span>(long, <span class="fu">aes</span>(month, bleached, <span class="at">group =</span> colony)) <span class="sc">+</span></span>
 <span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">colour =</span> <span class="st">&quot;#8a969e&quot;</span>) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">colour =</span> <span class="st">&quot;#1b7f8c&quot;</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
 <span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">&quot;% bleached surface&quot;</span>) <span class="sc">+</span> <span class="fu">theme_c</span>()</span></code></pre></div>
-<p><img src="07-two-groups_files/figure-html/unnamed-chunk-9-1.png" width="85%" style="display: block; margin: auto;" /></p>
+<p><img src="07-two-groups_files/figure-html/unnamed-chunk-9-1.png" alt="" width="85%" style="display: block; margin: auto;" /></p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="fu">t.test</span>(cc<span class="sc">$</span>bleached_march, cc<span class="sc">$</span>bleached_july, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>#&gt; 
 #&gt;  Paired t-test
@@ -1074,13 +1070,11 @@ extrêmes. Vérifiez les différences avec un histogramme ou un QQ
 plot.</p>
 </div>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="fu">wilcox.test</span>(cc<span class="sc">$</span>bleached_march, cc<span class="sc">$</span>bleached_july, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<pre><code>#&gt; Warning in wilcox.test.default(cc$bleached_march, cc$bleached_july, paired =
-#&gt; TRUE): cannot compute exact p-value with ties</code></pre>
 <pre><code>#&gt; 
-#&gt;  Wilcoxon signed rank test with continuity correction
+#&gt;  Wilcoxon signed rank exact test
 #&gt; 
 #&gt; data:  cc$bleached_march and cc$bleached_july
-#&gt; V = 198, p-value = 0.0005532
+#&gt; V = 198, p-value = 0.0001335
 #&gt; alternative hypothesis: true location shift is not equal to 0</code></pre>
 </div>
 <div id="summary" class="section level2">
@@ -1232,16 +1226,16 @@ data-q="W3sidHlwZSI6Im51bSIsImVuIjoiMS4gTWVhbiBGIOKIkiBtZWFuIE0sIHJlb3BlbmVkIGFy
 
 </div>
 <div class="solution" data-quiz="t07">
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a>oc <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/octopus_catch.csv&quot;</span>)</span>
-<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a>re <span class="ot">&lt;-</span> oc[oc<span class="sc">$</span>area <span class="sc">==</span> <span class="st">&quot;reopened&quot;</span>, ]</span>
-<span id="cb28-3"><a href="#cb28-3" tabindex="-1"></a><span class="fu">t.test</span>(weight_g <span class="sc">~</span> sex, <span class="at">data =</span> re)                          <span class="co"># 1 (difference of the two means), 2</span></span>
-<span id="cb28-4"><a href="#cb28-4" tabindex="-1"></a><span class="fu">wilcox.test</span>(weight_g <span class="sc">~</span> sex, <span class="at">data =</span> re, <span class="at">exact =</span> <span class="cn">FALSE</span>)      <span class="co"># 3</span></span>
-<span id="cb28-5"><a href="#cb28-5" tabindex="-1"></a>tl <span class="ot">&lt;-</span> <span class="fu">t.test</span>(<span class="fu">log</span>(weight_g) <span class="sc">~</span> gear, <span class="at">data =</span> oc)</span>
-<span id="cb28-6"><a href="#cb28-6" tabindex="-1"></a><span class="fu">exp</span>(tl<span class="sc">$</span>estimate[<span class="dv">1</span>] <span class="sc">-</span> tl<span class="sc">$</span>estimate[<span class="dv">2</span>]); tl<span class="sc">$</span>p.value           <span class="co"># 4, 5</span></span>
-<span id="cb28-7"><a href="#cb28-7" tabindex="-1"></a>cc <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/coral_tagged_colonies.csv&quot;</span>)</span>
-<span id="cb28-8"><a href="#cb28-8" tabindex="-1"></a>ac <span class="ot">&lt;-</span> cc[cc<span class="sc">$</span>genus <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;Acropora&quot;</span>, <span class="st">&quot;Pocillopora&quot;</span>), ]</span>
-<span id="cb28-9"><a href="#cb28-9" tabindex="-1"></a><span class="fu">t.test</span>(ac<span class="sc">$</span>bleached_march, ac<span class="sc">$</span>bleached_july, <span class="at">paired =</span> <span class="cn">TRUE</span>) <span class="co"># 6, 7, 8</span></span>
-<span id="cb28-10"><a href="#cb28-10" tabindex="-1"></a><span class="co"># 9: paired (same quadrats)   10: Wilcoxon rank-sum (small n, outlier)</span></span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a>oc <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/octopus_catch.csv&quot;</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a>re <span class="ot">&lt;-</span> oc[oc<span class="sc">$</span>area <span class="sc">==</span> <span class="st">&quot;reopened&quot;</span>, ]</span>
+<span id="cb27-3"><a href="#cb27-3" tabindex="-1"></a><span class="fu">t.test</span>(weight_g <span class="sc">~</span> sex, <span class="at">data =</span> re)                          <span class="co"># 1 (difference of the two means), 2</span></span>
+<span id="cb27-4"><a href="#cb27-4" tabindex="-1"></a><span class="fu">wilcox.test</span>(weight_g <span class="sc">~</span> sex, <span class="at">data =</span> re, <span class="at">exact =</span> <span class="cn">FALSE</span>)      <span class="co"># 3</span></span>
+<span id="cb27-5"><a href="#cb27-5" tabindex="-1"></a>tl <span class="ot">&lt;-</span> <span class="fu">t.test</span>(<span class="fu">log</span>(weight_g) <span class="sc">~</span> gear, <span class="at">data =</span> oc)</span>
+<span id="cb27-6"><a href="#cb27-6" tabindex="-1"></a><span class="fu">exp</span>(tl<span class="sc">$</span>estimate[<span class="dv">1</span>] <span class="sc">-</span> tl<span class="sc">$</span>estimate[<span class="dv">2</span>]); tl<span class="sc">$</span>p.value           <span class="co"># 4, 5</span></span>
+<span id="cb27-7"><a href="#cb27-7" tabindex="-1"></a>cc <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/coral_tagged_colonies.csv&quot;</span>)</span>
+<span id="cb27-8"><a href="#cb27-8" tabindex="-1"></a>ac <span class="ot">&lt;-</span> cc[cc<span class="sc">$</span>genus <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;Acropora&quot;</span>, <span class="st">&quot;Pocillopora&quot;</span>), ]</span>
+<span id="cb27-9"><a href="#cb27-9" tabindex="-1"></a><span class="fu">t.test</span>(ac<span class="sc">$</span>bleached_march, ac<span class="sc">$</span>bleached_july, <span class="at">paired =</span> <span class="cn">TRUE</span>) <span class="co"># 6, 7, 8</span></span>
+<span id="cb27-10"><a href="#cb27-10" tabindex="-1"></a><span class="co"># 9: paired (same quadrats)   10: Wilcoxon rank-sum (small n, outlier)</span></span></code></pre></div>
 </div>
 </div>
 
