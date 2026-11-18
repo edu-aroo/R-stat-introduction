@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>R4Marine Stats · Session 7</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.1/jquery-3.6.1.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<!-- header.html: inserted inside <head> of every page (see _site.yml) -->
+<!-- config.js (settings) and quiz_index.js (made by R/build_site.R) first,
+     then course.js (the behaviour that reads them) -->
+<script src="assets/config.js"></script>
+<script src="assets/quiz_index.js"></script>
+<script src="assets/course.js"></script>
+<meta name="author" content="Aroo Falinirina">
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<link rel="stylesheet" href="assets/course.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">R4Marine Stats</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Sessions
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="00-start.html">0 · Why statistics?</a>
+    </li>
+    <li>
+      <a href="01-design.html">1 · Study design &amp; sampling</a>
+    </li>
+    <li>
+      <a href="02-describe.html">2 · Describing data</a>
+    </li>
+    <li>
+      <a href="03-explore.html">3 · Exploring distributions</a>
+    </li>
+    <li>
+      <a href="04-probability.html">4 · Probability &amp; distributions</a>
+    </li>
+    <li>
+      <a href="05-estimation.html">5 · Standard error &amp; CIs</a>
+    </li>
+    <li>
+      <a href="06-testing.html">6 · Hypothesis tests &amp; p-values</a>
+    </li>
+    <li>
+      <a href="07-two-groups.html">7 · Comparing two groups</a>
+    </li>
+    <li>
+      <a href="08-anova.html">8 · ANOVA &amp; Kruskal–Wallis</a>
+    </li>
+    <li>
+      <a href="09-categorical.html">9 · Proportions &amp; χ²</a>
+    </li>
+    <li>
+      <a href="10-regression.html">10 · Correlation &amp; regression</a>
+    </li>
+    <li>
+      <a href="11-power-reporting.html">11 · Power, multiple tests, reporting</a>
+    </li>
+    <li>
+      <a href="12-practice.html">12 · Practice</a>
+    </li>
+    <li>
+      <a href="13-final-project.html">13 · Final project</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Resources
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="choose-test.html">Which test? (decision guide)</a>
+    </li>
+    <li>
+      <a href="cheatsheet.html">Cheatsheet</a>
+    </li>
+    <li>
+      <a href="glossary.html">Glossary EN–FR</a>
+    </li>
+    <li>
+      <a href="common-errors.html">Common errors &amp; pitfalls</a>
+    </li>
+    <li>
+      <a href="resources.html">To go further</a>
+    </li>
+    <li>
+      <a href="help.html">Need help?</a>
+    </li>
+    <li>
+      <a href="whats-new.html">What's new</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore"><span class="en">7 · Comparing two
+groups</span><span class="fr">7 · Comparer deux groupes</span></h1>
+<h3 class="subtitle">~3 h</h3>
+
+</div>
+
+
+<div class="objectives">
+<div id="by-the-end-of-this-session-you-will-be-able-to"
+class="section level4 en">
+<h4>By the end of this session you will be able to</h4>
+<ul>
+<li>compare the means of <strong>two independent groups</strong> with
+the <strong>Welch t-test</strong>, and check its assumptions;</li>
+<li>analyse a right-skewed variable on the <strong>log scale</strong>
+and report the result as a <strong>ratio</strong>;</li>
+<li>use the <strong>Wilcoxon rank-sum</strong> (Mann–Whitney) test when
+the t-test is not appropriate;</li>
+<li>recognise <strong>paired</strong> data and analyse them with the
+<strong>paired t-test</strong> or the <strong>Wilcoxon
+signed-rank</strong> test;</li>
+<li>compute an <strong>effect size</strong> (difference with CI, Cohen’s
+d) and write a complete result sentence.</li>
+</ul>
+</div>
+<div id="à-la-fin-de-cette-séance-vous-saurez"
+class="section level4 fr">
+<h4>À la fin de cette séance vous saurez</h4>
+<ul>
+<li>comparer les moyennes de <strong>deux groupes indépendants</strong>
+avec le <strong>test t de Welch</strong>, et vérifier ses conditions
+;</li>
+<li>analyser une variable asymétrique à droite sur l’<strong>échelle
+log</strong> et rapporter le résultat comme un <strong>rapport</strong>
+;</li>
+<li>utiliser le test de <strong>Wilcoxon des rangs</strong>
+(Mann–Whitney) quand le test t ne convient pas ;</li>
+<li>reconnaître des données <strong>appariées</strong> et les analyser
+avec le <strong>test t apparié</strong> ou le test des <strong>rangs
+signés de Wilcoxon</strong> ;</li>
+<li>calculer une <strong>taille d’effet</strong> (différence avec IC, d
+de Cohen) et rédiger une phrase de résultat complète.</li>
+</ul>
+</div>
+</div>
+<div id="independent" class="section level2">
+<h2><span class="en">Independent groups: octopus weight by
+area</span><span class="fr">Groupes indépendants : poids des pieuvres
+par zone</span></h2>
+<div class="callout ecology">
+<div class="en">
+<p><strong>Data:</strong> <code>octopus_catch.csv</code> (Session 3).
+185 octopuses landed from the <strong>reopened</strong> area (Tsifota)
+and 160 from <strong>open</strong> areas (Andrevo), on the same day.
+Each octopus is one independent observation; the two groups contain
+<strong>different</strong> octopuses → <strong>independent
+groups</strong>.</p>
+</div>
+<div class="fr">
+<p><strong>Données :</strong> <code>octopus_catch.csv</code> (séance 3).
+185 pieuvres débarquées de la zone <strong>rouverte</strong> (Tsifota)
+et 160 des zones <strong>ouvertes</strong> (Andrevo), le même jour.
+Chaque pieuvre est une observation indépendante ; les deux groupes
+contiennent des pieuvres <strong>différentes</strong> → <strong>groupes
+indépendants</strong>.</p>
+</div>
+</div>
+<div class="en">
+<p><strong>Plot first</strong> (Session 3), then check the assumptions
+of the t-test:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Independence</strong> — comes from the design (Session 1),
+not from a test.</li>
+<li><strong>Approximate normality of each group</strong> — or large
+groups (central limit theorem, Session 5): with ≥ 30–40 per group,
+moderate skewness is fine; strong skewness or outliers still
+matter.</li>
+<li><strong>Equal variances</strong> — <em>not needed</em> with
+<strong>Welch’s</strong> version, R’s default. Keep it.</li>
+</ol>
+</div>
+<div class="fr">
+<p><strong>Tracez d’abord</strong> (séance 3), puis vérifiez les
+conditions du test t :</p>
+<ol style="list-style-type: decimal">
+<li><strong>Indépendance</strong> — vient du plan d’étude (séance 1),
+pas d’un test.</li>
+<li><strong>Normalité approximative de chaque groupe</strong> — ou
+grands groupes (théorème central limite, séance 5) : avec ≥ 30–40 par
+groupe, une asymétrie modérée ne pose pas problème ; une forte asymétrie
+ou des valeurs extrêmes comptent encore.</li>
+<li><strong>Variances égales</strong> — <em>pas nécessaires</em> avec la
+version de <strong>Welch</strong>, celle de R par défaut.
+Gardez-la.</li>
+</ol>
+</div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(oc, <span class="fu">aes</span>(area, weight_g)) <span class="sc">+</span> <span class="fu">geom_boxplot</span>(<span class="at">width =</span> <span class="fl">0.5</span>, <span class="at">fill =</span> <span class="st">&quot;#e9f4f6&quot;</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">&quot;weight (g)&quot;</span>) <span class="sc">+</span> <span class="fu">theme_c</span>(<span class="dv">11</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(oc, <span class="fu">aes</span>(<span class="at">sample =</span> <span class="fu">log</span>(weight_g))) <span class="sc">+</span> <span class="fu">stat_qq</span>(<span class="at">colour =</span> <span class="st">&quot;#1b7f8c&quot;</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span> <span class="fu">stat_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> area) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;theoretical&quot;</span>, <span class="at">y =</span> <span class="st">&quot;log(weight)&quot;</span>) <span class="sc">+</span> <span class="fu">theme_c</span>(<span class="dv">11</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>p1 <span class="sc">+</span> p2 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span></code></pre></div>
+<p><img src="07-two-groups_files/figure-html/unnamed-chunk-1-1.png" width="85%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>oc <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(area) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>(), <span class="at">mean =</span> <span class="fu">mean</span>(weight_g), <span class="at">sd =</span> <span class="fu">sd</span>(weight_g), <span class="at">median =</span> <span class="fu">median</span>(weight_g))</span></code></pre></div>
+<pre><code>#&gt; # A tibble: 2 × 5
+#&gt;   area         n  mean    sd median
+#&gt;   &lt;chr&gt;    &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+#&gt; 1 open       160  631.  316.    570
+#&gt; 2 reopened   185  980.  511.    890</code></pre>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>plot_layout(widths)</code></td>
+<td>(patchwork) relative widths of the plots placed side by side</td>
+<td>a numeric vector</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>plot_layout(widths)</code></td>
+<td>(patchwork) largeurs relatives des graphiques placés côte à
+côte</td>
+<td>un vecteur numérique</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="en">
+<p>Weights are right-skewed in both areas; their logs are close to
+normal. Two valid options — <strong>decide before testing</strong>, do
+not run both and keep the “best” p-value:</p>
+<ul>
+<li><strong>A.</strong> Welch t-test on the <strong>raw weights</strong>
+(large groups, so the mean is still well estimated) → effect =
+<strong>difference</strong> in grams.</li>
+<li><strong>B.</strong> Welch t-test on <strong>log(weight)</strong> →
+effect = <strong>ratio</strong> of geometric means (“× 1.4”), which
+suits a multiplicative variable.</li>
+</ul>
+</div>
+<div class="fr">
+<p>Les poids sont asymétriques à droite dans les deux zones ; leurs logs
+sont proches de la normale. Deux options valides — <strong>décidez avant
+de tester</strong>, ne faites pas les deux pour garder la « meilleure »
+p-value :</p>
+<ul>
+<li><strong>A.</strong> Test t de Welch sur les <strong>poids
+bruts</strong> (grands groupes, la moyenne reste donc bien estimée) →
+effet = <strong>différence</strong> en grammes.</li>
+<li><strong>B.</strong> Test t de Welch sur <strong>log(poids)</strong>
+→ effet = <strong>rapport</strong> des moyennes géométriques (« × 1,4
+»), adapté à une variable multiplicative.</li>
+</ul>
+</div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>tA <span class="ot">&lt;-</span> <span class="fu">t.test</span>(weight_g <span class="sc">~</span> area, <span class="at">data =</span> oc)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>tA</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt;  Welch Two Sample t-test
+#&gt; 
+#&gt; data:  weight_g by area
+#&gt; t = -7.7425, df = 311.84, p-value = 1.373e-13
+#&gt; alternative hypothesis: true difference in means between group open and group reopened is not equal to 0
+#&gt; 95 percent confidence interval:
+#&gt;  -438.0729 -260.5352
+#&gt; sample estimates:
+#&gt;     mean in group open mean in group reopened 
+#&gt;               630.7500               980.0541</code></pre>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>t.test(formula, data, var.equal, paired)</code></td>
+<td>two-sample t-test</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>  <code>formula</code></td>
+<td><code>numeric ~ group</code>; the group must have exactly 2
+values</td>
+<td>column names</td>
+</tr>
+<tr class="odd">
+<td>  <code>var.equal</code></td>
+<td><code>FALSE</code> (default) = Welch test; <code>TRUE</code> =
+classic Student test with pooled variance</td>
+<td><code>TRUE</code> / <code>FALSE</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>t.test(formula, data, var.equal, paired)</code></td>
+<td>test t à deux échantillons</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>  <code>formula</code></td>
+<td><code>numérique ~ groupe</code> ; le groupe doit avoir exactement 2
+valeurs</td>
+<td>noms de colonnes</td>
+</tr>
+<tr class="odd">
+<td>  <code>var.equal</code></td>
+<td><code>FALSE</code> (défaut) = test de Welch ; <code>TRUE</code> =
+test de Student classique avec variance commune</td>
+<td><code>TRUE</code> / <code>FALSE</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="en">
+<p><strong>Reading the output.</strong> <code>mean in group open</code>
+and <code>mean in group reopened</code>: the two means. The
+<strong>difference</strong> is computed as <strong>first group − second
+group</strong>, in the alphabetical order of the levels
+(<code>open</code> − <code>reopened</code>), hence a negative CI. To get
+reopened − open, make <code>area</code> a factor with
+<code>levels = c("reopened", "open")</code>. <code>df</code> has
+decimals: the Welch correction.</p>
+</div>
+<div class="fr">
+<p><strong>Lecture de la sortie.</strong>
+<code>mean in group open</code> et <code>mean in group reopened</code> :
+les deux moyennes. La <strong>différence</strong> est calculée
+<strong>premier groupe − second groupe</strong>, dans l’ordre
+alphabétique des niveaux (<code>open</code> − <code>reopened</code>),
+d’où un IC négatif. Pour obtenir rouverte − ouverte, faites de
+<code>area</code> un facteur avec
+<code>levels = c("reopened", "open")</code>. <code>df</code> a des
+décimales : la correction de Welch.</p>
+</div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>oc<span class="sc">$</span>area <span class="ot">&lt;-</span> <span class="fu">factor</span>(oc<span class="sc">$</span>area, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;reopened&quot;</span>, <span class="st">&quot;open&quot;</span>))</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>tA <span class="ot">&lt;-</span> <span class="fu">t.test</span>(weight_g <span class="sc">~</span> area, <span class="at">data =</span> oc)</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">c</span>(<span class="at">diff =</span> <span class="fu">diff</span>(<span class="fu">rev</span>(tA<span class="sc">$</span>estimate)), <span class="at">lower =</span> tA<span class="sc">$</span>conf.int[<span class="dv">1</span>], <span class="at">upper =</span> tA<span class="sc">$</span>conf.int[<span class="dv">2</span>]), <span class="dv">1</span>)</span></code></pre></div>
+<pre><code>#&gt; diff.mean in group reopened                       lower 
+#&gt;                       349.3                       260.5 
+#&gt;                       upper 
+#&gt;                       438.1</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>tB <span class="ot">&lt;-</span> <span class="fu">t.test</span>(<span class="fu">log</span>(weight_g) <span class="sc">~</span> area, <span class="at">data =</span> oc)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>ratio <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">diff</span>(<span class="fu">rev</span>(tB<span class="sc">$</span>estimate)))            <span class="co"># ratio of geometric means reopened / open</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">c</span>(<span class="at">ratio =</span> ratio, <span class="at">lower =</span> <span class="fu">exp</span>(tB<span class="sc">$</span>conf.int[<span class="dv">1</span>]), <span class="at">upper =</span> <span class="fu">exp</span>(tB<span class="sc">$</span>conf.int[<span class="dv">2</span>])), <span class="dv">2</span>)</span></code></pre></div>
+<pre><code>#&gt; ratio.mean in group reopened                        lower 
+#&gt;                         1.54                         1.38 
+#&gt;                        upper 
+#&gt;                         1.71</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>tB<span class="sc">$</span>p.value</span></code></pre></div>
+<pre><code>#&gt; [1] 8.812121e-14</code></pre>
+<div class="en">
+<p>Option B in words: octopuses from the reopened area were <strong>1.54
+times heavier</strong> (geometric means; 95 % CI 1.38–1.71), i.e. about
+54 % heavier.</p>
+</div>
+<div class="fr">
+<p>L’option B en mots : les pieuvres de la zone rouverte étaient
+<strong>1.54 fois plus lourdes</strong> (moyennes géométriques ; IC 95 %
+1.38–1.71), soit environ 54 % plus lourdes.</p>
+</div>
+<div id="effect-size-cohens-dtaille-deffet-d-de-cohen"
+class="section level3">
+<h3><span class="en">Effect size: Cohen’s d</span><span
+class="fr">Taille d’effet : d de Cohen</span></h3>
+<div class="en">
+<p>d = (difference of means) / (pooled SD). It has no unit, so it lets
+you compare effects across studies and is needed for power calculations
+(Session 11).</p>
+</div>
+<div class="fr">
+<p>d = (différence des moyennes) / (ET commun). Il est sans unité, il
+permet donc de comparer des effets entre études, et il est nécessaire
+pour les calculs de puissance (séance 11).</p>
+</div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> oc<span class="sc">$</span>weight_g[oc<span class="sc">$</span>area <span class="sc">==</span> <span class="st">&quot;reopened&quot;</span>]; x2 <span class="ot">&lt;-</span> oc<span class="sc">$</span>weight_g[oc<span class="sc">$</span>area <span class="sc">==</span> <span class="st">&quot;open&quot;</span>]</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>sd_pooled <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(((<span class="fu">length</span>(x1) <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="fu">var</span>(x1) <span class="sc">+</span> (<span class="fu">length</span>(x2) <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="fu">var</span>(x2)) <span class="sc">/</span> (<span class="fu">length</span>(x1) <span class="sc">+</span> <span class="fu">length</span>(x2) <span class="sc">-</span> <span class="dv">2</span>))</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>d <span class="ot">&lt;-</span> (<span class="fu">mean</span>(x1) <span class="sc">-</span> <span class="fu">mean</span>(x2)) <span class="sc">/</span> sd_pooled</span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="fu">round</span>(d, <span class="dv">2</span>)</span></code></pre></div>
+<pre><code>#&gt; [1] 0.81</code></pre>
+</div>
+</div>
+<div id="wilcoxon" class="section level2">
+<h2><span class="en">The rank-based alternative: Wilcoxon
+rank-sum</span><span class="fr">L’alternative sur les rangs : Wilcoxon
+des rangs</span></h2>
+<div class="en">
+<p>When groups are <strong>small</strong> and clearly skewed, or have
+strong outliers, and a log does not help, use the <strong>Wilcoxon
+rank-sum test</strong> (also called <strong>Mann–Whitney U</strong>). It
+replaces values by their <strong>ranks</strong> in the pooled data and
+asks whether one group tends to have higher ranks. It does not assume
+normality, but it tests a slightly different question: whether values of
+one group tend to be larger (a “shift”), not whether the
+<strong>means</strong> differ.</p>
+</div>
+<div class="fr">
+<p>Quand les groupes sont <strong>petits</strong> et nettement
+asymétriques, ou ont de fortes valeurs extrêmes, et qu’un log n’aide
+pas, utilisez le <strong>test de Wilcoxon des rangs</strong> (aussi
+appelé <strong>U de Mann–Whitney</strong>). Il remplace les valeurs par
+leurs <strong>rangs</strong> dans l’ensemble des données et demande si
+un groupe tend à avoir des rangs plus élevés. Il ne suppose pas la
+normalité, mais il teste une question un peu différente : si les valeurs
+d’un groupe tendent à être plus grandes (un « décalage »), pas si les
+<strong>moyennes</strong> diffèrent.</p>
+</div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">wilcox.test</span>(weight_g <span class="sc">~</span> area, <span class="at">data =</span> oc, <span class="at">conf.int =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt;  Wilcoxon rank sum test with continuity correction
+#&gt; 
+#&gt; data:  weight_g by area
+#&gt; W = 21494, p-value = 4.296e-13
+#&gt; alternative hypothesis: true location shift is not equal to 0
+#&gt; 95 percent confidence interval:
+#&gt;  220 380
+#&gt; sample estimates:
+#&gt; difference in location 
+#&gt;                    300</code></pre>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>wilcox.test(formula, data, paired, conf.int, exact)</code></td>
+<td>Wilcoxon rank-sum test (2 independent groups) or signed-rank test
+(<code>paired = TRUE</code>)</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>  <code>conf.int</code></td>
+<td><code>TRUE</code> adds an estimate of the shift between groups
+(Hodges–Lehmann) and its CI</td>
+<td><code>TRUE</code> / <code>FALSE</code></td>
+</tr>
+<tr class="odd">
+<td>  <code>exact</code></td>
+<td>exact p-value (small samples, no ties) or normal approximation; with
+ties R warns and uses the approximation — that is fine</td>
+<td><code>TRUE</code> / <code>FALSE</code> / <code>NULL</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>wilcox.test(formula, data, paired, conf.int, exact)</code></td>
+<td>test de Wilcoxon des rangs (2 groupes indépendants) ou des rangs
+signés (<code>paired = TRUE</code>)</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>  <code>conf.int</code></td>
+<td><code>TRUE</code> ajoute une estimation du décalage entre groupes
+(Hodges–Lehmann) et son IC</td>
+<td><code>TRUE</code> / <code>FALSE</code></td>
+</tr>
+<tr class="odd">
+<td>  <code>exact</code></td>
+<td>p-value exacte (petits échantillons, sans ex æquo) ou approximation
+normale ; avec des ex æquo R avertit et utilise l’approximation — c’est
+normal</td>
+<td><code>TRUE</code> / <code>FALSE</code> / <code>NULL</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="en">
+<p><code>W</code> is the rank statistic. The message “cannot compute
+exact p-value with ties” appears because several octopuses have the same
+weight (rounded to 10 g): R then uses an approximation, which is
+fine.</p>
+</div>
+<div class="fr">
+<p><code>W</code> est la statistique des rangs. Le message « cannot
+compute exact p-value with ties » apparaît parce que plusieurs pieuvres
+ont le même poids (arrondi à 10 g) : R utilise alors une approximation,
+ce qui est correct.</p>
+</div>
+</div>
+<div id="paired" class="section level2">
+<h2><span class="en">Paired data: the same colonies measured
+twice</span><span class="fr">Données appariées : les mêmes colonies
+mesurées deux fois</span></h2>
+<div class="callout ecology">
+<div class="en">
+<p><strong>Tagged corals</strong>
+(<code>coral_tagged_colonies.csv</code>, simulated). <strong>20 coral
+colonies</strong> of four genera were tagged with numbered plates on one
+reef. Each was photographed from above in <strong>March 2026</strong>
+(peak of a marine heatwave) and again in <strong>July 2026</strong>; the
+% of bleached surface was measured on the photos. <em>One row = one
+colony, measured twice.</em> Question: did bleaching decrease between
+March and July?</p>
+</div>
+<div class="fr">
+<p><strong>Coraux marqués</strong>
+(<code>coral_tagged_colonies.csv</code>, simulé). <strong>20 colonies
+coralliennes</strong> de quatre genres ont été marquées avec des plaques
+numérotées sur un récif. Chacune a été photographiée du dessus en
+<strong>mars 2026</strong> (pic d’une vague de chaleur marine) puis en
+<strong>juillet 2026</strong> ; le % de surface blanchie a été mesuré
+sur les photos. <em>Une ligne = une colonie, mesurée deux fois.</em>
+Question : le blanchissement a-t-il diminué entre mars et juillet ?</p>
+</div>
+</div>
+<p><a class="btn-dl" href="data/coral_tagged_colonies.csv" download>⇩
+coral_tagged_colonies.csv</a></p>
+<div class="en">
+<p>The two measurements of a colony are <strong>not
+independent</strong>: a heavily bleached colony in March tends to be
+more bleached in July too. Colonies differ a lot from each other (5 % to
+70 % in March), but we only care about the <strong>change within each
+colony</strong>. A <strong>paired test</strong> analyses the 20
+<strong>differences</strong> (March − July): it is a one-sample t-test
+of H0: mean difference = 0.</p>
+</div>
+<div class="fr">
+<p>Les deux mesures d’une colonie ne sont <strong>pas
+indépendantes</strong> : une colonie très blanchie en mars tend à l’être
+aussi en juillet. Les colonies diffèrent beaucoup entre elles (5 % à 70
+% en mars), mais seule nous intéresse la <strong>variation au sein de
+chaque colonie</strong>. Un <strong>test apparié</strong> analyse les 20
+<strong>différences</strong> (mars − juillet) : c’est un test t à un
+échantillon de H0 : différence moyenne = 0.</p>
+</div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>cc <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/coral_tagged_colonies.csv&quot;</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>cc<span class="sc">$</span>diff <span class="ot">&lt;-</span> cc<span class="sc">$</span>bleached_march <span class="sc">-</span> cc<span class="sc">$</span>bleached_july</span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a><span class="fu">summary</span>(cc<span class="sc">$</span>diff)</span></code></pre></div>
+<pre><code>#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#&gt;  -5.900   2.300   8.150   8.845  16.100  21.700</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="co"># a &quot;slope graph&quot;: one line per colony</span></span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>long <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">colony =</span> <span class="fu">rep</span>(cc<span class="sc">$</span>colony_id, <span class="dv">2</span>),</span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a>                   <span class="at">month =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;March&quot;</span>, <span class="st">&quot;July&quot;</span>), <span class="at">each =</span> <span class="dv">20</span>), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;March&quot;</span>, <span class="st">&quot;July&quot;</span>)),</span>
+<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a>                   <span class="at">bleached =</span> <span class="fu">c</span>(cc<span class="sc">$</span>bleached_march, cc<span class="sc">$</span>bleached_july))</span>
+<span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a><span class="fu">ggplot</span>(long, <span class="fu">aes</span>(month, bleached, <span class="at">group =</span> colony)) <span class="sc">+</span></span>
+<span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">colour =</span> <span class="st">&quot;#8a969e&quot;</span>) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">colour =</span> <span class="st">&quot;#1b7f8c&quot;</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">&quot;% bleached surface&quot;</span>) <span class="sc">+</span> <span class="fu">theme_c</span>()</span></code></pre></div>
+<p><img src="07-two-groups_files/figure-html/unnamed-chunk-9-1.png" width="85%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="fu">t.test</span>(cc<span class="sc">$</span>bleached_march, cc<span class="sc">$</span>bleached_july, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt;  Paired t-test
+#&gt; 
+#&gt; data:  cc$bleached_march and cc$bleached_july
+#&gt; t = 4.8189, df = 19, p-value = 0.0001193
+#&gt; alternative hypothesis: true mean difference is not equal to 0
+#&gt; 95 percent confidence interval:
+#&gt;   5.003274 12.686726
+#&gt; sample estimates:
+#&gt; mean difference 
+#&gt;           8.845</code></pre>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="fu">t.test</span>(cc<span class="sc">$</span>diff, <span class="at">mu =</span> <span class="dv">0</span>)<span class="sc">$</span>p.value                 <span class="co"># exactly the same test</span></span></code></pre></div>
+<pre><code>#&gt; [1] 0.0001192937</code></pre>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>geom_line(aes(group = colony))</code></td>
+<td>joins the points of the same colony: one line per colony</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>t.test(x, y, paired = TRUE)</code></td>
+<td>paired t-test: tests the mean of the differences <code>x − y</code>
+row by row</td>
+<td>two vectors of the same length, <strong>same order of
+units</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>geom_line(aes(group = colony))</code></td>
+<td>relie les points d’une même colonie : une ligne par colonie</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>t.test(x, y, paired = TRUE)</code></td>
+<td>test t apparié : teste la moyenne des différences <code>x − y</code>
+ligne par ligne</td>
+<td>deux vecteurs de même longueur, <strong>même ordre des
+unités</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="en">
+<p>What if we had forgotten the pairing? The between-colony variability
+is then counted as noise:</p>
+</div>
+<div class="fr">
+<p>Et si nous avions oublié l’appariement ? La variabilité entre
+colonies est alors comptée comme du bruit :</p>
+</div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a><span class="fu">t.test</span>(cc<span class="sc">$</span>bleached_march, cc<span class="sc">$</span>bleached_july)<span class="sc">$</span>p.value      <span class="co"># WRONG here: treats them as independent</span></span></code></pre></div>
+<pre><code>#&gt; [1] 0.09381913</code></pre>
+<div class="en">
+<p>The unpaired test gives a much larger p-value: it loses the
+information that each colony is its own control. Pairing (or “blocking”)
+is a powerful design: measure the <strong>same units</strong> before and
+after, or compare treatments <strong>within</strong> the same site.</p>
+<p>The rank-based paired alternative is the <strong>Wilcoxon signed-rank
+test</strong>: <code>wilcox.test(x, y, paired = TRUE)</code>. Use it
+with few pairs and strongly skewed or outlying differences. Check the
+differences with a histogram or QQ plot.</p>
+</div>
+<div class="fr">
+<p>Le test non apparié donne une p-value bien plus grande : il perd
+l’information que chaque colonie est son propre témoin. L’appariement
+(ou « blocage ») est un plan puissant : mesurer les <strong>mêmes
+unités</strong> avant et après, ou comparer des traitements <strong>au
+sein</strong> d’un même site.</p>
+<p>L’alternative appariée sur les rangs est le <strong>test des rangs
+signés de Wilcoxon</strong> :
+<code>wilcox.test(x, y, paired = TRUE)</code>. Utilisez-le avec peu de
+paires et des différences fortement asymétriques ou avec des valeurs
+extrêmes. Vérifiez les différences avec un histogramme ou un QQ
+plot.</p>
+</div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="fu">wilcox.test</span>(cc<span class="sc">$</span>bleached_march, cc<span class="sc">$</span>bleached_july, <span class="at">paired =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>#&gt; Warning in wilcox.test.default(cc$bleached_march, cc$bleached_july, paired =
+#&gt; TRUE): cannot compute exact p-value with ties</code></pre>
+<pre><code>#&gt; 
+#&gt;  Wilcoxon signed rank test with continuity correction
+#&gt; 
+#&gt; data:  cc$bleached_march and cc$bleached_july
+#&gt; V = 198, p-value = 0.0005532
+#&gt; alternative hypothesis: true location shift is not equal to 0</code></pre>
+</div>
+<div id="summary" class="section level2">
+<h2><span class="en">Which test? Summary</span><span class="fr">Quel
+test ? Résumé</span></h2>
+<div class="en">
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Design</th>
+<th>Data roughly normal (or large n)</th>
+<th>Small n, skewed / outliers</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>2 independent groups</td>
+<td>Welch t-test <code>t.test(y ~ g)</code> (on log(y) if
+multiplicative)</td>
+<td>Wilcoxon rank-sum <code>wilcox.test(y ~ g)</code></td>
+</tr>
+<tr class="even">
+<td>Paired (same units twice)</td>
+<td>paired t-test <code>t.test(x, y, paired = TRUE)</code></td>
+<td>Wilcoxon signed-rank
+<code>wilcox.test(x, y, paired = TRUE)</code></td>
+</tr>
+<tr class="odd">
+<td>One group vs a reference value</td>
+<td><code>t.test(x, mu = …)</code></td>
+<td><code>wilcox.test(x, mu = …)</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Write it like this:</strong> “Bleached surface decreased by
+8.8 percentage points on average between March and July (95 % CI
+5.0–12.7; paired t-test, t = 4.82, df = 19, p &lt; 0.001; n = 20
+colonies).”</p>
+</div>
+<div class="fr">
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Plan</th>
+<th>Données à peu près normales (ou grand n)</th>
+<th>Petit n, asymétrie / valeurs extrêmes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>2 groupes indépendants</td>
+<td>test t de Welch <code>t.test(y ~ g)</code> (sur log(y) si
+multiplicatif)</td>
+<td>Wilcoxon des rangs <code>wilcox.test(y ~ g)</code></td>
+</tr>
+<tr class="even">
+<td>Apparié (mêmes unités deux fois)</td>
+<td>test t apparié <code>t.test(x, y, paired = TRUE)</code></td>
+<td>rangs signés de Wilcoxon
+<code>wilcox.test(x, y, paired = TRUE)</code></td>
+</tr>
+<tr class="odd">
+<td>Un groupe vs une valeur de référence</td>
+<td><code>t.test(x, mu = …)</code></td>
+<td><code>wilcox.test(x, mu = …)</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rédigez ainsi :</strong> « La surface blanchie a diminué en
+moyenne de 8,8 points de pourcentage entre mars et juillet (IC 95 %
+5,0–12,7 ; test t apparié, t = 4,82, ddl = 19, p &lt; 0,001 ; n = 20
+colonies). »</p>
+</div>
+</div>
+<div id="application" class="section level2">
+<h2><span class="en">Application work &amp; quiz</span><span
+class="fr">Travail d’application et quiz</span></h2>
+<div class="application">
+<div id="application-work-7" class="section level3 en">
+<h3>Application work 7</h3>
+<ol style="list-style-type: decimal">
+<li>– 2. In the <strong>reopened</strong> area only, compare the weights
+of <strong>female and male</strong> octopuses (Welch t-test,
+<code>weight_g ~ sex</code>): mean F − mean M (1 decimal) and p-value (4
+decimals).</li>
+<li>Same comparison with the Wilcoxon rank-sum test
+(<code>exact = FALSE</code>): p-value (4 decimals).</li>
+<li>– 5. All octopuses: Welch t-test on <strong>log(weight)</strong> by
+<strong>gear</strong> (<code>log(weight_g) ~ gear</code>). Ratio of
+geometric means <strong>hook / spear</strong> (<code>exp</code> of mean
+log hook − mean log spear, 3 decimals) and p-value (4 decimals).</li>
+<li>– 8. Tagged corals, <strong>Acropora and Pocillopora only</strong>
+(10 colonies): paired t-test March vs July. Mean difference (2
+decimals), <em>t</em> (3 decimals), lower limit of the 95 % CI (2
+decimals).</li>
+<li>– 10. Choosing the test.</li>
+</ol>
+</div>
+<div id="travail-dapplication-7" class="section level3 fr">
+<h3>Travail d’application 7</h3>
+<ol style="list-style-type: decimal">
+<li>– 2. Dans la zone <strong>rouverte</strong> seulement, comparez les
+poids des pieuvres <strong>femelles et mâles</strong> (test t de Welch,
+<code>weight_g ~ sex</code>) : moyenne F − moyenne M (1 décimale) et
+p-value (4 décimales).</li>
+<li>Même comparaison avec le test de Wilcoxon des rangs
+(<code>exact = FALSE</code>) : p-value (4 décimales).</li>
+<li>– 5. Toutes les pieuvres : test t de Welch sur
+<strong>log(poids)</strong> par <strong>engin</strong>
+(<code>log(weight_g) ~ gear</code>). Rapport des moyennes géométriques
+<strong>hook / spear</strong> (<code>exp</code> de moyenne log hook −
+moyenne log spear, 3 décimales) et p-value (4 décimales).</li>
+<li>– 8. Coraux marqués, <strong>Acropora et Pocillopora
+seulement</strong> (10 colonies) : test t apparié mars vs juillet.
+Différence moyenne (2 décimales), <em>t</em> (3 décimales), limite
+inférieure de l’IC à 95 % (2 décimales).</li>
+<li>– 10. Choisir le test.</li>
+</ol>
+</div>
+</div>
+<div class="hint">
+<div class="en">
+<p>Q4: in <code>tl &lt;- t.test(log(weight_g) ~ gear, data = oc)</code>,
+<code>tl$estimate</code> holds the mean log of <code>hook</code> then
+<code>spear</code> (alphabetical order). Q6–8:
+<code>ac &lt;- cc[cc$genus %in% c("Acropora", "Pocillopora"), ]</code>.</p>
+</div>
+<div class="fr">
+<p>Q4 : dans
+<code>tl &lt;- t.test(log(weight_g) ~ gear, data = oc)</code>,
+<code>tl$estimate</code> contient la moyenne des log de
+<code>hook</code> puis de <code>spear</code> (ordre alphabétique). Q6–8
+:
+<code>ac &lt;- cc[cc$genus %in% c("Acropora", "Pocillopora"), ]</code>.</p>
+</div>
+</div>
+<div id="quiz-t07" class="quiz" data-quiz-id="t07"
+data-q="W3sidHlwZSI6Im51bSIsImVuIjoiMS4gTWVhbiBGIOKIkiBtZWFuIE0sIHJlb3BlbmVkIGFyZWEgKGcpPyIsImZyIjoiMS4gTW95ZW5uZSBGIOKIkiBtb3llbm5lIE0sIHpvbmUgcm91dmVydGUgKGcpID8iLCJhbnN3ZXIiOjguOCwidG9sIjowLjA2LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiMi4gcC12YWx1ZSBvZiB0aGUgV2VsY2ggdC10ZXN0PyIsImZyIjoiMi4gcC12YWx1ZSBkdSB0ZXN0IHQgZGUgV2VsY2ggPyIsImFuc3dlciI6MC45MDc5LCJ0b2wiOjZlLTA1LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiMy4gcC12YWx1ZSBvZiB0aGUgV2lsY294b24gcmFuay1zdW0gdGVzdD8iLCJmciI6IjMuIHAtdmFsdWUgZHUgdGVzdCBkZSBXaWxjb3hvbiBkZXMgcmFuZ3MgPyIsImFuc3dlciI6MC42NTMzLCJ0b2wiOjZlLTA1LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiNC4gUmF0aW8gb2YgZ2VvbWV0cmljIG1lYW5zIGhvb2sgLyBzcGVhcj8iLCJmciI6IjQuIFJhcHBvcnQgZGVzIG1veWVubmVzIGfDqW9tw6l0cmlxdWVzIGhvb2sgLyBzcGVhciA/IiwiYW5zd2VyIjoxLjAyNSwidG9sIjowLjAwMDYsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibnVtIiwiZW4iOiI1LiBwLXZhbHVlIChsb2cgc2NhbGUpPyIsImZyIjoiNS4gcC12YWx1ZSAow6ljaGVsbGUgbG9nKSA/IiwiYW5zd2VyIjowLjcwNjIsInRvbCI6NmUtMDUsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibnVtIiwiZW4iOiI2LiBNZWFuIGRpZmZlcmVuY2UgTWFyY2gg4oiSIEp1bHkgKEFjcm9wb3JhICsgUG9jaWxsb3BvcmEpPyIsImZyIjoiNi4gRGlmZsOpcmVuY2UgbW95ZW5uZSBtYXJzIOKIkiBqdWlsbGV0IChBY3JvcG9yYSArIFBvY2lsbG9wb3JhKSA/IiwiYW5zd2VyIjo4Ljc3LCJ0b2wiOjAuMDA2LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiNy4gdCBzdGF0aXN0aWM/IiwiZnIiOiI3LiBTdGF0aXN0aXF1ZSB0ID8iLCJhbnN3ZXIiOjMuMDA0LCJ0b2wiOjAuMDAwNiwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJudW0iLCJlbiI6IjguIExvd2VyIGxpbWl0IG9mIHRoZSA5NSAlIENJPyIsImZyIjoiOC4gTGltaXRlIGluZsOpcmlldXJlIGRlIGwnSUMgw6AgOTUgJSA/IiwiYW5zd2VyIjoyLjE3LCJ0b2wiOjAuMDA2LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im1jcSIsImVuIjoiOS4gU2VhZ3Jhc3MgY292ZXIgbWVhc3VyZWQgaW4gdGhlIHNhbWUgMTIgcXVhZHJhdHMgYmVmb3JlIGFuZCBhZnRlciBhIGN5Y2xvbmUuIFRlc3Q/IiwiZnIiOiI5LiBSZWNvdXZyZW1lbnQgZCdoZXJiaWVyIG1lc3Vyw6kgZGFucyBsZXMgMTIgbcOqbWVzIHF1YWRyYXRzIGF2YW50IGV0IGFwcsOocyB1biBjeWNsb25lLiBUZXN0ID8iLCJvcHRpb25zX2VuIjpbIldlbGNoIHQtdGVzdCIsInBhaXJlZCB0LXRlc3QgKG9yIFdpbGNveG9uIHNpZ25lZC1yYW5rKSIsIldpbGNveG9uIHJhbmstc3VtIiwiY2hpLXNxdWFyZSB0ZXN0Il0sIm9wdGlvbnNfZnIiOlsidGVzdCB0IGRlIFdlbGNoIiwidGVzdCB0IGFwcGFyacOpIChvdSByYW5ncyBzaWduw6lzIGRlIFdpbGNveG9uKSIsIldpbGNveG9uIGRlcyByYW5ncyIsInRlc3QgZHUga2hpLWRldXgiXSwiYW5zd2VyIjoxfSx7InR5cGUiOiJtY3EiLCJlbiI6IjEwLiA4IGZpc2ggcGVyIGdyb3VwLCBvbmUgdmVyeSBsYXJnZSBvdXRsaWVyLCByYXcgbGVuZ3Rocy4gQSByZWFzb25hYmxlIHRlc3QgaXPigKYiLCJmciI6IjEwLiA4IHBvaXNzb25zIHBhciBncm91cGUsIHVuZSB0csOocyBncmFuZGUgdmFsZXVyIGV4dHLDqm1lLCBsb25ndWV1cnMgYnJ1dGVzLiBVbiB0ZXN0IHJhaXNvbm5hYmxlIGVzdOKApiIsIm9wdGlvbnNfZW4iOlsiU3R1ZGVudCB0LXRlc3Qgd2l0aCB2YXIuZXF1YWwgPSBUUlVFIiwiV2lsY294b24gcmFuay1zdW0gdGVzdCIsInBhaXJlZCB0LXRlc3QiLCJvbmUtc2FtcGxlIHQtdGVzdCJdLCJvcHRpb25zX2ZyIjpbInRlc3QgdCBkZSBTdHVkZW50IGF2ZWMgdmFyLmVxdWFsID0gVFJVRSIsInRlc3QgZGUgV2lsY294b24gZGVzIHJhbmdzIiwidGVzdCB0IGFwcGFyacOpIiwidGVzdCB0IMOgIHVuIMOpY2hhbnRpbGxvbiJdLCJhbnN3ZXIiOjF9XQ==">
+
+</div>
+<div class="solution" data-quiz="t07">
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a>oc <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/octopus_catch.csv&quot;</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a>re <span class="ot">&lt;-</span> oc[oc<span class="sc">$</span>area <span class="sc">==</span> <span class="st">&quot;reopened&quot;</span>, ]</span>
+<span id="cb28-3"><a href="#cb28-3" tabindex="-1"></a><span class="fu">t.test</span>(weight_g <span class="sc">~</span> sex, <span class="at">data =</span> re)                          <span class="co"># 1 (difference of the two means), 2</span></span>
+<span id="cb28-4"><a href="#cb28-4" tabindex="-1"></a><span class="fu">wilcox.test</span>(weight_g <span class="sc">~</span> sex, <span class="at">data =</span> re, <span class="at">exact =</span> <span class="cn">FALSE</span>)      <span class="co"># 3</span></span>
+<span id="cb28-5"><a href="#cb28-5" tabindex="-1"></a>tl <span class="ot">&lt;-</span> <span class="fu">t.test</span>(<span class="fu">log</span>(weight_g) <span class="sc">~</span> gear, <span class="at">data =</span> oc)</span>
+<span id="cb28-6"><a href="#cb28-6" tabindex="-1"></a><span class="fu">exp</span>(tl<span class="sc">$</span>estimate[<span class="dv">1</span>] <span class="sc">-</span> tl<span class="sc">$</span>estimate[<span class="dv">2</span>]); tl<span class="sc">$</span>p.value           <span class="co"># 4, 5</span></span>
+<span id="cb28-7"><a href="#cb28-7" tabindex="-1"></a>cc <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/coral_tagged_colonies.csv&quot;</span>)</span>
+<span id="cb28-8"><a href="#cb28-8" tabindex="-1"></a>ac <span class="ot">&lt;-</span> cc[cc<span class="sc">$</span>genus <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;Acropora&quot;</span>, <span class="st">&quot;Pocillopora&quot;</span>), ]</span>
+<span id="cb28-9"><a href="#cb28-9" tabindex="-1"></a><span class="fu">t.test</span>(ac<span class="sc">$</span>bleached_march, ac<span class="sc">$</span>bleached_july, <span class="at">paired =</span> <span class="cn">TRUE</span>) <span class="co"># 6, 7, 8</span></span>
+<span id="cb28-10"><a href="#cb28-10" tabindex="-1"></a><span class="co"># 9: paired (same quadrats)   10: Wilcoxon rank-sum (small n, outlier)</span></span></code></pre></div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

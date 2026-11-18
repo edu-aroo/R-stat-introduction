@@ -1,0 +1,346 @@
+---
+title: "[4 · Probability and distributions]{.en}[4 · Probabilités et lois de distribution]{.fr}"
+pagetitle: "R4Marine Stats · Session 4"
+subtitle: "~3 h"
+---
+
+```{r setup, include=FALSE}
+source("R/course_helpers.R")
+library(ggplot2)
+oc  <- read.csv("data/octopus_catch.csv")
+lag <- read.csv("data/lagoon_population.csv")
+knitr::opts_chunk$set(fig.height = 3.3)
+```
+
+::: objectives
+::: en
+#### By the end of this session you will be able to
+- explain a probability as a **long-run proportion**, and use the complement and multiplication rules;
+- describe a **distribution** (discrete or continuous) and its mean and spread;
+- use the **binomial** (successes out of n trials), **Poisson** (counts) and **normal** distributions, and recognise a **log-normal** variable;
+- use R's four functions for each distribution: `d…()` (probability or density), `p…()` (cumulative probability), `q…()` (quantile), `r…()` (random values);
+- compute and interpret a **z-score**.
+:::
+::: fr
+#### À la fin de cette séance vous saurez
+- expliquer une probabilité comme une **proportion sur le long terme**, et utiliser les règles du complément et de la multiplication ;
+- décrire une **loi de distribution** (discrète ou continue) avec sa moyenne et sa dispersion ;
+- utiliser les lois **binomiale** (succès sur n essais), de **Poisson** (comptages) et **normale**, et reconnaître une variable **log-normale** ;
+- utiliser les quatre fonctions de R pour chaque loi : `d…()` (probabilité ou densité), `p…()` (probabilité cumulée), `q…()` (quantile), `r…()` (valeurs aléatoires) ;
+- calculer et interpréter un **score z**.
+:::
+:::
+
+::: {.callout .tip}
+::: en
+Why probability in a statistics course? Because a **p-value** (Session 6) and a **confidence interval** (Session 5) are probability statements: "if chance alone were at work, how often would we see this?". Distributions are the models of "chance alone".
+:::
+::: fr
+Pourquoi des probabilités dans un cours de statistiques ? Parce qu'une **p-value** (séance 6) et un **intervalle de confiance** (séance 5) sont des énoncés de probabilité : « si seul le hasard agissait, à quelle fréquence verrions-nous ceci ? ». Les lois de distribution sont les modèles du « hasard seul ».
+:::
+:::
+
+## [Probability as a long-run proportion]{.en}[La probabilité comme proportion sur le long terme]{.fr} {#probability}
+
+::: en
+The probability of an event is the proportion of times it happens if the random process is repeated **many times**. In the octopus data, the proportion of females is close to 0.5. We can simulate thousands of octopuses with a 0.5 chance of being female and watch the proportion settle (the **law of large numbers**):
+:::
+::: fr
+La probabilité d'un événement est la proportion de fois où il se produit si le processus aléatoire est répété **un grand nombre de fois**. Dans les données de pieuvres, la proportion de femelles est proche de 0,5. On peut simuler des milliers de pieuvres avec une chance de 0,5 d'être femelle et regarder la proportion se stabiliser (la **loi des grands nombres**) :
+:::
+
+```{r}
+set.seed(4)
+female <- rbinom(5000, size = 1, prob = 0.5)       # 1 = female, 0 = male
+running <- cumsum(female) / seq_along(female)      # proportion after 1, 2, 3 ... octopuses
+running[c(10, 100, 1000, 5000)]
+ggplot(data.frame(n = 1:5000, p = running), aes(n, p)) +
+  geom_line(colour = "#1b7f8c") + geom_hline(yintercept = 0.5, linetype = 2) +
+  scale_x_log10() + labs(x = "number of octopuses (log scale)", y = "proportion of females") + theme_c()
+```
+
+```{r, echo=FALSE}
+fa(c("`rbinom(n, size, prob)`", "`n` random values from a binomial distribution; with `size = 1`, each value is 0 or 1 (one trial)", "`n` valeurs aléatoires d'une loi binomiale ; avec `size = 1`, chaque valeur vaut 0 ou 1 (un essai)", "", ""),
+   c("`cumsum(x)`", "cumulative sum: 1st value, 1st + 2nd, 1st + 2nd + 3rd…", "somme cumulée : 1re valeur, 1re + 2e, 1re + 2e + 3e…", "a numeric vector", "un vecteur numérique"),
+   c("`seq_along(x)`", "1, 2, 3 … up to the length of `x`", "1, 2, 3 … jusqu'à la longueur de `x`", "a vector", "un vecteur"))
+```
+
+::: en
+**Three rules** you will use:
+
+- **Complement:** P(not A) = 1 − P(A). If 6 % of octopuses are undersized, 94 % are not.
+- **Multiplication (independent events):** P(A and B) = P(A) × P(B). Probability that two octopuses in a row are undersized: 0.06 × 0.06 = 0.0036.
+- **At least one:** P(at least one) = 1 − P(none). Probability that at least one of 10 octopuses is undersized: 1 − 0.94¹⁰ = `r round(1 - 0.94^10, 3)`.
+:::
+::: fr
+**Trois règles** que vous utiliserez :
+
+- **Complément :** P(non A) = 1 − P(A). Si 6 % des pieuvres sont sous la taille légale, 94 % ne le sont pas.
+- **Multiplication (événements indépendants) :** P(A et B) = P(A) × P(B). Probabilité que deux pieuvres d'affilée soient trop petites : 0,06 × 0,06 = 0,0036.
+- **Au moins un :** P(au moins un) = 1 − P(aucun). Probabilité qu'au moins une pieuvre sur 10 soit trop petite : 1 − 0,94¹⁰ = `r round(1 - 0.94^10, 3)`.
+:::
+
+## [Distributions and R's four functions]{.en}[Lois de distribution et les quatre fonctions de R]{.fr} {#dpqr}
+
+::: en
+A **distribution** says which values a random variable can take and how probable each is. **Discrete** distributions (counts: 0, 1, 2…) give a probability to each value; **continuous** distributions (measurements) give a **density**: probabilities are **areas** under the curve.
+
+R has the same four functions for every distribution; only the suffix changes (`binom`, `pois`, `norm`, `lnorm`, `t`, `chisq`…):
+
+| Prefix | Gives | Example | Question it answers |
+|---|---|---|---|
+| `d` | probability (discrete) / height of the curve (continuous) | `dbinom(2, 10, 0.06)` | P(X = 2)? |
+| `p` | cumulative probability P(X ≤ x) | `pbinom(2, 10, 0.06)` | P(X ≤ 2)? |
+| `q` | quantile: the value x such that P(X ≤ x) = p | `qnorm(0.975)` | below which value are 97.5 %? |
+| `r` | random values | `rnorm(5, 30, 2)` | simulate data |
+:::
+::: fr
+Une **loi de distribution** dit quelles valeurs une variable aléatoire peut prendre et avec quelle probabilité. Les lois **discrètes** (comptages : 0, 1, 2…) donnent une probabilité à chaque valeur ; les lois **continues** (mesures) donnent une **densité** : les probabilités sont des **aires** sous la courbe.
+
+R a les mêmes quatre fonctions pour chaque loi ; seul le suffixe change (`binom`, `pois`, `norm`, `lnorm`, `t`, `chisq`…) :
+
+| Préfixe | Donne | Exemple | Question à laquelle il répond |
+|---|---|---|---|
+| `d` | probabilité (discrète) / hauteur de la courbe (continue) | `dbinom(2, 10, 0.06)` | P(X = 2) ? |
+| `p` | probabilité cumulée P(X ≤ x) | `pbinom(2, 10, 0.06)` | P(X ≤ 2) ? |
+| `q` | quantile : la valeur x telle que P(X ≤ x) = p | `qnorm(0.975)` | sous quelle valeur sont 97,5 % ? |
+| `r` | valeurs aléatoires | `rnorm(5, 30, 2)` | simuler des données |
+:::
+
+## [Binomial: successes out of n trials]{.en}[Binomiale : succès sur n essais]{.fr} {#binomial}
+
+::: en
+**When:** n independent trials, each a "success" with the same probability p; X = number of successes. Examples: number of undersized octopuses in a catch of n; number of fishers out of 20 who support a closure; number of tagged turtles re-sighted.
+**Mean** = n·p, **variance** = n·p·(1 − p).
+
+On reopening day, about 5 % of the octopuses of Tsifota were under 350 g (a common minimum weight). Take p = 0.06 for an ordinary fishing day. A fisher lands **10** octopuses:
+:::
+::: fr
+**Quand :** n essais indépendants, chacun un « succès » avec la même probabilité p ; X = nombre de succès. Exemples : nombre de pieuvres trop petites dans une capture de n ; nombre de pêcheurs sur 20 qui soutiennent une fermeture ; nombre de tortues marquées revues.
+**Moyenne** = n·p, **variance** = n·p·(1 − p).
+
+Le jour de la réouverture, environ 5 % des pieuvres de Tsifota pesaient moins de 350 g (un poids minimum courant). Prenons p = 0,06 pour un jour de pêche ordinaire. Un pêcheur débarque **10** pieuvres :
+:::
+
+```{r}
+p <- 0.06
+dbinom(0:4, size = 10, prob = p)        # P(X = 0), P(X = 1) ... P(X = 4)
+dbinom(0, 10, p)                        # none undersized
+1 - dbinom(0, 10, p)                    # at least one
+pbinom(1, 10, p)                        # at most one: P(X <= 1)
+1 - pbinom(1, 10, p)                    # two or more: P(X >= 2)
+10 * p                                  # expected number (mean)
+```
+
+```{r, echo=FALSE}
+fa(c("`dbinom(x, size, prob)`", "probability of exactly `x` successes", "probabilité d'exactement `x` succès", "", ""),
+   c("&nbsp;&nbsp;`size`", "number of trials n", "nombre d'essais n", "a whole number", "un entier"),
+   c("&nbsp;&nbsp;`prob`", "probability of success at each trial", "probabilité de succès à chaque essai", "between 0 and 1", "entre 0 et 1"),
+   c("`pbinom(q, size, prob, lower.tail)`", "P(X ≤ q); with `lower.tail = FALSE`: P(X > q)", "P(X ≤ q) ; avec `lower.tail = FALSE` : P(X > q)", "", ""))
+```
+
+::: {.callout .warning}
+::: en
+**"Or more" with discrete distributions.** P(X ≥ 2) = 1 − P(X ≤ **1**), not 1 − P(X ≤ 2). For counts, ≥ 2 and > 1 are the same thing; ≥ 2 and > 2 are not.
+:::
+::: fr
+**« Ou plus » avec les lois discrètes.** P(X ≥ 2) = 1 − P(X ≤ **1**), pas 1 − P(X ≤ 2). Pour des comptages, ≥ 2 et > 1 sont la même chose ; ≥ 2 et > 2 ne le sont pas.
+:::
+:::
+
+## [Poisson: counts in a fixed area or time]{.en}[Poisson : comptages dans une surface ou un temps fixe]{.fr} {#poisson}
+
+::: en
+**When:** counts of independent events in a fixed unit (urchins per m², turtles per hour of survey, larvae per litre), with a mean λ ("lambda"). Its **variance equals its mean**. If the variance of real counts is much larger than the mean, individuals are **clumped** (*overdispersion*), which is very common in ecology — the negative binomial distribution then fits better (*Statistical modelling* course).
+:::
+::: fr
+**Quand :** comptages d'événements indépendants dans une unité fixe (oursins par m², tortues par heure d'observation, larves par litre), de moyenne λ (« lambda »). Sa **variance est égale à sa moyenne**. Si la variance de vrais comptages est bien plus grande que la moyenne, les individus sont **agrégés** (*surdispersion*), ce qui est très fréquent en écologie — la loi binomiale négative convient alors mieux (cours *Modélisation statistique*).
+:::
+
+```{r}
+lambda <- 2.5                      # mean number of urchins per cell, say
+dpois(0:6, lambda)
+dpois(0, lambda)                   # an empty cell
+1 - ppois(4, lambda)               # 5 urchins or more
+
+# real counts of the lagoon: compare mean and variance
+inshore <- lag$urchins[lag$zone == "inshore"]
+c(mean = mean(inshore), variance = var(inshore))
+```
+
+```{r, echo=FALSE}
+fa(c("`dpois(x, lambda)`, `ppois(q, lambda)`", "Poisson probability of exactly `x`; cumulative P(X ≤ q)", "probabilité de Poisson d'exactement `x` ; cumulée P(X ≤ q)", "", ""),
+   c("&nbsp;&nbsp;`lambda`", "the mean count (also the variance)", "le comptage moyen (aussi la variance)", "a positive number", "un nombre positif"))
+```
+
+## [The normal distribution]{.en}[La loi normale]{.fr} {#normal}
+
+::: en
+The **normal** (Gaussian) distribution is the symmetric bell curve, fully defined by its mean μ and standard deviation σ. Many measurements are close to normal (lengths of animals of the same age, water temperature on a given day), and — much more important — **means of samples are close to normal** even when the data are not (Session 5). That is why it is everywhere in statistics.
+
+The **68–95–99.7 rule**: about 68 % of values lie within 1 σ of the mean, 95 % within 2 σ (exactly 1.96), 99.7 % within 3 σ.
+:::
+::: fr
+La loi **normale** (gaussienne) est la courbe en cloche symétrique, entièrement définie par sa moyenne μ et son écart-type σ. Beaucoup de mesures sont proches de la normale (tailles d'animaux du même âge, température de l'eau un jour donné), et — bien plus important — **les moyennes d'échantillons sont proches de la normale** même quand les données ne le sont pas (séance 5). C'est pourquoi elle est partout en statistiques.
+
+La **règle 68–95–99,7** : environ 68 % des valeurs sont à moins de 1 σ de la moyenne, 95 % à moins de 2 σ (exactement 1,96), 99,7 % à moins de 3 σ.
+:::
+
+`r fig_svg("normal-rule", "The normal distribution: shares of the values within 1, 2 and 3 standard deviations of the mean.", "La loi normale : parts des valeurs à moins de 1, 2 et 3 écarts-types de la moyenne.")`
+
+::: en
+Example: the shell length of adult sea urchins on a reef is normal with mean 72 mm and SD 8 mm.
+:::
+::: fr
+Exemple : le diamètre du test des oursins adultes d'un récif suit une loi normale de moyenne 72 mm et d'écart-type 8 mm.
+:::
+
+```{r}
+pnorm(60, mean = 72, sd = 8)                   # P(length < 60 mm)
+1 - pnorm(85, 72, 8)                           # P(length > 85 mm)
+pnorm(80, 72, 8) - pnorm(64, 72, 8)            # P(64 < length < 80): within 1 SD -> 0.68
+qnorm(0.90, 72, 8)                             # the 10 % largest urchins are above...
+qnorm(c(0.025, 0.975))                         # standard normal: -1.96 and +1.96
+```
+
+```{r, echo=FALSE}
+fa(c("`pnorm(q, mean, sd, lower.tail)`", "P(X ≤ q) = area under the curve to the left of `q`", "P(X ≤ q) = aire sous la courbe à gauche de `q`", "", ""),
+   c("`qnorm(p, mean, sd)`", "the value below which a share `p` of the distribution lies (inverse of `pnorm()`)", "la valeur sous laquelle se trouve une part `p` de la loi (inverse de `pnorm()`)", "`p` between 0 and 1", "`p` entre 0 et 1"),
+   c("&nbsp;&nbsp;`mean`, `sd`", "parameters μ and σ; defaults 0 and 1 = the **standard normal** distribution", "paramètres μ et σ ; défauts 0 et 1 = la loi **normale centrée réduite**", "numbers (`sd` > 0)", "nombres (`sd` > 0)"),
+   c("`rnorm(n, mean, sd)`", "`n` random values from a normal distribution", "`n` valeurs aléatoires d'une loi normale", "", ""))
+```
+
+### [z-scores]{.en}[Scores z]{.fr}
+
+::: en
+A **z-score** tells how many standard deviations a value is from the mean: **z = (x − μ) / σ**. It puts variables with different units on the same scale. An urchin of 90 mm has z = (90 − 72) / 8 = 2.25: it is unusually large (|z| > 2 happens for about 5 % of values). `scale(x)` converts a whole vector into z-scores using its own mean and SD.
+:::
+::: fr
+Un **score z** indique à combien d'écarts-types une valeur est de la moyenne : **z = (x − μ) / σ**. Il met des variables d'unités différentes sur la même échelle. Un oursin de 90 mm a z = (90 − 72) / 8 = 2,25 : il est inhabituellement grand (|z| > 2 arrive pour environ 5 % des valeurs). `scale(x)` convertit tout un vecteur en scores z avec sa propre moyenne et son propre ET.
+:::
+
+```{r}
+(90 - 72) / 8
+z <- as.vector(scale(lag$seagrass_cover))
+round(c(mean = mean(z), sd = sd(z)), 3)        # z-scores always have mean 0 and SD 1
+```
+
+```{r, echo=FALSE}
+fa(c("`scale(x)`", "z-scores: (x − mean) / SD, as a 1-column matrix; `as.vector()` makes it a plain vector", "scores z : (x − moyenne) / ET, sous forme de matrice à 1 colonne ; `as.vector()` en fait un simple vecteur", "a numeric vector", "un vecteur numérique"))
+```
+
+## [Log-normal: when the log is normal]{.en}[Log-normale : quand le log est normal]{.fr} {#lognormal}
+
+::: en
+A variable is **log-normal** when its **log** is normal. It is always positive and right-skewed — octopus weights, fish biomass, incomes. This is why the log transformation of Session 3 worked: on the log scale, the normal tools apply. The parameters `meanlog` and `sdlog` of `dlnorm()`/`plnorm()` are the mean and SD **of the log**.
+:::
+::: fr
+Une variable est **log-normale** quand son **log** est normal. Elle est toujours positive et asymétrique à droite — poids de pieuvres, biomasse de poissons, revenus. C'est pourquoi la transformation log de la séance 3 a fonctionné : sur l'échelle log, les outils de la loi normale s'appliquent. Les paramètres `meanlog` et `sdlog` de `dlnorm()`/`plnorm()` sont la moyenne et l'ET **du log**.
+:::
+
+```{r}
+lw <- log(oc$weight_g[oc$area == "open"])
+m <- mean(lw); s <- sd(lw)
+c(meanlog = m, sdlog = s)
+plnorm(350, meanlog = m, sdlog = s)                      # model: P(weight < 350 g)
+mean(oc$weight_g[oc$area == "open"] < 350)               # observed proportion
+```
+
+::: en
+The log-normal model predicts `r round(100 * plnorm(350, m, s), 1)` % of octopuses under 350 g in the open area, close to the observed `r round(100 * mean(oc$weight_g[oc$area == "open"] < 350), 1)` %: the model describes the data well.
+:::
+::: fr
+Le modèle log-normal prédit `r round(100 * plnorm(350, m, s), 1)` % de pieuvres sous 350 g dans la zone ouverte, proche des `r round(100 * mean(oc$weight_g[oc$area == "open"] < 350), 1)` % observés : le modèle décrit bien les données.
+:::
+
+## [Application work & quiz]{.en}[Travail d'application et quiz]{.fr} {#application}
+
+```{r answers04, include=FALSE}
+e1 <- round(dbinom(3, 20, 0.15), 4)
+e2 <- round(1 - pbinom(4, 20, 0.15), 4)
+e3 <- round(dpois(0, 1.8), 4)
+e4 <- round(1 - ppois(3, 1.8), 4)
+e5 <- round(pnorm(26, 28.5, 1.2), 4)
+e6 <- round(qnorm(0.95, 28.5, 1.2), 2)
+e7 <- round((31.2 - 28.5) / 1.2, 2)
+lr <- log(oc$weight_g[oc$area == "reopened"])
+e8 <- round(plnorm(350, mean(lr), sd(lr)), 4)
+```
+
+::: application
+::: en
+### Application work 4
+
+Give probabilities with **4 decimals**.
+
+1. 15 % of fishers of a village use a beach seine. Out of 20 fishers drawn at random, probability that **exactly 3** use one?
+2. … probability that **5 or more** use one?
+3. Turtles surface in front of an observation point at a mean rate of 1.8 per hour (Poisson). Probability of seeing **none** in an hour?
+4. … probability of seeing **4 or more** in an hour?
+5. Sea-surface temperature at noon in March is normal with mean 28.5 °C and SD 1.2 °C. Probability that it is **below 26 °C**?
+6. Temperature exceeded only on the 5 % hottest days (the 0.95 quantile, 2 decimals)?
+7. z-score of a day at 31.2 °C (2 decimals)?
+8. Fit a log-normal to the weights of the **reopened** area (meanlog and sdlog of `log(weight_g)`). Probability of a weight under 350 g according to this model?
+9. – 10. Choosing a distribution.
+:::
+::: fr
+### Travail d'application 4
+
+Donnez les probabilités avec **4 décimales**.
+
+1. 15 % des pêcheurs d'un village utilisent une senne de plage. Sur 20 pêcheurs tirés au hasard, probabilité qu'**exactement 3** en utilisent une ?
+2. … probabilité que **5 ou plus** en utilisent une ?
+3. Des tortues font surface devant un point d'observation au rythme moyen de 1,8 par heure (Poisson). Probabilité de n'en voir **aucune** en une heure ?
+4. … probabilité d'en voir **4 ou plus** en une heure ?
+5. La température de surface à midi en mars suit une loi normale de moyenne 28,5 °C et d'ET 1,2 °C. Probabilité qu'elle soit **sous 26 °C** ?
+6. Température dépassée seulement les 5 % de jours les plus chauds (le quantile 0,95, 2 décimales) ?
+7. Score z d'un jour à 31,2 °C (2 décimales) ?
+8. Ajustez une log-normale aux poids de la zone **rouverte** (meanlog et sdlog de `log(weight_g)`). Probabilité d'un poids sous 350 g selon ce modèle ?
+9. – 10. Choisir une loi.
+:::
+:::
+
+::: hint
+::: en
+Q2: "5 or more" = 1 − P(X ≤ 4). Q4: 1 − P(X ≤ 3). Q6: `qnorm()`. Q8: as in the last section, with the reopened area.
+:::
+::: fr
+Q2 : « 5 ou plus » = 1 − P(X ≤ 4). Q4 : 1 − P(X ≤ 3). Q6 : `qnorm()`. Q8 : comme dans la dernière section, avec la zone rouverte.
+:::
+:::
+
+```{r quiz04, echo=FALSE}
+quiz("t04", list(
+  q_num("1. P(exactly 3 of 20)?", "1. P(exactement 3 sur 20) ?", e1, tol = 0.00006),
+  q_num("2. P(5 or more of 20)?", "2. P(5 ou plus sur 20) ?", e2, tol = 0.00006),
+  q_num("3. P(no turtle in one hour)?", "3. P(aucune tortue en une heure) ?", e3, tol = 0.00006),
+  q_num("4. P(4 or more turtles in one hour)?", "4. P(4 tortues ou plus en une heure) ?", e4, tol = 0.00006),
+  q_num("5. P(temperature < 26 °C)?", "5. P(température < 26 °C) ?", e5, tol = 0.00006),
+  q_num("6. 0.95 quantile of temperature (°C)?", "6. Quantile 0,95 de la température (°C) ?", e6, tol = 0.006),
+  q_num("7. z-score of 31.2 °C?", "7. Score z de 31,2 °C ?", e7, tol = 0.006),
+  q_num("8. Log-normal P(weight < 350 g), reopened area?", "8. P(poids < 350 g) log-normale, zone rouverte ?", e8, tol = 0.00006),
+  q_mcq("9. Number of sea cucumbers counted in 1 m² quadrats: which distribution is the natural first model?",
+        "9. Nombre d'holothuries comptées dans des quadrats de 1 m² : quelle loi est le premier modèle naturel ?",
+        c("normal", "binomial", "Poisson", "log-normal"), c("normale", "binomiale", "Poisson", "log-normale"), correct = 3),
+  q_mcq("10. For urchin counts, the variance is 4 times the mean. This suggests…",
+        "10. Pour des comptages d'oursins, la variance vaut 4 fois la moyenne. Cela suggère…",
+        c("a perfect Poisson distribution", "clumped individuals (overdispersion)", "a normal distribution", "an error in the data"),
+        c("une loi de Poisson parfaite", "des individus agrégés (surdispersion)", "une loi normale", "une erreur dans les données"), correct = 2)
+))
+```
+
+::: {.solution data-quiz="t04"}
+```{r, eval=FALSE}
+dbinom(3, size = 20, prob = 0.15)                         # 1
+1 - pbinom(4, 20, 0.15)                                   # 2  (or pbinom(4, 20, 0.15, lower.tail = FALSE))
+dpois(0, 1.8)                                             # 3
+1 - ppois(3, 1.8)                                         # 4
+pnorm(26, mean = 28.5, sd = 1.2)                          # 5
+qnorm(0.95, 28.5, 1.2)                                    # 6
+(31.2 - 28.5) / 1.2                                       # 7
+oc <- read.csv("data/octopus_catch.csv")
+lr <- log(oc$weight_g[oc$area == "reopened"])
+plnorm(350, meanlog = mean(lr), sdlog = sd(lr))           # 8
+# 9: Poisson (counts in a fixed area)   10: overdispersion (clumping)
+```
+:::

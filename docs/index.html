@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>R4Marine Stats · Home</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.1/jquery-3.6.1.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<!-- header.html: inserted inside <head> of every page (see _site.yml) -->
+<!-- config.js (settings) and quiz_index.js (made by R/build_site.R) first,
+     then course.js (the behaviour that reads them) -->
+<script src="assets/config.js"></script>
+<script src="assets/quiz_index.js"></script>
+<script src="assets/course.js"></script>
+<meta name="author" content="Aroo Falinirina">
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+
+
+
+
+<link rel="stylesheet" href="assets/course.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">R4Marine Stats</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Sessions
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="00-start.html">0 · Why statistics?</a>
+    </li>
+    <li>
+      <a href="01-design.html">1 · Study design &amp; sampling</a>
+    </li>
+    <li>
+      <a href="02-describe.html">2 · Describing data</a>
+    </li>
+    <li>
+      <a href="03-explore.html">3 · Exploring distributions</a>
+    </li>
+    <li>
+      <a href="04-probability.html">4 · Probability &amp; distributions</a>
+    </li>
+    <li>
+      <a href="05-estimation.html">5 · Standard error &amp; CIs</a>
+    </li>
+    <li>
+      <a href="06-testing.html">6 · Hypothesis tests &amp; p-values</a>
+    </li>
+    <li>
+      <a href="07-two-groups.html">7 · Comparing two groups</a>
+    </li>
+    <li>
+      <a href="08-anova.html">8 · ANOVA &amp; Kruskal–Wallis</a>
+    </li>
+    <li>
+      <a href="09-categorical.html">9 · Proportions &amp; χ²</a>
+    </li>
+    <li>
+      <a href="10-regression.html">10 · Correlation &amp; regression</a>
+    </li>
+    <li>
+      <a href="11-power-reporting.html">11 · Power, multiple tests, reporting</a>
+    </li>
+    <li>
+      <a href="12-practice.html">12 · Practice</a>
+    </li>
+    <li>
+      <a href="13-final-project.html">13 · Final project</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Resources
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="choose-test.html">Which test? (decision guide)</a>
+    </li>
+    <li>
+      <a href="cheatsheet.html">Cheatsheet</a>
+    </li>
+    <li>
+      <a href="glossary.html">Glossary EN–FR</a>
+    </li>
+    <li>
+      <a href="common-errors.html">Common errors &amp; pitfalls</a>
+    </li>
+    <li>
+      <a href="resources.html">To go further</a>
+    </li>
+    <li>
+      <a href="help.html">Need help?</a>
+    </li>
+    <li>
+      <a href="whats-new.html">What's new</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore"><span class="en">R4Marine Stats -
+Introduction to Statistics using R</span><span class="fr">R4Marine Stats
+- Introduction aux statistiques avec R</span></h1>
+<h3 class="subtitle"><span class="en">From describing your data to
+choosing, running and reporting the right test</span><span class="fr">De
+la description des données au choix, à l’exécution et à la rédaction du
+bon test</span></h3>
+
+</div>
+
+
+<!--
+  index.Rmd = the HOME page (becomes index.html).
+  ::: en  ...  :::   -> a block shown only in English (class "en")
+  ::: fr  ...  :::   -> a block shown only in French  (class "fr")
+  <div id="dashboard"> is filled by course.js (PART 9) with the student's progress.
+-->
+<div id="dashboard">
+
+</div>
+<div id="welcomebienvenue" class="section level2 no-track">
+<h2 class="no-track"><span class="en">Welcome</span><span
+class="fr">Bienvenue</span></h2>
+<div class="en">
+<p>This course teaches the <strong>statistics</strong> that marine
+scientists, students and practitioners use every day — and the reasoning
+behind them — with <strong>R</strong> as the tool. It follows the
+classic path of an introductory statistics course, with marine and
+fisheries examples from Madagascar:</p>
+<ul>
+<li><strong>Design and description</strong> (Sessions 0–3): populations
+and samples, study design and sampling, describing and plotting
+data;</li>
+<li><strong>Probability and estimation</strong> (Sessions 4–5):
+distributions, standard errors, confidence intervals, the
+bootstrap;</li>
+<li><strong>Tests</strong> (Sessions 6–9): p-values and their limits,
+comparing two or more groups (t-tests, ANOVA, rank-based tests),
+proportions and χ² tests;</li>
+<li><strong>Relationships and practice</strong> (Sessions 10–13):
+correlation and simple linear regression, power and sample size,
+reporting, a practice session and a final project.</li>
+</ul>
+<p><strong>Before you start:</strong> you should be able to use R at the
+level of the <em>R4Marine Research</em> Beginner course (scripts,
+<code>read.csv()</code>, <code>$</code>, simple <code>dplyr</code> and
+<code>ggplot2</code>). Models with several predictors, GLMs and mixed
+models are in the next course, <em>Statistical modelling with
+R</em>.</p>
+</div>
+<div class="fr">
+<p>Ce cours enseigne les <strong>statistiques</strong> que les
+scientifiques, étudiants et praticiens des sciences marines utilisent
+tous les jours — et le raisonnement qui les sous-tend — avec
+<strong>R</strong> comme outil. Il suit le parcours classique d’un cours
+d’introduction aux statistiques, avec des exemples marins et
+halieutiques de Madagascar :</p>
+<ul>
+<li><strong>Plan d’étude et description</strong> (séances 0–3) :
+populations et échantillons, plan d’étude et échantillonnage, décrire et
+représenter les données ;</li>
+<li><strong>Probabilités et estimation</strong> (séances 4–5) : lois de
+distribution, erreurs standard, intervalles de confiance, bootstrap
+;</li>
+<li><strong>Tests</strong> (séances 6–9) : les p-values et leurs
+limites, comparer deux groupes ou plus (tests t, ANOVA, tests sur les
+rangs), proportions et tests du χ² ;</li>
+<li><strong>Relations et pratique</strong> (séances 10–13) : corrélation
+et régression linéaire simple, puissance et taille d’échantillon,
+rédaction, une séance d’exercices et un projet final.</li>
+</ul>
+<p><strong>Avant de commencer :</strong> vous devez savoir utiliser R au
+niveau du cours <em>R4Marine Research</em> Débutant (scripts,
+<code>read.csv()</code>, <code>$</code>, <code>dplyr</code> et
+<code>ggplot2</code> simples). Les modèles à plusieurs prédicteurs, les
+GLM et les modèles mixtes sont dans le cours suivant, <em>Modélisation
+statistique avec R</em>.</p>
+</div>
+</div>
+<div id="how-the-course-workscomment-fonctionne-le-cours"
+class="section level2 no-track">
+<h2 class="no-track"><span class="en">How the course works</span><span
+class="fr">Comment fonctionne le cours</span></h2>
+<div class="en">
+<ol style="list-style-type: decimal">
+<li><strong>Follow the sessions in order.</strong> Click <strong>“Mark
+this section as done”</strong> at the end of each section: your progress
+is saved, and next time you log in you go back exactly where you
+stopped.</li>
+<li><strong>Do the application work in your own script</strong>, then
+enter your results in the <strong>quiz</strong>. Each quiz allows
+<strong>2 attempts</strong>; your <strong>best</strong> attempt counts.
+After an attempt, the questions in red show what to check in your
+script.</li>
+<li>The <strong>solution</strong> opens when the quiz is finished (both
+attempts used, or full marks). <strong>Hints</strong> (💡) are free:
+they never cost points.</li>
+<li><strong>Moving to the next session:</strong> a session opens when
+you have finished the quiz of the previous one with at least <strong>75
+%</strong> of the points (for the practice session: 75 % of the points
+of its six exercises together). Locked sessions show a 🔒.</li>
+<li><strong>Certificate:</strong> finish all quizzes with at least
+<strong>75 %</strong> of the total points and you receive a
+<strong>certificate</strong>.</li>
+<li>If 75 % can no longer be reached on a session after your two
+attempts, you are taken to a help page with my contacts: we will look at
+it together.</li>
+</ol>
+</div>
+<div class="fr">
+<ol style="list-style-type: decimal">
+<li><strong>Suivez les séances dans l’ordre.</strong> Cliquez sur
+<strong>« Marquer cette section comme terminée »</strong> à la fin de
+chaque section : votre progression est enregistrée, et à la prochaine
+connexion vous revenez exactement là où vous vous êtes arrêté.</li>
+<li><strong>Faites le travail d’application dans votre propre
+script</strong>, puis saisissez vos résultats dans le
+<strong>quiz</strong>. Chaque quiz permet <strong>2 tentatives</strong>
+; votre <strong>meilleure</strong> tentative compte. Après une
+tentative, les questions en rouge indiquent quoi vérifier dans votre
+script.</li>
+<li>La <strong>solution</strong> s’ouvre quand le quiz est terminé (deux
+tentatives utilisées, ou score parfait). Les <strong>indices</strong>
+(💡) sont gratuits : ils ne coûtent jamais de points.</li>
+<li><strong>Passer à la séance suivante :</strong> une séance s’ouvre
+quand vous avez terminé le quiz de la précédente avec au moins
+<strong>75 %</strong> des points (pour la séance d’exercices : 75 % des
+points de ses six exercices réunis). Les séances verrouillées portent un
+🔒.</li>
+<li><strong>Certificat :</strong> terminez tous les quiz avec au moins
+<strong>75 %</strong> du total des points et vous recevez un
+<strong>certificat</strong>.</li>
+<li>Si les 75 % ne peuvent plus être atteints à une séance après vos
+deux tentatives, vous êtes redirigé vers une page d’aide avec mes
+contacts : nous regarderons cela ensemble.</li>
+</ol>
+</div>
+</div>
+<div id="resourcesressources" class="section level2 no-track">
+<h2 class="no-track"><span class="en">Resources</span><span
+class="fr">Ressources</span></h2>
+<div class="en">
+<ul>
+<li><strong>Which test?</strong> — the decision guide of the whole
+course on one page.</li>
+<li><strong>Cheatsheet</strong> — every function of the course, by
+task.</li>
+<li><strong>Glossary EN–FR</strong> — the statistical vocabulary in both
+languages.</li>
+<li><strong>Common errors &amp; pitfalls</strong> — R error messages of
+statistical functions, and the classic statistical mistakes.</li>
+<li><strong>To go further</strong> — free books and courses to
+continue.</li>
+<li><strong>Data and setup:</strong>
+<a class="btn-dl" href="data/intro_stats_data.zip" download>⇩
+intro_stats_data.zip</a>
+<a class="btn-dl" href="templates/check_setup.R" download>⇩
+check_setup.R</a></li>
+<li>All datasets are <strong>simulated</strong> for teaching: names of
+villages, sites and reserves are invented.</li>
+</ul>
+</div>
+<div class="fr">
+<ul>
+<li><strong>Quel test ?</strong> — le guide de décision de tout le cours
+sur une page.</li>
+<li><strong>Aide-mémoire</strong> — toutes les fonctions du cours, par
+tâche.</li>
+<li><strong>Glossaire EN–FR</strong> — le vocabulaire statistique dans
+les deux langues.</li>
+<li><strong>Erreurs et pièges fréquents</strong> — messages d’erreur de
+R des fonctions statistiques, et les erreurs statistiques
+classiques.</li>
+<li><strong>Pour aller plus loin</strong> — livres et cours gratuits
+pour continuer.</li>
+<li><strong>Données et installation :</strong>
+<a class="btn-dl" href="data/intro_stats_data.zip" download>⇩
+intro_stats_data.zip</a>
+<a class="btn-dl" href="templates/check_setup.R" download>⇩
+check_setup.R</a></li>
+<li>Toutes les données sont <strong>simulées</strong> pour
+l’enseignement : les noms de villages, sites et réserves sont
+inventés.</li>
+</ul>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

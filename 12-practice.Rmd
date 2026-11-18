@@ -1,0 +1,325 @@
+---
+title: "[12 · Practice session]{.en}[12 · Séance d'exercices]{.fr}"
+pagetitle: "R4Marine Stats · Session 12"
+subtitle: "~3.5 h"
+---
+
+```{r setup, include=FALSE}
+source("R/course_helpers.R")
+```
+
+::: objectives
+::: en
+#### What this session is for
+No new concepts: six independent exercises to **practise** Sessions 1 to 11 before the final project. Each exercise has its own quiz (**two attempts**, the best one counts) and its own solution. The final project opens when the six exercises together reach 75 % of their points.
+
+- Write everything in one script `scripts/s12_practice.R`, one section per exercise (**Ctrl + Shift + R**).
+- **Before** each test, write in a comment: the question, H0, the type of variables, independent or paired, and the test you choose.
+- If you get less than 70 % on an exercise, re-read the session indicated.
+:::
+::: fr
+#### À quoi sert cette séance
+Pas de nouvelle notion : six exercices indépendants pour **pratiquer** les séances 1 à 11 avant le projet final. Chaque exercice a son propre quiz (**deux tentatives**, la meilleure compte) et sa propre solution. Le projet final s'ouvre quand les six exercices réunis atteignent 75 % de leurs points.
+
+- Écrivez tout dans un seul script `scripts/s12_practice.R`, une section par exercice (**Ctrl + Maj + R**).
+- **Avant** chaque test, écrivez en commentaire : la question, H0, le type des variables, indépendant ou apparié, et le test choisi.
+- Si vous obtenez moins de 70 % à un exercice, relisez la séance indiquée.
+:::
+:::
+
+```{r answers, include=FALSE}
+rf  <- read.csv("data/reef_fish_sites.csv")
+fs  <- read.csv("data/fisher_survey.csv")
+lag <- read.csv("data/lagoon_population.csv")
+sc  <- read.csv("data/sea_cucumber_pens.csv")
+cc  <- read.csv("data/coral_tagged_colonies.csv")
+
+# P1 describe
+p1a <- round(median(rf$herbivore_pct[rf$region == "North"]), 2)
+p1b <- round(sd(rf$rugosity), 3)
+p1c <- round(IQR(rf$depth_m), 3)
+p1d <- round(100 * sd(rf$species_richness) / mean(rf$species_richness), 2)
+p1e <- round(cor(rf$rugosity, rf$coral_cover), 3)
+
+# P2 probability
+p2a <- round(dbinom(2, 12, 0.10), 4)
+p2b <- round(1 - pbinom(2, 12, 0.10), 4)
+p2c <- round(dpois(0, 0.7), 4)
+p2d <- round(1 - pnorm(42, 35, 4), 4)
+p2e <- round(qnorm(0.10, 35, 4), 2)
+
+# P3 estimation
+set.seed(303); s3 <- lag[sample(1:nrow(lag), 50), ]
+ci3 <- t.test(s3$seagrass_cover)$conf.int
+p3a <- round(mean(s3$seagrass_cover), 2)
+p3b <- round(ci3[1], 2); p3c <- round(ci3[2], 2)
+p3d <- sum(s3$urchins == 0)
+b3 <- binom.test(p3d, 50)$conf.int
+p3e <- round(b3[2], 3)
+
+# P4 two groups
+t4 <- t.test(log(monthly_catch_kg) ~ sex, data = fs)
+p4a <- round(exp(t4$estimate[[1]] - t4$estimate[[2]]), 3)
+p4b <- round(t4$statistic[[1]], 3)
+p4c <- round(wilcox.test(trips_per_week ~ boat, data = fs, exact = FALSE)$p.value, 4)
+deep <- cc[cc$depth_m > 5, ]
+p4d <- nrow(deep)
+p4e <- round(wilcox.test(deep$bleached_march, deep$bleached_july, paired = TRUE, exact = FALSE)$p.value, 4)
+
+# P5 several groups
+f5 <- aov(rugosity ~ management, data = rf)
+p5a <- round(summary(f5)[[1]][1, "F value"], 3)
+tk5 <- TukeyHSD(f5)$management
+p5b <- round(tk5["Open access-No-take", "diff"], 3)
+p5c <- round(tk5["Open access-LMMA", "p adj"], 4)
+p5d <- round(summary(aov(initial_weight_g ~ treatment, data = sc))[[1]][1, "Pr(>F)"], 3)
+p5e <- round(kruskal.test(herbivore_pct ~ management, data = rf)$p.value, 4)
+
+# P6 categorical + regression
+c6 <- chisq.test(table(fs$education, fs$supports_closure))
+p6a <- round(c6$statistic[[1]], 3)
+p6b <- round(c6$p.value, 4)
+l6 <- lm(species_richness ~ coral_cover, data = rf)
+p6c <- round(coef(l6)[[2]], 4)
+p6d <- round(summary(l6)$r.squared, 4)
+p6e <- round(predict(l6, data.frame(coral_cover = 40))[[1]], 2)
+```
+
+## [Exercise 1 — Describing reef sites]{.en}[Exercice 1 — Décrire les sites récifaux]{.fr} {#p1}
+
+::: en
+*Revise: Sessions 2–3.* Data: `reef_fish_sites.csv` (36 sites, one row per site).
+
+1. Median % of herbivores in the **North** region (2 decimals).
+2. Standard deviation of **rugosity** (3 decimals).
+3. Interquartile range of **depth** (3 decimals).
+4. Coefficient of variation of **species richness**, in % (2 decimals).
+5. Pearson correlation between **rugosity** and **coral cover** (3 decimals). Plot it first!
+:::
+::: fr
+*Révision : séances 2–3.* Données : `reef_fish_sites.csv` (36 sites, une ligne par site).
+
+1. % médian d'herbivores dans la région **North** (2 décimales).
+2. Écart-type de la **rugosité** (3 décimales).
+3. Écart interquartile de la **profondeur** (3 décimales).
+4. Coefficient de variation de la **richesse spécifique**, en % (2 décimales).
+5. Corrélation de Pearson entre **rugosité** et **recouvrement corallien** (3 décimales). Tracez d'abord !
+:::
+
+```{r quiz-p1, echo=FALSE}
+quiz("tp1", title_en = "Exercise 1", title_fr = "Exercice 1", list(
+  q_num("1. Median % herbivores, North?", "1. % médian d'herbivores, North ?", p1a, tol = 0.006),
+  q_num("2. SD of rugosity?", "2. ET de la rugosité ?", p1b, tol = 0.0006),
+  q_num("3. IQR of depth?", "3. Écart interquartile de la profondeur ?", p1c, tol = 0.0006),
+  q_num("4. CV of species richness (%)?", "4. CV de la richesse (%) ?", p1d, tol = 0.006),
+  q_num("5. r rugosity–coral cover?", "5. r rugosité–corail ?", p1e, tol = 0.0006)
+))
+```
+
+::: {.solution data-quiz="tp1"}
+```{r, eval=FALSE}
+rf <- read.csv("data/reef_fish_sites.csv")
+tapply(rf$herbivore_pct, rf$region, median)                    # 1
+sd(rf$rugosity); IQR(rf$depth_m)                               # 2, 3
+100 * sd(rf$species_richness) / mean(rf$species_richness)      # 4
+plot(rf$coral_cover, rf$rugosity); cor(rf$rugosity, rf$coral_cover)   # 5
+```
+:::
+
+## [Exercise 2 — Probability]{.en}[Exercice 2 — Probabilités]{.fr} {#p2}
+
+::: en
+*Revise: Session 4.* Probabilities with 4 decimals.
+
+1. 10 % of tagged sea turtles lose their tag within a year. Out of 12 tagged turtles, probability that **exactly 2** lose it?
+2. … that **3 or more** lose it?
+3. Dugongs are seen at a mean rate of 0.7 per survey day (Poisson). Probability of **no** dugong on a given day?
+4. Carapace length of juvenile green turtles in a foraging area is normal, with mean 35 cm and SD 4 cm. Probability that a turtle measures **more than 42 cm**?
+5. Length below which the **10 %** smallest turtles lie (2 decimals)?
+:::
+::: fr
+*Révision : séance 4.* Probabilités avec 4 décimales.
+
+1. 10 % des tortues marines marquées perdent leur bague en un an. Sur 12 tortues marquées, probabilité qu'**exactement 2** la perdent ?
+2. … que **3 ou plus** la perdent ?
+3. On observe des dugongs au rythme moyen de 0,7 par jour de suivi (Poisson). Probabilité de **n'en voir aucun** un jour donné ?
+4. La longueur de carapace des tortues vertes juvéniles d’une zone d’alimentation suit une loi normale de moyenne 35 cm et d’ET 4 cm. Probabilité qu'une tortue mesure **plus de 42 cm** ?
+5. Longueur sous laquelle se trouvent les **10 %** de tortues les plus petites (2 décimales) ?
+:::
+
+```{r quiz-p2, echo=FALSE}
+quiz("tp2", title_en = "Exercise 2", title_fr = "Exercice 2", list(
+  q_num("1. P(exactly 2 of 12)?", "1. P(exactement 2 sur 12) ?", p2a, tol = 0.00006),
+  q_num("2. P(3 or more of 12)?", "2. P(3 ou plus sur 12) ?", p2b, tol = 0.00006),
+  q_num("3. P(no dugong)?", "3. P(aucun dugong) ?", p2c, tol = 0.00006),
+  q_num("4. P(length > 42 cm)?", "4. P(longueur > 42 cm) ?", p2d, tol = 0.00006),
+  q_num("5. 10 % quantile (cm)?", "5. Quantile 10 % (cm) ?", p2e, tol = 0.006)
+))
+```
+
+::: {.solution data-quiz="tp2"}
+```{r, eval=FALSE}
+dbinom(2, 12, 0.10); 1 - pbinom(2, 12, 0.10)     # 1, 2
+dpois(0, 0.7)                                     # 3
+1 - pnorm(42, 35, 4); qnorm(0.10, 35, 4)          # 4, 5
+```
+:::
+
+## [Exercise 3 — A sample from the lagoon]{.en}[Exercice 3 — Un échantillon du lagon]{.fr} {#p3}
+
+::: en
+*Revise: Sessions 1 and 5.* Draw a simple random sample of **50 cells**: run exactly `set.seed(303); s3 <- lag[sample(1:nrow(lag), 50), ]`.
+
+1. Sample mean of seagrass cover (2 decimals).
+2. – 3. Lower and upper limits of its 95 % CI (2 decimals). Does it contain the true mean of Session 1?
+4. Number of cells of the sample **without any urchin**.
+5. Upper limit of the exact 95 % CI (`binom.test()`) of the proportion of cells without urchins (3 decimals).
+:::
+::: fr
+*Révision : séances 1 et 5.* Tirez un échantillon aléatoire simple de **50 cellules** : exécutez exactement `set.seed(303); s3 <- lag[sample(1:nrow(lag), 50), ]`.
+
+1. Moyenne d'échantillon du recouvrement d'herbier (2 décimales).
+2. – 3. Limites inférieure et supérieure de son IC à 95 % (2 décimales). Contient-il la vraie moyenne de la séance 1 ?
+4. Nombre de cellules de l'échantillon **sans aucun oursin**.
+5. Limite supérieure de l'IC exact à 95 % (`binom.test()`) de la proportion de cellules sans oursins (3 décimales).
+:::
+
+```{r quiz-p3, echo=FALSE}
+quiz("tp3", title_en = "Exercise 3", title_fr = "Exercice 3", list(
+  q_num("1. Sample mean cover?", "1. Recouvrement moyen de l'échantillon ?", p3a, tol = 0.006),
+  q_num("2. Lower limit of the 95 % CI?", "2. Limite inférieure de l'IC à 95 % ?", p3b, tol = 0.006),
+  q_num("3. Upper limit of the 95 % CI?", "3. Limite supérieure de l'IC à 95 % ?", p3c, tol = 0.006),
+  q_num("4. Cells without urchins?", "4. Cellules sans oursins ?", p3d, tol = 0),
+  q_num("5. Upper limit, exact CI of the proportion?", "5. Limite supérieure, IC exact de la proportion ?", p3e, tol = 0.0006)
+))
+```
+
+::: {.solution data-quiz="tp3"}
+```{r, eval=FALSE}
+lag <- read.csv("data/lagoon_population.csv")
+set.seed(303); s3 <- lag[sample(1:nrow(lag), 50), ]
+mean(s3$seagrass_cover); t.test(s3$seagrass_cover)$conf.int     # 1, 2, 3
+mean(lag$seagrass_cover)                                         # true mean, for comparison
+x <- sum(s3$urchins == 0); x                                     # 4
+binom.test(x, 50)$conf.int                                       # 5
+```
+:::
+
+## [Exercise 4 — Two groups]{.en}[Exercice 4 — Deux groupes]{.fr} {#p4}
+
+::: en
+*Revise: Session 7.* Data: `fisher_survey.csv` and `coral_tagged_colonies.csv`.
+
+1. – 2. Declared **monthly catch** is right-skewed. Welch t-test on `log(monthly_catch_kg) ~ sex`: ratio of geometric means **F / M** (3 decimals) and the *t* statistic (3 decimals).
+3. **Trips per week** (a count from 0 to 7) by **boat** ownership: Wilcoxon rank-sum test (`exact = FALSE`), p-value (4 decimals).
+4. – 5. Tagged corals deeper than **5 m**: how many colonies? Wilcoxon signed-rank test March vs July (`paired = TRUE, exact = FALSE`): p-value (4 decimals).
+:::
+::: fr
+*Révision : séance 7.* Données : `fisher_survey.csv` et `coral_tagged_colonies.csv`.
+
+1. – 2. La **capture mensuelle** déclarée est asymétrique à droite. Test t de Welch sur `log(monthly_catch_kg) ~ sex` : rapport des moyennes géométriques **F / M** (3 décimales) et statistique *t* (3 décimales).
+3. **Sorties par semaine** (un comptage de 0 à 7) selon la possession d'une **pirogue** (`boat`) : test de Wilcoxon des rangs (`exact = FALSE`), p-value (4 décimales).
+4. – 5. Coraux marqués à plus de **5 m** : combien de colonies ? Test des rangs signés de Wilcoxon mars vs juillet (`paired = TRUE, exact = FALSE`) : p-value (4 décimales).
+:::
+
+```{r quiz-p4, echo=FALSE}
+quiz("tp4", title_en = "Exercise 4", title_fr = "Exercice 4", list(
+  q_num("1. Ratio of geometric means F / M?", "1. Rapport des moyennes géométriques F / M ?", p4a, tol = 0.0006),
+  q_num("2. t statistic?", "2. Statistique t ?", p4b, tol = 0.0006),
+  q_num("3. p-value, trips by boat?", "3. p-value, sorties selon pirogue ?", p4c, tol = 0.00006),
+  q_num("4. Colonies deeper than 5 m?", "4. Colonies à plus de 5 m ?", p4d, tol = 0),
+  q_num("5. p-value, signed-rank test?", "5. p-value, rangs signés ?", p4e, tol = 0.00006)
+))
+```
+
+::: {.solution data-quiz="tp4"}
+```{r, eval=FALSE}
+fs <- read.csv("data/fisher_survey.csv")
+t4 <- t.test(log(monthly_catch_kg) ~ sex, data = fs)
+exp(t4$estimate[1] - t4$estimate[2]); t4$statistic              # 1, 2
+wilcox.test(trips_per_week ~ boat, data = fs, exact = FALSE)    # 3
+cc <- read.csv("data/coral_tagged_colonies.csv")
+deep <- cc[cc$depth_m > 5, ]; nrow(deep)                        # 4
+wilcox.test(deep$bleached_march, deep$bleached_july, paired = TRUE, exact = FALSE)   # 5
+```
+:::
+
+## [Exercise 5 — Several groups]{.en}[Exercice 5 — Plusieurs groupes]{.fr} {#p5}
+
+::: en
+*Revise: Session 8.*
+
+1. ANOVA of **rugosity** by **management** (reef sites): *F* value (3 decimals).
+2. Tukey HSD: difference **Open access − No-take** (3 decimals).
+3. Tukey HSD: adjusted p-value of **Open access − LMMA** (4 decimals).
+4. Sea-cucumber pens: ANOVA of the **initial weight** by treatment. p-value (3 decimals). (What should we expect, if treatments were assigned at random?)
+5. Kruskal–Wallis test of **herbivore_pct** by management: p-value (4 decimals).
+:::
+::: fr
+*Révision : séance 8.*
+
+1. ANOVA de la **rugosité** par **gestion** (sites récifaux) : valeur de *F* (3 décimales).
+2. HSD de Tukey : différence **Open access − No-take** (3 décimales).
+3. HSD de Tukey : p-value ajustée de **Open access − LMMA** (4 décimales).
+4. Enclos d'holothuries : ANOVA du **poids initial** par traitement. p-value (3 décimales). (À quoi faut-il s'attendre, si les traitements ont été attribués au hasard ?)
+5. Test de Kruskal–Wallis de **herbivore_pct** par gestion : p-value (4 décimales).
+:::
+
+```{r quiz-p5, echo=FALSE}
+quiz("tp5", title_en = "Exercise 5", title_fr = "Exercice 5", list(
+  q_num("1. F value, rugosity?", "1. Valeur de F, rugosité ?", p5a, tol = 0.0006),
+  q_num("2. Difference Open access − No-take?", "2. Différence Open access − No-take ?", p5b, tol = 0.0006),
+  q_num("3. Adjusted p, Open access − LMMA?", "3. p ajustée, Open access − LMMA ?", p5c, tol = 0.00006),
+  q_num("4. p-value, initial weight by treatment?", "4. p-value, poids initial par traitement ?", p5d, tol = 0.0006),
+  q_num("5. Kruskal–Wallis p-value, herbivores?", "5. p-value de Kruskal–Wallis, herbivores ?", p5e, tol = 0.00006)
+))
+```
+
+::: {.solution data-quiz="tp5"}
+```{r, eval=FALSE}
+rf <- read.csv("data/reef_fish_sites.csv")
+f5 <- aov(rugosity ~ management, data = rf)
+summary(f5); TukeyHSD(f5)                                        # 1, 2, 3
+sc <- read.csv("data/sea_cucumber_pens.csv")
+summary(aov(initial_weight_g ~ treatment, data = sc))            # 4: large p, as expected with random assignment
+kruskal.test(herbivore_pct ~ management, data = rf)              # 5
+```
+:::
+
+## [Exercise 6 — Association and regression]{.en}[Exercice 6 — Association et régression]{.fr} {#p6}
+
+::: en
+*Revise: Sessions 9–10.*
+
+1. – 2. χ² test of independence between **education** and **support for closures**: χ² (3 decimals) and p-value (4 decimals).
+3. – 4. Reef sites: `lm(species_richness ~ coral_cover)`: slope (4 decimals) and R² (4 decimals).
+5. Predicted species richness for a site with **40 %** coral cover (2 decimals).
+:::
+::: fr
+*Révision : séances 9–10.*
+
+1. – 2. Test du χ² d'indépendance entre **éducation** et **soutien aux fermetures** : χ² (3 décimales) et p-value (4 décimales).
+3. – 4. Sites récifaux : `lm(species_richness ~ coral_cover)` : pente (4 décimales) et R² (4 décimales).
+5. Richesse spécifique prédite pour un site à **40 %** de corail (2 décimales).
+:::
+
+```{r quiz-p6, echo=FALSE}
+quiz("tp6", title_en = "Exercise 6", title_fr = "Exercice 6", list(
+  q_num("1. χ² education × support?", "1. χ² éducation × soutien ?", p6a, tol = 0.0006),
+  q_num("2. p-value?", "2. p-value ?", p6b, tol = 0.00006),
+  q_num("3. Slope of richness on coral cover?", "3. Pente de la richesse sur le corail ?", p6c, tol = 0.00006),
+  q_num("4. R²?", "4. R² ?", p6d, tol = 0.00006),
+  q_num("5. Predicted richness at 40 % coral?", "5. Richesse prédite à 40 % de corail ?", p6e, tol = 0.006)
+))
+```
+
+::: {.solution data-quiz="tp6"}
+```{r, eval=FALSE}
+fs <- read.csv("data/fisher_survey.csv")
+chisq.test(table(fs$education, fs$supports_closure))             # 1, 2
+rf <- read.csv("data/reef_fish_sites.csv")
+l6 <- lm(species_richness ~ coral_cover, data = rf)
+coef(l6); summary(l6)$r.squared                                  # 3, 4
+predict(l6, data.frame(coral_cover = 40))                        # 5
+```
+:::

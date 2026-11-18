@@ -1,0 +1,365 @@
+---
+title: "[1 · Study design and sampling]{.en}[1 · Plan d'étude et échantillonnage]{.fr}"
+pagetitle: "R4Marine Stats · Session 1"
+subtitle: "~2.5 h"
+---
+
+```{r setup, include=FALSE}
+source("R/course_helpers.R")
+library(ggplot2)
+lag <- read.csv("data/lagoon_population.csv")
+```
+
+::: objectives
+::: en
+#### By the end of this session you will be able to
+- tell an **observational study** from an **experiment**, and explain why only experiments show causes directly;
+- identify the **sampling unit** (or experimental unit) of a study, and recognise **pseudoreplication**;
+- describe **simple random**, **stratified**, **systematic** and **convenience** sampling, and their strengths and risks;
+- draw these samples in R with `sample()` and `set.seed()`, and compare their estimates with the true population value;
+- assign treatments at random to experimental units.
+:::
+::: fr
+#### À la fin de cette séance vous saurez
+- distinguer une **étude observationnelle** d'une **expérience**, et expliquer pourquoi seules les expériences montrent directement des causes ;
+- identifier l'**unité d'échantillonnage** (ou unité expérimentale) d'une étude, et reconnaître la **pseudo-réplication** ;
+- décrire l'échantillonnage **aléatoire simple**, **stratifié**, **systématique** et **de commodité**, avec leurs atouts et leurs risques ;
+- tirer ces échantillons dans R avec `sample()` et `set.seed()`, et comparer leurs estimations à la vraie valeur de la population ;
+- attribuer des traitements au hasard à des unités expérimentales.
+:::
+:::
+
+## [Observational studies and experiments]{.en}[Études observationnelles et expériences]{.fr} {#study-types}
+
+::: en
+- In an **observational study**, you measure what exists without changing anything: fish biomass in no-take reserves, LMMAs and open-access reefs; incomes of fishers who are or are not LMMA members.
+- In an **experiment**, *you* decide which unit receives which treatment, **at random**: four feeds assigned at random to 24 sea-cucumber pens (Session 8).
+
+Why it matters: in the reef survey, no-take reserves have more fish. But reserves may have been placed on reefs that were already in better condition (more coral, further from villages). Coral cover is then a **confounding variable**: it is related both to the "treatment" (protection) and to the response (fish). An observational study shows an **association**; to speak of a **cause**, you need an experiment — or a careful design (before/after and control/impact, called *BACI*) and arguments.
+
+In an experiment, **random assignment** spreads the unknown differences between units evenly over the treatments: if pens differ in sediment, the random draw makes it unlikely that all the good pens get the same feed.
+:::
+::: fr
+- Dans une **étude observationnelle**, on mesure ce qui existe sans rien changer : la biomasse de poissons dans les réserves intégrales, les LMMA et les récifs en libre accès ; les revenus de pêcheurs membres ou non d'une LMMA.
+- Dans une **expérience**, *vous* décidez quelle unité reçoit quel traitement, **au hasard** : quatre aliments attribués au hasard à 24 enclos d'holothuries (séance 8).
+
+Pourquoi c'est important : dans le suivi des récifs, les réserves intégrales ont plus de poissons. Mais les réserves ont peut-être été placées sur des récifs déjà en meilleur état (plus de corail, plus loin des villages). Le recouvrement corallien est alors une **variable de confusion** : il est lié à la fois au « traitement » (la protection) et à la réponse (les poissons). Une étude observationnelle montre une **association** ; pour parler de **cause**, il faut une expérience — ou un plan soigneux (avant/après et témoin/impact, appelé *BACI*) et des arguments.
+
+Dans une expérience, l'**attribution aléatoire** répartit les différences inconnues entre unités de façon équilibrée entre les traitements : si les enclos diffèrent par leur sédiment, le tirage au hasard rend peu probable que tous les bons enclos reçoivent le même aliment.
+:::
+
+```{r}
+# Random assignment of 4 feeds to 24 pens (6 pens each)
+set.seed(90)
+treatments <- rep(c("control", "seaweed", "manure", "mixed"), each = 6)
+plan <- data.frame(pen = sprintf("P%02d", 1:24), treatment = sample(treatments))
+head(plan, 8)
+table(plan$treatment)
+```
+
+```{r, echo=FALSE}
+fa(c("`set.seed(n)`", "fixes the starting point of R's random numbers: the same seed gives the same \"random\" draw, so your work can be repeated exactly", "fixe le point de départ des nombres aléatoires de R : la même graine donne le même tirage « aléatoire », votre travail peut donc être refait à l'identique", "any whole number", "un nombre entier quelconque"),
+   c("`sample(x)`", "with one vector: shuffles it (random order)", "avec un seul vecteur : le mélange (ordre aléatoire)", "a vector", "un vecteur"),
+   c("`sprintf(\"P%02d\", 1:24)`", "builds labels: `%02d` = a whole number on 2 digits (P01, P02…)", "construit des étiquettes : `%02d` = un entier sur 2 chiffres (P01, P02…)", "", ""))
+```
+
+## [The sampling unit and pseudoreplication]{.en}[L'unité d'échantillonnage et la pseudo-réplication]{.fr} {#units}
+
+::: en
+The **sampling unit** (in an experiment, the **experimental unit**) is the smallest unit that is **independently** selected or treated. It is what *n* counts.
+
+- Sea-cucumber experiment: the feed is given to a **pen**, not to each animal. The 30 animals of one pen share the same water, the same sediment, the same feeding: they are not 30 independent replicates. **n = 24 pens**, not 720 animals.
+- Reef survey: management applies to a **site**. Three transects on the same reef share the same history: they are averaged, and **n = 36 sites**.
+
+**Pseudoreplication** is treating non-independent measurements as independent replicates. Classic example: comparing *one* reserve with *one* fished reef using 30 quadrats in each. The test would compare two places, not "protection": any difference between the two places (depth, currents, distance to the village) is confused with the effect of protection. With one place per treatment, the true n is 1 per group.
+:::
+::: fr
+L'**unité d'échantillonnage** (dans une expérience, l'**unité expérimentale**) est la plus petite unité sélectionnée ou traitée **indépendamment**. C'est elle que *n* compte.
+
+- Expérience sur les holothuries : l'aliment est donné à un **enclos**, pas à chaque animal. Les 30 animaux d'un enclos partagent la même eau, le même sédiment, la même alimentation : ce ne sont pas 30 réplicats indépendants. **n = 24 enclos**, pas 720 animaux.
+- Suivi des récifs : la gestion s'applique à un **site**. Trois transects sur le même récif partagent la même histoire : ils sont moyennés, et **n = 36 sites**.
+
+La **pseudo-réplication** consiste à traiter des mesures non indépendantes comme des réplicats indépendants. Exemple classique : comparer *une* réserve à *un* récif pêché avec 30 quadrats dans chacun. Le test comparerait deux lieux, pas « la protection » : toute différence entre les deux lieux (profondeur, courants, distance au village) est confondue avec l'effet de la protection. Avec un seul lieu par traitement, le vrai n est de 1 par groupe.
+:::
+
+::: {.callout .ecology}
+::: en
+**Rule:** ask "*at which level was the treatment applied, or the unit chosen at random?*" — that level is your replicate. Measurements below it (animals in a pen, quadrats on a transect) improve the precision of each replicate's value, but do not increase n. (Mixed models, which use all levels at once, are in the *Statistical modelling* course.)
+:::
+::: fr
+**Règle :** demandez-vous « *à quel niveau le traitement a-t-il été appliqué, ou l'unité choisie au hasard ?* » — ce niveau est votre réplicat. Les mesures en dessous (animaux d'un enclos, quadrats d'un transect) améliorent la précision de la valeur de chaque réplicat, mais n'augmentent pas n. (Les modèles mixtes, qui utilisent tous les niveaux à la fois, sont dans le cours *Modélisation statistique*.)
+:::
+:::
+
+## [A population we know entirely]{.en}[Une population connue entièrement]{.fr} {#population}
+
+::: {.callout .ecology}
+::: en
+**Lagoon census** (`lagoon_population.csv`, simulated). A seagrass lagoon was divided into **1,200 cells of 10 × 10 m** (40 columns `x` from the shore to the reef, 30 rows `y`). Drone images checked on the ground gave, for **every** cell, the zone (`inshore`, `middle`, `reef_flat`), the depth, the % seagrass cover and the number of sea urchins. Because we know the whole population, we know the **true** parameters — something that never happens in real life — and we can watch how samples behave.
+:::
+::: fr
+**Recensement du lagon** (`lagoon_population.csv`, simulé). Un lagon à herbiers a été divisé en **1 200 cellules de 10 × 10 m** (40 colonnes `x` de la côte vers le récif, 30 lignes `y`). Des images de drone vérifiées sur le terrain ont donné, pour **chaque** cellule, la zone (`inshore`, `middle`, `reef_flat`), la profondeur, le % de recouvrement d'herbier et le nombre d'oursins. Comme nous connaissons toute la population, nous connaissons les **vrais** paramètres — ce qui n'arrive jamais dans la réalité — et nous pouvons observer le comportement des échantillons.
+:::
+:::
+
+`r dl("lagoon_population.csv", "lagoon_population.csv")`
+
+```{r, fig.height=3.4}
+lag <- read.csv("data/lagoon_population.csv")
+mu <- mean(lag$seagrass_cover)          # the TRUE mean (parameter)
+mu
+tapply(lag$seagrass_cover, lag$zone, mean)
+
+ggplot(lag, aes(x, y, fill = seagrass_cover)) +
+  geom_tile() +
+  scale_fill_gradient(low = "#f6f1e7", high = "#4a7d3a", name = "% cover") +
+  coord_equal() + labs(x = "x (shore → reef)", y = "y") + theme_c()
+```
+
+```{r, echo=FALSE}
+fa(c("`geom_tile()`", "draws one coloured rectangle per row, at position `x`, `y`", "dessine un rectangle coloré par ligne, à la position `x`, `y`", "", ""),
+   c("`scale_fill_gradient(low, high, name)`", "colour scale between two colours for a numeric `fill`", "échelle de couleurs entre deux couleurs pour un `fill` numérique", "colour names or codes", "noms ou codes de couleurs"),
+   c("`coord_equal()`", "one unit on x = one unit on y (cells stay square)", "une unité sur x = une unité sur y (les cellules restent carrées)", "", ""))
+```
+
+::: en
+Cover decreases strongly from the shore (≈ 60 %) to the reef flat (≈ 20 %). Keep this in mind: how you sample this gradient will decide whether your estimate is right.
+:::
+::: fr
+Le recouvrement diminue fortement de la côte (≈ 60 %) vers le platier (≈ 20 %). Gardez cela en tête : la façon d'échantillonner ce gradient décidera si votre estimation est juste.
+:::
+
+## [Four ways to choose 30 cells]{.en}[Quatre façons de choisir 30 cellules]{.fr} {#designs}
+
+`r fig_svg("sampling-designs", "Four sampling designs of 30 units in the same lagoon. Only the first three give every part of the lagoon a known chance to be sampled.", "Quatre plans d'échantillonnage de 30 unités dans le même lagon. Seuls les trois premiers donnent à chaque partie du lagon une chance connue d'être échantillonnée.")`
+
+### [Simple random sampling]{.en}[Échantillonnage aléatoire simple]{.fr}
+
+::: en
+Every cell has the **same chance** of being chosen, independently of the others. It is the reference design: the sample mean is **unbiased** (on average, over many samples, it equals μ).
+:::
+::: fr
+Chaque cellule a la **même chance** d'être choisie, indépendamment des autres. C'est le plan de référence : la moyenne d'échantillon est **sans biais** (en moyenne, sur de nombreux échantillons, elle vaut μ).
+:::
+
+```{r}
+set.seed(1)
+rows_srs <- sample(1:nrow(lag), size = 30)        # 30 row numbers, without replacement
+srs <- lag[rows_srs, ]
+mean(srs$seagrass_cover)
+```
+
+```{r, echo=FALSE}
+fa(c("`sample(x, size, replace)`", "draws `size` values at random from `x`", "tire `size` valeurs au hasard dans `x`", "", ""),
+   c("&nbsp;&nbsp;`size`", "how many values to draw", "combien de valeurs tirer", "a whole number", "un nombre entier"),
+   c("&nbsp;&nbsp;`replace`", "`FALSE` (default): each value at most once (sampling cells); `TRUE`: values can come back (bootstrap, Session 5)", "`FALSE` (défaut) : chaque valeur au plus une fois (tirer des cellules) ; `TRUE` : les valeurs peuvent revenir (bootstrap, séance 5)", "`TRUE` / `FALSE`", "`TRUE` / `FALSE`"),
+   c("`lag[rows, ]`", "keeps the rows whose numbers are in `rows`, all columns (Beginner Session 4)", "garde les lignes dont les numéros sont dans `rows`, toutes les colonnes (séance 4 du niveau débutant)", "", ""))
+```
+
+### [Stratified random sampling]{.en}[Échantillonnage aléatoire stratifié]{.fr}
+
+::: en
+The population is divided into **strata** that are expected to differ (here the three zones), and a random sample is drawn **in each stratum**. Advantages: every zone is represented, results can be given per zone, and the estimate is usually **more precise** than a simple random sample of the same size, because the large differences between zones no longer add noise. The fisher survey is stratified by village (60 per village).
+:::
+::: fr
+La population est divisée en **strates** qui devraient différer (ici les trois zones), et un échantillon aléatoire est tiré **dans chaque strate**. Avantages : chaque zone est représentée, les résultats peuvent être donnés par zone, et l'estimation est en général **plus précise** qu'un échantillon aléatoire simple de même taille, car les grandes différences entre zones n'ajoutent plus de bruit. L'enquête pêcheurs est stratifiée par village (60 par village).
+:::
+
+```{r}
+set.seed(1)
+rows_str <- c(sample(which(lag$zone == "inshore"),   10),
+              sample(which(lag$zone == "middle"),    10),
+              sample(which(lag$zone == "reef_flat"), 10))
+str_s <- lag[rows_str, ]
+tapply(str_s$seagrass_cover, str_s$zone, mean)
+mean(str_s$seagrass_cover)
+```
+
+```{r, echo=FALSE}
+fa(c("`which(test)`", "the positions (row numbers) where the test is `TRUE`", "les positions (numéros de lignes) où le test est `TRUE`", "a logical vector", "un vecteur logique"))
+```
+
+::: en
+Here the three zones have almost the same number of cells (≈ 400 each), so the plain mean of the 30 values is fine. If the strata had very different sizes, each stratum mean should be **weighted by the share of the population it represents**.
+:::
+::: fr
+Ici les trois zones ont presque le même nombre de cellules (≈ 400 chacune), la moyenne simple des 30 valeurs convient donc. Si les strates avaient des tailles très différentes, la moyenne de chaque strate devrait être **pondérée par la part de la population qu'elle représente**.
+:::
+
+### [Systematic sampling]{.en}[Échantillonnage systématique]{.fr}
+
+::: en
+Units are taken at **regular intervals** from a random start: a quadrat every 5 m along a tape, every 40th cell. Easy in the field and well spread, but risky if the environment has a **pattern with the same period** as the interval (e.g. sand ridges every 40 m).
+:::
+::: fr
+Les unités sont prises à **intervalles réguliers** à partir d'un départ aléatoire : un quadrat tous les 5 m le long d'un ruban, une cellule sur 40. Facile sur le terrain et bien réparti, mais risqué si le milieu présente un **motif de même période** que l'intervalle (ex. des rides de sable tous les 40 m).
+:::
+
+```{r}
+set.seed(1)
+start <- sample(1:40, 1)
+rows_sys <- seq(from = start, to = nrow(lag), by = 40)   # 1 cell in 40 -> 30 cells
+length(rows_sys)
+mean(lag$seagrass_cover[rows_sys])
+```
+
+### [Convenience sampling]{.en}[Échantillonnage de commodité]{.fr}
+
+::: en
+"We sampled the 30 cells closest to the landing site because the boat was broken." The sample is easy, but **biased**: here all cells are inshore, where cover is highest.
+:::
+::: fr
+« Nous avons échantillonné les 30 cellules les plus proches du débarcadère parce que la pirogue était en panne. » L'échantillon est facile, mais **biaisé** : ici toutes les cellules sont côtières, là où le recouvrement est le plus élevé.
+:::
+
+```{r}
+conv <- lag[lag$x <= 2 & lag$y <= 15, ]      # 30 cells next to the landing site
+nrow(conv)
+mean(conv$seagrass_cover)                    # far above the true mean
+```
+
+::: {.callout .warning}
+::: en
+**More data does not fix bias.** 300 convenience cells would give an even *more confident* wrong answer. Random selection is what makes the statistics of the next sessions valid.
+:::
+::: fr
+**Plus de données ne corrige pas un biais.** 300 cellules de commodité donneraient une réponse fausse encore *plus sûre d'elle*. C'est le tirage aléatoire qui rend valides les statistiques des séances suivantes.
+:::
+:::
+
+## [Repeating the sampling many times]{.en}[Répéter l'échantillonnage de nombreuses fois]{.fr} {#repeat}
+
+::: en
+One sample gives one estimate. What if we had sampled again? Because we know the population, we can draw **1,000 simple random samples** and 1,000 stratified samples, and look at the spread of their means. `replicate()` repeats an expression many times.
+:::
+::: fr
+Un échantillon donne une estimation. Et si nous avions échantillonné à nouveau ? Comme nous connaissons la population, nous pouvons tirer **1 000 échantillons aléatoires simples** et 1 000 échantillons stratifiés, et regarder la dispersion de leurs moyennes. `replicate()` répète une expression de nombreuses fois.
+:::
+
+```{r, fig.height=3.2}
+set.seed(42)
+m_srs <- replicate(1000, mean(lag$seagrass_cover[sample(1:nrow(lag), 30)]))
+m_str <- replicate(1000, {
+  r <- c(sample(which(lag$zone == "inshore"), 10), sample(which(lag$zone == "middle"), 10),
+         sample(which(lag$zone == "reef_flat"), 10))
+  mean(lag$seagrass_cover[r])
+})
+c(mean_srs = mean(m_srs), mean_str = mean(m_str), true = mu)   # both unbiased
+c(sd_srs = sd(m_srs), sd_str = sd(m_str))                      # stratified is more precise
+
+sims <- data.frame(design = rep(c("simple random", "stratified"), each = 1000), mean = c(m_srs, m_str))
+ggplot(sims, aes(mean, fill = design)) +
+  geom_histogram(binwidth = 1, alpha = 0.6, position = "identity") +
+  geom_vline(xintercept = mu, linewidth = 1) +
+  labs(x = "mean cover of a sample of 30 cells (%)", y = "number of samples") + theme_c()
+```
+
+```{r, echo=FALSE}
+fa(c("`replicate(n, expr)`", "evaluates `expr` `n` times and collects the results in a vector", "évalue `expr` `n` fois et rassemble les résultats dans un vecteur", "", ""),
+   c("&nbsp;&nbsp;`{ ... }`", "several lines treated as one expression; the value of the last line is returned", "plusieurs lignes traitées comme une seule expression ; la valeur de la dernière ligne est renvoyée", "", ""),
+   c("&nbsp;&nbsp;`alpha`, `position = \"identity\"` (in `geom_histogram()`)", "transparency (0–1); bars of the two groups drawn on top of each other instead of stacked", "transparence (0–1) ; barres des deux groupes superposées au lieu d'empilées", "", ""),
+   c("`geom_vline(xintercept)`", "vertical line at a given x value", "ligne verticale à une valeur de x donnée", "a number", "un nombre"))
+```
+
+::: en
+Both histograms are centred on the true mean (no bias), but the stratified one is **narrower**: with the same effort (30 cells), stratification gives estimates closer to the truth. The spread of these sample means has a name — the **standard error** — and it is the subject of Session 5.
+:::
+::: fr
+Les deux histogrammes sont centrés sur la vraie moyenne (pas de biais), mais celui du stratifié est **plus étroit** : avec le même effort (30 cellules), la stratification donne des estimations plus proches de la vérité. La dispersion de ces moyennes d'échantillons a un nom — l'**erreur standard** — et c'est le sujet de la séance 5.
+:::
+
+## [Application work & quiz]{.en}[Travail d'application et quiz]{.fr} {#application}
+
+```{r answers01, include=FALSE}
+b1 <- round(mean(lag$seagrass_cover), 2)
+b2 <- round(sd(lag$seagrass_cover), 2)
+b3 <- round(mean(lag$urchins), 3)
+b4 <- round(100 * mean(lag$seagrass_cover > 50), 1)
+b5 <- round(mean(lag$seagrass_cover[lag$zone == "reef_flat"]), 2)
+set.seed(2026); s <- lag[sample(1:nrow(lag), 40), ]
+b6 <- round(mean(s$urchins), 3)
+```
+
+::: application
+::: en
+### Application work 1
+
+With `lagoon_population.csv` (the whole population):
+
+1. True mean seagrass cover μ (2 decimals).
+2. True standard deviation σ of seagrass cover (use `sd()`, 2 decimals).
+3. True mean number of urchins per cell (3 decimals).
+4. Percentage of cells with **more than 50 %** cover (1 decimal).
+5. True mean cover on the **reef flat** (2 decimals).
+6. Run **exactly** `set.seed(2026); s <- lag[sample(1:nrow(lag), 40), ]` and give the mean number of urchins in this sample (3 decimals).
+7. – 10. Design questions.
+:::
+::: fr
+### Travail d'application 1
+
+Avec `lagoon_population.csv` (toute la population) :
+
+1. Vraie moyenne du recouvrement μ (2 décimales).
+2. Vrai écart-type σ du recouvrement (utilisez `sd()`, 2 décimales).
+3. Vrai nombre moyen d'oursins par cellule (3 décimales).
+4. Pourcentage de cellules avec **plus de 50 %** de recouvrement (1 décimale).
+5. Vrai recouvrement moyen sur le **platier** (`reef_flat`, 2 décimales).
+6. Exécutez **exactement** `set.seed(2026); s <- lag[sample(1:nrow(lag), 40), ]` et donnez le nombre moyen d'oursins dans cet échantillon (3 décimales).
+7. – 10. Questions sur le plan d'étude.
+:::
+:::
+
+::: hint
+::: en
+Q4: `mean(lag$seagrass_cover > 50)` is a proportion; multiply by 100. Q6: the seed must be run **in the same line or just before** `sample()`, otherwise the draw differs.
+:::
+::: fr
+Q4 : `mean(lag$seagrass_cover > 50)` est une proportion ; multipliez par 100. Q6 : la graine doit être exécutée **sur la même ligne ou juste avant** `sample()`, sinon le tirage diffère.
+:::
+:::
+
+```{r quiz01, echo=FALSE}
+quiz("t01", list(
+  q_num("1. True mean cover μ?", "1. Vraie moyenne du recouvrement μ ?", b1, tol = 0.006),
+  q_num("2. True SD of cover?", "2. Vrai écart-type du recouvrement ?", b2, tol = 0.006),
+  q_num("3. True mean number of urchins per cell?", "3. Vrai nombre moyen d'oursins par cellule ?", b3, tol = 0.0006),
+  q_num("4. % of cells with more than 50 % cover?", "4. % de cellules à plus de 50 % de recouvrement ?", b4, tol = 0.06),
+  q_num("5. True mean cover on the reef flat?", "5. Vrai recouvrement moyen sur le platier ?", b5, tol = 0.006),
+  q_num("6. Mean urchins in the sample drawn with set.seed(2026)?", "6. Moyenne d'oursins dans l'échantillon tiré avec set.seed(2026) ?", b6, tol = 0.0006),
+  q_mcq("7. A study compares fish biomass between existing reserves and fished reefs. It is…",
+        "7. Une étude compare la biomasse de poissons entre des réserves existantes et des récifs pêchés. C'est…",
+        c("an experiment: it can prove that protection causes more fish", "an observational study: it shows an association, possibly confounded",
+          "a census", "a systematic sample"),
+        c("une expérience : elle peut prouver que la protection cause plus de poissons", "une étude observationnelle : elle montre une association, peut-être confondue",
+          "un recensement", "un échantillon systématique"), correct = 2),
+  q_mcq("8. 30 juvenile sea cucumbers per pen, 6 pens per feed. The experimental unit is…",
+        "8. 30 holothuries juvéniles par enclos, 6 enclos par aliment. L'unité expérimentale est…",
+        c("the animal (n = 720)", "the pen (n = 24)", "the feed (n = 4)", "the farm (n = 1)"),
+        c("l'animal (n = 720)", "l'enclos (n = 24)", "l'aliment (n = 4)", "la ferme (n = 1)"), correct = 2),
+  q_mcq("9. Sampling the 30 cells nearest the landing site gives a mean cover that is…",
+        "9. Échantillonner les 30 cellules les plus proches du débarcadère donne un recouvrement moyen…",
+        c("unbiased but imprecise", "biased upwards, because inshore cells have more seagrass", "biased downwards", "exactly μ"),
+        c("sans biais mais imprécis", "biaisé vers le haut, car les cellules côtières ont plus d'herbier", "biaisé vers le bas", "exactement μ"), correct = 2),
+  q_mcq("10. Why was the stratified design more precise than simple random sampling here?",
+        "10. Pourquoi le plan stratifié était-il plus précis que l'aléatoire simple ici ?",
+        c("Because it uses more cells", "Because the strata (zones) differ strongly, and each zone is always represented",
+          "Because it removes all variability", "Because set.seed() was used"),
+        c("Parce qu'il utilise plus de cellules", "Parce que les strates (zones) diffèrent fortement, et chaque zone est toujours représentée",
+          "Parce qu'il supprime toute variabilité", "Parce que set.seed() a été utilisé"), correct = 2)
+))
+```
+
+::: {.solution data-quiz="t01"}
+```{r, eval=FALSE}
+lag <- read.csv("data/lagoon_population.csv")
+round(mean(lag$seagrass_cover), 2)                        # 1
+round(sd(lag$seagrass_cover), 2)                          # 2
+round(mean(lag$urchins), 3)                               # 3
+round(100 * mean(lag$seagrass_cover > 50), 1)             # 4
+round(tapply(lag$seagrass_cover, lag$zone, mean), 2)      # 5
+set.seed(2026); s <- lag[sample(1:nrow(lag), 40), ]
+round(mean(s$urchins), 3)                                 # 6
+# 7: observational (reserves were not assigned at random) -> association, possible confounding
+# 8: the pen: the feed is applied to the pen   9: biased upwards   10: zones differ strongly
+```
+:::

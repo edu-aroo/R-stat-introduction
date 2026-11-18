@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>R4Marine Stats · Which test?</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.1/jquery-3.6.1.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<!-- header.html: inserted inside <head> of every page (see _site.yml) -->
+<!-- config.js (settings) and quiz_index.js (made by R/build_site.R) first,
+     then course.js (the behaviour that reads them) -->
+<script src="assets/config.js"></script>
+<script src="assets/quiz_index.js"></script>
+<script src="assets/course.js"></script>
+<meta name="author" content="Aroo Falinirina">
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+
+
+
+
+<link rel="stylesheet" href="assets/course.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">R4Marine Stats</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Sessions
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="00-start.html">0 · Why statistics?</a>
+    </li>
+    <li>
+      <a href="01-design.html">1 · Study design &amp; sampling</a>
+    </li>
+    <li>
+      <a href="02-describe.html">2 · Describing data</a>
+    </li>
+    <li>
+      <a href="03-explore.html">3 · Exploring distributions</a>
+    </li>
+    <li>
+      <a href="04-probability.html">4 · Probability &amp; distributions</a>
+    </li>
+    <li>
+      <a href="05-estimation.html">5 · Standard error &amp; CIs</a>
+    </li>
+    <li>
+      <a href="06-testing.html">6 · Hypothesis tests &amp; p-values</a>
+    </li>
+    <li>
+      <a href="07-two-groups.html">7 · Comparing two groups</a>
+    </li>
+    <li>
+      <a href="08-anova.html">8 · ANOVA &amp; Kruskal–Wallis</a>
+    </li>
+    <li>
+      <a href="09-categorical.html">9 · Proportions &amp; χ²</a>
+    </li>
+    <li>
+      <a href="10-regression.html">10 · Correlation &amp; regression</a>
+    </li>
+    <li>
+      <a href="11-power-reporting.html">11 · Power, multiple tests, reporting</a>
+    </li>
+    <li>
+      <a href="12-practice.html">12 · Practice</a>
+    </li>
+    <li>
+      <a href="13-final-project.html">13 · Final project</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Resources
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="choose-test.html">Which test? (decision guide)</a>
+    </li>
+    <li>
+      <a href="cheatsheet.html">Cheatsheet</a>
+    </li>
+    <li>
+      <a href="glossary.html">Glossary EN–FR</a>
+    </li>
+    <li>
+      <a href="common-errors.html">Common errors &amp; pitfalls</a>
+    </li>
+    <li>
+      <a href="resources.html">To go further</a>
+    </li>
+    <li>
+      <a href="help.html">Need help?</a>
+    </li>
+    <li>
+      <a href="whats-new.html">What's new</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore"><span class="en">Which test? A decision
+guide</span><span class="fr">Quel test ? Un guide de
+décision</span></h1>
+
+</div>
+
+
+<div id="four-questions-in-this-orderquatre-questions-dans-cet-ordre"
+class="section level2 no-track">
+<h2 class="no-track"><span class="en">Four questions, in this
+order</span><span class="fr">Quatre questions, dans cet
+ordre</span></h2>
+<div class="en">
+<ol style="list-style-type: decimal">
+<li><strong>What is my question?</strong> Estimate a value, compare
+groups, or describe a relationship? Write it in one sentence.</li>
+<li><strong>What type are my variables?</strong> Numeric (continuous or
+count) or categorical (nominal or ordinal)? Which one is the response?
+(Session 0)</li>
+<li><strong>What is my sampling unit, and are the measurements
+independent or paired?</strong> (Sessions 1 and 7)</li>
+<li><strong>What do the data look like?</strong> Roughly normal, or
+skewed, with outliers, many zeros? How large is n? (Sessions 3 and
+5)</li>
+</ol>
+<p>Questions 1–3 decide the <strong>family</strong> of the test;
+question 4 decides between the <strong>parametric</strong> version
+(blue) and the <strong>rank-based or exact</strong> alternative
+(orange). Decide <strong>before</strong> looking at p-values (Session
+11).</p>
+</div>
+<div class="fr">
+<ol style="list-style-type: decimal">
+<li><strong>Quelle est ma question ?</strong> Estimer une valeur,
+comparer des groupes, ou décrire une relation ? Écrivez-la en une
+phrase.</li>
+<li><strong>De quel type sont mes variables ?</strong> Numérique
+(continue ou comptage) ou catégorielle (nominale ou ordinale) ? Laquelle
+est la réponse ? (Séance 0)</li>
+<li><strong>Quelle est mon unité d’échantillonnage, et les mesures
+sont-elles indépendantes ou appariées ?</strong> (Séances 1 et 7)</li>
+<li><strong>À quoi ressemblent les données ?</strong> À peu près
+normales, ou asymétriques, avec des valeurs extrêmes, beaucoup de zéros
+? Quel est n ? (Séances 3 et 5)</li>
+</ol>
+<p>Les questions 1–3 décident de la <strong>famille</strong> du test ;
+la question 4 décide entre la version <strong>paramétrique</strong>
+(bleu) et l’alternative <strong>sur les rangs ou exacte</strong>
+(orange). Décidez <strong>avant</strong> de regarder les p-values
+(séance 11).</p>
+</div>
+<figure class="svg-fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 600" role="img" aria-label="Choosing a test" font-family="Source Sans 3, Arial, sans-serif">
+<defs><marker id="arc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#5d6b75"/></marker></defs>
+<rect x="330" y="8" width="280" height="44" rx="9" fill="#0b3d5c" stroke="#0b3d5c" stroke-width="1.8"/><text class="en" x="470.0" y="35.0" text-anchor="middle" font-weight="700" font-size="16" fill="#fff">What is your question?</text><text class="fr" x="470.0" y="35.0" text-anchor="middle" font-weight="700" font-size="16" fill="#fff">Quelle est votre question ?</text>
+<path d="M470 52 L98.0 86" stroke="#5d6b75" stroke-width="1.6" fill="none" marker-end="url(#arc)"/>
+<rect x="10" y="88" width="176" height="48" rx="9" fill="#f6f1e7" stroke="#b08a4a" stroke-width="1.8"/><text class="en" x="98.0" y="108.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">1 group vs a value</text><text class="en" x="98.0" y="125.5" text-anchor="middle" font-size="13.5" fill="#0b3d5c">numeric</text><text class="fr" x="98.0" y="108.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">1 groupe vs une valeur</text><text class="fr" x="98.0" y="125.5" text-anchor="middle" font-size="13.5" fill="#0b3d5c">numérique</text>
+<path d="M470 52 L284.0 86" stroke="#5d6b75" stroke-width="1.6" fill="none" marker-end="url(#arc)"/>
+<rect x="196" y="88" width="176" height="48" rx="9" fill="#f6f1e7" stroke="#b08a4a" stroke-width="1.8"/><text class="en" x="284.0" y="108.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Compare 2 groups</text><text class="en" x="284.0" y="125.5" text-anchor="middle" font-size="13.5" fill="#0b3d5c">numeric response</text><text class="fr" x="284.0" y="108.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Comparer 2 groupes</text><text class="fr" x="284.0" y="125.5" text-anchor="middle" font-size="13.5" fill="#0b3d5c">réponse numérique</text>
+<path d="M470 52 L470.0 86" stroke="#5d6b75" stroke-width="1.6" fill="none" marker-end="url(#arc)"/>
+<rect x="382" y="88" width="176" height="48" rx="9" fill="#f6f1e7" stroke="#b08a4a" stroke-width="1.8"/><text class="en" x="470.0" y="108.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Compare 3+ groups</text><text class="en" x="470.0" y="125.5" text-anchor="middle" font-size="13.5" fill="#0b3d5c">numeric response</text><text class="fr" x="470.0" y="108.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Comparer 3+ groupes</text><text class="fr" x="470.0" y="125.5" text-anchor="middle" font-size="13.5" fill="#0b3d5c">réponse numérique</text>
+<path d="M470 52 L656.0 86" stroke="#5d6b75" stroke-width="1.6" fill="none" marker-end="url(#arc)"/>
+<rect x="568" y="88" width="176" height="48" rx="9" fill="#f6f1e7" stroke="#b08a4a" stroke-width="1.8"/><text class="en" x="656.0" y="108.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Categorical data</text><text class="en" x="656.0" y="125.5" text-anchor="middle" font-size="13.5" fill="#0b3d5c">counts, proportions</text><text class="fr" x="656.0" y="108.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Données catégorielles</text><text class="fr" x="656.0" y="125.5" text-anchor="middle" font-size="13.5" fill="#0b3d5c">effectifs, proportions</text>
+<path d="M470 52 L842.0 86" stroke="#5d6b75" stroke-width="1.6" fill="none" marker-end="url(#arc)"/>
+<rect x="754" y="88" width="176" height="48" rx="9" fill="#f6f1e7" stroke="#b08a4a" stroke-width="1.8"/><text class="en" x="842.0" y="108.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Relationship</text><text class="en" x="842.0" y="125.5" text-anchor="middle" font-size="13.5" fill="#0b3d5c">2 numeric variables</text><text class="fr" x="842.0" y="108.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Relation</text><text class="fr" x="842.0" y="125.5" text-anchor="middle" font-size="13.5" fill="#0b3d5c">2 variables numériques</text>
+<path d="M98.0 136 L98.0 160" stroke="#5d6b75" stroke-width="1.6" fill="none" marker-end="url(#arc)"/>
+<rect x="10" y="162" width="176" height="62" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"/><text class="en" x="98.0" y="189.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">one-sample t-test</text><text class="en" x="98.0" y="206.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">t.test(x, mu = m)</text><text class="fr" x="98.0" y="189.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">test t à 1 échantillon</text><text class="fr" x="98.0" y="206.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">t.test(x, mu = m)</text>
+<rect x="10" y="236" width="176" height="62" rx="9" fill="#fdf0eb" stroke="#d9694a" stroke-width="1.8"/><text class="en" x="98.0" y="263.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Wilcoxon signed-rank</text><text class="en" x="98.0" y="280.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">wilcox.test(x, mu = m)</text><text class="fr" x="98.0" y="263.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">rangs signés Wilcoxon</text><text class="fr" x="98.0" y="280.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">wilcox.test(x, mu = m)</text>
+<path d="M284.0 136 L284.0 164" stroke="#5d6b75" stroke-width="1.6" fill="none" marker-end="url(#arc)"/>
+<text class="en" x="284" y="178" text-anchor="middle" font-size="12.5" font-style="italic" fill="#5d6b75">independent groups</text><text class="fr" x="284" y="178" text-anchor="middle" font-size="12.5" font-style="italic" fill="#5d6b75">groupes indépendants</text>
+<text class="en" x="284" y="322" text-anchor="middle" font-size="12.5" font-style="italic" fill="#5d6b75">paired: same units twice</text><text class="fr" x="284" y="322" text-anchor="middle" font-size="12.5" font-style="italic" fill="#5d6b75">apparié : mêmes unités 2 fois</text>
+<rect x="196" y="184" width="176" height="56" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"/><text class="en" x="284.0" y="208.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Welch t-test</text><text class="en" x="284.0" y="225.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">t.test(y ~ g)</text><text class="fr" x="284.0" y="208.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">test t de Welch</text><text class="fr" x="284.0" y="225.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">t.test(y ~ g)</text>
+<rect x="196" y="244" width="176" height="56" rx="9" fill="#fdf0eb" stroke="#d9694a" stroke-width="1.8"/><text class="en" x="284.0" y="268.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Wilcoxon rank-sum</text><text class="en" x="284.0" y="285.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">wilcox.test(y ~ g)</text><text class="fr" x="284.0" y="268.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Wilcoxon des rangs</text><text class="fr" x="284.0" y="285.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">wilcox.test(y ~ g)</text>
+<rect x="196" y="330" width="176" height="56" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"/><text class="en" x="284.0" y="354.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">paired t-test</text><text class="en" x="284.0" y="371.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">paired = TRUE</text><text class="fr" x="284.0" y="354.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">test t apparié</text><text class="fr" x="284.0" y="371.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">paired = TRUE</text>
+<rect x="196" y="390" width="176" height="56" rx="9" fill="#fdf0eb" stroke="#d9694a" stroke-width="1.8"/><text class="en" x="284.0" y="414.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Wilcoxon signed-rank</text><text class="en" x="284.0" y="431.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">paired = TRUE</text><text class="fr" x="284.0" y="414.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">rangs signés Wilcoxon</text><text class="fr" x="284.0" y="431.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">paired = TRUE</text>
+<path d="M470.0 136 L470.0 160" stroke="#5d6b75" stroke-width="1.6" fill="none" marker-end="url(#arc)"/>
+<rect x="382" y="162" width="176" height="74" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"/><text class="en" x="470.0" y="187.0" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">one-way ANOVA</text><text class="en" x="470.0" y="204.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">aov(y ~ g)</text><text class="en" x="470.0" y="221.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">TukeyHSD(fit)</text><text class="fr" x="470.0" y="187.0" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">ANOVA à 1 facteur</text><text class="fr" x="470.0" y="204.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">aov(y ~ g)</text><text class="fr" x="470.0" y="221.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">TukeyHSD(fit)</text>
+<rect x="382" y="244" width="176" height="56" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"/><text class="en" x="470.0" y="268.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">unequal variances</text><text class="en" x="470.0" y="285.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">oneway.test(y ~ g)</text><text class="fr" x="470.0" y="268.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">variances inégales</text><text class="fr" x="470.0" y="285.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">oneway.test(y ~ g)</text>
+<rect x="382" y="308" width="176" height="74" rx="9" fill="#fdf0eb" stroke="#d9694a" stroke-width="1.8"/><text class="en" x="470.0" y="333.0" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Kruskal–Wallis</text><text class="en" x="470.0" y="350.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">kruskal.test(y ~ g)</text><text class="en" x="470.0" y="367.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">pairwise.wilcox.test()</text><text class="fr" x="470.0" y="333.0" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Kruskal–Wallis</text><text class="fr" x="470.0" y="350.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">kruskal.test(y ~ g)</text><text class="fr" x="470.0" y="367.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">pairwise.wilcox.test()</text>
+<path d="M656.0 136 L656.0 160" stroke="#5d6b75" stroke-width="1.6" fill="none" marker-end="url(#arc)"/>
+<rect x="568" y="162" width="176" height="56" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"/><text class="en" x="656.0" y="186.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">1 proportion</text><text class="en" x="656.0" y="203.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">binom.test(x, n, p)</text><text class="fr" x="656.0" y="186.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">1 proportion</text><text class="fr" x="656.0" y="203.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">binom.test(x, n, p)</text>
+<rect x="568" y="224" width="176" height="56" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"/><text class="en" x="656.0" y="248.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">counts vs expected %</text><text class="en" x="656.0" y="265.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">chisq.test(tab, p = )</text><text class="fr" x="656.0" y="248.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">effectifs vs % attendus</text><text class="fr" x="656.0" y="265.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">chisq.test(tab, p = )</text>
+<rect x="568" y="286" width="176" height="56" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"/><text class="en" x="656.0" y="310.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">2 proportions</text><text class="en" x="656.0" y="327.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">prop.test(x, n)</text><text class="fr" x="656.0" y="310.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">2 proportions</text><text class="fr" x="656.0" y="327.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">prop.test(x, n)</text>
+<rect x="568" y="348" width="176" height="56" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"/><text class="en" x="656.0" y="372.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">2 categorical variables</text><text class="en" x="656.0" y="389.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">chisq.test(table(a, b))</text><text class="fr" x="656.0" y="372.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">2 variables catégorielles</text><text class="fr" x="656.0" y="389.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">chisq.test(table(a, b))</text>
+<rect x="568" y="410" width="176" height="60" rx="9" fill="#fdf0eb" stroke="#d9694a" stroke-width="1.8"/><text class="en" x="656.0" y="436.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">expected counts &lt; 5</text><text class="en" x="656.0" y="453.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">fisher.test(tab)</text><text class="fr" x="656.0" y="436.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">effectifs attendus &lt; 5</text><text class="fr" x="656.0" y="453.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">fisher.test(tab)</text>
+<path d="M842.0 136 L842.0 160" stroke="#5d6b75" stroke-width="1.6" fill="none" marker-end="url(#arc)"/>
+<rect x="754" y="162" width="176" height="56" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"/><text class="en" x="842.0" y="186.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Pearson correlation</text><text class="en" x="842.0" y="203.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">cor.test(x, y)</text><text class="fr" x="842.0" y="186.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">corrélation de Pearson</text><text class="fr" x="842.0" y="203.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">cor.test(x, y)</text>
+<rect x="754" y="224" width="176" height="56" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"/><text class="en" x="842.0" y="248.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">linear regression</text><text class="en" x="842.0" y="265.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">lm(y ~ x)</text><text class="fr" x="842.0" y="248.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">régression linéaire</text><text class="fr" x="842.0" y="265.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">lm(y ~ x)</text>
+<rect x="754" y="286" width="176" height="74" rx="9" fill="#fdf0eb" stroke="#d9694a" stroke-width="1.8"/><text class="en" x="842.0" y="311.0" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Spearman correlation</text><text class="en" x="842.0" y="328.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">cor.test(x, y,</text><text class="en" x="842.0" y="345.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">method = "spearman")</text><text class="fr" x="842.0" y="311.0" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">corrélation de Spearman</text><text class="fr" x="842.0" y="328.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">cor.test(x, y,</text><text class="fr" x="842.0" y="345.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">method = "spearman")</text>
+<rect x="10" y="500" width="22" height="16" rx="4" fill="#e9f4f6" stroke="#1b7f8c"/><rect x="10" y="530" width="22" height="16" rx="4" fill="#fdf0eb" stroke="#d9694a"/>
+<text class="en" x="40" y="513" font-size="14" fill="#3c4a52">parametric: data (or residuals) roughly normal, or large n without strong outliers — log-transform multiplicative variables first</text>
+<text class="fr" x="40" y="513" font-size="14" fill="#3c4a52">paramétrique : données (ou résidus) à peu près normales, ou grand n sans fortes valeurs extrêmes — log-transformez d'abord les variables multiplicatives</text>
+<text class="en" x="40" y="543" font-size="14" fill="#3c4a52">rank-based or exact alternative: small n with skew or outliers, ordinal data, small expected counts</text>
+<text class="fr" x="40" y="543" font-size="14" fill="#3c4a52">alternative sur les rangs ou exacte : petit n avec asymétrie ou valeurs extrêmes, données ordinales, petits effectifs attendus</text>
+<text class="en" x="10" y="580" font-size="14" font-weight="700" fill="#d9694a">Always: independent units (Session 1), plot first (Session 3), report the effect size with its CI (Session 11).</text>
+<text class="fr" x="10" y="580" font-size="14" font-weight="700" fill="#d9694a">Toujours : unités indépendantes (séance 1), tracer d'abord (séance 3), rapporter la taille d'effet avec son IC (séance 11).</text>
+</svg><figcaption><span class="en">Decision chart of the course. Blue: parametric test; orange: rank-based or exact alternative.</span><span class="fr">Schéma de décision du cours. Bleu : test paramétrique ; orange : alternative sur les rangs ou exacte.</span></figcaption></figure>
+</div>
+<div id="the-same-in-a-tablela-même-chose-en-tableau"
+class="section level2 no-track">
+<h2 class="no-track"><span class="en">The same in a table</span><span
+class="fr">La même chose en tableau</span></h2>
+<div class="en">
+<table style="width:100%;">
+<colgroup>
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Question</th>
+<th>Response</th>
+<th>Design</th>
+<th>Parametric</th>
+<th>Alternative</th>
+<th>Session</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Estimate a mean</td>
+<td>numeric</td>
+<td>one sample</td>
+<td><code>t.test(x)$conf.int</code></td>
+<td>bootstrap, <code>median()</code> + bootstrap</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td>Estimate a proportion</td>
+<td>yes/no</td>
+<td>one sample</td>
+<td><code>prop.test(x, n)</code></td>
+<td><code>binom.test(x, n)</code> (exact)</td>
+<td>5, 9</td>
+</tr>
+<tr class="odd">
+<td>Mean vs reference value</td>
+<td>numeric</td>
+<td>one sample</td>
+<td><code>t.test(x, mu = m)</code></td>
+<td><code>wilcox.test(x, mu = m)</code></td>
+<td>6</td>
+</tr>
+<tr class="even">
+<td>Compare 2 groups</td>
+<td>numeric</td>
+<td>independent</td>
+<td><code>t.test(y ~ g)</code> (Welch)</td>
+<td><code>wilcox.test(y ~ g)</code></td>
+<td>7</td>
+</tr>
+<tr class="odd">
+<td>Compare 2 conditions</td>
+<td>numeric</td>
+<td>paired</td>
+<td><code>t.test(x1, x2, paired = TRUE)</code></td>
+<td><code>wilcox.test(x1, x2, paired = TRUE)</code></td>
+<td>7</td>
+</tr>
+<tr class="even">
+<td>Compare 3+ groups</td>
+<td>numeric</td>
+<td>independent</td>
+<td><code>aov(y ~ g)</code> + <code>TukeyHSD()</code>;
+<code>oneway.test()</code></td>
+<td><code>kruskal.test(y ~ g)</code> +
+<code>pairwise.wilcox.test()</code></td>
+<td>8</td>
+</tr>
+<tr class="odd">
+<td>Counts vs expected proportions</td>
+<td>categorical</td>
+<td>one sample</td>
+<td><code>chisq.test(table(x), p = …)</code></td>
+<td><code>binom.test()</code> (2 categories)</td>
+<td>9</td>
+</tr>
+<tr class="even">
+<td>Compare 2 proportions</td>
+<td>yes/no</td>
+<td>independent</td>
+<td><code>prop.test(c(x1, x2), c(n1, n2))</code></td>
+<td><code>fisher.test()</code></td>
+<td>9</td>
+</tr>
+<tr class="odd">
+<td>Association of 2 categorical variables</td>
+<td>categorical</td>
+<td>independent</td>
+<td><code>chisq.test(table(a, b))</code></td>
+<td><code>fisher.test(table(a, b))</code></td>
+<td>9</td>
+</tr>
+<tr class="even">
+<td>Linear relationship</td>
+<td>2 numeric</td>
+<td>—</td>
+<td><code>cor.test(x, y)</code>, <code>lm(y ~ x)</code></td>
+<td><code>cor.test(x, y, method = "spearman")</code></td>
+<td>10</td>
+</tr>
+<tr class="odd">
+<td>Plan the sample size</td>
+<td>—</td>
+<td>—</td>
+<td><code>power.t.test()</code>, <code>power.prop.test()</code></td>
+<td>simulation</td>
+<td>11</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Not in this course</strong> (→ <em>Statistical modelling with
+R</em>): several predictors at once (multiple regression, ANCOVA,
+two-way ANOVA), counts and proportions as responses (GLM: Poisson,
+negative binomial, binomial), repeated measures and nested designs
+(mixed models).</p>
+</div>
+<div class="fr">
+<table style="width:100%;">
+<colgroup>
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Question</th>
+<th>Réponse</th>
+<th>Plan</th>
+<th>Paramétrique</th>
+<th>Alternative</th>
+<th>Séance</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Estimer une moyenne</td>
+<td>numérique</td>
+<td>un échantillon</td>
+<td><code>t.test(x)$conf.int</code></td>
+<td>bootstrap, <code>median()</code> + bootstrap</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td>Estimer une proportion</td>
+<td>oui/non</td>
+<td>un échantillon</td>
+<td><code>prop.test(x, n)</code></td>
+<td><code>binom.test(x, n)</code> (exact)</td>
+<td>5, 9</td>
+</tr>
+<tr class="odd">
+<td>Moyenne vs valeur de référence</td>
+<td>numérique</td>
+<td>un échantillon</td>
+<td><code>t.test(x, mu = m)</code></td>
+<td><code>wilcox.test(x, mu = m)</code></td>
+<td>6</td>
+</tr>
+<tr class="even">
+<td>Comparer 2 groupes</td>
+<td>numérique</td>
+<td>indépendant</td>
+<td><code>t.test(y ~ g)</code> (Welch)</td>
+<td><code>wilcox.test(y ~ g)</code></td>
+<td>7</td>
+</tr>
+<tr class="odd">
+<td>Comparer 2 conditions</td>
+<td>numérique</td>
+<td>apparié</td>
+<td><code>t.test(x1, x2, paired = TRUE)</code></td>
+<td><code>wilcox.test(x1, x2, paired = TRUE)</code></td>
+<td>7</td>
+</tr>
+<tr class="even">
+<td>Comparer 3+ groupes</td>
+<td>numérique</td>
+<td>indépendant</td>
+<td><code>aov(y ~ g)</code> + <code>TukeyHSD()</code> ;
+<code>oneway.test()</code></td>
+<td><code>kruskal.test(y ~ g)</code> +
+<code>pairwise.wilcox.test()</code></td>
+<td>8</td>
+</tr>
+<tr class="odd">
+<td>Effectifs vs proportions attendues</td>
+<td>catégorielle</td>
+<td>un échantillon</td>
+<td><code>chisq.test(table(x), p = …)</code></td>
+<td><code>binom.test()</code> (2 catégories)</td>
+<td>9</td>
+</tr>
+<tr class="even">
+<td>Comparer 2 proportions</td>
+<td>oui/non</td>
+<td>indépendant</td>
+<td><code>prop.test(c(x1, x2), c(n1, n2))</code></td>
+<td><code>fisher.test()</code></td>
+<td>9</td>
+</tr>
+<tr class="odd">
+<td>Association de 2 variables catégorielles</td>
+<td>catégorielle</td>
+<td>indépendant</td>
+<td><code>chisq.test(table(a, b))</code></td>
+<td><code>fisher.test(table(a, b))</code></td>
+<td>9</td>
+</tr>
+<tr class="even">
+<td>Relation linéaire</td>
+<td>2 numériques</td>
+<td>—</td>
+<td><code>cor.test(x, y)</code>, <code>lm(y ~ x)</code></td>
+<td><code>cor.test(x, y, method = "spearman")</code></td>
+<td>10</td>
+</tr>
+<tr class="odd">
+<td>Planifier la taille d’échantillon</td>
+<td>—</td>
+<td>—</td>
+<td><code>power.t.test()</code>, <code>power.prop.test()</code></td>
+<td>simulation</td>
+<td>11</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Pas dans ce cours</strong> (→ <em>Modélisation statistique
+avec R</em>) : plusieurs prédicteurs à la fois (régression multiple,
+ANCOVA, ANOVA à deux facteurs), comptages et proportions comme réponses
+(GLM : Poisson, binomiale négative, binomiale), mesures répétées et
+plans emboîtés (modèles mixtes).</p>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

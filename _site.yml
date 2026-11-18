@@ -1,0 +1,50 @@
+# =============================================================================
+# _site.yml — settings shared by ALL pages of the R Markdown website
+# Build the whole site with:  source("R/build_site.R")   (or Build > Build Website)
+# =============================================================================
+name: "r4marine-stats"
+output_dir: "docs"          # GitHub Pages will publish this folder
+
+# files/folders NOT copied into docs/ (they are for you, not for students)
+exclude: ["R", "apps-script", "slides", "pdf_kit", "README.md", "*.Rproj", "docs", "accounts_to_paste.csv"]
+
+navbar:
+  title: "R4Marine Stats"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Sessions"
+      menu:
+        - { text: "0 · Why statistics?",               href: 00-start.html }
+        - { text: "1 · Study design & sampling",       href: 01-design.html }
+        - { text: "2 · Describing data",               href: 02-describe.html }
+        - { text: "3 · Exploring distributions",       href: 03-explore.html }
+        - { text: "4 · Probability & distributions",   href: 04-probability.html }
+        - { text: "5 · Standard error & CIs",          href: 05-estimation.html }
+        - { text: "6 · Hypothesis tests & p-values",   href: 06-testing.html }
+        - { text: "7 · Comparing two groups",          href: 07-two-groups.html }
+        - { text: "8 · ANOVA & Kruskal–Wallis",        href: 08-anova.html }
+        - { text: "9 · Proportions & χ²",              href: 09-categorical.html }
+        - { text: "10 · Correlation & regression",     href: 10-regression.html }
+        - { text: "11 · Power, multiple tests, reporting", href: 11-power-reporting.html }
+        - { text: "12 · Practice",                     href: 12-practice.html }
+        - { text: "13 · Final project",                href: 13-final-project.html }
+    - text: "Resources"
+      menu:
+        - { text: "Which test? (decision guide)",      href: choose-test.html }
+        - { text: "Cheatsheet",                        href: cheatsheet.html }
+        - { text: "Glossary EN–FR",                    href: glossary.html }
+        - { text: "Common errors & pitfalls",          href: common-errors.html }
+        - { text: "To go further",                     href: resources.html }
+        - { text: "Need help?",                        href: help.html }
+        - { text: "What's new",                        href: whats-new.html }
+
+output:
+  html_document:
+    theme: flatly            # Bootstrap theme (colours overridden in course.css)
+    highlight: tango         # colours of the R code
+    css: assets/course.css
+    toc: false               # the table of contents is built by course.js
+    self_contained: false    # keep JS/CSS as separate files (required for a site)
+    includes:
+      in_header: assets/header.html   # loads config.js + course.js on every page

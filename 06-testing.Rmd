@@ -1,0 +1,367 @@
+---
+title: "[6 · Hypothesis tests and p-values]{.en}[6 · Tests d'hypothèse et p-values]{.fr}"
+pagetitle: "R4Marine Stats · Session 6"
+subtitle: "~3 h"
+---
+
+```{r setup, include=FALSE}
+source("R/course_helpers.R")
+library(ggplot2)
+oc <- read.csv("data/octopus_catch.csv")
+knitr::opts_chunk$set(fig.height = 3.2)
+```
+
+::: objectives
+::: en
+#### By the end of this session you will be able to
+- state a **null hypothesis** H0 and an **alternative** H1 for a question;
+- explain the logic of a test with a **permutation test**: "how often would chance alone give a difference this large?";
+- define the **p-value** correctly — and list what it is **not**;
+- run and read a **one-sample t-test** (`t.test(x, mu = …)`), two-sided or one-sided;
+- explain **type I** and **type II** errors, the level α and the **power**;
+- distinguish **statistical significance** from **practical importance**, and report an **effect size with its CI**.
+:::
+::: fr
+#### À la fin de cette séance vous saurez
+- formuler une **hypothèse nulle** H0 et une **alternative** H1 pour une question ;
+- expliquer la logique d'un test avec un **test de permutation** : « à quelle fréquence le hasard seul donnerait-il une différence aussi grande ? » ;
+- définir correctement la **p-value** — et dire ce qu'elle n'est **pas** ;
+- réaliser et lire un **test t à un échantillon** (`t.test(x, mu = …)`), bilatéral ou unilatéral ;
+- expliquer les erreurs de **type I** et de **type II**, le seuil α et la **puissance** ;
+- distinguer la **significativité statistique** de l'**importance pratique**, et rapporter une **taille d'effet avec son IC**.
+:::
+:::
+
+## [The logic of a test]{.en}[La logique d'un test]{.fr} {#logic}
+
+::: en
+Every test follows the same five steps:
+
+1. **Question** → two hypotheses. **H0** (null): "no effect, no difference" — the boring explanation, chance alone. **H1** (alternative): there is a difference.
+2. A **test statistic** that measures how far the data are from H0 (a difference of means, a *t*, a χ²…).
+3. The **distribution of this statistic if H0 were true** (by simulation, or by theory).
+4. The **p-value**: the probability, **if H0 were true**, of getting a statistic **at least as extreme** as the one observed.
+5. A **conclusion in words**, with the size of the effect.
+:::
+::: fr
+Chaque test suit les mêmes cinq étapes :
+
+1. **Question** → deux hypothèses. **H0** (nulle) : « pas d'effet, pas de différence » — l'explication ennuyeuse, le hasard seul. **H1** (alternative) : il y a une différence.
+2. Une **statistique de test** qui mesure à quelle distance les données sont de H0 (une différence de moyennes, un *t*, un χ²…).
+3. La **distribution de cette statistique si H0 était vraie** (par simulation, ou par la théorie).
+4. La **p-value** : la probabilité, **si H0 était vraie**, d'obtenir une statistique **au moins aussi extrême** que celle observée.
+5. Une **conclusion en mots**, avec la taille de l'effet.
+:::
+
+## [A test you can see: the permutation test]{.en}[Un test qu'on peut voir : le test de permutation]{.fr} {#permutation}
+
+::: {.callout .ecology}
+::: en
+**Data:** `octopus_catch.csv` (Session 3): every octopus landed on the reopening day of a temporary closure, in Tsifota (area **reopened**) and Andrevo (**open** areas). The sex of the **fisher** (woman or man) was also recorded.
+:::
+::: fr
+**Données :** `octopus_catch.csv` (séance 3) : toutes les pieuvres débarquées le jour de réouverture d'une fermeture temporaire, à Tsifota (zone **rouverte**) et Andrevo (zones **ouvertes**). Le sexe du **pêcheur** (femme ou homme) a aussi été noté.
+:::
+:::
+
+::: en
+**Question:** in the reopened area, do octopuses caught by women and by men differ in mean weight?
+H0: the fisher's sex has nothing to do with the weight; the labels "F" and "M" could be shuffled without changing anything. H1: the mean weights differ.
+
+If H0 is true, **shuffling the labels** at random produces differences of the size that chance alone creates. We shuffle 5,000 times and see where the observed difference falls.
+:::
+::: fr
+**Question :** dans la zone rouverte, les pieuvres capturées par des femmes et par des hommes diffèrent-elles en poids moyen ?
+H0 : le sexe du pêcheur n'a rien à voir avec le poids ; on pourrait mélanger les étiquettes « F » et « M » sans rien changer. H1 : les poids moyens diffèrent.
+
+Si H0 est vraie, **mélanger les étiquettes** au hasard produit des différences de la taille que crée le hasard seul. On mélange 5 000 fois et on regarde où tombe la différence observée.
+:::
+
+```{r}
+oc <- read.csv("data/octopus_catch.csv")
+re <- oc[oc$area == "reopened", ]
+obs <- mean(re$weight_g[re$fisher_sex == "F"]) - mean(re$weight_g[re$fisher_sex == "M"])
+obs
+
+set.seed(6)
+perm <- replicate(5000, {
+  shuffled <- sample(re$fisher_sex)                  # random labels: H0 world
+  mean(re$weight_g[shuffled == "F"]) - mean(re$weight_g[shuffled == "M"])
+})
+p_perm <- mean(abs(perm) >= abs(obs))                # two-sided p-value
+p_perm
+```
+
+```{r}
+ggplot(data.frame(diff = perm), aes(diff)) +
+  geom_histogram(bins = 40, fill = "#bfdfe4", colour = "white") +
+  geom_vline(xintercept = c(-obs, obs), colour = "#d9694a", linewidth = 1, linetype = c(2, 1)) +
+  labs(x = "difference of means F − M if H0 is true (g)", y = "number of shuffles") + theme_c()
+```
+
+```{r, echo=FALSE}
+fa(c("`sample(x)`", "random permutation of `x` (Session 1): here, the labels are redistributed at random among the octopuses", "permutation aléatoire de `x` (séance 1) : ici, les étiquettes sont redistribuées au hasard entre les pieuvres", "", ""),
+   c("`mean(abs(perm) >= abs(obs))`", "share of shuffles giving a difference at least as large (in either direction) as the observed one = the p-value", "part des mélanges donnant une différence au moins aussi grande (dans un sens ou l'autre) que celle observée = la p-value", "", ""))
+```
+
+::: en
+The observed difference (solid line) sits well inside the cloud of differences produced by shuffling: such a difference happens in about `r round(100 * p_perm)` % of shuffles. **No evidence** that the fisher's sex matters (p = `r round(p_perm, 2)`).
+
+Now the main question of the closure: are octopuses heavier in the **reopened** area than in the **open** area?
+:::
+::: fr
+La différence observée (trait plein) se situe bien à l'intérieur du nuage des différences produites par les mélanges : une telle différence arrive dans environ `r round(100 * p_perm)` % des mélanges. **Pas de preuve** que le sexe du pêcheur compte (p = `r round(p_perm, 2)`).
+
+Maintenant la question principale de la fermeture : les pieuvres sont-elles plus lourdes dans la zone **rouverte** que dans la zone **ouverte** ?
+:::
+
+```{r}
+obs2 <- mean(oc$weight_g[oc$area == "reopened"]) - mean(oc$weight_g[oc$area == "open"])
+set.seed(6)
+perm2 <- replicate(5000, {
+  a <- sample(oc$area)
+  mean(oc$weight_g[a == "reopened"]) - mean(oc$weight_g[a == "open"])
+})
+obs2
+max(abs(perm2))                    # the largest difference chance produced in 5,000 shuffles
+mean(abs(perm2) >= abs(obs2))      # p-value: 0 shuffles out of 5,000 -> p < 1/5000
+```
+
+::: en
+In 5,000 shuffles, chance never produced a difference as large as `r round(obs2)` g. We report **p < 0.001** (never "p = 0"): the data are very unlikely under H0, so we reject it. The difference is **real** — but the test does not say *why* (Session 1: this is an observational comparison of two villages).
+:::
+::: fr
+En 5 000 mélanges, le hasard n'a jamais produit une différence aussi grande que `r round(obs2)` g. On écrit **p < 0,001** (jamais « p = 0 ») : les données sont très improbables sous H0, on la rejette donc. La différence est **réelle** — mais le test ne dit pas *pourquoi* (séance 1 : c'est une comparaison observationnelle de deux villages).
+:::
+
+## [What a p-value is — and is not]{.en}[Ce qu'est une p-value — et ce qu'elle n'est pas]{.fr} {#pvalue}
+
+::: en
+**It is:** the probability of data at least as extreme as ours **if H0 were true**. Small p → the data are surprising under H0.
+
+**It is not:**
+
+- the probability that H0 is true (p = 0.03 does **not** mean "3 % chance there is no effect");
+- the probability that the result is due to chance;
+- a measure of the **size** or the **importance** of the effect (a tiny effect can give a tiny p with a huge sample);
+- a proof of "no effect" when it is large: **absence of evidence is not evidence of absence** — maybe the sample was too small (power, Session 11).
+
+By convention, p < α = 0.05 is called "statistically significant". The 0.05 threshold is arbitrary: p = 0.049 and p = 0.051 carry the same evidence. Report the **exact p-value** (e.g. p = 0.034), not only "p < 0.05" or stars.
+:::
+::: fr
+**C'est :** la probabilité de données au moins aussi extrêmes que les nôtres **si H0 était vraie**. p petite → les données sont surprenantes sous H0.
+
+**Ce n'est pas :**
+
+- la probabilité que H0 soit vraie (p = 0,03 ne veut **pas** dire « 3 % de chances qu'il n'y ait pas d'effet ») ;
+- la probabilité que le résultat soit dû au hasard ;
+- une mesure de la **taille** ou de l'**importance** de l'effet (un effet minuscule peut donner une p minuscule avec un énorme échantillon) ;
+- une preuve d'« absence d'effet » quand elle est grande : **l'absence de preuve n'est pas la preuve de l'absence** — l'échantillon était peut-être trop petit (puissance, séance 11).
+
+Par convention, p < α = 0,05 est dite « statistiquement significative ». Le seuil 0,05 est arbitraire : p = 0,049 et p = 0,051 apportent la même preuve. Donnez la **p-value exacte** (ex. p = 0,034), pas seulement « p < 0,05 » ou des étoiles.
+:::
+
+## [The one-sample t-test]{.en}[Le test t à un échantillon]{.fr} {#one-sample}
+
+::: en
+Shuffling needs two groups. With one sample and a **reference value** μ₀, theory gives the null distribution directly. Example: the fisheries service considers a fishery healthy if the mean octopus landed weighs **at least 700 g**. In the **open** area, is the mean weight different from 700 g?
+
+- H0: μ = 700 g; H1: μ ≠ 700 g (two-sided).
+- Statistic: **t = (x̄ − μ₀) / SE**: the distance to 700 g, in standard errors.
+- Under H0, t follows a *t* distribution with n − 1 df (Session 5).
+:::
+::: fr
+Le mélange demande deux groupes. Avec un seul échantillon et une **valeur de référence** μ₀, la théorie donne directement la distribution sous H0. Exemple : le service des pêches considère qu'une pêcherie est en bonne santé si la pieuvre moyenne débarquée pèse **au moins 700 g**. Dans la zone **ouverte**, le poids moyen diffère-t-il de 700 g ?
+
+- H0 : μ = 700 g ; H1 : μ ≠ 700 g (bilatéral).
+- Statistique : **t = (x̄ − μ₀) / ES** : la distance à 700 g, en erreurs standard.
+- Sous H0, t suit une loi de *t* à n − 1 ddl (séance 5).
+:::
+
+```{r}
+wo <- oc$weight_g[oc$area == "open"]
+n <- length(wo)
+t_stat <- (mean(wo) - 700) / (sd(wo) / sqrt(n))
+t_stat
+2 * pt(-abs(t_stat), df = n - 1)          # two-sided p-value "by hand"
+
+t.test(wo, mu = 700)                      # the same with t.test()
+```
+
+```{r, echo=FALSE}
+fa(c("`pt(q, df)`", "P(T ≤ q) for a *t* distribution; `2 * pt(-abs(t), df)` = the two tails beyond ±t", "P(T ≤ q) pour une loi de *t* ; `2 * pt(-abs(t), df)` = les deux queues au-delà de ±t", "", ""),
+   c("`t.test(x, mu, alternative, conf.level)`", "one-sample t-test of H0: mean of `x` = `mu`", "test t à un échantillon de H0 : moyenne de `x` = `mu`", "", ""),
+   c("&nbsp;&nbsp;`mu`", "the reference value μ₀", "la valeur de référence μ₀", "a number (default 0)", "un nombre (défaut 0)"),
+   c("&nbsp;&nbsp;`alternative`", "`\"two.sided\"` (default): μ ≠ μ₀; `\"less\"`: μ < μ₀; `\"greater\"`: μ > μ₀", "`\"two.sided\"` (défaut) : μ ≠ μ₀ ; `\"less\"` : μ < μ₀ ; `\"greater\"` : μ > μ₀", "", ""))
+```
+
+::: en
+How to read the output: `t` and `df`; the `p-value`; the **95 % CI** of the mean (581 to 680 g) — it does **not** contain 700, which is the same conclusion as p < 0.05 (a two-sided test at α = 0.05 rejects μ₀ exactly when the 95 % CI excludes μ₀). **Report:** "In the open area, octopuses weighed on average 631 g (95 % CI 581–680 g), below the 700 g reference (one-sample t-test, t = −2.78, df = 159, p = 0.006)."
+:::
+::: fr
+Lecture de la sortie : `t` et `df` ; la `p-value` ; l'**IC à 95 %** de la moyenne (581 à 680 g) — il ne contient **pas** 700, ce qui est la même conclusion que p < 0,05 (un test bilatéral au seuil α = 0,05 rejette μ₀ exactement quand l'IC à 95 % exclut μ₀). **Rédaction :** « Dans la zone ouverte, les pieuvres pesaient en moyenne 631 g (IC 95 % 581–680 g), en dessous de la référence de 700 g (test t à un échantillon, t = −2,78, ddl = 159, p = 0,006). »
+:::
+
+```{r, include=FALSE}
+tt <- t.test(wo, mu = 700)
+stopifnot(round(mean(wo)) == 631, round(tt$conf.int[1]) == 581, round(tt$conf.int[2]) == 680,
+          round(tt$statistic, 2) == -2.78, round(tt$p.value, 3) == 0.006)
+```
+
+### [One-sided or two-sided?]{.en}[Unilatéral ou bilatéral ?]{.fr}
+
+::: en
+A **one-sided** test (`alternative = "less"`) looks only in one direction and halves the p-value. It is justified only if the direction was fixed **before** seeing the data **and** a difference in the other direction would be treated exactly like "no difference". In practice, use **two-sided** tests unless you have a strong, pre-registered reason.
+:::
+::: fr
+Un test **unilatéral** (`alternative = "less"`) ne regarde que dans un sens et divise la p-value par deux. Il n'est justifié que si le sens a été fixé **avant** de voir les données **et** qu'une différence dans l'autre sens serait traitée exactement comme « pas de différence ». En pratique, utilisez des tests **bilatéraux** sauf raison forte et décidée à l'avance.
+:::
+
+## [Two kinds of errors]{.en}[Deux sortes d'erreurs]{.fr} {#errors}
+
+`r fig_svg("test-errors", "The four possible outcomes of a test. α is fixed by you (usually 0.05); β depends on the effect size, the variability and n.", "Les quatre issues possibles d'un test. α est fixé par vous (en général 0,05) ; β dépend de la taille de l'effet, de la variabilité et de n.")`
+
+::: en
+- **Type I error** (false positive): rejecting H0 when it is true. Its probability is α: with α = 0.05, **1 test in 20** on pure noise is "significant".
+- **Type II error** (false negative): not rejecting H0 when there is a real effect. Its probability is β.
+- **Power** = 1 − β: the probability of detecting a real effect. Small samples have low power (Session 11).
+
+Let us check α by simulation: 2,000 samples drawn from a population where H0 is **true**.
+:::
+::: fr
+- **Erreur de type I** (faux positif) : rejeter H0 alors qu'elle est vraie. Sa probabilité est α : avec α = 0,05, **1 test sur 20** sur du pur bruit est « significatif ».
+- **Erreur de type II** (faux négatif) : ne pas rejeter H0 alors qu'il existe un vrai effet. Sa probabilité est β.
+- **Puissance** = 1 − β : la probabilité de détecter un effet réel. Les petits échantillons ont une faible puissance (séance 11).
+
+Vérifions α par simulation : 2 000 échantillons tirés d'une population où H0 est **vraie**.
+:::
+
+```{r}
+set.seed(66)
+p_null <- replicate(2000, t.test(rnorm(15, mean = 700, sd = 200), mu = 700)$p.value)
+mean(p_null < 0.05)            # close to 0.05: the false-positive rate
+```
+
+::: en
+That is why running many tests and reporting only the significant ones is misleading: with 20 tests on noise, you expect one "discovery" (multiple testing, Session 11).
+:::
+::: fr
+C'est pourquoi faire beaucoup de tests et ne rapporter que les significatifs est trompeur : avec 20 tests sur du bruit, on s'attend à une « découverte » (tests multiples, séance 11).
+:::
+
+## [Significant is not the same as important]{.en}[Significatif n'est pas la même chose qu'important]{.fr} {#importance}
+
+::: en
+A p-value answers "is there an effect?"; the **effect size** answers "how big?", and its **CI** "how precisely do we know it?". Always report the effect, in the units of the data:
+
+- the difference of mean weights between areas, with its CI (Session 7);
+- or a standardised effect, such as **Cohen's d** = difference / SD (≈ 0.2 small, 0.5 medium, 0.8 large — rough guides only).
+
+Whether 50 g more per octopus matters is a **fisheries** question (price, reproduction), not a statistical one.
+:::
+::: fr
+Une p-value répond à « y a-t-il un effet ? » ; la **taille d'effet** répond à « de quelle taille ? », et son **IC** à « avec quelle précision le connaissons-nous ? ». Donnez toujours l'effet, dans les unités des données :
+
+- la différence de poids moyens entre zones, avec son IC (séance 7) ;
+- ou un effet standardisé, comme le **d de Cohen** = différence / ET (≈ 0,2 petit, 0,5 moyen, 0,8 grand — repères grossiers seulement).
+
+Savoir si 50 g de plus par pieuvre comptent est une question **halieutique** (prix, reproduction), pas statistique.
+:::
+
+## [Application work & quiz]{.en}[Travail d'application et quiz]{.fr} {#application}
+
+```{r answers06, include=FALSE}
+wr <- oc$weight_g[oc$area == "reopened"]
+g1 <- round(mean(wr), 1)
+tt1 <- t.test(wr, mu = 900)
+g2 <- round(tt1$statistic[[1]], 3)
+g3 <- round(tt1$p.value, 4)
+g4 <- round(tt1$conf.int[1], 1)
+op <- oc[oc$area == "open", ]
+obs_g <- mean(op$weight_g[op$gear == "spear"]) - mean(op$weight_g[op$gear == "hook"])
+g5 <- round(obs_g, 1)
+set.seed(60)
+pg <- replicate(5000, { s <- sample(op$gear); mean(op$weight_g[s == "spear"]) - mean(op$weight_g[s == "hook"]) })
+g6 <- round(mean(abs(pg) >= abs(obs_g)), 3)
+```
+
+::: application
+::: en
+### Application work 6
+
+1. Mean weight of octopuses in the **reopened** area (1 decimal).
+2. – 4. One-sample t-test of H0: μ = **900 g** in the reopened area. Give *t* (3 decimals), the p-value (4 decimals) and the lower limit of the 95 % CI (1 decimal).
+5. In the **open** area, difference of mean weights **spear − hook** (1 decimal).
+6. Permutation test of this difference: run **exactly** `set.seed(60)` then 5,000 shuffles of the `gear` labels **of the open area**, as in the session, and give the two-sided p-value (3 decimals).
+7. – 10. Interpretation.
+:::
+::: fr
+### Travail d'application 6
+
+1. Poids moyen des pieuvres de la zone **rouverte** (1 décimale).
+2. – 4. Test t à un échantillon de H0 : μ = **900 g** dans la zone rouverte. Donnez *t* (3 décimales), la p-value (4 décimales) et la limite inférieure de l'IC à 95 % (1 décimale).
+5. Dans la zone **ouverte**, différence des poids moyens **spear − hook** (harpon − crochet, 1 décimale).
+6. Test de permutation de cette différence : exécutez **exactement** `set.seed(60)` puis 5 000 mélanges des étiquettes `gear` **de la zone ouverte**, comme dans la séance, et donnez la p-value bilatérale (3 décimales).
+7. – 10. Interprétation.
+:::
+:::
+
+::: hint
+::: en
+Q6: `op <- oc[oc$area == "open", ]`, then inside `replicate()`: `s <- sample(op$gear)` and the difference of means of `op$weight_g` for `s == "spear"` and `s == "hook"`. The seed must be set just before `replicate()`.
+:::
+::: fr
+Q6 : `op <- oc[oc$area == "open", ]`, puis dans `replicate()` : `s <- sample(op$gear)` et la différence des moyennes de `op$weight_g` pour `s == "spear"` et `s == "hook"`. La graine doit être fixée juste avant `replicate()`.
+:::
+:::
+
+```{r quiz06, echo=FALSE}
+quiz("t06", list(
+  q_num("1. Mean weight, reopened area?", "1. Poids moyen, zone rouverte ?", g1, tol = 0.06),
+  q_num("2. t statistic (H0: μ = 900)?", "2. Statistique t (H0 : μ = 900) ?", g2, tol = 0.0006),
+  q_num("3. p-value?", "3. p-value ?", g3, tol = 0.00006),
+  q_num("4. Lower limit of the 95 % CI?", "4. Limite inférieure de l'IC à 95 % ?", g4, tol = 0.06),
+  q_num("5. Difference spear − hook, open area (g)?", "5. Différence harpon − crochet, zone ouverte (g) ?", g5, tol = 0.06),
+  q_num("6. Permutation p-value?", "6. p-value de permutation ?", g6, tol = 0.0006),
+  q_mcq("7. p = 0.03 means…", "7. p = 0,03 signifie…",
+        c("there is a 3 % chance that H0 is true",
+          "if H0 were true, data at least this extreme would occur about 3 % of the time",
+          "the effect is small", "97 % of the data support H1"),
+        c("il y a 3 % de chances que H0 soit vraie",
+          "si H0 était vraie, des données au moins aussi extrêmes arriveraient environ 3 % du temps",
+          "l'effet est petit", "97 % des données soutiennent H1"), correct = 2),
+  q_mcq("8. A study finds p = 0.40 with 8 sites per group. The best conclusion is…",
+        "8. Une étude trouve p = 0,40 avec 8 sites par groupe. La meilleure conclusion est…",
+        c("there is no difference", "no evidence of a difference; the study may lack power",
+          "H0 is proven", "the difference is 40 %"),
+        c("il n'y a pas de différence", "pas de preuve d'une différence ; l'étude manque peut-être de puissance",
+          "H0 est prouvée", "la différence est de 40 %"), correct = 2),
+  q_mcq("9. Rejecting H0 when it is actually true is a…", "9. Rejeter H0 alors qu'elle est vraie est une…",
+        c("type I error (false positive)", "type II error (false negative)", "power", "confidence level"),
+        c("erreur de type I (faux positif)", "erreur de type II (faux négatif)", "puissance", "niveau de confiance"), correct = 1),
+  q_mcq("10. The 95 % CI of a mean is 812–968 g. A two-sided test of H0: μ = 900 g at α = 0.05…",
+        "10. L'IC à 95 % d'une moyenne est 812–968 g. Un test bilatéral de H0 : μ = 900 g au seuil α = 0,05…",
+        c("rejects H0", "does not reject H0, because 900 is inside the CI", "cannot be decided", "rejects H0 only if n > 30"),
+        c("rejette H0", "ne rejette pas H0, car 900 est dans l'IC", "ne peut pas être décidé", "rejette H0 seulement si n > 30"), correct = 2)
+))
+```
+
+::: {.solution data-quiz="t06"}
+```{r, eval=FALSE}
+oc <- read.csv("data/octopus_catch.csv")
+wr <- oc$weight_g[oc$area == "reopened"]
+mean(wr)                                                   # 1
+t.test(wr, mu = 900)                                       # 2, 3, 4
+op <- oc[oc$area == "open", ]
+obs <- mean(op$weight_g[op$gear == "spear"]) - mean(op$weight_g[op$gear == "hook"])
+obs                                                        # 5
+set.seed(60)
+pg <- replicate(5000, {
+  s <- sample(op$gear)
+  mean(op$weight_g[s == "spear"]) - mean(op$weight_g[s == "hook"])
+})
+mean(abs(pg) >= abs(obs))                                  # 6
+# 7: probability of data this extreme IF H0 were true   8: no evidence (low power?)
+# 9: type I error   10: 900 is inside the CI -> not rejected
+```
+:::

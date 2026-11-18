@@ -1,0 +1,1703 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>R4Marine Stats · Session 0</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.1/jquery-3.6.1.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<!-- header.html: inserted inside <head> of every page (see _site.yml) -->
+<!-- config.js (settings) and quiz_index.js (made by R/build_site.R) first,
+     then course.js (the behaviour that reads them) -->
+<script src="assets/config.js"></script>
+<script src="assets/quiz_index.js"></script>
+<script src="assets/course.js"></script>
+<meta name="author" content="Aroo Falinirina">
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<link rel="stylesheet" href="assets/course.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">R4Marine Stats</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Sessions
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="00-start.html">0 · Why statistics?</a>
+    </li>
+    <li>
+      <a href="01-design.html">1 · Study design &amp; sampling</a>
+    </li>
+    <li>
+      <a href="02-describe.html">2 · Describing data</a>
+    </li>
+    <li>
+      <a href="03-explore.html">3 · Exploring distributions</a>
+    </li>
+    <li>
+      <a href="04-probability.html">4 · Probability &amp; distributions</a>
+    </li>
+    <li>
+      <a href="05-estimation.html">5 · Standard error &amp; CIs</a>
+    </li>
+    <li>
+      <a href="06-testing.html">6 · Hypothesis tests &amp; p-values</a>
+    </li>
+    <li>
+      <a href="07-two-groups.html">7 · Comparing two groups</a>
+    </li>
+    <li>
+      <a href="08-anova.html">8 · ANOVA &amp; Kruskal–Wallis</a>
+    </li>
+    <li>
+      <a href="09-categorical.html">9 · Proportions &amp; χ²</a>
+    </li>
+    <li>
+      <a href="10-regression.html">10 · Correlation &amp; regression</a>
+    </li>
+    <li>
+      <a href="11-power-reporting.html">11 · Power, multiple tests, reporting</a>
+    </li>
+    <li>
+      <a href="12-practice.html">12 · Practice</a>
+    </li>
+    <li>
+      <a href="13-final-project.html">13 · Final project</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Resources
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="choose-test.html">Which test? (decision guide)</a>
+    </li>
+    <li>
+      <a href="cheatsheet.html">Cheatsheet</a>
+    </li>
+    <li>
+      <a href="glossary.html">Glossary EN–FR</a>
+    </li>
+    <li>
+      <a href="common-errors.html">Common errors &amp; pitfalls</a>
+    </li>
+    <li>
+      <a href="resources.html">To go further</a>
+    </li>
+    <li>
+      <a href="help.html">Need help?</a>
+    </li>
+    <li>
+      <a href="whats-new.html">What's new</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore"><span class="en">0 · Why statistics?
+Variables, populations and samples</span><span class="fr">0 · Pourquoi
+les statistiques ? Variables, populations et échantillons</span></h1>
+<h3 class="subtitle">~2 h</h3>
+
+</div>
+
+
+<div class="objectives">
+<div id="by-the-end-of-this-session-you-will-be-able-to"
+class="section level4 en">
+<h4>By the end of this session you will be able to</h4>
+<ul>
+<li>set up the project of this course and import its datasets;</li>
+<li>say what statistics are for: <strong>describe</strong>,
+<strong>estimate</strong>, <strong>test</strong>,
+<strong>predict</strong> — always in the presence of
+<strong>variability</strong>;</li>
+<li>distinguish a <strong>population</strong> from a
+<strong>sample</strong>, and a <strong>parameter</strong> (μ, σ, p) from
+a <strong>statistic</strong> (x̄, s, p̂);</li>
+<li>classify a variable as <strong>categorical</strong> (nominal or
+ordinal) or <strong>numeric</strong> (discrete or continuous);</li>
+<li>store each type correctly in R (<code>character</code>,
+<code>factor</code>, ordered factor, <code>integer</code>,
+<code>numeric</code>).</li>
+</ul>
+</div>
+<div id="à-la-fin-de-cette-séance-vous-saurez"
+class="section level4 fr">
+<h4>À la fin de cette séance vous saurez</h4>
+<ul>
+<li>installer le projet de ce cours et importer ses jeux de données
+;</li>
+<li>dire à quoi servent les statistiques : <strong>décrire</strong>,
+<strong>estimer</strong>, <strong>tester</strong>,
+<strong>prédire</strong> — toujours en présence de
+<strong>variabilité</strong> ;</li>
+<li>distinguer une <strong>population</strong> d’un
+<strong>échantillon</strong>, et un <strong>paramètre</strong> (μ, σ, p)
+d’une <strong>statistique</strong> (x̄, s, p̂) ;</li>
+<li>classer une variable comme <strong>catégorielle</strong> (nominale
+ou ordinale) ou <strong>numérique</strong> (discrète ou continue) ;</li>
+<li>stocker chaque type correctement dans R (<code>character</code>,
+<code>factor</code>, facteur ordonné, <code>integer</code>,
+<code>numeric</code>).</li>
+</ul>
+</div>
+</div>
+<div id="start" class="section level2">
+<h2><span class="en">Before you start</span><span class="fr">Avant de
+commencer</span></h2>
+<div class="en">
+<p>This course teaches <strong>statistics</strong>, with R as the tool.
+It assumes you can already: open an RStudio project, write a script,
+import a CSV with <code>read.csv()</code>, select columns with
+<code>$</code>, and make a simple graph — the content of the
+<strong>Beginner level of the R course</strong> (R4Marine Research). If
+one of these is new to you, do that level first: here, the effort goes
+into the reasoning, not into the code.</p>
+<p><strong>Set up your project (15 min):</strong></p>
+<ol style="list-style-type: decimal">
+<li>In RStudio: <em>File → New Project → New Directory → New
+Project</em>, name it <code>intro-stats</code>.</li>
+<li>Inside it, create three folders: <code>data</code>,
+<code>scripts</code>, <code>outputs</code>.</li>
+<li>Download <strong>all the datasets</strong> of the course (one zip)
+and unzip them into <code>data/</code>:</li>
+</ol>
+</div>
+<div class="fr">
+<p>Ce cours enseigne les <strong>statistiques</strong>, avec R comme
+outil. Il suppose que vous savez déjà : ouvrir un projet RStudio, écrire
+un script, importer un CSV avec <code>read.csv()</code>, sélectionner
+des colonnes avec <code>$</code>, et faire un graphique simple — le
+contenu du <strong>niveau Débutant du cours de R</strong> (R4Marine
+Research). Si l’un de ces points est nouveau pour vous, faites d’abord
+ce niveau : ici, l’effort porte sur le raisonnement, pas sur le
+code.</p>
+<p><strong>Installez votre projet (15 min) :</strong></p>
+<ol style="list-style-type: decimal">
+<li>Dans RStudio : <em>File → New Project → New Directory → New
+Project</em>, nommez-le <code>intro-stats</code>.</li>
+<li>À l’intérieur, créez trois dossiers : <code>data</code>,
+<code>scripts</code>, <code>outputs</code>.</li>
+<li>Téléchargez <strong>tous les jeux de données</strong> du cours (un
+zip) et décompressez-les dans <code>data/</code> :</li>
+</ol>
+</div>
+<p><a class="btn-dl" href="data/intro_stats_data.zip" download>⇩
+intro_stats_data.zip</a>
+<a class="btn-dl" href="templates/check_setup.R" download>⇩
+check_setup.R</a></p>
+<div class="en">
+<ol start="4" style="list-style-type: decimal">
+<li>Install the packages used in the course (once):
+<code>install.packages(c("dplyr", "ggplot2"))</code>. Everything else is
+in <strong>base R</strong> (the package <code>stats</code>, loaded
+automatically).</li>
+<li>Put <code>check_setup.R</code> in your project and run it
+(<strong>Ctrl + Shift + Enter</strong>): every line should show ✔.</li>
+</ol>
+</div>
+<div class="fr">
+<ol start="4" style="list-style-type: decimal">
+<li>Installez les packages utilisés dans le cours (une fois) :
+<code>install.packages(c("dplyr", "ggplot2"))</code>. Tout le reste est
+dans <strong>R de base</strong> (le package <code>stats</code>, chargé
+automatiquement).</li>
+<li>Placez <code>check_setup.R</code> dans votre projet et exécutez-le
+(<strong>Ctrl + Maj + Entrée</strong>) : chaque ligne doit afficher
+✔.</li>
+</ol>
+</div>
+<div class="callout tip">
+<div class="en">
+<p><strong>One script per session</strong>,
+e.g. <code>scripts/s00_variables.R</code>, starting with the data it
+needs. Run it from the top after each <strong>Session → Restart
+R</strong>: if it still works, your analysis is reproducible.</p>
+</div>
+<div class="fr">
+<p><strong>Un script par séance</strong>, ex.
+<code>scripts/s00_variables.R</code>, qui commence par les données dont
+il a besoin. Relancez-le depuis le début après chaque <strong>Session →
+Restart R</strong> : s’il fonctionne encore, votre analyse est
+reproductible.</p>
+</div>
+</div>
+</div>
+<div id="why" class="section level2">
+<h2><span class="en">What statistics are for</span><span class="fr">À
+quoi servent les statistiques</span></h2>
+<div class="en">
+<p>If every octopus weighed the same, every reef had the same fish
+biomass and every fisher gave the same answer, we would not need
+statistics: one measurement would tell the whole story. Statistics exist
+because of <strong>variability</strong>: two quadrats a metre apart do
+not have the same seagrass cover, two fishers of the same village do not
+catch the same amount. Statistics are the tools to <strong>draw reliable
+conclusions despite this variability</strong>.</p>
+<p>They do four jobs, which give the plan of this course:</p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Job</th>
+<th>Question</th>
+<th>Sessions</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Describe</strong></td>
+<td>What do my data look like?</td>
+<td>2, 3</td>
+</tr>
+<tr class="even">
+<td><strong>Estimate</strong></td>
+<td>What is the value in the whole population, and how precise is my
+estimate?</td>
+<td>4, 5</td>
+</tr>
+<tr class="odd">
+<td><strong>Test</strong></td>
+<td>Is the difference / relationship I see larger than what chance alone
+would produce?</td>
+<td>6 to 9</td>
+</tr>
+<tr class="even">
+<td><strong>Predict / model</strong></td>
+<td>How much does Y change when X changes?</td>
+<td>10 (then the <em>Statistical modelling</em> course)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p>Si toutes les pieuvres pesaient le même poids, si tous les récifs
+avaient la même biomasse de poissons et si tous les pêcheurs donnaient
+la même réponse, nous n’aurions pas besoin de statistiques : une seule
+mesure raconterait toute l’histoire. Les statistiques existent à cause
+de la <strong>variabilité</strong> : deux quadrats à un mètre d’écart
+n’ont pas le même recouvrement d’herbier, deux pêcheurs du même village
+ne capturent pas la même quantité. Les statistiques sont les outils pour
+<strong>tirer des conclusions fiables malgré cette
+variabilité</strong>.</p>
+<p>Elles font quatre métiers, qui donnent le plan de ce cours :</p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Métier</th>
+<th>Question</th>
+<th>Séances</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Décrire</strong></td>
+<td>À quoi ressemblent mes données ?</td>
+<td>2, 3</td>
+</tr>
+<tr class="even">
+<td><strong>Estimer</strong></td>
+<td>Quelle est la valeur dans toute la population, et quelle est la
+précision de mon estimation ?</td>
+<td>4, 5</td>
+</tr>
+<tr class="odd">
+<td><strong>Tester</strong></td>
+<td>La différence / la relation que je vois est-elle plus grande que ce
+que le hasard seul produirait ?</td>
+<td>6 à 9</td>
+</tr>
+<tr class="even">
+<td><strong>Prédire / modéliser</strong></td>
+<td>De combien Y change-t-il quand X change ?</td>
+<td>10 (puis le cours <em>Modélisation statistique</em>)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<figure class="svg-fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 190" role="img" aria-label="Statistical workflow" font-family="Source Sans 3, Arial, sans-serif">
+<defs><marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#5d6b75"/></marker></defs>
+<rect x="10" y="40" width="130" height="70" rx="10" fill="#0b3d5c"/>
+<text class="en" x="75.0" y="70" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">Question</text>
+<text class="fr" x="75.0" y="70" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">Question</text>
+<text class="en" x="75.0" y="92" text-anchor="middle" font-size="13" fill="#fff" fill-opacity="0.85">one sentence</text>
+<text class="fr" x="75.0" y="92" text-anchor="middle" font-size="13" fill="#fff" fill-opacity="0.85">une phrase</text>
+<path d="M142 75.0 L158 75.0" stroke="#5d6b75" stroke-width="2" marker-end="url(#arw)"/>
+<rect x="160" y="40" width="130" height="70" rx="10" fill="#1b7f8c"/>
+<text class="en" x="225.0" y="70" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">Design</text>
+<text class="fr" x="225.0" y="70" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">Plan d'étude</text>
+<text class="en" x="225.0" y="92" text-anchor="middle" font-size="13" fill="#fff" fill-opacity="0.85">Session 1</text>
+<text class="fr" x="225.0" y="92" text-anchor="middle" font-size="13" fill="#fff" fill-opacity="0.85">Séance 1</text>
+<path d="M292 75.0 L308 75.0" stroke="#5d6b75" stroke-width="2" marker-end="url(#arw)"/>
+<rect x="310" y="40" width="130" height="70" rx="10" fill="#e9f4f6" stroke="#c9d3d8"/>
+<text class="en" x="375.0" y="70" text-anchor="middle" font-size="16" font-weight="700" fill="#0b3d5c">Collect data</text>
+<text class="fr" x="375.0" y="70" text-anchor="middle" font-size="16" font-weight="700" fill="#0b3d5c">Collecter</text>
+<text class="en" x="375.0" y="92" text-anchor="middle" font-size="13" fill="#0b3d5c" fill-opacity="0.85">field, survey</text>
+<text class="fr" x="375.0" y="92" text-anchor="middle" font-size="13" fill="#0b3d5c" fill-opacity="0.85">terrain, enquête</text>
+<path d="M442 75.0 L458 75.0" stroke="#5d6b75" stroke-width="2" marker-end="url(#arw)"/>
+<rect x="460" y="40" width="130" height="70" rx="10" fill="#eef5ea" stroke="#c9d3d8"/>
+<text class="en" x="525.0" y="70" text-anchor="middle" font-size="16" font-weight="700" fill="#0b3d5c">Explore</text>
+<text class="fr" x="525.0" y="70" text-anchor="middle" font-size="16" font-weight="700" fill="#0b3d5c">Explorer</text>
+<text class="en" x="525.0" y="92" text-anchor="middle" font-size="13" fill="#0b3d5c" fill-opacity="0.85">Sessions 2–3</text>
+<text class="fr" x="525.0" y="92" text-anchor="middle" font-size="13" fill="#0b3d5c" fill-opacity="0.85">Séances 2–3</text>
+<path d="M592 75.0 L608 75.0" stroke="#5d6b75" stroke-width="2" marker-end="url(#arw)"/>
+<rect x="610" y="40" width="130" height="70" rx="10" fill="#f6f1e7" stroke="#c9d3d8"/>
+<text class="en" x="675.0" y="70" text-anchor="middle" font-size="16" font-weight="700" fill="#0b3d5c">Estimate · test</text>
+<text class="fr" x="675.0" y="70" text-anchor="middle" font-size="16" font-weight="700" fill="#0b3d5c">Estimer · tester</text>
+<text class="en" x="675.0" y="92" text-anchor="middle" font-size="13" fill="#0b3d5c" fill-opacity="0.85">Sessions 4–10</text>
+<text class="fr" x="675.0" y="92" text-anchor="middle" font-size="13" fill="#0b3d5c" fill-opacity="0.85">Séances 4–10</text>
+<path d="M742 75.0 L758 75.0" stroke="#5d6b75" stroke-width="2" marker-end="url(#arw)"/>
+<rect x="760" y="40" width="130" height="70" rx="10" fill="#fdf0eb" stroke="#c9d3d8"/>
+<text class="en" x="825.0" y="70" text-anchor="middle" font-size="16" font-weight="700" fill="#0b3d5c">Report</text>
+<text class="fr" x="825.0" y="70" text-anchor="middle" font-size="16" font-weight="700" fill="#0b3d5c">Rédiger</text>
+<text class="en" x="825.0" y="92" text-anchor="middle" font-size="13" fill="#0b3d5c" fill-opacity="0.85">Session 11</text>
+<text class="fr" x="825.0" y="92" text-anchor="middle" font-size="13" fill="#0b3d5c" fill-opacity="0.85">Séance 11</text>
+<path d="M825.0 114 L825.0 150 L75.0 150 L75.0 118" fill="none" stroke="#d9694a" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arw)"/>
+<text class="en" x="460" y="144" text-anchor="middle" font-size="13" fill="#d9694a">new questions</text>
+<text class="fr" x="460" y="144" text-anchor="middle" font-size="13" fill="#d9694a">nouvelles questions</text>
+<text class="en" x="460" y="24" text-anchor="middle" font-size="14" fill="#5d6b75">Decide the question, the design and the analysis BEFORE collecting the data</text>
+<text class="fr" x="460" y="24" text-anchor="middle" font-size="14" fill="#5d6b75">Décidez la question, le plan et l'analyse AVANT de collecter les données</text>
+</svg><figcaption><span class="en">The statistical workflow. The question and the study design come before the data; the choice of test comes from the question and the type of variables, not from the p-value.</span><span class="fr">La démarche statistique. La question et le plan d'étude viennent avant les données ; le choix du test vient de la question et du type des variables, pas de la p-value.</span></figcaption></figure>
+<div class="callout warning">
+<div class="en">
+<p><strong>The most common mistake</strong> is to start from the data
+(“I have a table, which test can I run?”). Start from the
+<strong>question</strong>, write it in one sentence, then decide what to
+measure and how. No statistical test can rescue a badly designed study
+(Session 1).</p>
+</div>
+<div class="fr">
+<p><strong>L’erreur la plus fréquente</strong> est de partir des données
+(« j’ai un tableau, quel test puis-je faire ? »). Partez de la
+<strong>question</strong>, écrivez-la en une phrase, puis décidez quoi
+mesurer et comment. Aucun test statistique ne peut sauver une étude mal
+conçue (séance 1).</p>
+</div>
+</div>
+</div>
+<div id="population" class="section level2">
+<h2><span class="en">Populations and samples</span><span
+class="fr">Populations et échantillons</span></h2>
+<div class="en">
+<ul>
+<li>The <strong>population</strong> is the whole set of units your
+question is about: <em>all</em> the fishers registered in the four
+villages, <em>all</em> the octopuses landed in the region in 2026,
+<em>all</em> the 10 × 10 m cells of a lagoon.</li>
+<li>A <strong>sample</strong> is the part of the population you actually
+measure: the 240 fishers interviewed, the 345 octopuses weighed.</li>
+<li>A <strong>parameter</strong> is a value of the population (usually
+unknown): the true mean weight μ. A <strong>statistic</strong> is the
+same value computed on the sample: the sample mean x̄. We use the
+statistic to <strong>estimate</strong> the parameter.</li>
+</ul>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Population (parameter)</th>
+<th>Sample (statistic)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Mean</td>
+<td>μ (“mu”)</td>
+<td>x̄ (“x bar”) — <code>mean(x)</code></td>
+</tr>
+<tr class="even">
+<td>Standard deviation</td>
+<td>σ (“sigma”)</td>
+<td>s — <code>sd(x)</code></td>
+</tr>
+<tr class="odd">
+<td>Proportion</td>
+<td>p</td>
+<td>p̂ (“p hat”) — <code>mean(x == "yes")</code></td>
+</tr>
+<tr class="even">
+<td>Size</td>
+<td>N</td>
+<td>n — <code>length(x)</code>, <code>nrow(df)</code></td>
+</tr>
+</tbody>
+</table>
+<p>The whole of inference (Sessions 5 to 11) answers one question:
+<strong>how far can the statistic be from the parameter, just because we
+measured a sample and not the whole population?</strong></p>
+</div>
+<div class="fr">
+<ul>
+<li>La <strong>population</strong> est l’ensemble des unités sur
+lesquelles porte votre question : <em>tous</em> les pêcheurs inscrits
+dans les quatre villages, <em>toutes</em> les pieuvres débarquées dans
+la région en 2026, <em>toutes</em> les cellules de 10 × 10 m d’un
+lagon.</li>
+<li>Un <strong>échantillon</strong> est la partie de la population que
+vous mesurez réellement : les 240 pêcheurs interrogés, les 345 pieuvres
+pesées.</li>
+<li>Un <strong>paramètre</strong> est une valeur de la population (en
+général inconnue) : le vrai poids moyen μ. Une
+<strong>statistique</strong> est la même valeur calculée sur
+l’échantillon : la moyenne d’échantillon x̄. On utilise la statistique
+pour <strong>estimer</strong> le paramètre.</li>
+</ul>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Population (paramètre)</th>
+<th>Échantillon (statistique)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Moyenne</td>
+<td>μ (« mu »)</td>
+<td>x̄ (« x barre ») — <code>mean(x)</code></td>
+</tr>
+<tr class="even">
+<td>Écart-type</td>
+<td>σ (« sigma »)</td>
+<td>s — <code>sd(x)</code></td>
+</tr>
+<tr class="odd">
+<td>Proportion</td>
+<td>p</td>
+<td>p̂ (« p chapeau ») — <code>mean(x == "yes")</code></td>
+</tr>
+<tr class="even">
+<td>Taille</td>
+<td>N</td>
+<td>n — <code>length(x)</code>, <code>nrow(df)</code></td>
+</tr>
+</tbody>
+</table>
+<p>Toute l’inférence (séances 5 à 11) répond à une question : <strong>à
+quelle distance la statistique peut-elle être du paramètre, simplement
+parce que nous avons mesuré un échantillon et non toute la population
+?</strong></p>
+</div>
+<div class="callout try">
+<div class="en">
+<p><strong>Try it.</strong> For the octopus dataset (Session 4): what is
+the population? the sample? Is the mean weight of the 345 octopuses a
+parameter or a statistic?</p>
+</div>
+<div class="fr">
+<p><strong>À vous.</strong> Pour le jeu de données des pieuvres (séance
+4) : quelle est la population ? l’échantillon ? Le poids moyen des 345
+pieuvres est-il un paramètre ou une statistique ?</p>
+</div>
+</div>
+</div>
+<div id="types" class="section level2">
+<h2><span class="en">Types of variables</span><span class="fr">Types de
+variables</span></h2>
+<div class="callout ecology">
+<div class="en">
+<p><strong>Fisher survey</strong> (<code>fisher_survey.csv</code>,
+simulated). In September 2026, enumerators interviewed <strong>240
+fishers</strong> in four villages (Ambohibe, Tsifota, Andrevo, Befasy)
+in Malagasy, face to face. In each village, <strong>60 fishers were
+drawn at random</strong> from the register of the fishers’ association.
+<em>One row = one fisher</em>: village, sex, age, years of fishing,
+education, household size, main gear, owns a boat, fishing trips per
+week, declared monthly catch (kg), member of the LMMA (locally managed
+marine area), supports temporary closures, perceived trend of catches
+over 5 years.</p>
+</div>
+<div class="fr">
+<p><strong>Enquête pêcheurs</strong> (<code>fisher_survey.csv</code>,
+simulée). En septembre 2026, des enquêteurs ont interrogé <strong>240
+pêcheurs</strong> de quatre villages (Ambohibe, Tsifota, Andrevo,
+Befasy) en malgache, en face à face. Dans chaque village, <strong>60
+pêcheurs ont été tirés au hasard</strong> dans le registre de
+l’association des pêcheurs. <em>Une ligne = un pêcheur</em> : village,
+sexe, âge, années de pêche, éducation, taille du ménage, engin
+principal, possède une pirogue, sorties de pêche par semaine, capture
+mensuelle déclarée (kg), membre de la LMMA (aire marine gérée
+localement), soutient les fermetures temporaires, tendance perçue des
+captures sur 5 ans.</p>
+</div>
+</div>
+<p><a class="btn-dl" href="data/fisher_survey.csv" download>⇩
+fisher_survey.csv</a></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>fs <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/fisher_survey.csv&quot;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">str</span>(fs)</span></code></pre></div>
+<pre><code>#&gt; &#39;data.frame&#39;:    240 obs. of  14 variables:
+#&gt;  $ fisher_id       : chr  &quot;F001&quot; &quot;F002&quot; &quot;F003&quot; &quot;F004&quot; ...
+#&gt;  $ village         : chr  &quot;Ambohibe&quot; &quot;Ambohibe&quot; &quot;Ambohibe&quot; &quot;Ambohibe&quot; ...
+#&gt;  $ sex             : chr  &quot;F&quot; &quot;M&quot; &quot;M&quot; &quot;M&quot; ...
+#&gt;  $ age             : int  59 61 41 48 19 43 32 36 44 49 ...
+#&gt;  $ years_fishing   : int  37 33 26 26 4 28 11 19 25 32 ...
+#&gt;  $ education       : chr  &quot;secondary&quot; &quot;none&quot; &quot;none&quot; &quot;primary&quot; ...
+#&gt;  $ household_size  : int  11 4 4 2 7 4 3 8 5 4 ...
+#&gt;  $ main_gear       : chr  &quot;gleaning&quot; &quot;net&quot; &quot;net&quot; &quot;line&quot; ...
+#&gt;  $ boat            : chr  &quot;no&quot; &quot;yes&quot; &quot;no&quot; &quot;yes&quot; ...
+#&gt;  $ trips_per_week  : int  2 1 4 5 5 3 7 1 5 4 ...
+#&gt;  $ monthly_catch_kg: num  25 101 28.6 125.7 39.4 ...
+#&gt;  $ lmma_member     : chr  &quot;yes&quot; &quot;yes&quot; &quot;no&quot; &quot;yes&quot; ...
+#&gt;  $ supports_closure: chr  &quot;yes&quot; &quot;no&quot; &quot;yes&quot; &quot;yes&quot; ...
+#&gt;  $ catch_trend     : chr  &quot;decreased&quot; &quot;stable&quot; &quot;stable&quot; &quot;increased&quot; ...</code></pre>
+<div class="en">
+<p>The <strong>type</strong> of a variable decides how you summarise it,
+how you plot it and which test you can use. It is the first thing to
+check.</p>
+</div>
+<div class="fr">
+<p>Le <strong>type</strong> d’une variable décide comment la résumer,
+comment la représenter et quel test utiliser. C’est la première chose à
+vérifier.</p>
+</div>
+<figure class="svg-fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 330" role="img" aria-label="Types of variables" font-family="Source Sans 3, Arial, sans-serif">
+<defs><marker id="arv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#5d6b75"/></marker></defs>
+<rect x="350" y="10" width="200" height="44" rx="10" fill="#0b3d5c" stroke="#0b3d5c" stroke-width="2"/><text class="en" x="450.0" y="37.0" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">Variable</text><text class="fr" x="450.0" y="37.0" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">Variable</text>
+<rect x="110" y="90" width="260" height="48" rx="10" fill="#f6f1e7" stroke="#b08a4a" stroke-width="2"/><text class="en" x="240.0" y="119.0" text-anchor="middle" font-size="16" font-weight="700" fill="#0b3d5c">Categorical (qualitative)</text><text class="fr" x="240.0" y="119.0" text-anchor="middle" font-size="16" font-weight="700" fill="#0b3d5c">Catégorielle (qualitative)</text>
+<rect x="530" y="90" width="260" height="48" rx="10" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="2"/><text class="en" x="660.0" y="119.0" text-anchor="middle" font-size="16" font-weight="700" fill="#0b3d5c">Numeric (quantitative)</text><text class="fr" x="660.0" y="119.0" text-anchor="middle" font-size="16" font-weight="700" fill="#0b3d5c">Numérique (quantitative)</text>
+<path d="M400 54 L260 88" stroke="#5d6b75" stroke-width="2" fill="none" marker-end="url(#arv)"/>
+<path d="M500 54 L640 88" stroke="#5d6b75" stroke-width="2" fill="none" marker-end="url(#arv)"/>
+<path d="M200 138 L130 178" stroke="#5d6b75" stroke-width="2" fill="none" marker-end="url(#arv)"/>
+<path d="M290 138 L350 178" stroke="#5d6b75" stroke-width="2" fill="none" marker-end="url(#arv)"/>
+<path d="M610 138 L560 178" stroke="#5d6b75" stroke-width="2" fill="none" marker-end="url(#arv)"/>
+<path d="M710 138 L770 178" stroke="#5d6b75" stroke-width="2" fill="none" marker-end="url(#arv)"/>
+<rect x="20" y="180" width="200" height="130" rx="10" fill="#fff" stroke="#b08a4a" stroke-width="2"/>
+<rect x="20" y="180" width="200" height="40" rx="10" fill="#f6f1e7"/>
+<text class="en" x="120" y="206" text-anchor="middle" font-size="17" font-weight="700" fill="#0b3d5c">Nominal</text>
+<text class="en" x="120" y="246" text-anchor="middle" font-size="14" fill="#3c4a52">no order</text>
+<text class="en" x="120" y="286" text-anchor="middle" font-size="14" font-style="italic" fill="#1b7f8c">village, sex, gear</text>
+<text class="fr" x="120" y="206" text-anchor="middle" font-size="17" font-weight="700" fill="#0b3d5c">Nominale</text>
+<text class="fr" x="120" y="246" text-anchor="middle" font-size="14" fill="#3c4a52">sans ordre</text>
+<text class="fr" x="120" y="286" text-anchor="middle" font-size="14" font-style="italic" fill="#1b7f8c">village, sexe, engin</text>
+<rect x="240" y="180" width="200" height="130" rx="10" fill="#fff" stroke="#b08a4a" stroke-width="2"/>
+<rect x="240" y="180" width="200" height="40" rx="10" fill="#f6f1e7"/>
+<text class="en" x="340" y="206" text-anchor="middle" font-size="17" font-weight="700" fill="#0b3d5c">Ordinal</text>
+<text class="en" x="340" y="246" text-anchor="middle" font-size="14" fill="#3c4a52">ordered categories</text>
+<text class="en" x="340" y="286" text-anchor="middle" font-size="14" font-style="italic" fill="#1b7f8c">education, catch trend</text>
+<text class="fr" x="340" y="206" text-anchor="middle" font-size="17" font-weight="700" fill="#0b3d5c">Ordinale</text>
+<text class="fr" x="340" y="246" text-anchor="middle" font-size="14" fill="#3c4a52">catégories ordonnées</text>
+<text class="fr" x="340" y="286" text-anchor="middle" font-size="14" font-style="italic" fill="#1b7f8c">éducation, tendance</text>
+<rect x="460" y="180" width="200" height="130" rx="10" fill="#fff" stroke="#1b7f8c" stroke-width="2"/>
+<rect x="460" y="180" width="200" height="40" rx="10" fill="#e9f4f6"/>
+<text class="en" x="560" y="206" text-anchor="middle" font-size="17" font-weight="700" fill="#0b3d5c">Discrete</text>
+<text class="en" x="560" y="246" text-anchor="middle" font-size="14" fill="#3c4a52">counts (0, 1, 2…)</text>
+<text class="en" x="560" y="286" text-anchor="middle" font-size="14" font-style="italic" fill="#1b7f8c">trips/week, urchins</text>
+<text class="fr" x="560" y="206" text-anchor="middle" font-size="17" font-weight="700" fill="#0b3d5c">Discrète</text>
+<text class="fr" x="560" y="246" text-anchor="middle" font-size="14" fill="#3c4a52">comptages (0, 1, 2…)</text>
+<text class="fr" x="560" y="286" text-anchor="middle" font-size="14" font-style="italic" fill="#1b7f8c">sorties/sem., oursins</text>
+<rect x="680" y="180" width="200" height="130" rx="10" fill="#fff" stroke="#1b7f8c" stroke-width="2"/>
+<rect x="680" y="180" width="200" height="40" rx="10" fill="#e9f4f6"/>
+<text class="en" x="780" y="206" text-anchor="middle" font-size="17" font-weight="700" fill="#0b3d5c">Continuous</text>
+<text class="en" x="780" y="246" text-anchor="middle" font-size="14" fill="#3c4a52">measurements</text>
+<text class="en" x="780" y="286" text-anchor="middle" font-size="14" font-style="italic" fill="#1b7f8c">weight, cover, depth</text>
+<text class="fr" x="780" y="206" text-anchor="middle" font-size="17" font-weight="700" fill="#0b3d5c">Continue</text>
+<text class="fr" x="780" y="246" text-anchor="middle" font-size="14" fill="#3c4a52">mesures</text>
+<text class="fr" x="780" y="286" text-anchor="middle" font-size="14" font-style="italic" fill="#1b7f8c">poids, recouvrement, prof.</text>
+<text x="230" y="168" text-anchor="middle" font-size="12" fill="#5d6b75">R: factor()</text>
+<text x="670" y="168" text-anchor="middle" font-size="12" fill="#5d6b75">R: integer / numeric</text>
+</svg><figcaption><span class="en">The four types of variables, with examples from the fisher survey.</span><span class="fr">Les quatre types de variables, avec des exemples de l'enquête pêcheurs.</span></figcaption></figure>
+<div class="en">
+<table>
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Definition</th>
+<th>Examples (fisher survey)</th>
+<th>Summarised by</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Categorical nominal</strong></td>
+<td>categories with no order</td>
+<td><code>village</code>, <code>sex</code>, <code>main_gear</code>,
+<code>lmma_member</code></td>
+<td>counts, proportions</td>
+</tr>
+<tr class="even">
+<td><strong>Categorical ordinal</strong></td>
+<td>categories with a natural order</td>
+<td><code>education</code> (none &lt; primary &lt; secondary),
+<code>catch_trend</code></td>
+<td>counts, proportions, median category</td>
+</tr>
+<tr class="odd">
+<td><strong>Numeric discrete</strong></td>
+<td>counts: whole numbers</td>
+<td><code>trips_per_week</code>, <code>household_size</code></td>
+<td>mean, median, SD…</td>
+</tr>
+<tr class="even">
+<td><strong>Numeric continuous</strong></td>
+<td>measurements: any value in a range</td>
+<td><code>age</code>*, <code>monthly_catch_kg</code></td>
+<td>mean, median, SD…</td>
+</tr>
+</tbody>
+</table>
+<p>* Age is continuous in nature, recorded in whole years. A
+<strong>numeric code is not a number</strong>: a village coded 1, 2, 3,
+4 is still nominal — its mean makes no sense.</p>
+</div>
+<div class="fr">
+<table>
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>Définition</th>
+<th>Exemples (enquête pêcheurs)</th>
+<th>Résumé par</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Catégorielle nominale</strong></td>
+<td>catégories sans ordre</td>
+<td><code>village</code>, <code>sex</code>, <code>main_gear</code>,
+<code>lmma_member</code></td>
+<td>effectifs, proportions</td>
+</tr>
+<tr class="even">
+<td><strong>Catégorielle ordinale</strong></td>
+<td>catégories avec un ordre naturel</td>
+<td><code>education</code> (none &lt; primary &lt; secondary),
+<code>catch_trend</code></td>
+<td>effectifs, proportions, catégorie médiane</td>
+</tr>
+<tr class="odd">
+<td><strong>Numérique discrète</strong></td>
+<td>comptages : nombres entiers</td>
+<td><code>trips_per_week</code>, <code>household_size</code></td>
+<td>moyenne, médiane, ET…</td>
+</tr>
+<tr class="even">
+<td><strong>Numérique continue</strong></td>
+<td>mesures : toute valeur dans un intervalle</td>
+<td><code>age</code>*, <code>monthly_catch_kg</code></td>
+<td>moyenne, médiane, ET…</td>
+</tr>
+</tbody>
+</table>
+<p>* L’âge est continu par nature, noté en années entières. Un
+<strong>code numérique n’est pas un nombre</strong> : un village codé 1,
+2, 3, 4 reste nominal — sa moyenne n’a aucun sens.</p>
+</div>
+</div>
+<div id="factors" class="section level2">
+<h2><span class="en">Storing each type correctly in R</span><span
+class="fr">Stocker chaque type correctement dans R</span></h2>
+<div class="en">
+<p><code>read.csv()</code> reads text columns as <code>character</code>
+and numbers as <code>integer</code> or <code>numeric</code>. For
+statistics, categorical variables are better stored as
+<strong>factors</strong>: R then knows the list of possible categories
+(the <strong>levels</strong>) and their order.</p>
+</div>
+<div class="fr">
+<p><code>read.csv()</code> lit les colonnes de texte comme
+<code>character</code> et les nombres comme <code>integer</code> ou
+<code>numeric</code>. Pour les statistiques, il vaut mieux stocker les
+variables catégorielles comme <strong>facteurs</strong> : R connaît
+alors la liste des catégories possibles (les <strong>niveaux</strong>)
+et leur ordre.</p>
+</div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>fs<span class="sc">$</span>village <span class="ot">&lt;-</span> <span class="fu">factor</span>(fs<span class="sc">$</span>village)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">levels</span>(fs<span class="sc">$</span>village)            <span class="co"># alphabetical order by default</span></span></code></pre></div>
+<pre><code>#&gt; [1] &quot;Ambohibe&quot; &quot;Andrevo&quot;  &quot;Befasy&quot;   &quot;Tsifota&quot;</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">table</span>(fs<span class="sc">$</span>village)</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt; Ambohibe  Andrevo   Befasy  Tsifota 
+#&gt;       60       60       60       60</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="co"># an ordinal variable: give the order, and say it is ordered</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>fs<span class="sc">$</span>education <span class="ot">&lt;-</span> <span class="fu">factor</span>(fs<span class="sc">$</span>education, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;none&quot;</span>, <span class="st">&quot;primary&quot;</span>, <span class="st">&quot;secondary&quot;</span>), <span class="at">ordered =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="fu">table</span>(fs<span class="sc">$</span>education)</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt;      none   primary secondary 
+#&gt;        90       114        36</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>fs<span class="sc">$</span>education[<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>]</span></code></pre></div>
+<pre><code>#&gt; [1] secondary none      none      primary   primary   none     
+#&gt; Levels: none &lt; primary &lt; secondary</code></pre>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>factor(x, levels, ordered)</code></td>
+<td>turns a vector into a factor (a categorical variable with a fixed
+list of categories)</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>  <code>levels</code></td>
+<td>the categories, <strong>in the order you want</strong> (tables and
+graphs follow it); a value not in the list becomes <code>NA</code></td>
+<td>a character vector</td>
+</tr>
+<tr class="odd">
+<td>  <code>ordered</code></td>
+<td><code>TRUE</code> = ordinal variable: R prints
+<code>none &lt; primary &lt; secondary</code> and allows comparisons
+such as <code>&gt;</code></td>
+<td><code>TRUE</code> / <code>FALSE</code> (default)</td>
+</tr>
+<tr class="even">
+<td><code>levels(f)</code></td>
+<td>the categories of a factor, in their order</td>
+<td>a factor</td>
+</tr>
+<tr class="odd">
+<td><code>table(x)</code></td>
+<td>counts of each category</td>
+<td>a vector or factor</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>factor(x, levels, ordered)</code></td>
+<td>transforme un vecteur en facteur (variable catégorielle avec une
+liste fixe de catégories)</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>  <code>levels</code></td>
+<td>les catégories, <strong>dans l’ordre voulu</strong> (tableaux et
+graphiques le suivent) ; une valeur absente de la liste devient
+<code>NA</code></td>
+<td>un vecteur de texte</td>
+</tr>
+<tr class="odd">
+<td>  <code>ordered</code></td>
+<td><code>TRUE</code> = variable ordinale : R affiche
+<code>none &lt; primary &lt; secondary</code> et permet des comparaisons
+comme <code>&gt;</code></td>
+<td><code>TRUE</code> / <code>FALSE</code> (défaut)</td>
+</tr>
+<tr class="even">
+<td><code>levels(f)</code></td>
+<td>les catégories d’un facteur, dans leur ordre</td>
+<td>un facteur</td>
+</tr>
+<tr class="odd">
+<td><code>table(x)</code></td>
+<td>effectif de chaque catégorie</td>
+<td>un vecteur ou facteur</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="callout warning">
+<div class="en">
+<p><strong>Spelling matters.</strong> If one interview says
+<code>"Secondary"</code> with a capital S,
+<code>factor(..., levels = c("none", "primary", "secondary"))</code>
+turns it into <code>NA</code> — silently. Always compare
+<code>table(x, useNA = "ifany")</code> before and after creating a
+factor.</p>
+</div>
+<div class="fr">
+<p><strong>L’orthographe compte.</strong> Si un entretien indique
+<code>"Secondary"</code> avec une majuscule,
+<code>factor(..., levels = c("none", "primary", "secondary"))</code> le
+transforme en <code>NA</code> — sans prévenir. Comparez toujours
+<code>table(x, useNA = "ifany")</code> avant et après la création d’un
+facteur.</p>
+</div>
+</div>
+<div class="en">
+<p><strong>Numbers.</strong> <code>class()</code> tells you how R stores
+a column. <code>integer</code> and <code>numeric</code> (also called
+<em>double</em>) are both numbers: you can compute means. Check that
+numbers are not stored as text (a <code>%</code> sign or a comma in the
+file is enough to turn a whole column into <code>character</code>).</p>
+</div>
+<div class="fr">
+<p><strong>Nombres.</strong> <code>class()</code> indique comment R
+stocke une colonne. <code>integer</code> et <code>numeric</code> (aussi
+appelé <em>double</em>) sont tous deux des nombres : on peut calculer
+des moyennes. Vérifiez que les nombres ne sont pas stockés comme du
+texte (un signe <code>%</code> ou une virgule dans le fichier suffit à
+transformer toute une colonne en <code>character</code>).</p>
+</div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">class</span>(fs<span class="sc">$</span>trips_per_week)</span></code></pre></div>
+<pre><code>#&gt; [1] &quot;integer&quot;</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">class</span>(fs<span class="sc">$</span>monthly_catch_kg)</span></code></pre></div>
+<pre><code>#&gt; [1] &quot;numeric&quot;</code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">sapply</span>(fs, class)            <span class="co"># the class of every column</span></span></code></pre></div>
+<pre><code>#&gt; $fisher_id
+#&gt; [1] &quot;character&quot;
+#&gt; 
+#&gt; $village
+#&gt; [1] &quot;factor&quot;
+#&gt; 
+#&gt; $sex
+#&gt; [1] &quot;character&quot;
+#&gt; 
+#&gt; $age
+#&gt; [1] &quot;integer&quot;
+#&gt; 
+#&gt; $years_fishing
+#&gt; [1] &quot;integer&quot;
+#&gt; 
+#&gt; $education
+#&gt; [1] &quot;ordered&quot; &quot;factor&quot; 
+#&gt; 
+#&gt; $household_size
+#&gt; [1] &quot;integer&quot;
+#&gt; 
+#&gt; $main_gear
+#&gt; [1] &quot;character&quot;
+#&gt; 
+#&gt; $boat
+#&gt; [1] &quot;character&quot;
+#&gt; 
+#&gt; $trips_per_week
+#&gt; [1] &quot;integer&quot;
+#&gt; 
+#&gt; $monthly_catch_kg
+#&gt; [1] &quot;numeric&quot;
+#&gt; 
+#&gt; $lmma_member
+#&gt; [1] &quot;character&quot;
+#&gt; 
+#&gt; $supports_closure
+#&gt; [1] &quot;character&quot;
+#&gt; 
+#&gt; $catch_trend
+#&gt; [1] &quot;character&quot;</code></pre>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>class(x)</code></td>
+<td>how R stores an object: <code>"character"</code>,
+<code>"factor"</code>, <code>"integer"</code>, <code>"numeric"</code>,
+<code>"data.frame"</code>…</td>
+<td>any object</td>
+</tr>
+<tr class="even">
+<td><code>sapply(df, class)</code></td>
+<td>applies <code>class()</code> to every column of a data frame
+(Beginner Session 4)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>class(x)</code></td>
+<td>comment R stocke un objet : <code>"character"</code>,
+<code>"factor"</code>, <code>"integer"</code>, <code>"numeric"</code>,
+<code>"data.frame"</code>…</td>
+<td>tout objet</td>
+</tr>
+<tr class="even">
+<td><code>sapply(df, class)</code></td>
+<td>applique <code>class()</code> à chaque colonne d’un data frame
+(séance 4 du niveau débutant)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="first-look" class="section level2">
+<h2><span class="en">A first look at proportions</span><span
+class="fr">Un premier regard sur les proportions</span></h2>
+<div class="en">
+<p>For a categorical variable, counts become
+<strong>proportions</strong> with <code>prop.table()</code>. A
+proportion of a <code>"yes"/"no"</code> variable is also simply the mean
+of a logical test: <code>TRUE</code> counts as 1, <code>FALSE</code> as
+0.</p>
+</div>
+<div class="fr">
+<p>Pour une variable catégorielle, les effectifs deviennent des
+<strong>proportions</strong> avec <code>prop.table()</code>. La
+proportion d’une variable <code>"yes"/"no"</code> est aussi simplement
+la moyenne d’un test logique : <code>TRUE</code> compte pour 1,
+<code>FALSE</code> pour 0.</p>
+</div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="fu">table</span>(fs<span class="sc">$</span>main_gear)</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt; gleaning     line      net speargun 
+#&gt;       62       83       59       36</code></pre>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">prop.table</span>(<span class="fu">table</span>(fs<span class="sc">$</span>main_gear)), <span class="dv">3</span>)</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt; gleaning     line      net speargun 
+#&gt;    0.258    0.346    0.246    0.150</code></pre>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="fu">mean</span>(fs<span class="sc">$</span>lmma_member <span class="sc">==</span> <span class="st">&quot;yes&quot;</span>)          <span class="co"># proportion of LMMA members (p-hat)</span></span></code></pre></div>
+<pre><code>#&gt; [1] 0.3541667</code></pre>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>prop.table(tab)</code></td>
+<td>turns a table of counts into proportions (each count / total)</td>
+<td>a <code>table()</code></td>
+</tr>
+<tr class="even">
+<td><code>mean(x == "yes")</code></td>
+<td>proportion of <code>"yes"</code>: the test gives
+<code>TRUE</code>/<code>FALSE</code>, and the mean of
+<code>TRUE</code>(1)/<code>FALSE</code>(0) is the share of
+<code>TRUE</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>prop.table(tab)</code></td>
+<td>transforme un tableau d’effectifs en proportions (chaque effectif /
+total)</td>
+<td>un <code>table()</code></td>
+</tr>
+<tr class="even">
+<td><code>mean(x == "yes")</code></td>
+<td>proportion de <code>"yes"</code> : le test donne
+<code>TRUE</code>/<code>FALSE</code>, et la moyenne de
+<code>TRUE</code>(1)/<code>FALSE</code>(0) est la part de
+<code>TRUE</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="datasets" class="section level2">
+<h2><span class="en">The datasets of this course</span><span
+class="fr">Les jeux de données du cours</span></h2>
+<div class="en">
+<p>All datasets are <strong>simulated</strong> for teaching, with
+invented villages, sites and reserves, but realistic designs. Each
+session repeats how they were “collected”.</p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>File</th>
+<th>Collected how</th>
+<th>One row =</th>
+<th>Sessions</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>fisher_survey.csv</code></td>
+<td>240 interviews, 60 drawn at random per village, 2026</td>
+<td>one fisher</td>
+<td>0, 2, 9, 11, 12</td>
+</tr>
+<tr class="even">
+<td><code>lagoon_population.csv</code></td>
+<td>complete drone + ground map of a lagoon (1,200 cells of 10 × 10
+m)</td>
+<td>one cell</td>
+<td>1, 5</td>
+</tr>
+<tr class="odd">
+<td><code>reef_fish_sites.csv</code></td>
+<td>underwater visual census, 36 reef sites, 3 transects per site
+averaged</td>
+<td>one site</td>
+<td>2, 3, 8, 10, 12</td>
+</tr>
+<tr class="even">
+<td><code>octopus_catch.csv</code></td>
+<td>every octopus landed on the reopening day of a closure, 2
+villages</td>
+<td>one octopus</td>
+<td>4, 5, 6, 7, 9</td>
+</tr>
+<tr class="odd">
+<td><code>coral_tagged_colonies.csv</code></td>
+<td>20 tagged colonies photographed in March and July</td>
+<td>one colony (2 measures)</td>
+<td>7</td>
+</tr>
+<tr class="even">
+<td><code>sea_cucumber_pens.csv</code></td>
+<td>farm experiment, 4 feeds drawn at random among 24 pens</td>
+<td>one pen</td>
+<td>8</td>
+</tr>
+<tr class="odd">
+<td><code>mangrove_plots.csv</code></td>
+<td>40 plots along 4 sea-to-land transects</td>
+<td>one plot</td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td><code>seagrass_urchins.csv</code></td>
+<td>80 random stations inside and outside a no-take zone</td>
+<td>one station</td>
+<td>13</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p>Tous les jeux de données sont <strong>simulés</strong> pour
+l’enseignement, avec des villages, sites et réserves inventés, mais des
+plans d’étude réalistes. Chaque séance rappelle comment ils ont été «
+collectés ».</p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fichier</th>
+<th>Collecté comment</th>
+<th>Une ligne =</th>
+<th>Séances</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>fisher_survey.csv</code></td>
+<td>240 entretiens, 60 tirés au hasard par village, 2026</td>
+<td>un pêcheur</td>
+<td>0, 2, 9, 11, 12</td>
+</tr>
+<tr class="even">
+<td><code>lagoon_population.csv</code></td>
+<td>carte complète drone + terrain d’un lagon (1 200 cellules de 10 × 10
+m)</td>
+<td>une cellule</td>
+<td>1, 5</td>
+</tr>
+<tr class="odd">
+<td><code>reef_fish_sites.csv</code></td>
+<td>comptage visuel sous-marin, 36 sites récifaux, 3 transects par site
+moyennés</td>
+<td>un site</td>
+<td>2, 3, 8, 10, 12</td>
+</tr>
+<tr class="even">
+<td><code>octopus_catch.csv</code></td>
+<td>toutes les pieuvres débarquées le jour de réouverture d’une
+fermeture, 2 villages</td>
+<td>une pieuvre</td>
+<td>4, 5, 6, 7, 9</td>
+</tr>
+<tr class="odd">
+<td><code>coral_tagged_colonies.csv</code></td>
+<td>20 colonies marquées photographiées en mars et juillet</td>
+<td>une colonie (2 mesures)</td>
+<td>7</td>
+</tr>
+<tr class="even">
+<td><code>sea_cucumber_pens.csv</code></td>
+<td>expérience en ferme, 4 aliments tirés au hasard parmi 24 enclos</td>
+<td>un enclos</td>
+<td>8</td>
+</tr>
+<tr class="odd">
+<td><code>mangrove_plots.csv</code></td>
+<td>40 placettes le long de 4 transects mer-terre</td>
+<td>une placette</td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td><code>seagrass_urchins.csv</code></td>
+<td>80 stations aléatoires dans et hors d’une zone de
+non-prélèvement</td>
+<td>une station</td>
+<td>13</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="application" class="section level2">
+<h2><span class="en">Application work &amp; quiz</span><span
+class="fr">Travail d’application et quiz</span></h2>
+<div class="application">
+<div id="application-work-0" class="section level3 en">
+<h3>Application work 0</h3>
+<p>In <code>scripts/s00_variables.R</code>, import
+<code>fisher_survey.csv</code> and answer:</p>
+<ol style="list-style-type: decimal">
+<li>How many fishers were interviewed (n)?</li>
+<li>How many fishers were interviewed in <strong>Befasy</strong>?</li>
+<li>Percentage of <strong>women</strong> in the sample (one
+decimal)?</li>
+<li>Percentage of fishers who <strong>support temporary
+closures</strong> (one decimal)?</li>
+<li>Turn <code>education</code> into an <strong>ordered</strong> factor
+(none &lt; primary &lt; secondary). How many fishers have a
+<strong>secondary</strong> education?</li>
+<li>Which is the most common <strong>main gear</strong>?</li>
+<li>Among <strong>women</strong> only, what percentage use
+<strong>gleaning</strong> as their main gear (one decimal)?</li>
+<li>– 10. Questions on variable types and populations (no code
+needed).</li>
+</ol>
+</div>
+<div id="travail-dapplication-0" class="section level3 fr">
+<h3>Travail d’application 0</h3>
+<p>Dans <code>scripts/s00_variables.R</code>, importez
+<code>fisher_survey.csv</code> et répondez :</p>
+<ol style="list-style-type: decimal">
+<li>Combien de pêcheurs ont été interrogés (n) ?</li>
+<li>Combien de pêcheurs ont été interrogés à <strong>Befasy</strong>
+?</li>
+<li>Pourcentage de <strong>femmes</strong> dans l’échantillon (une
+décimale) ?</li>
+<li>Pourcentage de pêcheurs qui <strong>soutiennent les fermetures
+temporaires</strong> (une décimale) ?</li>
+<li>Transformez <code>education</code> en facteur
+<strong>ordonné</strong> (none &lt; primary &lt; secondary). Combien de
+pêcheurs ont une éducation <strong>secondary</strong> ?</li>
+<li>Quel est l’<strong>engin principal</strong> le plus fréquent ?</li>
+<li>Parmi les <strong>femmes</strong> seulement, quel pourcentage
+utilise le <strong>glanage</strong> (<code>gleaning</code>) comme engin
+principal (une décimale) ?</li>
+<li>– 10. Questions sur les types de variables et les populations (pas
+de code).</li>
+</ol>
+</div>
+</div>
+<div class="hint">
+<div class="en">
+<p>Q3–Q4: <code>100 * mean(fs$sex == "F")</code>. Q7: first select the
+gear of women, <code>fs$main_gear[fs$sex == "F"]</code>, then compute
+the proportion of <code>"gleaning"</code> in it.</p>
+</div>
+<div class="fr">
+<p>Q3–Q4 : <code>100 * mean(fs$sex == "F")</code>. Q7 : sélectionnez
+d’abord l’engin des femmes, <code>fs$main_gear[fs$sex == "F"]</code>,
+puis calculez la proportion de <code>"gleaning"</code> dedans.</p>
+</div>
+</div>
+<div id="quiz-t00" class="quiz" data-quiz-id="t00"
+data-q="W3sidHlwZSI6Im51bSIsImVuIjoiMS4gTnVtYmVyIG9mIGZpc2hlcnMgaW50ZXJ2aWV3ZWQ/IiwiZnIiOiIxLiBOb21icmUgZGUgcMOqY2hldXJzIGludGVycm9nw6lzID8iLCJhbnN3ZXIiOjI0MCwidG9sIjowLCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiMi4gTnVtYmVyIG9mIGZpc2hlcnMgaW50ZXJ2aWV3ZWQgaW4gQmVmYXN5PyIsImZyIjoiMi4gTm9tYnJlIGRlIHDDqmNoZXVycyBpbnRlcnJvZ8OpcyDDoCBCZWZhc3kgPyIsImFuc3dlciI6NjAsInRvbCI6MCwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJudW0iLCJlbiI6IjMuIFBlcmNlbnRhZ2Ugb2Ygd29tZW4gKDEgZGVjaW1hbCk/IiwiZnIiOiIzLiBQb3VyY2VudGFnZSBkZSBmZW1tZXMgKDEgZMOpY2ltYWxlKSA/IiwiYW5zd2VyIjoyOS4yLCJ0b2wiOjAuMDYsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibnVtIiwiZW4iOiI0LiBQZXJjZW50YWdlIHN1cHBvcnRpbmcgdGVtcG9yYXJ5IGNsb3N1cmVzICgxIGRlY2ltYWwpPyIsImZyIjoiNC4gUG91cmNlbnRhZ2Ugc291dGVuYW50IGxlcyBmZXJtZXR1cmVzIHRlbXBvcmFpcmVzICgxIGTDqWNpbWFsZSkgPyIsImFuc3dlciI6NjQuNiwidG9sIjowLjA2LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiNS4gTnVtYmVyIG9mIGZpc2hlcnMgd2l0aCBzZWNvbmRhcnkgZWR1Y2F0aW9uPyIsImZyIjoiNS4gTm9tYnJlIGRlIHDDqmNoZXVycyBhdmVjIHVuZSDDqWR1Y2F0aW9uIHNlY29uZGFpcmUgPyIsImFuc3dlciI6MzYsInRvbCI6MCwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJ0ZXh0IiwiZW4iOiI2LiBNb3N0IGNvbW1vbiBtYWluIGdlYXIgKGFzIHdyaXR0ZW4gaW4gdGhlIGRhdGEpPyIsImZyIjoiNi4gRW5naW4gcHJpbmNpcGFsIGxlIHBsdXMgZnLDqXF1ZW50ICh0ZWwgcXUnw6ljcml0IGRhbnMgbGVzIGRvbm7DqWVzKSA/IiwiYW5zd2VyIjpbImxpbmUiXX0seyJ0eXBlIjoibnVtIiwiZW4iOiI3LiAlIG9mIHdvbWVuIHVzaW5nIGdsZWFuaW5nICgxIGRlY2ltYWwpPyIsImZyIjoiNy4gJSBkZXMgZmVtbWVzIHByYXRpcXVhbnQgbGUgZ2xhbmFnZSAoMSBkw6ljaW1hbGUpID8iLCJhbnN3ZXIiOjYyLjksInRvbCI6MC4wNiwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJtY3EiLCJlbiI6IjguIDxjb2RlPmNhdGNoX3RyZW5kPFwvY29kZT4gKGRlY3JlYXNlZCAvIHN0YWJsZSAvIGluY3JlYXNlZCkgaXMgYeKApiIsImZyIjoiOC4gPGNvZGU+Y2F0Y2hfdHJlbmQ8XC9jb2RlPiAoZGVjcmVhc2VkIC8gc3RhYmxlIC8gaW5jcmVhc2VkKSBlc3QgdW5lIHZhcmlhYmxl4oCmIiwib3B0aW9uc19lbiI6WyJub21pbmFsIGNhdGVnb3JpY2FsIHZhcmlhYmxlIiwib3JkaW5hbCBjYXRlZ29yaWNhbCB2YXJpYWJsZSIsImRpc2NyZXRlIG51bWVyaWMgdmFyaWFibGUiLCJjb250aW51b3VzIG51bWVyaWMgdmFyaWFibGUiXSwib3B0aW9uc19mciI6WyJjYXTDqWdvcmllbGxlIG5vbWluYWxlIiwiY2F0w6lnb3JpZWxsZSBvcmRpbmFsZSIsIm51bcOpcmlxdWUgZGlzY3LDqHRlIiwibnVtw6lyaXF1ZSBjb250aW51ZSJdLCJhbnN3ZXIiOjF9LHsidHlwZSI6Im1jcSIsImVuIjoiOS4gPGNvZGU+dHJpcHNfcGVyX3dlZWs8XC9jb2RlPiBpcyBh4oCmIiwiZnIiOiI5LiA8Y29kZT50cmlwc19wZXJfd2VlazxcL2NvZGU+IGVzdCB1bmUgdmFyaWFibGXigKYiLCJvcHRpb25zX2VuIjpbIm5vbWluYWwgY2F0ZWdvcmljYWwgdmFyaWFibGUiLCJvcmRpbmFsIGNhdGVnb3JpY2FsIHZhcmlhYmxlIiwiZGlzY3JldGUgbnVtZXJpYyB2YXJpYWJsZSIsImNvbnRpbnVvdXMgbnVtZXJpYyB2YXJpYWJsZSJdLCJvcHRpb25zX2ZyIjpbImNhdMOpZ29yaWVsbGUgbm9taW5hbGUiLCJjYXTDqWdvcmllbGxlIG9yZGluYWxlIiwibnVtw6lyaXF1ZSBkaXNjcsOodGUiLCJudW3DqXJpcXVlIGNvbnRpbnVlIl0sImFuc3dlciI6Mn0seyJ0eXBlIjoibWNxIiwiZW4iOiIxMC4gVGhlIHByb3BvcnRpb24gb2YgTE1NQSBtZW1iZXJzIGFtb25nIHRoZSAyNDAgZmlzaGVycyBpbnRlcnZpZXdlZCBpc+KApiIsImZyIjoiMTAuIExhIHByb3BvcnRpb24gZGUgbWVtYnJlcyBkZSBsYSBMTU1BIHBhcm1pIGxlcyAyNDAgcMOqY2hldXJzIGludGVycm9nw6lzIGVzdOKApiIsIm9wdGlvbnNfZW4iOlsiYSBwYXJhbWV0ZXIsIHdyaXR0ZW4gcCIsImEgc3RhdGlzdGljLCB3cml0dGVuIHDMgiwgdGhhdCBlc3RpbWF0ZXMgcCIsInRoZSBwb3B1bGF0aW9uIiwiYSBwYXJhbWV0ZXIsIHdyaXR0ZW4gzrwiXSwib3B0aW9uc19mciI6WyJ1biBwYXJhbcOodHJlLCBub3TDqSBwIiwidW5lIHN0YXRpc3RpcXVlLCBub3TDqWUgcMyCLCBxdWkgZXN0aW1lIHAiLCJsYSBwb3B1bGF0aW9uIiwidW4gcGFyYW3DqHRyZSwgbm90w6kgzrwiXSwiYW5zd2VyIjoxfV0=">
+
+</div>
+<div class="solution" data-quiz="t00">
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a>fs <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/fisher_survey.csv&quot;</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a><span class="fu">nrow</span>(fs)                                                     <span class="co"># 1</span></span>
+<span id="cb23-3"><a href="#cb23-3" tabindex="-1"></a><span class="fu">sum</span>(fs<span class="sc">$</span>village <span class="sc">==</span> <span class="st">&quot;Befasy&quot;</span>)                                  <span class="co"># 2  (or table(fs$village))</span></span>
+<span id="cb23-4"><a href="#cb23-4" tabindex="-1"></a><span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> <span class="fu">mean</span>(fs<span class="sc">$</span>sex <span class="sc">==</span> <span class="st">&quot;F&quot;</span>), <span class="dv">1</span>)                          <span class="co"># 3</span></span>
+<span id="cb23-5"><a href="#cb23-5" tabindex="-1"></a><span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> <span class="fu">mean</span>(fs<span class="sc">$</span>supports_closure <span class="sc">==</span> <span class="st">&quot;yes&quot;</span>), <span class="dv">1</span>)           <span class="co"># 4</span></span>
+<span id="cb23-6"><a href="#cb23-6" tabindex="-1"></a>fs<span class="sc">$</span>education <span class="ot">&lt;-</span> <span class="fu">factor</span>(fs<span class="sc">$</span>education, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;none&quot;</span>, <span class="st">&quot;primary&quot;</span>, <span class="st">&quot;secondary&quot;</span>), <span class="at">ordered =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb23-7"><a href="#cb23-7" tabindex="-1"></a><span class="fu">table</span>(fs<span class="sc">$</span>education)                                          <span class="co"># 5</span></span>
+<span id="cb23-8"><a href="#cb23-8" tabindex="-1"></a><span class="fu">sort</span>(<span class="fu">table</span>(fs<span class="sc">$</span>main_gear), <span class="at">decreasing =</span> <span class="cn">TRUE</span>)                 <span class="co"># 6</span></span>
+<span id="cb23-9"><a href="#cb23-9" tabindex="-1"></a><span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> <span class="fu">mean</span>(fs<span class="sc">$</span>main_gear[fs<span class="sc">$</span>sex <span class="sc">==</span> <span class="st">&quot;F&quot;</span>] <span class="sc">==</span> <span class="st">&quot;gleaning&quot;</span>), <span class="dv">1</span>)   <span class="co"># 7</span></span>
+<span id="cb23-10"><a href="#cb23-10" tabindex="-1"></a><span class="co"># 8: ordinal (the categories have an order)   9: discrete numeric (a count)</span></span>
+<span id="cb23-11"><a href="#cb23-11" tabindex="-1"></a><span class="co"># 10: a statistic (computed on the sample), p-hat, which estimates the population proportion p</span></span></code></pre></div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

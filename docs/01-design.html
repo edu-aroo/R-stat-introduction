@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>R4Marine Stats · Session 1</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.1/jquery-3.6.1.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<!-- header.html: inserted inside <head> of every page (see _site.yml) -->
+<!-- config.js (settings) and quiz_index.js (made by R/build_site.R) first,
+     then course.js (the behaviour that reads them) -->
+<script src="assets/config.js"></script>
+<script src="assets/quiz_index.js"></script>
+<script src="assets/course.js"></script>
+<meta name="author" content="Aroo Falinirina">
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<link rel="stylesheet" href="assets/course.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">R4Marine Stats</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Sessions
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="00-start.html">0 · Why statistics?</a>
+    </li>
+    <li>
+      <a href="01-design.html">1 · Study design &amp; sampling</a>
+    </li>
+    <li>
+      <a href="02-describe.html">2 · Describing data</a>
+    </li>
+    <li>
+      <a href="03-explore.html">3 · Exploring distributions</a>
+    </li>
+    <li>
+      <a href="04-probability.html">4 · Probability &amp; distributions</a>
+    </li>
+    <li>
+      <a href="05-estimation.html">5 · Standard error &amp; CIs</a>
+    </li>
+    <li>
+      <a href="06-testing.html">6 · Hypothesis tests &amp; p-values</a>
+    </li>
+    <li>
+      <a href="07-two-groups.html">7 · Comparing two groups</a>
+    </li>
+    <li>
+      <a href="08-anova.html">8 · ANOVA &amp; Kruskal–Wallis</a>
+    </li>
+    <li>
+      <a href="09-categorical.html">9 · Proportions &amp; χ²</a>
+    </li>
+    <li>
+      <a href="10-regression.html">10 · Correlation &amp; regression</a>
+    </li>
+    <li>
+      <a href="11-power-reporting.html">11 · Power, multiple tests, reporting</a>
+    </li>
+    <li>
+      <a href="12-practice.html">12 · Practice</a>
+    </li>
+    <li>
+      <a href="13-final-project.html">13 · Final project</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Resources
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="choose-test.html">Which test? (decision guide)</a>
+    </li>
+    <li>
+      <a href="cheatsheet.html">Cheatsheet</a>
+    </li>
+    <li>
+      <a href="glossary.html">Glossary EN–FR</a>
+    </li>
+    <li>
+      <a href="common-errors.html">Common errors &amp; pitfalls</a>
+    </li>
+    <li>
+      <a href="resources.html">To go further</a>
+    </li>
+    <li>
+      <a href="help.html">Need help?</a>
+    </li>
+    <li>
+      <a href="whats-new.html">What's new</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore"><span class="en">1 · Study design and
+sampling</span><span class="fr">1 · Plan d’étude et
+échantillonnage</span></h1>
+<h3 class="subtitle">~2.5 h</h3>
+
+</div>
+
+
+<div class="objectives">
+<div id="by-the-end-of-this-session-you-will-be-able-to"
+class="section level4 en">
+<h4>By the end of this session you will be able to</h4>
+<ul>
+<li>tell an <strong>observational study</strong> from an
+<strong>experiment</strong>, and explain why only experiments show
+causes directly;</li>
+<li>identify the <strong>sampling unit</strong> (or experimental unit)
+of a study, and recognise <strong>pseudoreplication</strong>;</li>
+<li>describe <strong>simple random</strong>,
+<strong>stratified</strong>, <strong>systematic</strong> and
+<strong>convenience</strong> sampling, and their strengths and
+risks;</li>
+<li>draw these samples in R with <code>sample()</code> and
+<code>set.seed()</code>, and compare their estimates with the true
+population value;</li>
+<li>assign treatments at random to experimental units.</li>
+</ul>
+</div>
+<div id="à-la-fin-de-cette-séance-vous-saurez"
+class="section level4 fr">
+<h4>À la fin de cette séance vous saurez</h4>
+<ul>
+<li>distinguer une <strong>étude observationnelle</strong> d’une
+<strong>expérience</strong>, et expliquer pourquoi seules les
+expériences montrent directement des causes ;</li>
+<li>identifier l’<strong>unité d’échantillonnage</strong> (ou unité
+expérimentale) d’une étude, et reconnaître la
+<strong>pseudo-réplication</strong> ;</li>
+<li>décrire l’échantillonnage <strong>aléatoire simple</strong>,
+<strong>stratifié</strong>, <strong>systématique</strong> et <strong>de
+commodité</strong>, avec leurs atouts et leurs risques ;</li>
+<li>tirer ces échantillons dans R avec <code>sample()</code> et
+<code>set.seed()</code>, et comparer leurs estimations à la vraie valeur
+de la population ;</li>
+<li>attribuer des traitements au hasard à des unités
+expérimentales.</li>
+</ul>
+</div>
+</div>
+<div id="study-types" class="section level2">
+<h2><span class="en">Observational studies and experiments</span><span
+class="fr">Études observationnelles et expériences</span></h2>
+<div class="en">
+<ul>
+<li>In an <strong>observational study</strong>, you measure what exists
+without changing anything: fish biomass in no-take reserves, LMMAs and
+open-access reefs; incomes of fishers who are or are not LMMA
+members.</li>
+<li>In an <strong>experiment</strong>, <em>you</em> decide which unit
+receives which treatment, <strong>at random</strong>: four feeds
+assigned at random to 24 sea-cucumber pens (Session 8).</li>
+</ul>
+<p>Why it matters: in the reef survey, no-take reserves have more fish.
+But reserves may have been placed on reefs that were already in better
+condition (more coral, further from villages). Coral cover is then a
+<strong>confounding variable</strong>: it is related both to the
+“treatment” (protection) and to the response (fish). An observational
+study shows an <strong>association</strong>; to speak of a
+<strong>cause</strong>, you need an experiment — or a careful design
+(before/after and control/impact, called <em>BACI</em>) and
+arguments.</p>
+<p>In an experiment, <strong>random assignment</strong> spreads the
+unknown differences between units evenly over the treatments: if pens
+differ in sediment, the random draw makes it unlikely that all the good
+pens get the same feed.</p>
+</div>
+<div class="fr">
+<ul>
+<li>Dans une <strong>étude observationnelle</strong>, on mesure ce qui
+existe sans rien changer : la biomasse de poissons dans les réserves
+intégrales, les LMMA et les récifs en libre accès ; les revenus de
+pêcheurs membres ou non d’une LMMA.</li>
+<li>Dans une <strong>expérience</strong>, <em>vous</em> décidez quelle
+unité reçoit quel traitement, <strong>au hasard</strong> : quatre
+aliments attribués au hasard à 24 enclos d’holothuries (séance 8).</li>
+</ul>
+<p>Pourquoi c’est important : dans le suivi des récifs, les réserves
+intégrales ont plus de poissons. Mais les réserves ont peut-être été
+placées sur des récifs déjà en meilleur état (plus de corail, plus loin
+des villages). Le recouvrement corallien est alors une <strong>variable
+de confusion</strong> : il est lié à la fois au « traitement » (la
+protection) et à la réponse (les poissons). Une étude observationnelle
+montre une <strong>association</strong> ; pour parler de
+<strong>cause</strong>, il faut une expérience — ou un plan soigneux
+(avant/après et témoin/impact, appelé <em>BACI</em>) et des
+arguments.</p>
+<p>Dans une expérience, l’<strong>attribution aléatoire</strong>
+répartit les différences inconnues entre unités de façon équilibrée
+entre les traitements : si les enclos diffèrent par leur sédiment, le
+tirage au hasard rend peu probable que tous les bons enclos reçoivent le
+même aliment.</p>
+</div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># Random assignment of 4 feeds to 24 pens (6 pens each)</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">90</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>treatments <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;control&quot;</span>, <span class="st">&quot;seaweed&quot;</span>, <span class="st">&quot;manure&quot;</span>, <span class="st">&quot;mixed&quot;</span>), <span class="at">each =</span> <span class="dv">6</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>plan <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">pen =</span> <span class="fu">sprintf</span>(<span class="st">&quot;P%02d&quot;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">24</span>), <span class="at">treatment =</span> <span class="fu">sample</span>(treatments))</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">head</span>(plan, <span class="dv">8</span>)</span></code></pre></div>
+<pre><code>#&gt;   pen treatment
+#&gt; 1 P01     mixed
+#&gt; 2 P02   control
+#&gt; 3 P03    manure
+#&gt; 4 P04    manure
+#&gt; 5 P05   seaweed
+#&gt; 6 P06   control
+#&gt; 7 P07    manure
+#&gt; 8 P08     mixed</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">table</span>(plan<span class="sc">$</span>treatment)</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt; control  manure   mixed seaweed 
+#&gt;       6       6       6       6</code></pre>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>set.seed(n)</code></td>
+<td>fixes the starting point of R’s random numbers: the same seed gives
+the same “random” draw, so your work can be repeated exactly</td>
+<td>any whole number</td>
+</tr>
+<tr class="even">
+<td><code>sample(x)</code></td>
+<td>with one vector: shuffles it (random order)</td>
+<td>a vector</td>
+</tr>
+<tr class="odd">
+<td><code>sprintf("P%02d", 1:24)</code></td>
+<td>builds labels: <code>%02d</code> = a whole number on 2 digits (P01,
+P02…)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>set.seed(n)</code></td>
+<td>fixe le point de départ des nombres aléatoires de R : la même graine
+donne le même tirage « aléatoire », votre travail peut donc être refait
+à l’identique</td>
+<td>un nombre entier quelconque</td>
+</tr>
+<tr class="even">
+<td><code>sample(x)</code></td>
+<td>avec un seul vecteur : le mélange (ordre aléatoire)</td>
+<td>un vecteur</td>
+</tr>
+<tr class="odd">
+<td><code>sprintf("P%02d", 1:24)</code></td>
+<td>construit des étiquettes : <code>%02d</code> = un entier sur 2
+chiffres (P01, P02…)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="units" class="section level2">
+<h2><span class="en">The sampling unit and pseudoreplication</span><span
+class="fr">L’unité d’échantillonnage et la
+pseudo-réplication</span></h2>
+<div class="en">
+<p>The <strong>sampling unit</strong> (in an experiment, the
+<strong>experimental unit</strong>) is the smallest unit that is
+<strong>independently</strong> selected or treated. It is what
+<em>n</em> counts.</p>
+<ul>
+<li>Sea-cucumber experiment: the feed is given to a
+<strong>pen</strong>, not to each animal. The 30 animals of one pen
+share the same water, the same sediment, the same feeding: they are not
+30 independent replicates. <strong>n = 24 pens</strong>, not 720
+animals.</li>
+<li>Reef survey: management applies to a <strong>site</strong>. Three
+transects on the same reef share the same history: they are averaged,
+and <strong>n = 36 sites</strong>.</li>
+</ul>
+<p><strong>Pseudoreplication</strong> is treating non-independent
+measurements as independent replicates. Classic example: comparing
+<em>one</em> reserve with <em>one</em> fished reef using 30 quadrats in
+each. The test would compare two places, not “protection”: any
+difference between the two places (depth, currents, distance to the
+village) is confused with the effect of protection. With one place per
+treatment, the true n is 1 per group.</p>
+</div>
+<div class="fr">
+<p>L’<strong>unité d’échantillonnage</strong> (dans une expérience,
+l’<strong>unité expérimentale</strong>) est la plus petite unité
+sélectionnée ou traitée <strong>indépendamment</strong>. C’est elle que
+<em>n</em> compte.</p>
+<ul>
+<li>Expérience sur les holothuries : l’aliment est donné à un
+<strong>enclos</strong>, pas à chaque animal. Les 30 animaux d’un enclos
+partagent la même eau, le même sédiment, la même alimentation : ce ne
+sont pas 30 réplicats indépendants. <strong>n = 24 enclos</strong>, pas
+720 animaux.</li>
+<li>Suivi des récifs : la gestion s’applique à un <strong>site</strong>.
+Trois transects sur le même récif partagent la même histoire : ils sont
+moyennés, et <strong>n = 36 sites</strong>.</li>
+</ul>
+<p>La <strong>pseudo-réplication</strong> consiste à traiter des mesures
+non indépendantes comme des réplicats indépendants. Exemple classique :
+comparer <em>une</em> réserve à <em>un</em> récif pêché avec 30 quadrats
+dans chacun. Le test comparerait deux lieux, pas « la protection » :
+toute différence entre les deux lieux (profondeur, courants, distance au
+village) est confondue avec l’effet de la protection. Avec un seul lieu
+par traitement, le vrai n est de 1 par groupe.</p>
+</div>
+<div class="callout ecology">
+<div class="en">
+<p><strong>Rule:</strong> ask “<em>at which level was the treatment
+applied, or the unit chosen at random?</em>” — that level is your
+replicate. Measurements below it (animals in a pen, quadrats on a
+transect) improve the precision of each replicate’s value, but do not
+increase n. (Mixed models, which use all levels at once, are in the
+<em>Statistical modelling</em> course.)</p>
+</div>
+<div class="fr">
+<p><strong>Règle :</strong> demandez-vous « <em>à quel niveau le
+traitement a-t-il été appliqué, ou l’unité choisie au hasard ?</em> » —
+ce niveau est votre réplicat. Les mesures en dessous (animaux d’un
+enclos, quadrats d’un transect) améliorent la précision de la valeur de
+chaque réplicat, mais n’augmentent pas n. (Les modèles mixtes, qui
+utilisent tous les niveaux à la fois, sont dans le cours
+<em>Modélisation statistique</em>.)</p>
+</div>
+</div>
+</div>
+<div id="population" class="section level2">
+<h2><span class="en">A population we know entirely</span><span
+class="fr">Une population connue entièrement</span></h2>
+<div class="callout ecology">
+<div class="en">
+<p><strong>Lagoon census</strong> (<code>lagoon_population.csv</code>,
+simulated). A seagrass lagoon was divided into <strong>1,200 cells of 10
+× 10 m</strong> (40 columns <code>x</code> from the shore to the reef,
+30 rows <code>y</code>). Drone images checked on the ground gave, for
+<strong>every</strong> cell, the zone (<code>inshore</code>,
+<code>middle</code>, <code>reef_flat</code>), the depth, the % seagrass
+cover and the number of sea urchins. Because we know the whole
+population, we know the <strong>true</strong> parameters — something
+that never happens in real life — and we can watch how samples
+behave.</p>
+</div>
+<div class="fr">
+<p><strong>Recensement du lagon</strong>
+(<code>lagoon_population.csv</code>, simulé). Un lagon à herbiers a été
+divisé en <strong>1 200 cellules de 10 × 10 m</strong> (40 colonnes
+<code>x</code> de la côte vers le récif, 30 lignes <code>y</code>). Des
+images de drone vérifiées sur le terrain ont donné, pour
+<strong>chaque</strong> cellule, la zone (<code>inshore</code>,
+<code>middle</code>, <code>reef_flat</code>), la profondeur, le % de
+recouvrement d’herbier et le nombre d’oursins. Comme nous connaissons
+toute la population, nous connaissons les <strong>vrais</strong>
+paramètres — ce qui n’arrive jamais dans la réalité — et nous pouvons
+observer le comportement des échantillons.</p>
+</div>
+</div>
+<p><a class="btn-dl" href="data/lagoon_population.csv" download>⇩
+lagoon_population.csv</a></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>lag <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/lagoon_population.csv&quot;</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>mu <span class="ot">&lt;-</span> <span class="fu">mean</span>(lag<span class="sc">$</span>seagrass_cover)          <span class="co"># the TRUE mean (parameter)</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>mu</span></code></pre></div>
+<pre><code>#&gt; [1] 40.4225</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">tapply</span>(lag<span class="sc">$</span>seagrass_cover, lag<span class="sc">$</span>zone, mean)</span></code></pre></div>
+<pre><code>#&gt;   inshore    middle reef_flat 
+#&gt;  61.53590  41.81667  17.80769</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">ggplot</span>(lag, <span class="fu">aes</span>(x, y, <span class="at">fill =</span> seagrass_cover)) <span class="sc">+</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  <span class="fu">geom_tile</span>() <span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">&quot;#f6f1e7&quot;</span>, <span class="at">high =</span> <span class="st">&quot;#4a7d3a&quot;</span>, <span class="at">name =</span> <span class="st">&quot;% cover&quot;</span>) <span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;x (shore → reef)&quot;</span>, <span class="at">y =</span> <span class="st">&quot;y&quot;</span>) <span class="sc">+</span> <span class="fu">theme_c</span>()</span></code></pre></div>
+<p><img src="01-design_files/figure-html/unnamed-chunk-3-1.png" width="85%" style="display: block; margin: auto;" /></p>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>geom_tile()</code></td>
+<td>draws one coloured rectangle per row, at position <code>x</code>,
+<code>y</code></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>scale_fill_gradient(low, high, name)</code></td>
+<td>colour scale between two colours for a numeric
+<code>fill</code></td>
+<td>colour names or codes</td>
+</tr>
+<tr class="odd">
+<td><code>coord_equal()</code></td>
+<td>one unit on x = one unit on y (cells stay square)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>geom_tile()</code></td>
+<td>dessine un rectangle coloré par ligne, à la position <code>x</code>,
+<code>y</code></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>scale_fill_gradient(low, high, name)</code></td>
+<td>échelle de couleurs entre deux couleurs pour un <code>fill</code>
+numérique</td>
+<td>noms ou codes de couleurs</td>
+</tr>
+<tr class="odd">
+<td><code>coord_equal()</code></td>
+<td>une unité sur x = une unité sur y (les cellules restent
+carrées)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="en">
+<p>Cover decreases strongly from the shore (≈ 60 %) to the reef flat (≈
+20 %). Keep this in mind: how you sample this gradient will decide
+whether your estimate is right.</p>
+</div>
+<div class="fr">
+<p>Le recouvrement diminue fortement de la côte (≈ 60 %) vers le platier
+(≈ 20 %). Gardez cela en tête : la façon d’échantillonner ce gradient
+décidera si votre estimation est juste.</p>
+</div>
+</div>
+<div id="designs" class="section level2">
+<h2><span class="en">Four ways to choose 30 cells</span><span
+class="fr">Quatre façons de choisir 30 cellules</span></h2>
+<figure class="svg-fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 230" role="img" aria-label="Sampling designs" font-family="Source Sans 3, Arial, sans-serif">
+<text class="en" x="110.0" y="24" text-anchor="middle" font-size="16" font-weight="700" fill="#0b3d5c">Simple random</text>
+<text class="fr" x="110.0" y="24" text-anchor="middle" font-size="16" font-weight="700" fill="#0b3d5c">Aléatoire simple</text>
+<rect x="10.0" y="40" width="66.66666666666667" height="150" fill="#cfe3c6"/>
+<rect x="76.66666666666667" y="40" width="66.66666666666667" height="150" fill="#e2edd9"/>
+<rect x="143.33333333333334" y="40" width="66.66666666666667" height="150" fill="#f3f0e4"/>
+<rect x="11" y="101" width="8" height="8" fill="#0b3d5c"/>
+<rect x="11" y="111" width="8" height="8" fill="#0b3d5c"/>
+<rect x="21" y="41" width="8" height="8" fill="#0b3d5c"/>
+<rect x="21" y="101" width="8" height="8" fill="#0b3d5c"/>
+<rect x="31" y="61" width="8" height="8" fill="#0b3d5c"/>
+<rect x="31" y="71" width="8" height="8" fill="#0b3d5c"/>
+<rect x="51" y="101" width="8" height="8" fill="#0b3d5c"/>
+<rect x="61" y="61" width="8" height="8" fill="#0b3d5c"/>
+<rect x="61" y="101" width="8" height="8" fill="#0b3d5c"/>
+<rect x="71" y="121" width="8" height="8" fill="#0b3d5c"/>
+<rect x="81" y="171" width="8" height="8" fill="#0b3d5c"/>
+<rect x="81" y="181" width="8" height="8" fill="#0b3d5c"/>
+<rect x="91" y="51" width="8" height="8" fill="#0b3d5c"/>
+<rect x="91" y="161" width="8" height="8" fill="#0b3d5c"/>
+<rect x="101" y="61" width="8" height="8" fill="#0b3d5c"/>
+<rect x="111" y="81" width="8" height="8" fill="#0b3d5c"/>
+<rect x="131" y="131" width="8" height="8" fill="#0b3d5c"/>
+<rect x="141" y="71" width="8" height="8" fill="#0b3d5c"/>
+<rect x="141" y="81" width="8" height="8" fill="#0b3d5c"/>
+<rect x="141" y="121" width="8" height="8" fill="#0b3d5c"/>
+<rect x="151" y="121" width="8" height="8" fill="#0b3d5c"/>
+<rect x="171" y="41" width="8" height="8" fill="#0b3d5c"/>
+<rect x="171" y="61" width="8" height="8" fill="#0b3d5c"/>
+<rect x="171" y="71" width="8" height="8" fill="#0b3d5c"/>
+<rect x="181" y="161" width="8" height="8" fill="#0b3d5c"/>
+<rect x="191" y="101" width="8" height="8" fill="#0b3d5c"/>
+<rect x="191" y="121" width="8" height="8" fill="#0b3d5c"/>
+<rect x="191" y="151" width="8" height="8" fill="#0b3d5c"/>
+<rect x="191" y="161" width="8" height="8" fill="#0b3d5c"/>
+<rect x="201" y="161" width="8" height="8" fill="#0b3d5c"/>
+<rect x="10" y="40" width="200" height="150" fill="none" stroke="#5d6b75"/>
+<text class="en" x="338.0" y="24" text-anchor="middle" font-size="16" font-weight="700" fill="#0b3d5c">Stratified (3 zones)</text>
+<text class="fr" x="338.0" y="24" text-anchor="middle" font-size="16" font-weight="700" fill="#0b3d5c">Stratifié (3 zones)</text>
+<rect x="238.0" y="40" width="66.66666666666667" height="150" fill="#cfe3c6"/>
+<rect x="304.6666666666667" y="40" width="66.66666666666667" height="150" fill="#e2edd9"/>
+<rect x="371.33333333333337" y="40" width="66.66666666666667" height="150" fill="#f3f0e4"/>
+<line x1="304.6666666666667" y1="40" x2="304.6666666666667" y2="190" stroke="#0b3d5c" stroke-width="1.5" stroke-dasharray="4 3"/>
+<line x1="371.33333333333337" y1="40" x2="371.33333333333337" y2="190" stroke="#0b3d5c" stroke-width="1.5" stroke-dasharray="4 3"/>
+<rect x="239" y="81" width="8" height="8" fill="#0b3d5c"/>
+<rect x="239" y="161" width="8" height="8" fill="#0b3d5c"/>
+<rect x="249" y="61" width="8" height="8" fill="#0b3d5c"/>
+<rect x="269" y="51" width="8" height="8" fill="#0b3d5c"/>
+<rect x="269" y="91" width="8" height="8" fill="#0b3d5c"/>
+<rect x="269" y="151" width="8" height="8" fill="#0b3d5c"/>
+<rect x="279" y="71" width="8" height="8" fill="#0b3d5c"/>
+<rect x="279" y="171" width="8" height="8" fill="#0b3d5c"/>
+<rect x="299" y="71" width="8" height="8" fill="#0b3d5c"/>
+<rect x="299" y="161" width="8" height="8" fill="#0b3d5c"/>
+<rect x="319" y="161" width="8" height="8" fill="#0b3d5c"/>
+<rect x="329" y="71" width="8" height="8" fill="#0b3d5c"/>
+<rect x="329" y="121" width="8" height="8" fill="#0b3d5c"/>
+<rect x="339" y="81" width="8" height="8" fill="#0b3d5c"/>
+<rect x="339" y="121" width="8" height="8" fill="#0b3d5c"/>
+<rect x="339" y="141" width="8" height="8" fill="#0b3d5c"/>
+<rect x="349" y="81" width="8" height="8" fill="#0b3d5c"/>
+<rect x="359" y="91" width="8" height="8" fill="#0b3d5c"/>
+<rect x="359" y="151" width="8" height="8" fill="#0b3d5c"/>
+<rect x="369" y="131" width="8" height="8" fill="#0b3d5c"/>
+<rect x="379" y="71" width="8" height="8" fill="#0b3d5c"/>
+<rect x="389" y="181" width="8" height="8" fill="#0b3d5c"/>
+<rect x="399" y="91" width="8" height="8" fill="#0b3d5c"/>
+<rect x="399" y="171" width="8" height="8" fill="#0b3d5c"/>
+<rect x="399" y="181" width="8" height="8" fill="#0b3d5c"/>
+<rect x="409" y="111" width="8" height="8" fill="#0b3d5c"/>
+<rect x="419" y="121" width="8" height="8" fill="#0b3d5c"/>
+<rect x="419" y="171" width="8" height="8" fill="#0b3d5c"/>
+<rect x="419" y="181" width="8" height="8" fill="#0b3d5c"/>
+<rect x="429" y="161" width="8" height="8" fill="#0b3d5c"/>
+<rect x="238" y="40" width="200" height="150" fill="none" stroke="#5d6b75"/>
+<text class="en" x="566.0" y="24" text-anchor="middle" font-size="16" font-weight="700" fill="#0b3d5c">Systematic</text>
+<text class="fr" x="566.0" y="24" text-anchor="middle" font-size="16" font-weight="700" fill="#0b3d5c">Systématique</text>
+<rect x="466.0" y="40" width="66.66666666666667" height="150" fill="#cfe3c6"/>
+<rect x="532.6666666666666" y="40" width="66.66666666666667" height="150" fill="#e2edd9"/>
+<rect x="599.3333333333334" y="40" width="66.66666666666667" height="150" fill="#f3f0e4"/>
+<rect x="467" y="71" width="8" height="8" fill="#0b3d5c"/>
+<rect x="467" y="171" width="8" height="8" fill="#0b3d5c"/>
+<rect x="477" y="121" width="8" height="8" fill="#0b3d5c"/>
+<rect x="487" y="71" width="8" height="8" fill="#0b3d5c"/>
+<rect x="487" y="171" width="8" height="8" fill="#0b3d5c"/>
+<rect x="497" y="121" width="8" height="8" fill="#0b3d5c"/>
+<rect x="507" y="71" width="8" height="8" fill="#0b3d5c"/>
+<rect x="507" y="171" width="8" height="8" fill="#0b3d5c"/>
+<rect x="517" y="121" width="8" height="8" fill="#0b3d5c"/>
+<rect x="527" y="71" width="8" height="8" fill="#0b3d5c"/>
+<rect x="527" y="171" width="8" height="8" fill="#0b3d5c"/>
+<rect x="537" y="121" width="8" height="8" fill="#0b3d5c"/>
+<rect x="547" y="71" width="8" height="8" fill="#0b3d5c"/>
+<rect x="547" y="171" width="8" height="8" fill="#0b3d5c"/>
+<rect x="557" y="121" width="8" height="8" fill="#0b3d5c"/>
+<rect x="567" y="71" width="8" height="8" fill="#0b3d5c"/>
+<rect x="567" y="171" width="8" height="8" fill="#0b3d5c"/>
+<rect x="577" y="121" width="8" height="8" fill="#0b3d5c"/>
+<rect x="587" y="71" width="8" height="8" fill="#0b3d5c"/>
+<rect x="587" y="171" width="8" height="8" fill="#0b3d5c"/>
+<rect x="597" y="121" width="8" height="8" fill="#0b3d5c"/>
+<rect x="607" y="71" width="8" height="8" fill="#0b3d5c"/>
+<rect x="607" y="171" width="8" height="8" fill="#0b3d5c"/>
+<rect x="617" y="121" width="8" height="8" fill="#0b3d5c"/>
+<rect x="627" y="71" width="8" height="8" fill="#0b3d5c"/>
+<rect x="627" y="171" width="8" height="8" fill="#0b3d5c"/>
+<rect x="637" y="121" width="8" height="8" fill="#0b3d5c"/>
+<rect x="647" y="71" width="8" height="8" fill="#0b3d5c"/>
+<rect x="647" y="171" width="8" height="8" fill="#0b3d5c"/>
+<rect x="657" y="121" width="8" height="8" fill="#0b3d5c"/>
+<rect x="466" y="40" width="200" height="150" fill="none" stroke="#5d6b75"/>
+<text class="en" x="794.0" y="24" text-anchor="middle" font-size="16" font-weight="700" fill="#0b3d5c">Convenience (biased)</text>
+<text class="fr" x="794.0" y="24" text-anchor="middle" font-size="16" font-weight="700" fill="#0b3d5c">Commodité (biaisé)</text>
+<rect x="694.0" y="40" width="66.66666666666667" height="150" fill="#cfe3c6"/>
+<rect x="760.6666666666666" y="40" width="66.66666666666667" height="150" fill="#e2edd9"/>
+<rect x="827.3333333333334" y="40" width="66.66666666666667" height="150" fill="#f3f0e4"/>
+<rect x="695" y="41" width="8" height="8" fill="#d9694a"/>
+<rect x="695" y="51" width="8" height="8" fill="#d9694a"/>
+<rect x="695" y="61" width="8" height="8" fill="#d9694a"/>
+<rect x="695" y="71" width="8" height="8" fill="#d9694a"/>
+<rect x="695" y="81" width="8" height="8" fill="#d9694a"/>
+<rect x="695" y="91" width="8" height="8" fill="#d9694a"/>
+<rect x="695" y="101" width="8" height="8" fill="#d9694a"/>
+<rect x="695" y="111" width="8" height="8" fill="#d9694a"/>
+<rect x="695" y="121" width="8" height="8" fill="#d9694a"/>
+<rect x="695" y="131" width="8" height="8" fill="#d9694a"/>
+<rect x="705" y="41" width="8" height="8" fill="#d9694a"/>
+<rect x="705" y="51" width="8" height="8" fill="#d9694a"/>
+<rect x="705" y="61" width="8" height="8" fill="#d9694a"/>
+<rect x="705" y="71" width="8" height="8" fill="#d9694a"/>
+<rect x="705" y="81" width="8" height="8" fill="#d9694a"/>
+<rect x="705" y="91" width="8" height="8" fill="#d9694a"/>
+<rect x="705" y="101" width="8" height="8" fill="#d9694a"/>
+<rect x="705" y="111" width="8" height="8" fill="#d9694a"/>
+<rect x="705" y="121" width="8" height="8" fill="#d9694a"/>
+<rect x="705" y="131" width="8" height="8" fill="#d9694a"/>
+<rect x="715" y="41" width="8" height="8" fill="#d9694a"/>
+<rect x="715" y="51" width="8" height="8" fill="#d9694a"/>
+<rect x="715" y="61" width="8" height="8" fill="#d9694a"/>
+<rect x="715" y="71" width="8" height="8" fill="#d9694a"/>
+<rect x="715" y="81" width="8" height="8" fill="#d9694a"/>
+<rect x="715" y="91" width="8" height="8" fill="#d9694a"/>
+<rect x="715" y="101" width="8" height="8" fill="#d9694a"/>
+<rect x="715" y="111" width="8" height="8" fill="#d9694a"/>
+<rect x="715" y="121" width="8" height="8" fill="#d9694a"/>
+<rect x="715" y="131" width="8" height="8" fill="#d9694a"/>
+<rect x="694" y="40" width="200" height="150" fill="none" stroke="#5d6b75"/>
+<text class="en" x="10" y="212" font-size="13" fill="#5d6b75">shore</text><text class="fr" x="10" y="212" font-size="13" fill="#5d6b75">côte</text>
+<text class="en" x="210" y="212" font-size="13" fill="#5d6b75" text-anchor="end">reef</text><text class="fr" x="210" y="212" font-size="13" fill="#5d6b75" text-anchor="end">récif</text>
+</svg><figcaption><span class="en">Four sampling designs of 30 units in the same lagoon. Only the first three give every part of the lagoon a known chance to be sampled.</span><span class="fr">Quatre plans d'échantillonnage de 30 unités dans le même lagon. Seuls les trois premiers donnent à chaque partie du lagon une chance connue d'être échantillonnée.</span></figcaption></figure>
+<div id="simple-random-samplingéchantillonnage-aléatoire-simple"
+class="section level3">
+<h3><span class="en">Simple random sampling</span><span
+class="fr">Échantillonnage aléatoire simple</span></h3>
+<div class="en">
+<p>Every cell has the <strong>same chance</strong> of being chosen,
+independently of the others. It is the reference design: the sample mean
+is <strong>unbiased</strong> (on average, over many samples, it equals
+μ).</p>
+</div>
+<div class="fr">
+<p>Chaque cellule a la <strong>même chance</strong> d’être choisie,
+indépendamment des autres. C’est le plan de référence : la moyenne
+d’échantillon est <strong>sans biais</strong> (en moyenne, sur de
+nombreux échantillons, elle vaut μ).</p>
+</div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>rows_srs <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(lag), <span class="at">size =</span> <span class="dv">30</span>)        <span class="co"># 30 row numbers, without replacement</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>srs <span class="ot">&lt;-</span> lag[rows_srs, ]</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="fu">mean</span>(srs<span class="sc">$</span>seagrass_cover)</span></code></pre></div>
+<pre><code>#&gt; [1] 37.5</code></pre>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>sample(x, size, replace)</code></td>
+<td>draws <code>size</code> values at random from <code>x</code></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>  <code>size</code></td>
+<td>how many values to draw</td>
+<td>a whole number</td>
+</tr>
+<tr class="odd">
+<td>  <code>replace</code></td>
+<td><code>FALSE</code> (default): each value at most once (sampling
+cells); <code>TRUE</code>: values can come back (bootstrap, Session
+5)</td>
+<td><code>TRUE</code> / <code>FALSE</code></td>
+</tr>
+<tr class="even">
+<td><code>lag[rows, ]</code></td>
+<td>keeps the rows whose numbers are in <code>rows</code>, all columns
+(Beginner Session 4)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>sample(x, size, replace)</code></td>
+<td>tire <code>size</code> valeurs au hasard dans <code>x</code></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>  <code>size</code></td>
+<td>combien de valeurs tirer</td>
+<td>un nombre entier</td>
+</tr>
+<tr class="odd">
+<td>  <code>replace</code></td>
+<td><code>FALSE</code> (défaut) : chaque valeur au plus une fois (tirer
+des cellules) ; <code>TRUE</code> : les valeurs peuvent revenir
+(bootstrap, séance 5)</td>
+<td><code>TRUE</code> / <code>FALSE</code></td>
+</tr>
+<tr class="even">
+<td><code>lag[rows, ]</code></td>
+<td>garde les lignes dont les numéros sont dans <code>rows</code>,
+toutes les colonnes (séance 4 du niveau débutant)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="stratified-random-samplingéchantillonnage-aléatoire-stratifié"
+class="section level3">
+<h3><span class="en">Stratified random sampling</span><span
+class="fr">Échantillonnage aléatoire stratifié</span></h3>
+<div class="en">
+<p>The population is divided into <strong>strata</strong> that are
+expected to differ (here the three zones), and a random sample is drawn
+<strong>in each stratum</strong>. Advantages: every zone is represented,
+results can be given per zone, and the estimate is usually <strong>more
+precise</strong> than a simple random sample of the same size, because
+the large differences between zones no longer add noise. The fisher
+survey is stratified by village (60 per village).</p>
+</div>
+<div class="fr">
+<p>La population est divisée en <strong>strates</strong> qui devraient
+différer (ici les trois zones), et un échantillon aléatoire est tiré
+<strong>dans chaque strate</strong>. Avantages : chaque zone est
+représentée, les résultats peuvent être donnés par zone, et l’estimation
+est en général <strong>plus précise</strong> qu’un échantillon aléatoire
+simple de même taille, car les grandes différences entre zones
+n’ajoutent plus de bruit. L’enquête pêcheurs est stratifiée par village
+(60 par village).</p>
+</div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>rows_str <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">sample</span>(<span class="fu">which</span>(lag<span class="sc">$</span>zone <span class="sc">==</span> <span class="st">&quot;inshore&quot;</span>),   <span class="dv">10</span>),</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>              <span class="fu">sample</span>(<span class="fu">which</span>(lag<span class="sc">$</span>zone <span class="sc">==</span> <span class="st">&quot;middle&quot;</span>),    <span class="dv">10</span>),</span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>              <span class="fu">sample</span>(<span class="fu">which</span>(lag<span class="sc">$</span>zone <span class="sc">==</span> <span class="st">&quot;reef_flat&quot;</span>), <span class="dv">10</span>))</span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>str_s <span class="ot">&lt;-</span> lag[rows_str, ]</span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a><span class="fu">tapply</span>(str_s<span class="sc">$</span>seagrass_cover, str_s<span class="sc">$</span>zone, mean)</span></code></pre></div>
+<pre><code>#&gt;   inshore    middle reef_flat 
+#&gt;      65.2      42.2      14.8</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">mean</span>(str_s<span class="sc">$</span>seagrass_cover)</span></code></pre></div>
+<pre><code>#&gt; [1] 40.73333</code></pre>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>which(test)</code></td>
+<td>the positions (row numbers) where the test is <code>TRUE</code></td>
+<td>a logical vector</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>which(test)</code></td>
+<td>les positions (numéros de lignes) où le test est
+<code>TRUE</code></td>
+<td>un vecteur logique</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="en">
+<p>Here the three zones have almost the same number of cells (≈ 400
+each), so the plain mean of the 30 values is fine. If the strata had
+very different sizes, each stratum mean should be <strong>weighted by
+the share of the population it represents</strong>.</p>
+</div>
+<div class="fr">
+<p>Ici les trois zones ont presque le même nombre de cellules (≈ 400
+chacune), la moyenne simple des 30 valeurs convient donc. Si les strates
+avaient des tailles très différentes, la moyenne de chaque strate
+devrait être <strong>pondérée par la part de la population qu’elle
+représente</strong>.</p>
+</div>
+</div>
+<div id="systematic-samplingéchantillonnage-systématique"
+class="section level3">
+<h3><span class="en">Systematic sampling</span><span
+class="fr">Échantillonnage systématique</span></h3>
+<div class="en">
+<p>Units are taken at <strong>regular intervals</strong> from a random
+start: a quadrat every 5 m along a tape, every 40th cell. Easy in the
+field and well spread, but risky if the environment has a
+<strong>pattern with the same period</strong> as the interval (e.g. sand
+ridges every 40 m).</p>
+</div>
+<div class="fr">
+<p>Les unités sont prises à <strong>intervalles réguliers</strong> à
+partir d’un départ aléatoire : un quadrat tous les 5 m le long d’un
+ruban, une cellule sur 40. Facile sur le terrain et bien réparti, mais
+risqué si le milieu présente un <strong>motif de même période</strong>
+que l’intervalle (ex. des rides de sable tous les 40 m).</p>
+</div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">40</span>, <span class="dv">1</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>rows_sys <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from =</span> start, <span class="at">to =</span> <span class="fu">nrow</span>(lag), <span class="at">by =</span> <span class="dv">40</span>)   <span class="co"># 1 cell in 40 -&gt; 30 cells</span></span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a><span class="fu">length</span>(rows_sys)</span></code></pre></div>
+<pre><code>#&gt; [1] 30</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="fu">mean</span>(lag<span class="sc">$</span>seagrass_cover[rows_sys])</span></code></pre></div>
+<pre><code>#&gt; [1] 62.8</code></pre>
+</div>
+<div id="convenience-samplingéchantillonnage-de-commodité"
+class="section level3">
+<h3><span class="en">Convenience sampling</span><span
+class="fr">Échantillonnage de commodité</span></h3>
+<div class="en">
+<p>“We sampled the 30 cells closest to the landing site because the boat
+was broken.” The sample is easy, but <strong>biased</strong>: here all
+cells are inshore, where cover is highest.</p>
+</div>
+<div class="fr">
+<p>« Nous avons échantillonné les 30 cellules les plus proches du
+débarcadère parce que la pirogue était en panne. » L’échantillon est
+facile, mais <strong>biaisé</strong> : ici toutes les cellules sont
+côtières, là où le recouvrement est le plus élevé.</p>
+</div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>conv <span class="ot">&lt;-</span> lag[lag<span class="sc">$</span>x <span class="sc">&lt;=</span> <span class="dv">2</span> <span class="sc">&amp;</span> lag<span class="sc">$</span>y <span class="sc">&lt;=</span> <span class="dv">15</span>, ]      <span class="co"># 30 cells next to the landing site</span></span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a><span class="fu">nrow</span>(conv)</span></code></pre></div>
+<pre><code>#&gt; [1] 30</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="fu">mean</span>(conv<span class="sc">$</span>seagrass_cover)                    <span class="co"># far above the true mean</span></span></code></pre></div>
+<pre><code>#&gt; [1] 64.4</code></pre>
+<div class="callout warning">
+<div class="en">
+<p><strong>More data does not fix bias.</strong> 300 convenience cells
+would give an even <em>more confident</em> wrong answer. Random
+selection is what makes the statistics of the next sessions valid.</p>
+</div>
+<div class="fr">
+<p><strong>Plus de données ne corrige pas un biais.</strong> 300
+cellules de commodité donneraient une réponse fausse encore <em>plus
+sûre d’elle</em>. C’est le tirage aléatoire qui rend valides les
+statistiques des séances suivantes.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="repeat" class="section level2">
+<h2><span class="en">Repeating the sampling many times</span><span
+class="fr">Répéter l’échantillonnage de nombreuses fois</span></h2>
+<div class="en">
+<p>One sample gives one estimate. What if we had sampled again? Because
+we know the population, we can draw <strong>1,000 simple random
+samples</strong> and 1,000 stratified samples, and look at the spread of
+their means. <code>replicate()</code> repeats an expression many
+times.</p>
+</div>
+<div class="fr">
+<p>Un échantillon donne une estimation. Et si nous avions échantillonné
+à nouveau ? Comme nous connaissons la population, nous pouvons tirer
+<strong>1 000 échantillons aléatoires simples</strong> et 1 000
+échantillons stratifiés, et regarder la dispersion de leurs moyennes.
+<code>replicate()</code> répète une expression de nombreuses fois.</p>
+</div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a>m_srs <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>, <span class="fu">mean</span>(lag<span class="sc">$</span>seagrass_cover[<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(lag), <span class="dv">30</span>)]))</span>
+<span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a>m_str <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">1000</span>, {</span>
+<span id="cb24-4"><a href="#cb24-4" tabindex="-1"></a>  r <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">sample</span>(<span class="fu">which</span>(lag<span class="sc">$</span>zone <span class="sc">==</span> <span class="st">&quot;inshore&quot;</span>), <span class="dv">10</span>), <span class="fu">sample</span>(<span class="fu">which</span>(lag<span class="sc">$</span>zone <span class="sc">==</span> <span class="st">&quot;middle&quot;</span>), <span class="dv">10</span>),</span>
+<span id="cb24-5"><a href="#cb24-5" tabindex="-1"></a>         <span class="fu">sample</span>(<span class="fu">which</span>(lag<span class="sc">$</span>zone <span class="sc">==</span> <span class="st">&quot;reef_flat&quot;</span>), <span class="dv">10</span>))</span>
+<span id="cb24-6"><a href="#cb24-6" tabindex="-1"></a>  <span class="fu">mean</span>(lag<span class="sc">$</span>seagrass_cover[r])</span>
+<span id="cb24-7"><a href="#cb24-7" tabindex="-1"></a>})</span>
+<span id="cb24-8"><a href="#cb24-8" tabindex="-1"></a><span class="fu">c</span>(<span class="at">mean_srs =</span> <span class="fu">mean</span>(m_srs), <span class="at">mean_str =</span> <span class="fu">mean</span>(m_str), <span class="at">true =</span> mu)   <span class="co"># both unbiased</span></span></code></pre></div>
+<pre><code>#&gt; mean_srs mean_str     true 
+#&gt; 40.35913 40.34930 40.42250</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="fu">c</span>(<span class="at">sd_srs =</span> <span class="fu">sd</span>(m_srs), <span class="at">sd_str =</span> <span class="fu">sd</span>(m_str))                      <span class="co"># stratified is more precise</span></span></code></pre></div>
+<pre><code>#&gt;   sd_srs   sd_str 
+#&gt; 3.888493 2.209254</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a>sims <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">design =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;simple random&quot;</span>, <span class="st">&quot;stratified&quot;</span>), <span class="at">each =</span> <span class="dv">1000</span>), <span class="at">mean =</span> <span class="fu">c</span>(m_srs, m_str))</span>
+<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a><span class="fu">ggplot</span>(sims, <span class="fu">aes</span>(mean, <span class="at">fill =</span> design)) <span class="sc">+</span></span>
+<span id="cb28-3"><a href="#cb28-3" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">1</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">position =</span> <span class="st">&quot;identity&quot;</span>) <span class="sc">+</span></span>
+<span id="cb28-4"><a href="#cb28-4" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> mu, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb28-5"><a href="#cb28-5" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;mean cover of a sample of 30 cells (%)&quot;</span>, <span class="at">y =</span> <span class="st">&quot;number of samples&quot;</span>) <span class="sc">+</span> <span class="fu">theme_c</span>()</span></code></pre></div>
+<p><img src="01-design_files/figure-html/unnamed-chunk-11-1.png" width="85%" style="display: block; margin: auto;" /></p>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>replicate(n, expr)</code></td>
+<td>evaluates <code>expr</code> <code>n</code> times and collects the
+results in a vector</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>  <code>{ ... }</code></td>
+<td>several lines treated as one expression; the value of the last line
+is returned</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>  <code>alpha</code>, <code>position = "identity"</code> (in
+<code>geom_histogram()</code>)</td>
+<td>transparency (0–1); bars of the two groups drawn on top of each
+other instead of stacked</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>geom_vline(xintercept)</code></td>
+<td>vertical line at a given x value</td>
+<td>a number</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>replicate(n, expr)</code></td>
+<td>évalue <code>expr</code> <code>n</code> fois et rassemble les
+résultats dans un vecteur</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>  <code>{ ... }</code></td>
+<td>plusieurs lignes traitées comme une seule expression ; la valeur de
+la dernière ligne est renvoyée</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>  <code>alpha</code>, <code>position = "identity"</code> (in
+<code>geom_histogram()</code>)</td>
+<td>transparence (0–1) ; barres des deux groupes superposées au lieu
+d’empilées</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>geom_vline(xintercept)</code></td>
+<td>ligne verticale à une valeur de x donnée</td>
+<td>un nombre</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="en">
+<p>Both histograms are centred on the true mean (no bias), but the
+stratified one is <strong>narrower</strong>: with the same effort (30
+cells), stratification gives estimates closer to the truth. The spread
+of these sample means has a name — the <strong>standard error</strong> —
+and it is the subject of Session 5.</p>
+</div>
+<div class="fr">
+<p>Les deux histogrammes sont centrés sur la vraie moyenne (pas de
+biais), mais celui du stratifié est <strong>plus étroit</strong> : avec
+le même effort (30 cellules), la stratification donne des estimations
+plus proches de la vérité. La dispersion de ces moyennes d’échantillons
+a un nom — l’<strong>erreur standard</strong> — et c’est le sujet de la
+séance 5.</p>
+</div>
+</div>
+<div id="application" class="section level2">
+<h2><span class="en">Application work &amp; quiz</span><span
+class="fr">Travail d’application et quiz</span></h2>
+<div class="application">
+<div id="application-work-1" class="section level3 en">
+<h3>Application work 1</h3>
+<p>With <code>lagoon_population.csv</code> (the whole population):</p>
+<ol style="list-style-type: decimal">
+<li>True mean seagrass cover μ (2 decimals).</li>
+<li>True standard deviation σ of seagrass cover (use <code>sd()</code>,
+2 decimals).</li>
+<li>True mean number of urchins per cell (3 decimals).</li>
+<li>Percentage of cells with <strong>more than 50 %</strong> cover (1
+decimal).</li>
+<li>True mean cover on the <strong>reef flat</strong> (2 decimals).</li>
+<li>Run <strong>exactly</strong>
+<code>set.seed(2026); s &lt;- lag[sample(1:nrow(lag), 40), ]</code> and
+give the mean number of urchins in this sample (3 decimals).</li>
+<li>– 10. Design questions.</li>
+</ol>
+</div>
+<div id="travail-dapplication-1" class="section level3 fr">
+<h3>Travail d’application 1</h3>
+<p>Avec <code>lagoon_population.csv</code> (toute la population) :</p>
+<ol style="list-style-type: decimal">
+<li>Vraie moyenne du recouvrement μ (2 décimales).</li>
+<li>Vrai écart-type σ du recouvrement (utilisez <code>sd()</code>, 2
+décimales).</li>
+<li>Vrai nombre moyen d’oursins par cellule (3 décimales).</li>
+<li>Pourcentage de cellules avec <strong>plus de 50 %</strong> de
+recouvrement (1 décimale).</li>
+<li>Vrai recouvrement moyen sur le <strong>platier</strong>
+(<code>reef_flat</code>, 2 décimales).</li>
+<li>Exécutez <strong>exactement</strong>
+<code>set.seed(2026); s &lt;- lag[sample(1:nrow(lag), 40), ]</code> et
+donnez le nombre moyen d’oursins dans cet échantillon (3
+décimales).</li>
+<li>– 10. Questions sur le plan d’étude.</li>
+</ol>
+</div>
+</div>
+<div class="hint">
+<div class="en">
+<p>Q4: <code>mean(lag$seagrass_cover &gt; 50)</code> is a proportion;
+multiply by 100. Q6: the seed must be run <strong>in the same line or
+just before</strong> <code>sample()</code>, otherwise the draw
+differs.</p>
+</div>
+<div class="fr">
+<p>Q4 : <code>mean(lag$seagrass_cover &gt; 50)</code> est une proportion
+; multipliez par 100. Q6 : la graine doit être exécutée <strong>sur la
+même ligne ou juste avant</strong> <code>sample()</code>, sinon le
+tirage diffère.</p>
+</div>
+</div>
+<div id="quiz-t01" class="quiz" data-quiz-id="t01"
+data-q="W3sidHlwZSI6Im51bSIsImVuIjoiMS4gVHJ1ZSBtZWFuIGNvdmVyIM68PyIsImZyIjoiMS4gVnJhaWUgbW95ZW5uZSBkdSByZWNvdXZyZW1lbnQgzrwgPyIsImFuc3dlciI6NDAuNDIsInRvbCI6MC4wMDYsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibnVtIiwiZW4iOiIyLiBUcnVlIFNEIG9mIGNvdmVyPyIsImZyIjoiMi4gVnJhaSDDqWNhcnQtdHlwZSBkdSByZWNvdXZyZW1lbnQgPyIsImFuc3dlciI6MjEuNjEsInRvbCI6MC4wMDYsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibnVtIiwiZW4iOiIzLiBUcnVlIG1lYW4gbnVtYmVyIG9mIHVyY2hpbnMgcGVyIGNlbGw/IiwiZnIiOiIzLiBWcmFpIG5vbWJyZSBtb3llbiBkJ291cnNpbnMgcGFyIGNlbGx1bGUgPyIsImFuc3dlciI6Mi43NjgsInRvbCI6MC4wMDA2LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiNC4gJSBvZiBjZWxscyB3aXRoIG1vcmUgdGhhbiA1MCAlIGNvdmVyPyIsImZyIjoiNC4gJSBkZSBjZWxsdWxlcyDDoCBwbHVzIGRlIDUwICUgZGUgcmVjb3V2cmVtZW50ID8iLCJhbnN3ZXIiOjM2LjEsInRvbCI6MC4wNiwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJudW0iLCJlbiI6IjUuIFRydWUgbWVhbiBjb3ZlciBvbiB0aGUgcmVlZiBmbGF0PyIsImZyIjoiNS4gVnJhaSByZWNvdXZyZW1lbnQgbW95ZW4gc3VyIGxlIHBsYXRpZXIgPyIsImFuc3dlciI6MTcuODEsInRvbCI6MC4wMDYsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibnVtIiwiZW4iOiI2LiBNZWFuIHVyY2hpbnMgaW4gdGhlIHNhbXBsZSBkcmF3biB3aXRoIHNldC5zZWVkKDIwMjYpPyIsImZyIjoiNi4gTW95ZW5uZSBkJ291cnNpbnMgZGFucyBsJ8OpY2hhbnRpbGxvbiB0aXLDqSBhdmVjIHNldC5zZWVkKDIwMjYpID8iLCJhbnN3ZXIiOjIuNjc1LCJ0b2wiOjAuMDAwNiwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJtY3EiLCJlbiI6IjcuIEEgc3R1ZHkgY29tcGFyZXMgZmlzaCBiaW9tYXNzIGJldHdlZW4gZXhpc3RpbmcgcmVzZXJ2ZXMgYW5kIGZpc2hlZCByZWVmcy4gSXQgaXPigKYiLCJmciI6IjcuIFVuZSDDqXR1ZGUgY29tcGFyZSBsYSBiaW9tYXNzZSBkZSBwb2lzc29ucyBlbnRyZSBkZXMgcsOpc2VydmVzIGV4aXN0YW50ZXMgZXQgZGVzIHLDqWNpZnMgcMOqY2jDqXMuIEMnZXN04oCmIiwib3B0aW9uc19lbiI6WyJhbiBleHBlcmltZW50OiBpdCBjYW4gcHJvdmUgdGhhdCBwcm90ZWN0aW9uIGNhdXNlcyBtb3JlIGZpc2giLCJhbiBvYnNlcnZhdGlvbmFsIHN0dWR5OiBpdCBzaG93cyBhbiBhc3NvY2lhdGlvbiwgcG9zc2libHkgY29uZm91bmRlZCIsImEgY2Vuc3VzIiwiYSBzeXN0ZW1hdGljIHNhbXBsZSJdLCJvcHRpb25zX2ZyIjpbInVuZSBleHDDqXJpZW5jZSA6IGVsbGUgcGV1dCBwcm91dmVyIHF1ZSBsYSBwcm90ZWN0aW9uIGNhdXNlIHBsdXMgZGUgcG9pc3NvbnMiLCJ1bmUgw6l0dWRlIG9ic2VydmF0aW9ubmVsbGUgOiBlbGxlIG1vbnRyZSB1bmUgYXNzb2NpYXRpb24sIHBldXQtw6p0cmUgY29uZm9uZHVlIiwidW4gcmVjZW5zZW1lbnQiLCJ1biDDqWNoYW50aWxsb24gc3lzdMOpbWF0aXF1ZSJdLCJhbnN3ZXIiOjF9LHsidHlwZSI6Im1jcSIsImVuIjoiOC4gMzAganV2ZW5pbGUgc2VhIGN1Y3VtYmVycyBwZXIgcGVuLCA2IHBlbnMgcGVyIGZlZWQuIFRoZSBleHBlcmltZW50YWwgdW5pdCBpc+KApiIsImZyIjoiOC4gMzAgaG9sb3RodXJpZXMganV2w6luaWxlcyBwYXIgZW5jbG9zLCA2IGVuY2xvcyBwYXIgYWxpbWVudC4gTCd1bml0w6kgZXhww6lyaW1lbnRhbGUgZXN04oCmIiwib3B0aW9uc19lbiI6WyJ0aGUgYW5pbWFsIChuID0gNzIwKSIsInRoZSBwZW4gKG4gPSAyNCkiLCJ0aGUgZmVlZCAobiA9IDQpIiwidGhlIGZhcm0gKG4gPSAxKSJdLCJvcHRpb25zX2ZyIjpbImwnYW5pbWFsIChuID0gNzIwKSIsImwnZW5jbG9zIChuID0gMjQpIiwibCdhbGltZW50IChuID0gNCkiLCJsYSBmZXJtZSAobiA9IDEpIl0sImFuc3dlciI6MX0seyJ0eXBlIjoibWNxIiwiZW4iOiI5LiBTYW1wbGluZyB0aGUgMzAgY2VsbHMgbmVhcmVzdCB0aGUgbGFuZGluZyBzaXRlIGdpdmVzIGEgbWVhbiBjb3ZlciB0aGF0IGlz4oCmIiwiZnIiOiI5LiDDiWNoYW50aWxsb25uZXIgbGVzIDMwIGNlbGx1bGVzIGxlcyBwbHVzIHByb2NoZXMgZHUgZMOpYmFyY2Fkw6hyZSBkb25uZSB1biByZWNvdXZyZW1lbnQgbW95ZW7igKYiLCJvcHRpb25zX2VuIjpbInVuYmlhc2VkIGJ1dCBpbXByZWNpc2UiLCJiaWFzZWQgdXB3YXJkcywgYmVjYXVzZSBpbnNob3JlIGNlbGxzIGhhdmUgbW9yZSBzZWFncmFzcyIsImJpYXNlZCBkb3dud2FyZHMiLCJleGFjdGx5IM68Il0sIm9wdGlvbnNfZnIiOlsic2FucyBiaWFpcyBtYWlzIGltcHLDqWNpcyIsImJpYWlzw6kgdmVycyBsZSBoYXV0LCBjYXIgbGVzIGNlbGx1bGVzIGPDtHRpw6hyZXMgb250IHBsdXMgZCdoZXJiaWVyIiwiYmlhaXPDqSB2ZXJzIGxlIGJhcyIsImV4YWN0ZW1lbnQgzrwiXSwiYW5zd2VyIjoxfSx7InR5cGUiOiJtY3EiLCJlbiI6IjEwLiBXaHkgd2FzIHRoZSBzdHJhdGlmaWVkIGRlc2lnbiBtb3JlIHByZWNpc2UgdGhhbiBzaW1wbGUgcmFuZG9tIHNhbXBsaW5nIGhlcmU/IiwiZnIiOiIxMC4gUG91cnF1b2kgbGUgcGxhbiBzdHJhdGlmacOpIMOpdGFpdC1pbCBwbHVzIHByw6ljaXMgcXVlIGwnYWzDqWF0b2lyZSBzaW1wbGUgaWNpID8iLCJvcHRpb25zX2VuIjpbIkJlY2F1c2UgaXQgdXNlcyBtb3JlIGNlbGxzIiwiQmVjYXVzZSB0aGUgc3RyYXRhICh6b25lcykgZGlmZmVyIHN0cm9uZ2x5LCBhbmQgZWFjaCB6b25lIGlzIGFsd2F5cyByZXByZXNlbnRlZCIsIkJlY2F1c2UgaXQgcmVtb3ZlcyBhbGwgdmFyaWFiaWxpdHkiLCJCZWNhdXNlIHNldC5zZWVkKCkgd2FzIHVzZWQiXSwib3B0aW9uc19mciI6WyJQYXJjZSBxdSdpbCB1dGlsaXNlIHBsdXMgZGUgY2VsbHVsZXMiLCJQYXJjZSBxdWUgbGVzIHN0cmF0ZXMgKHpvbmVzKSBkaWZmw6hyZW50IGZvcnRlbWVudCwgZXQgY2hhcXVlIHpvbmUgZXN0IHRvdWpvdXJzIHJlcHLDqXNlbnTDqWUiLCJQYXJjZSBxdSdpbCBzdXBwcmltZSB0b3V0ZSB2YXJpYWJpbGl0w6kiLCJQYXJjZSBxdWUgc2V0LnNlZWQoKSBhIMOpdMOpIHV0aWxpc8OpIl0sImFuc3dlciI6MX1d">
+
+</div>
+<div class="solution" data-quiz="t01">
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a>lag <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/lagoon_population.csv&quot;</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">mean</span>(lag<span class="sc">$</span>seagrass_cover), <span class="dv">2</span>)                        <span class="co"># 1</span></span>
+<span id="cb29-3"><a href="#cb29-3" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">sd</span>(lag<span class="sc">$</span>seagrass_cover), <span class="dv">2</span>)                          <span class="co"># 2</span></span>
+<span id="cb29-4"><a href="#cb29-4" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">mean</span>(lag<span class="sc">$</span>urchins), <span class="dv">3</span>)                               <span class="co"># 3</span></span>
+<span id="cb29-5"><a href="#cb29-5" tabindex="-1"></a><span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> <span class="fu">mean</span>(lag<span class="sc">$</span>seagrass_cover <span class="sc">&gt;</span> <span class="dv">50</span>), <span class="dv">1</span>)             <span class="co"># 4</span></span>
+<span id="cb29-6"><a href="#cb29-6" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">tapply</span>(lag<span class="sc">$</span>seagrass_cover, lag<span class="sc">$</span>zone, mean), <span class="dv">2</span>)      <span class="co"># 5</span></span>
+<span id="cb29-7"><a href="#cb29-7" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2026</span>); s <span class="ot">&lt;-</span> lag[<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(lag), <span class="dv">40</span>), ]</span>
+<span id="cb29-8"><a href="#cb29-8" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">mean</span>(s<span class="sc">$</span>urchins), <span class="dv">3</span>)                                 <span class="co"># 6</span></span>
+<span id="cb29-9"><a href="#cb29-9" tabindex="-1"></a><span class="co"># 7: observational (reserves were not assigned at random) -&gt; association, possible confounding</span></span>
+<span id="cb29-10"><a href="#cb29-10" tabindex="-1"></a><span class="co"># 8: the pen: the feed is applied to the pen   9: biased upwards   10: zones differ strongly</span></span></code></pre></div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

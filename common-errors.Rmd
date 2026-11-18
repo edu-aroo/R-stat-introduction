@@ -1,0 +1,49 @@
+---
+title: "[Common errors and pitfalls]{.en}[Erreurs et pièges fréquents]{.fr}"
+pagetitle: "R4Marine Stats · Common errors"
+subtitle: "[R messages of statistical functions, and the classic statistical mistakes]{.en}[Messages de R des fonctions statistiques, et les erreurs statistiques classiques]{.fr}"
+---
+
+::: {.callout .tip}
+::: en
+**Method.** Read the **first** message. Check the **types** of your columns (`str()`): most errors of statistical functions come from a number stored as text, a group with the wrong number of levels, or `NA`. Then restart R and re-run the script from the top.
+:::
+::: fr
+**Méthode.** Lisez le **premier** message. Vérifiez les **types** de vos colonnes (`str()`) : la plupart des erreurs des fonctions statistiques viennent d'un nombre stocké comme texte, d'un groupe avec un mauvais nombre de niveaux, ou de `NA`. Puis redémarrez R et relancez le script depuis le début.
+:::
+:::
+
+## [R messages]{.en}[Messages de R]{.fr} {.no-track}
+
+| [Message]{.en}[Message]{.fr} | [What it means]{.en}[Ce que ça veut dire]{.fr} | [How to fix it]{.en}[Comment corriger]{.fr} |
+|---|---|---|
+| `grouping factor must have exactly 2 levels` | [`t.test(y ~ g)` or `wilcox.test(y ~ g)` with a group of 3+ values (or a typo creating an extra level).]{.en}[`t.test(y ~ g)` ou `wilcox.test(y ~ g)` avec un groupe de 3 valeurs ou plus (ou une faute de frappe créant un niveau en trop).]{.fr} | [`table(g)`; keep 2 groups with `subset()` / `filter()`, or use ANOVA / Kruskal–Wallis.]{.en}[`table(g)` ; gardez 2 groupes avec `subset()` / `filter()`, ou utilisez ANOVA / Kruskal–Wallis.]{.fr} |
+| `not enough 'x' observations` | [A group has 0 or 1 value (after removing `NA`).]{.en}[Un groupe a 0 ou 1 valeur (après suppression des `NA`).]{.fr} | [Check `table(g)` and `sum(!is.na(y))` per group.]{.en}[Vérifiez `table(g)` et `sum(!is.na(y))` par groupe.]{.fr} |
+| `data are essentially constant` | [All values identical in a group: no variance.]{.en}[Toutes les valeurs identiques dans un groupe : pas de variance.]{.fr} | [Look at the data; a t-test is meaningless here.]{.en}[Regardez les données ; un test t n'a pas de sens ici.]{.fr} |
+| `cannot compute exact p-value with ties` (warning) | [Wilcoxon / Spearman with equal values.]{.en}[Wilcoxon / Spearman avec des valeurs égales.]{.fr} | [Normal; add `exact = FALSE` to silence it.]{.en}[Normal ; ajoutez `exact = FALSE` pour le faire taire.]{.fr} |
+| `Chi-squared approximation may be incorrect` (warning) | [Some **expected** counts are below 5.]{.en}[Certains effectifs **attendus** sont sous 5.]{.fr} | [`chisq.test(tab)$expected`; use `fisher.test()` or merge rare categories.]{.en}[`chisq.test(tab)$expected` ; utilisez `fisher.test()` ou regroupez des catégories rares.]{.fr} |
+| `'x' and 'y' must have the same length` | [Paired test or correlation with vectors of different lengths.]{.en}[Test apparié ou corrélation avec des vecteurs de longueurs différentes.]{.fr} | [Build both from the same rows of the same data frame.]{.en}[Construisez les deux à partir des mêmes lignes du même data frame.]{.fr} |
+| `non-numeric argument` / `'x' must be numeric` | [The response is stored as text.]{.en}[La réponse est stockée comme du texte.]{.fr} | [`str(df)`; clean and `as.numeric()`.]{.en}[`str(df)` ; nettoyez et `as.numeric()`.]{.fr} |
+| `NaNs produced` with `log()` | [Log of a negative number; `log(0)` gives `-Inf`.]{.en}[Log d'un nombre négatif ; `log(0)` donne `-Inf`.]{.fr} | [Check the minimum; for counts with zeros use `log1p(x)` = log(1 + x).]{.en}[Vérifiez le minimum ; pour des comptages avec des zéros utilisez `log1p(x)` = log(1 + x).]{.fr} |
+| `object 'x' not found` in `predict()` | [`newdata` does not contain a column named like the predictor.]{.en}[`newdata` ne contient pas de colonne nommée comme le prédicteur.]{.fr} | [`data.frame(salinity_psu = 35)`: exactly the same name as in `lm()`.]{.en}[`data.frame(salinity_psu = 35)` : exactement le même nom que dans `lm()`.]{.fr} |
+| [`TukeyHSD()` error: no factors in the fitted model]{.en}[Erreur de `TukeyHSD()` : pas de facteur dans le modèle]{.fr} | [The group was numeric (e.g. codes 1, 2, 3).]{.en}[Le groupe était numérique (ex. codes 1, 2, 3).]{.fr} | [`df$g <- factor(df$g)` before `aov()`.]{.en}[`df$g <- factor(df$g)` avant `aov()`.]{.fr} |
+| [ANOVA table shows Df = 1 for a 4-group factor]{.en}[Le tableau d'ANOVA montre Df = 1 pour un facteur à 4 groupes]{.fr} | [The group is numeric: R fitted a regression.]{.en}[Le groupe est numérique : R a ajusté une régression.]{.fr} | [Same fix: make it a factor.]{.en}[Même correction : en faire un facteur.]{.fr} |
+| [Different answer after `set.seed()`]{.en}[Réponse différente après `set.seed()`]{.fr} | [Another random call ran between the seed and `sample()`, or R < 3.6.]{.en}[Un autre appel aléatoire a eu lieu entre la graine et `sample()`, ou R < 3.6.]{.fr} | [Run the seed immediately before the random code; update R.]{.en}[Exécutez la graine juste avant le code aléatoire ; mettez R à jour.]{.fr} |
+
+## [Statistical pitfalls]{.en}[Pièges statistiques]{.fr} {.no-track}
+
+| [Pitfall]{.en}[Piège]{.fr} | [Why it is wrong]{.en}[Pourquoi c'est faux]{.fr} | [Instead]{.en}[À la place]{.fr} | [Session]{.en}[Séance]{.fr} |
+|---|---|---|---|
+| [Pseudoreplication]{.en}[Pseudo-réplication]{.fr} | [Quadrats of one site counted as independent replicates of a treatment.]{.en}[Les quadrats d'un site comptés comme réplicats indépendants d'un traitement.]{.fr} | [Analyse at the level of the replicate (site means); plan several sites per treatment.]{.en}[Analysez au niveau du réplicat (moyennes par site) ; prévoyez plusieurs sites par traitement.]{.fr} | 1 |
+| [Testing before plotting]{.en}[Tester avant de tracer]{.fr} | [Outliers, curves and errors go unnoticed (Anscombe).]{.en}[Valeurs extrêmes, courbes et erreurs passent inaperçues (Anscombe).]{.fr} | [Plot every variable and relationship first.]{.en}[Tracez d'abord chaque variable et relation.]{.fr} | 3 |
+| [Bars of means ± SE without saying it]{.en}[Barres de moyennes ± ES sans le dire]{.fr} | [Reader cannot tell SD, SE or CI apart; data hidden.]{.en}[Le lecteur ne distingue pas ET, ES ou IC ; données cachées.]{.fr} | [Points + mean and 95 % CI, stated in the caption.]{.en}[Points + moyenne et IC à 95 %, indiqués dans la légende.]{.fr} | 5 |
+| ["p > 0.05 so there is no difference"]{.en}[« p > 0,05 donc il n'y a pas de différence »]{.fr} | [Absence of evidence ≠ evidence of absence; low power?]{.en}[Absence de preuve ≠ preuve d'absence ; faible puissance ?]{.fr} | [Report the effect and its CI; plan n with a power analysis.]{.en}[Donnez l'effet et son IC ; planifiez n par une analyse de puissance.]{.fr} | 6, 11 |
+| ["p < 0.001 so the effect is large"]{.en}[« p < 0,001 donc l'effet est grand »]{.fr} | [With large n, tiny effects are significant.]{.en}[Avec un grand n, des effets minuscules sont significatifs.]{.fr} | [Judge the effect size in real units.]{.en}[Jugez la taille d'effet en unités réelles.]{.fr} | 6 |
+| [Unpaired test on paired data]{.en}[Test non apparié sur données appariées]{.fr} | [Between-unit variation is counted as noise: power lost.]{.en}[La variation entre unités est comptée comme du bruit : puissance perdue.]{.fr} | [`paired = TRUE`.]{.en}[`paired = TRUE`.]{.fr} | 7 |
+| [Many t-tests instead of ANOVA]{.en}[Beaucoup de tests t au lieu d'une ANOVA]{.fr} | [False-positive risk grows with the number of tests.]{.en}[Le risque de faux positif augmente avec le nombre de tests.]{.fr} | [ANOVA + Tukey, or adjusted p-values.]{.en}[ANOVA + Tukey, ou p-values ajustées.]{.fr} | 8, 11 |
+| [Checking normality on the pooled raw data]{.en}[Vérifier la normalité sur toutes les données brutes réunies]{.fr} | [Group differences make the pooled data look non-normal.]{.en}[Les différences entre groupes rendent les données réunies non normales.]{.fr} | [Check the residuals (or each group).]{.en}[Vérifiez les résidus (ou chaque groupe).]{.fr} | 8 |
+| [χ² on percentages]{.en}[χ² sur des pourcentages]{.fr} | [The test needs counts; % hide n.]{.en}[Le test demande des effectifs ; les % cachent n.]{.fr} | [Use the table of counts.]{.en}[Utilisez le tableau d'effectifs.]{.fr} | 9 |
+| [Correlation = causation]{.en}[Corrélation = causalité]{.fr} | [A third variable may drive both.]{.en}[Une troisième variable peut agir sur les deux.]{.fr} | [Say "associated with"; use experiments or careful designs.]{.en}[Dites « associé à » ; utilisez des expériences ou des plans soigneux.]{.fr} | 1, 10 |
+| [Extrapolating a regression]{.en}[Extrapoler une régression]{.fr} | [The line is only valid within the observed range.]{.en}[La droite n'est valable que dans l'étendue observée.]{.fr} | [Predict inside the range only.]{.en}[Prédisez seulement dans l'étendue.]{.fr} | 10 |
+| [Trying tests until p < 0.05]{.en}[Essayer des tests jusqu'à p < 0,05]{.fr} | [p-hacking: false positives become likely.]{.en}[p-hacking : les faux positifs deviennent probables.]{.fr} | [Write the analysis plan first; report all tests.]{.en}[Écrivez d'abord le plan d'analyse ; rapportez tous les tests.]{.fr} | 11 |
+| [Deleting "outliers" that spoil the result]{.en}[Supprimer les « valeurs extrêmes » qui gênent]{.fr} | [Biased results.]{.en}[Résultats biaisés.]{.fr} | [Correct real errors only; otherwise robust methods or log; report what you did.]{.en}[Corrigez seulement les vraies erreurs ; sinon méthodes robustes ou log ; dites ce que vous avez fait.]{.fr} | 2 |

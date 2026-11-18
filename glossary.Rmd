@@ -1,0 +1,71 @@
+---
+title: "[Glossary English – French]{.en}[Glossaire anglais – français]{.fr}"
+pagetitle: "R4Marine Stats · Glossary"
+subtitle: "[The words of statistics in both languages, with the session where they appear]{.en}[Les mots des statistiques dans les deux langues, avec la séance où ils apparaissent]{.fr}"
+---
+
+| English | Français | [Short definition]{.en}[Définition courte]{.fr} | [Session]{.en}[Séance]{.fr} |
+|---|---|---|---|
+| alternative hypothesis (H1) | hypothèse alternative (H1) | [there is an effect / a difference]{.en}[il y a un effet / une différence]{.fr} | 6 |
+| analysis of variance (ANOVA) | analyse de variance (ANOVA) | [compares several means using variances]{.en}[compare plusieurs moyennes à l'aide de variances]{.fr} | 8 |
+| bias | biais | [systematic difference between estimate and truth]{.en}[écart systématique entre estimation et vérité]{.fr} | 1 |
+| bootstrap | bootstrap (ré-échantillonnage) | [resampling the sample with replacement]{.en}[ré-échantillonner l'échantillon avec remise]{.fr} | 5 |
+| categorical (nominal, ordinal) | catégorielle (nominale, ordinale) | [variable made of categories (unordered, ordered)]{.en}[variable faite de catégories (sans ordre, ordonnées)]{.fr} | 0 |
+| central limit theorem | théorème central limite | [means of large samples are ≈ normal]{.en}[les moyennes de grands échantillons sont ≈ normales]{.fr} | 5 |
+| coefficient of variation | coefficient de variation | [SD / mean × 100]{.en}[ET / moyenne × 100]{.fr} | 2 |
+| confidence interval (CI) | intervalle de confiance (IC) | [range of plausible values for a parameter]{.en}[intervalle de valeurs plausibles d'un paramètre]{.fr} | 5 |
+| confounding variable | variable de confusion | [related to both "treatment" and response]{.en}[liée à la fois au « traitement » et à la réponse]{.fr} | 1 |
+| contingency table | tableau de contingence | [two-way table of counts]{.en}[tableau croisé d'effectifs]{.fr} | 2, 9 |
+| convenience sample | échantillon de commodité | [units chosen because easy to reach]{.en}[unités choisies parce que faciles d'accès]{.fr} | 1 |
+| correlation coefficient | coefficient de corrélation | [strength of a linear (Pearson) or monotonic (Spearman) relation]{.en}[force d'une relation linéaire (Pearson) ou monotone (Spearman)]{.fr} | 10 |
+| count data | données de comptage | [whole numbers 0, 1, 2…]{.en}[nombres entiers 0, 1, 2…]{.fr} | 0, 4 |
+| degrees of freedom (df) | degrés de liberté (ddl) | [number of independent pieces of information]{.en}[nombre d'informations indépendantes]{.fr} | 5 |
+| distribution | loi (de distribution) / distribution | [values a variable takes and their probabilities]{.en}[valeurs que prend une variable et leurs probabilités]{.fr} | 4 |
+| effect size | taille d'effet | [how big the difference / relationship is]{.en}[taille de la différence / relation]{.fr} | 6 |
+| expected count | effectif attendu (théorique) | [count predicted under H0]{.en}[effectif prédit sous H0]{.fr} | 9 |
+| experimental unit | unité expérimentale | [unit to which a treatment is applied]{.en}[unité à laquelle on applique un traitement]{.fr} | 1 |
+| false discovery rate | taux de fausses découvertes | [expected share of false positives among discoveries]{.en}[part attendue de faux positifs parmi les découvertes]{.fr} | 11 |
+| fitted value | valeur ajustée (prédite) | [value predicted by the model]{.en}[valeur prédite par le modèle]{.fr} | 8, 10 |
+| geometric mean | moyenne géométrique | [exp(mean(log(x)))]{.en}[exp(mean(log(x)))]{.fr} | 3 |
+| goodness of fit | ajustement (adéquation) | [do counts follow expected proportions?]{.en}[les effectifs suivent-ils des proportions attendues ?]{.fr} | 9 |
+| interquartile range (IQR) | écart interquartile (EI) | [Q3 − Q1]{.en}[Q3 − Q1]{.fr} | 2 |
+| intercept | ordonnée à l'origine | [value of y when x = 0]{.en}[valeur de y quand x = 0]{.fr} | 10 |
+| least squares | moindres carrés | [fit minimising the sum of squared residuals]{.en}[ajustement minimisant la somme des carrés des résidus]{.fr} | 10 |
+| mean square | carré moyen | [sum of squares / df]{.en}[somme des carrés / ddl]{.fr} | 8 |
+| median | médiane | [middle value]{.en}[valeur du milieu]{.fr} | 2 |
+| multiple testing | tests multiples | [many tests → more false positives]{.en}[beaucoup de tests → plus de faux positifs]{.fr} | 11 |
+| null hypothesis (H0) | hypothèse nulle (H0) | [no effect / no difference]{.en}[pas d'effet / pas de différence]{.fr} | 6 |
+| odds ratio | rapport des cotes (odds ratio) | [ratio of the odds of an event in two groups]{.en}[rapport des cotes d'un événement dans deux groupes]{.fr} | 9 |
+| one-sided / two-sided test | test unilatéral / bilatéral | [looks in one / both directions]{.en}[regarde dans un sens / les deux sens]{.fr} | 6 |
+| outlier | valeur extrême (aberrante) | [value far from the others]{.en}[valeur éloignée des autres]{.fr} | 2 |
+| overdispersion | surdispersion | [variance of counts > mean (clumping)]{.en}[variance des comptages > moyenne (agrégation)]{.fr} | 4 |
+| paired data | données appariées | [same units measured twice]{.en}[mêmes unités mesurées deux fois]{.fr} | 7 |
+| parameter | paramètre | [value in the population (μ, σ, p)]{.en}[valeur dans la population (μ, σ, p)]{.fr} | 0 |
+| parametric / non-parametric test | test paramétrique / non paramétrique | [based on values and a distribution / on ranks]{.en}[fondé sur les valeurs et une loi / sur les rangs]{.fr} | 7 |
+| permutation test | test de permutation | [null distribution built by shuffling labels]{.en}[distribution sous H0 construite en mélangeant les étiquettes]{.fr} | 6 |
+| population | population | [all the units the question is about]{.en}[toutes les unités concernées par la question]{.fr} | 0 |
+| post-hoc test | test post hoc (a posteriori) | [pairwise comparisons after an ANOVA]{.en}[comparaisons par paires après une ANOVA]{.fr} | 8 |
+| power | puissance | [probability of detecting a real effect]{.en}[probabilité de détecter un effet réel]{.fr} | 6, 11 |
+| prediction interval | intervalle de prédiction | [range for one new observation]{.en}[intervalle pour une nouvelle observation]{.fr} | 10 |
+| pseudoreplication | pseudo-réplication | [non-independent measures treated as replicates]{.en}[mesures non indépendantes traitées comme des réplicats]{.fr} | 1 |
+| p-value | p-value (valeur p) | [P(data at least as extreme, if H0 is true)]{.en}[P(données au moins aussi extrêmes, si H0 est vraie)]{.fr} | 6 |
+| quantile, quartile, percentile | quantile, quartile, centile | [value below which a share of data lies]{.en}[valeur sous laquelle se trouve une part des données]{.fr} | 2 |
+| random assignment | attribution aléatoire (randomisation) | [treatments given to units by chance]{.en}[traitements donnés aux unités par tirage au sort]{.fr} | 1 |
+| rank | rang | [position of a value once sorted]{.en}[position d'une valeur une fois triée]{.fr} | 7 |
+| regression slope | pente de régression | [change in y per unit of x]{.en}[variation de y par unité de x]{.fr} | 10 |
+| residual | résidu | [observed − fitted]{.en}[observé − ajusté]{.fr} | 8, 10 |
+| response / predictor | réponse / prédicteur (variable explicative) | [variable explained / explaining]{.en}[variable expliquée / explicative]{.fr} | 10 |
+| sample | échantillon | [the units actually measured]{.en}[les unités réellement mesurées]{.fr} | 0 |
+| sampling distribution | distribution d'échantillonnage | [distribution of a statistic over many samples]{.en}[distribution d'une statistique sur de nombreux échantillons]{.fr} | 5 |
+| sampling unit | unité d'échantillonnage | [unit independently selected; what n counts]{.en}[unité sélectionnée indépendamment ; ce que n compte]{.fr} | 1 |
+| significance level (α) | seuil de signification (α) | [accepted risk of a false positive, often 0.05]{.en}[risque accepté de faux positif, souvent 0,05]{.fr} | 6 |
+| skewness (right-skewed) | asymétrie (asymétrique à droite) | [long tail of large values]{.en}[longue queue de grandes valeurs]{.fr} | 2, 3 |
+| standard deviation (SD) | écart-type (ET) | [typical distance of values to the mean]{.en}[distance typique des valeurs à la moyenne]{.fr} | 2 |
+| standard error (SE) | erreur standard (ES, erreur type) | [precision of an estimate: SD / √n for a mean]{.en}[précision d'une estimation : ET / √n pour une moyenne]{.fr} | 5 |
+| statistic | statistique | [value computed on the sample (x̄, s, p̂)]{.en}[valeur calculée sur l'échantillon (x̄, s, p̂)]{.fr} | 0 |
+| stratified sampling | échantillonnage stratifié | [random sample within each stratum]{.en}[échantillon aléatoire dans chaque strate]{.fr} | 1 |
+| sum of squares | somme des carrés | [sum of squared deviations]{.en}[somme des écarts au carré]{.fr} | 8 |
+| systematic sampling | échantillonnage systématique | [units at regular intervals]{.en}[unités à intervalles réguliers]{.fr} | 1 |
+| type I / type II error | erreur de type I / de type II | [false positive / false negative]{.en}[faux positif / faux négatif]{.fr} | 6 |
+| variance | variance | [mean squared deviation (n − 1)]{.en}[écart quadratique moyen (n − 1)]{.fr} | 2 |
+| z-score | score z (cote z) | [(x − mean) / SD]{.en}[(x − moyenne) / ET]{.fr} | 4 |

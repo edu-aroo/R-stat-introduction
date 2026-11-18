@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>R4Marine Stats · Session 8</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.1/jquery-3.6.1.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<!-- header.html: inserted inside <head> of every page (see _site.yml) -->
+<!-- config.js (settings) and quiz_index.js (made by R/build_site.R) first,
+     then course.js (the behaviour that reads them) -->
+<script src="assets/config.js"></script>
+<script src="assets/quiz_index.js"></script>
+<script src="assets/course.js"></script>
+<meta name="author" content="Aroo Falinirina">
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<link rel="stylesheet" href="assets/course.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">R4Marine Stats</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Sessions
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="00-start.html">0 · Why statistics?</a>
+    </li>
+    <li>
+      <a href="01-design.html">1 · Study design &amp; sampling</a>
+    </li>
+    <li>
+      <a href="02-describe.html">2 · Describing data</a>
+    </li>
+    <li>
+      <a href="03-explore.html">3 · Exploring distributions</a>
+    </li>
+    <li>
+      <a href="04-probability.html">4 · Probability &amp; distributions</a>
+    </li>
+    <li>
+      <a href="05-estimation.html">5 · Standard error &amp; CIs</a>
+    </li>
+    <li>
+      <a href="06-testing.html">6 · Hypothesis tests &amp; p-values</a>
+    </li>
+    <li>
+      <a href="07-two-groups.html">7 · Comparing two groups</a>
+    </li>
+    <li>
+      <a href="08-anova.html">8 · ANOVA &amp; Kruskal–Wallis</a>
+    </li>
+    <li>
+      <a href="09-categorical.html">9 · Proportions &amp; χ²</a>
+    </li>
+    <li>
+      <a href="10-regression.html">10 · Correlation &amp; regression</a>
+    </li>
+    <li>
+      <a href="11-power-reporting.html">11 · Power, multiple tests, reporting</a>
+    </li>
+    <li>
+      <a href="12-practice.html">12 · Practice</a>
+    </li>
+    <li>
+      <a href="13-final-project.html">13 · Final project</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Resources
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="choose-test.html">Which test? (decision guide)</a>
+    </li>
+    <li>
+      <a href="cheatsheet.html">Cheatsheet</a>
+    </li>
+    <li>
+      <a href="glossary.html">Glossary EN–FR</a>
+    </li>
+    <li>
+      <a href="common-errors.html">Common errors &amp; pitfalls</a>
+    </li>
+    <li>
+      <a href="resources.html">To go further</a>
+    </li>
+    <li>
+      <a href="help.html">Need help?</a>
+    </li>
+    <li>
+      <a href="whats-new.html">What's new</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore"><span class="en">8 · Comparing several
+groups: ANOVA and Kruskal–Wallis</span><span class="fr">8 · Comparer
+plusieurs groupes : ANOVA et Kruskal–Wallis</span></h1>
+<h3 class="subtitle">~3.5 h</h3>
+
+</div>
+
+
+<div class="objectives">
+<div id="by-the-end-of-this-session-you-will-be-able-to"
+class="section level4 en">
+<h4>By the end of this session you will be able to</h4>
+<ul>
+<li>explain why we do not compare 4 groups with 6 t-tests;</li>
+<li>explain the idea of <strong>analysis of variance</strong>
+(between-group vs within-group variability, the <em>F</em> ratio);</li>
+<li>run a <strong>one-way ANOVA</strong> with <code>aov()</code>, and
+check its assumptions on the <strong>residuals</strong>;</li>
+<li>find <strong>which groups differ</strong> with <strong>Tukey’s
+HSD</strong>, and report an effect size (η²);</li>
+<li>use <strong>Welch’s ANOVA</strong> (<code>oneway.test()</code>) when
+variances differ, and the <strong>Kruskal–Wallis</strong> test with
+<strong>pairwise Wilcoxon</strong> tests when data are not suitable for
+ANOVA.</li>
+</ul>
+</div>
+<div id="à-la-fin-de-cette-séance-vous-saurez"
+class="section level4 fr">
+<h4>À la fin de cette séance vous saurez</h4>
+<ul>
+<li>expliquer pourquoi on ne compare pas 4 groupes avec 6 tests t ;</li>
+<li>expliquer l’idée de l’<strong>analyse de variance</strong>
+(variabilité entre groupes vs au sein des groupes, le rapport
+<em>F</em>) ;</li>
+<li>réaliser une <strong>ANOVA à un facteur</strong> avec
+<code>aov()</code>, et vérifier ses conditions sur les
+<strong>résidus</strong> ;</li>
+<li>trouver <strong>quels groupes diffèrent</strong> avec le <strong>HSD
+de Tukey</strong>, et rapporter une taille d’effet (η²) ;</li>
+<li>utiliser l’<strong>ANOVA de Welch</strong>
+(<code>oneway.test()</code>) quand les variances diffèrent, et le test
+de <strong>Kruskal–Wallis</strong> avec des tests de <strong>Wilcoxon
+par paires</strong> quand les données ne conviennent pas à l’ANOVA.</li>
+</ul>
+</div>
+</div>
+<div class="callout ecology">
+<div class="en">
+<p><strong>Sea-cucumber feeding experiment</strong>
+(<code>sea_cucumber_pens.csv</code>, simulated). A community farm of
+<em>Holothuria scabra</em> tested four feeding treatments in 2026:
+<strong>control</strong> (no added food), dried
+<strong>seaweed</strong>, composted <strong>manure</strong>, and
+<strong>mixed</strong> (seaweed + manure). <strong>24 pens</strong> of
+the same size each received 30 juveniles; the treatments were
+<strong>assigned at random</strong>, 6 pens each (Session 1). After 90
+days, all animals were weighed. <em>One row = one pen</em> (the
+experimental unit): initial mean weight (g), mean growth (g per day),
+final mean weight, number and % of survivors.</p>
+</div>
+<div class="fr">
+<p><strong>Expérience d’alimentation des holothuries</strong>
+(<code>sea_cucumber_pens.csv</code>, simulé). Une ferme communautaire
+d’<em>Holothuria scabra</em> a testé quatre traitements en 2026 :
+<strong>control</strong> (pas d’apport), <strong>seaweed</strong>
+(algues séchées), <strong>manure</strong> (fumier composté) et
+<strong>mixed</strong> (algues + fumier). <strong>24 enclos</strong> de
+même taille ont reçu chacun 30 juvéniles ; les traitements ont été
+<strong>attribués au hasard</strong>, 6 enclos chacun (séance 1). Après
+90 jours, tous les animaux ont été pesés. <em>Une ligne = un enclos</em>
+(l’unité expérimentale) : poids moyen initial (g), croissance moyenne (g
+par jour), poids moyen final, nombre et % de survivants.</p>
+</div>
+</div>
+<p><a class="btn-dl" href="data/sea_cucumber_pens.csv" download>⇩
+sea_cucumber_pens.csv</a></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>sc <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/sea_cucumber_pens.csv&quot;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>sc<span class="sc">$</span>treatment <span class="ot">&lt;-</span> <span class="fu">factor</span>(sc<span class="sc">$</span>treatment, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;control&quot;</span>, <span class="st">&quot;seaweed&quot;</span>, <span class="st">&quot;manure&quot;</span>, <span class="st">&quot;mixed&quot;</span>))</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>sc <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(treatment) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>(), <span class="at">mean =</span> <span class="fu">mean</span>(growth_g_day), <span class="at">sd =</span> <span class="fu">sd</span>(growth_g_day))</span></code></pre></div>
+<pre><code>#&gt; # A tibble: 4 × 4
+#&gt;   treatment     n  mean     sd
+#&gt;   &lt;fct&gt;     &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt;
+#&gt; 1 control       6 0.667 0.221 
+#&gt; 2 seaweed       6 0.84  0.0443
+#&gt; 3 manure        6 0.743 0.0781
+#&gt; 4 mixed         6 1.04  0.136</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">ggplot</span>(sc, <span class="fu">aes</span>(treatment, growth_g_day)) <span class="sc">+</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">width =</span> <span class="fl">0.5</span>, <span class="at">outlier.shape =</span> <span class="cn">NA</span>, <span class="at">fill =</span> <span class="st">&quot;#eef5ea&quot;</span>) <span class="sc">+</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">height =</span> <span class="dv">0</span>, <span class="at">colour =</span> <span class="st">&quot;#0b3d5c&quot;</span>) <span class="sc">+</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">&quot;growth (g/day)&quot;</span>) <span class="sc">+</span> <span class="fu">theme_c</span>()</span></code></pre></div>
+<p><img src="08-anova_files/figure-html/unnamed-chunk-1-1.png" width="85%" style="display: block; margin: auto;" /></p>
+<div id="why-anova" class="section level2">
+<h2><span class="en">Why not several t-tests?</span><span
+class="fr">Pourquoi pas plusieurs tests t ?</span></h2>
+<div class="en">
+<p>Four treatments give 6 pairs. With 6 independent tests at α = 0.05,
+the probability of <strong>at least one false positive</strong> when all
+treatments are in fact equal is 1 − 0.95⁶ = 0.26 — not 0.05 (Session 4,
+“at least one”). The <strong>ANOVA</strong> asks one global question
+first — “are all the means equal?” — at α = 0.05; only if the answer is
+no do we look for which ones differ, with a method that
+<strong>controls</strong> the error rate.</p>
+</div>
+<div class="fr">
+<p>Quatre traitements donnent 6 paires. Avec 6 tests indépendants au
+seuil α = 0,05, la probabilité d’<strong>au moins un faux
+positif</strong> quand tous les traitements sont en réalité égaux vaut 1
+− 0,95⁶ = 0.26 — pas 0,05 (séance 4, « au moins un »).
+L’<strong>ANOVA</strong> pose d’abord une question globale — « toutes
+les moyennes sont-elles égales ? » — au seuil α = 0,05 ; seulement si la
+réponse est non, on cherche lesquelles diffèrent, avec une méthode qui
+<strong>contrôle</strong> le taux d’erreur.</p>
+</div>
+</div>
+<div id="idea" class="section level2">
+<h2><span class="en">The idea: comparing two variabilities</span><span
+class="fr">L’idée : comparer deux variabilités</span></h2>
+<div class="en">
+<p>H0: μ_control = μ_seaweed = μ_manure = μ_mixed. H1: at least one mean
+differs.</p>
+<p>ANOVA splits the total variability of growth (sum of squared
+deviations from the grand mean, <strong>SS total</strong>) into:</p>
+<ul>
+<li><strong>SS between</strong> groups: how far the group means are from
+the grand mean (the treatment effect + noise);</li>
+<li><strong>SS within</strong> groups (residual): how far each pen is
+from its own group mean (noise only).</li>
+</ul>
+<p>Each is divided by its degrees of freedom to give a <strong>mean
+square</strong> (MS). The ratio <strong>F = MS between / MS
+within</strong> is close to 1 if H0 is true, and large if group means
+differ more than the noise allows.</p>
+</div>
+<div class="fr">
+<p>H0 : μ_control = μ_seaweed = μ_manure = μ_mixed. H1 : au moins une
+moyenne diffère.</p>
+<p>L’ANOVA découpe la variabilité totale de la croissance (somme des
+carrés des écarts à la moyenne générale, <strong>SC totale</strong>) en
+:</p>
+<ul>
+<li><strong>SC entre</strong> groupes : à quelle distance les moyennes
+des groupes sont de la moyenne générale (effet du traitement + bruit)
+;</li>
+<li><strong>SC intra</strong> groupes (résiduelle) : à quelle distance
+chaque enclos est de la moyenne de son groupe (bruit seul).</li>
+</ul>
+<p>Chacune est divisée par ses degrés de liberté pour donner un
+<strong>carré moyen</strong> (CM). Le rapport <strong>F = CM entre / CM
+intra</strong> est proche de 1 si H0 est vraie, et grand si les moyennes
+des groupes diffèrent plus que le bruit ne le permet.</p>
+</div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>grand <span class="ot">&lt;-</span> <span class="fu">mean</span>(sc<span class="sc">$</span>growth_g_day)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>gm <span class="ot">&lt;-</span> <span class="fu">ave</span>(sc<span class="sc">$</span>growth_g_day, sc<span class="sc">$</span>treatment)          <span class="co"># each pen gets the mean of its group</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>ss_between <span class="ot">&lt;-</span> <span class="fu">sum</span>((gm <span class="sc">-</span> grand)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>ss_within  <span class="ot">&lt;-</span> <span class="fu">sum</span>((sc<span class="sc">$</span>growth_g_day <span class="sc">-</span> gm)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">4</span>; N <span class="ot">&lt;-</span> <span class="fu">nrow</span>(sc)</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>F_ratio <span class="ot">&lt;-</span> (ss_between <span class="sc">/</span> (k <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">/</span> (ss_within <span class="sc">/</span> (N <span class="sc">-</span> k))</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="fu">c</span>(<span class="at">SS_between =</span> ss_between, <span class="at">SS_within =</span> ss_within, <span class="at">F =</span> F_ratio)</span></code></pre></div>
+<pre><code>#&gt; SS_between  SS_within          F 
+#&gt;  0.4646458  0.3781500  8.1915613</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">pf</span>(F_ratio, <span class="at">df1 =</span> k <span class="sc">-</span> <span class="dv">1</span>, <span class="at">df2 =</span> N <span class="sc">-</span> k, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)    <span class="co"># p-value</span></span></code></pre></div>
+<pre><code>#&gt; [1] 0.0009410842</code></pre>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ave(x, g)</code></td>
+<td>replaces each value by the mean of its group (same length as
+<code>x</code>)</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>pf(q, df1, df2, lower.tail = FALSE)</code></td>
+<td>P(F &gt; q) for the <em>F</em> distribution: the p-value of an
+ANOVA</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ave(x, g)</code></td>
+<td>remplace chaque valeur par la moyenne de son groupe (même longueur
+que <code>x</code>)</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>pf(q, df1, df2, lower.tail = FALSE)</code></td>
+<td>P(F &gt; q) pour la loi <em>F</em> : la p-value d’une ANOVA</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="aov" class="section level2">
+<h2><span class="en">One-way ANOVA with aov()</span><span
+class="fr">ANOVA à un facteur avec aov()</span></h2>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">aov</span>(growth_g_day <span class="sc">~</span> treatment, <span class="at">data =</span> sc)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code></pre></div>
+<pre><code>#&gt;             Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+#&gt; treatment    3 0.4646 0.15488   8.192 0.000941 ***
+#&gt; Residuals   20 0.3782 0.01891                     
+#&gt; ---
+#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>aov(formula, data)</code></td>
+<td>fits an analysis of variance; <code>summary()</code> prints the
+ANOVA table</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>  <code>formula</code></td>
+<td><code>numeric ~ factor</code> (the factor can have 2 or more
+groups)</td>
+<td>column names</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>aov(formula, data)</code></td>
+<td>ajuste une analyse de variance ; <code>summary()</code> affiche le
+tableau d’ANOVA</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>  <code>formula</code></td>
+<td><code>numérique ~ facteur</code> (le facteur peut avoir 2 groupes ou
+plus)</td>
+<td>noms de colonnes</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="en">
+<p><strong>Reading the table.</strong> Row <code>treatment</code>: Df =
+k − 1 = 3, Sum Sq = SS between, Mean Sq, F value, Pr(&gt;F) = the
+p-value. Row <code>Residuals</code>: Df = N − k = 20, SS within. We
+found the same numbers by hand. Here p &lt; 0.001: <strong>at least
+one</strong> treatment mean differs.</p>
+<p><strong>Effect size: η² (eta squared)</strong> = SS between / SS
+total, the share of the variability explained by the treatments.</p>
+</div>
+<div class="fr">
+<p><strong>Lecture du tableau.</strong> Ligne <code>treatment</code> :
+Df = k − 1 = 3, Sum Sq = SC entre, Mean Sq, F value, Pr(&gt;F) = la
+p-value. Ligne <code>Residuals</code> : Df = N − k = 20, SC intra. On
+retrouve les nombres calculés à la main. Ici p &lt; 0,001 : <strong>au
+moins une</strong> moyenne de traitement diffère.</p>
+<p><strong>Taille d’effet : η² (êta carré)</strong> = SC entre / SC
+totale, la part de la variabilité expliquée par les traitements.</p>
+</div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>ss <span class="ot">&lt;-</span> <span class="fu">summary</span>(fit)[[<span class="dv">1</span>]][[<span class="st">&quot;Sum Sq&quot;</span>]]</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>eta2 <span class="ot">&lt;-</span> ss[<span class="dv">1</span>] <span class="sc">/</span> <span class="fu">sum</span>(ss)</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="fu">round</span>(eta2, <span class="dv">2</span>)</span></code></pre></div>
+<pre><code>#&gt; [1] 0.55</code></pre>
+</div>
+<div id="assumptions" class="section level2">
+<h2><span class="en">Checking the assumptions</span><span
+class="fr">Vérifier les conditions</span></h2>
+<div class="en">
+<p>ANOVA has the same assumptions as the t-test, checked on the
+<strong>residuals</strong> (each value minus its group mean):</p>
+<ol style="list-style-type: decimal">
+<li><strong>Independence</strong> — design (random assignment of
+pens).</li>
+<li><strong>Normal residuals</strong> — QQ plot of the residuals.</li>
+<li><strong>Equal variances</strong> in the groups — residuals vs fitted
+values: the vertical spread should be similar for every group. Rule of
+thumb: largest SD / smallest SD &lt; 2. Tests such as
+<code>bartlett.test()</code> (sensitive to non-normality) or Levene’s
+test (<code>car::leveneTest()</code>) exist, but the graph is usually
+enough.</li>
+</ol>
+<p>With equal group sizes (a <em>balanced</em> design, as here), ANOVA
+is quite robust to moderate departures.</p>
+</div>
+<div class="fr">
+<p>L’ANOVA a les mêmes conditions que le test t, vérifiées sur les
+<strong>résidus</strong> (chaque valeur moins la moyenne de son groupe)
+:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Indépendance</strong> — plan d’étude (attribution aléatoire
+des enclos).</li>
+<li><strong>Résidus normaux</strong> — QQ plot des résidus.</li>
+<li><strong>Variances égales</strong> dans les groupes — résidus vs
+valeurs ajustées : la dispersion verticale doit être semblable pour
+chaque groupe. Règle pratique : plus grand ET / plus petit ET &lt; 2.
+Des tests comme <code>bartlett.test()</code> (sensible à la
+non-normalité) ou le test de Levene (<code>car::leveneTest()</code>)
+existent, mais le graphique suffit en général.</li>
+</ol>
+<p>Avec des groupes de même taille (plan <em>équilibré</em>, comme ici),
+l’ANOVA est assez robuste à des écarts modérés.</p>
+</div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="fu">plot</span>(fit, <span class="at">which =</span> <span class="dv">1</span>)       <span class="co"># residuals vs fitted</span></span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a><span class="fu">plot</span>(fit, <span class="at">which =</span> <span class="dv">2</span>)       <span class="co"># QQ plot of residuals</span></span></code></pre></div>
+<p><img src="08-anova_files/figure-html/unnamed-chunk-7-1.png" width="85%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="fu">tapply</span>(sc<span class="sc">$</span>growth_g_day, sc<span class="sc">$</span>treatment, sd)</span></code></pre></div>
+<pre><code>#&gt;    control    seaweed     manure      mixed 
+#&gt; 0.22141966 0.04427189 0.07814516 0.13614943</code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">bartlett.test</span>(growth_g_day <span class="sc">~</span> treatment, <span class="at">data =</span> sc)</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt;  Bartlett test of homogeneity of variances
+#&gt; 
+#&gt; data:  growth_g_day by treatment
+#&gt; Bartlett&#39;s K-squared = 11.371, df = 3, p-value = 0.009878</code></pre>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>plot(fit, which)</code></td>
+<td>diagnostic plots of a fitted model: <code>1</code> residuals vs
+fitted, <code>2</code> QQ plot of residuals (also for <code>lm()</code>,
+Session 10)</td>
+<td>1 to 6</td>
+</tr>
+<tr class="even">
+<td><code>par(mfrow = c(1, 2))</code></td>
+<td>base R: the next plots are placed in 1 row × 2 columns; reset with
+<code>c(1, 1)</code></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><code>bartlett.test(formula, data)</code></td>
+<td>test of H0: equal variances in all groups</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>residuals(fit)</code></td>
+<td>the residuals, if you want to plot them yourself</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>plot(fit, which)</code></td>
+<td>graphiques de diagnostic d’un modèle ajusté : <code>1</code> résidus
+vs valeurs ajustées, <code>2</code> QQ plot des résidus (aussi pour
+<code>lm()</code>, séance 10)</td>
+<td>1 à 6</td>
+</tr>
+<tr class="even">
+<td><code>par(mfrow = c(1, 2))</code></td>
+<td>R de base : les graphiques suivants sont placés sur 1 ligne × 2
+colonnes ; remettre avec <code>c(1, 1)</code></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><code>bartlett.test(formula, data)</code></td>
+<td>test de H0 : variances égales dans tous les groupes</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>residuals(fit)</code></td>
+<td>les résidus, si vous voulez les tracer vous-même</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="en">
+<p>The residuals look roughly normal, but the spread is
+<strong>not</strong> equal: control pens vary about five times more than
+seaweed pens (SD ratio ≈ 5, Bartlett p = 0.01). SDs computed from 6 pens
+are themselves imprecise, but the gap is large, so we check the
+conclusion with <strong>Welch’s ANOVA</strong>, which does not assume
+equal variances (the same idea as Welch’s t-test):</p>
+</div>
+<div class="fr">
+<p>Les résidus semblent à peu près normaux, mais la dispersion n’est
+<strong>pas</strong> égale : les enclos témoins varient environ cinq
+fois plus que les enclos à algues (rapport des ET ≈ 5, Bartlett p =
+0.01). Des ET calculés sur 6 enclos sont eux-mêmes imprécis, mais
+l’écart est grand ; on vérifie donc la conclusion avec l’<strong>ANOVA
+de Welch</strong>, qui ne suppose pas des variances égales (la même idée
+que le test t de Welch) :</p>
+</div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="fu">oneway.test</span>(growth_g_day <span class="sc">~</span> treatment, <span class="at">data =</span> sc)</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt;  One-way analysis of means (not assuming equal variances)
+#&gt; 
+#&gt; data:  growth_g_day and treatment
+#&gt; F = 7.3431, num df = 3.0000, denom df = 9.9258, p-value = 0.007013</code></pre>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>oneway.test(formula, data, var.equal)</code></td>
+<td>one-way comparison of means; <code>var.equal = FALSE</code>
+(default) = Welch’s ANOVA</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>oneway.test(formula, data, var.equal)</code></td>
+<td>comparaison de moyennes à un facteur ;
+<code>var.equal = FALSE</code> (défaut) = ANOVA de Welch</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="en">
+<p>Welch’s ANOVA still gives p = 0.007: the conclusion “feeds differ”
+does not depend on the equal-variance assumption. When both analyses
+agree, report the ANOVA and mention the check; when they disagree,
+report Welch’s.</p>
+</div>
+<div class="fr">
+<p>L’ANOVA de Welch donne encore p = 0.007 : la conclusion « les
+aliments diffèrent » ne dépend pas de la condition de variances égales.
+Quand les deux analyses concordent, rapportez l’ANOVA et mentionnez la
+vérification ; quand elles divergent, rapportez celle de Welch.</p>
+</div>
+</div>
+<div id="tukey" class="section level2">
+<h2><span class="en">Which groups differ? Tukey’s HSD</span><span
+class="fr">Quels groupes diffèrent ? Le HSD de Tukey</span></h2>
+<div class="en">
+<p>After a significant ANOVA, <strong>Tukey’s Honest Significant
+Difference</strong> compares <strong>all pairs</strong> of groups, with
+CIs and p-values <strong>adjusted</strong> so that the risk of at least
+one false positive over all pairs stays at 5 %.</p>
+</div>
+<div class="fr">
+<p>Après une ANOVA significative, la <strong>différence franchement
+significative (HSD) de Tukey</strong> compare <strong>toutes les
+paires</strong> de groupes, avec des IC et des p-values
+<strong>ajustés</strong> pour que le risque d’au moins un faux positif
+sur toutes les paires reste à 5 %.</p>
+</div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a>tk <span class="ot">&lt;-</span> <span class="fu">TukeyHSD</span>(fit)</span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>tk</span></code></pre></div>
+<pre><code>#&gt;   Tukey multiple comparisons of means
+#&gt;     95% family-wise confidence level
+#&gt; 
+#&gt; Fit: aov(formula = growth_g_day ~ treatment, data = sc)
+#&gt; 
+#&gt; $treatment
+#&gt;                        diff         lwr       upr     p adj
+#&gt; seaweed-control  0.17333333 -0.04886941 0.3955361 0.1620665
+#&gt; manure-control   0.07666667 -0.14553608 0.2988694 0.7700640
+#&gt; mixed-control    0.37166667  0.14946392 0.5938694 0.0007641
+#&gt; manure-seaweed  -0.09666667 -0.31886941 0.1255361 0.6232480
+#&gt; mixed-seaweed    0.19833333 -0.02386941 0.4205361 0.0907992
+#&gt; mixed-manure     0.29500000  0.07279726 0.5172027 0.0068723</code></pre>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">9</span>, <span class="dv">3</span>, <span class="dv">1</span>))                   <span class="co"># wider left margin for the labels</span></span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a><span class="fu">plot</span>(tk, <span class="at">las =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p><img src="08-anova_files/figure-html/unnamed-chunk-11-1.png" width="85%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">2</span>) <span class="sc">+</span> <span class="fl">0.1</span>)</span></code></pre></div>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>TukeyHSD(fit, conf.level)</code></td>
+<td>all pairwise differences of an <code>aov()</code> fit, with
+family-wise CIs and adjusted p-values (<code>p adj</code>)</td>
+<td>an <code>aov</code> object</td>
+</tr>
+<tr class="even">
+<td><code>plot(tk, las = 1)</code></td>
+<td>draws the CIs of the differences; those not crossing 0 are
+significant; <code>las = 1</code> = horizontal labels</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>TukeyHSD(fit, conf.level)</code></td>
+<td>toutes les différences par paires d’un ajustement
+<code>aov()</code>, avec IC de famille et p-values ajustées
+(<code>p adj</code>)</td>
+<td>un objet <code>aov</code></td>
+</tr>
+<tr class="even">
+<td><code>plot(tk, las = 1)</code></td>
+<td>trace les IC des différences ; ceux qui ne coupent pas 0 sont
+significatifs ; <code>las = 1</code> = étiquettes horizontales</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="en">
+<p>Only the <strong>mixed</strong> feed differs clearly from control and
+from manure; seaweed alone and manure alone are not distinguishable from
+the control with 6 pens each. <strong>Report:</strong> “Growth differed
+among feeds (one-way ANOVA, F₃,₂₀ = 8.19, p &lt; 0.001, η² = 0.55). Pens
+receiving the mixed feed grew 0.37 g/day faster than controls (Tukey
+HSD, 95 % CI 0.15–0.59, p &lt; 0.001).”</p>
+</div>
+<div class="fr">
+<p>Seul l’aliment <strong>mixed</strong> diffère nettement du témoin et
+du fumier ; les algues seules et le fumier seul ne se distinguent pas du
+témoin avec 6 enclos chacun. <strong>Rédaction :</strong> « La
+croissance différait entre aliments (ANOVA à un facteur, F₃,₂₀ = 8,19, p
+&lt; 0,001, η² = 0,55). Les enclos recevant l’aliment mixte ont grandi
+0,37 g/jour plus vite que les témoins (HSD de Tukey, IC 95 % 0,15–0,59,
+p &lt; 0,001). »</p>
+</div>
+</div>
+<div id="kruskal" class="section level2">
+<h2><span class="en">Kruskal–Wallis: the rank-based
+alternative</span><span class="fr">Kruskal–Wallis : l’alternative sur
+les rangs</span></h2>
+<div class="en">
+<p>Survival percentages of 30 animals per pen are bounded (0–100),
+discrete and may be skewed. The <strong>Kruskal–Wallis</strong> test is
+the rank version of the one-way ANOVA (and the extension of the Wilcoxon
+rank-sum test to more than 2 groups). After a significant result,
+<strong>pairwise Wilcoxon tests</strong> with a <strong>p-value
+adjustment</strong> (Holm’s method) tell which groups differ.</p>
+</div>
+<div class="fr">
+<p>Les pourcentages de survie de 30 animaux par enclos sont bornés
+(0–100), discrets et peuvent être asymétriques. Le test de
+<strong>Kruskal–Wallis</strong> est la version sur les rangs de l’ANOVA
+à un facteur (et l’extension du test de Wilcoxon des rangs à plus de 2
+groupes). Après un résultat significatif, des <strong>tests de Wilcoxon
+par paires</strong> avec un <strong>ajustement des p-values</strong>
+(méthode de Holm) indiquent quels groupes diffèrent.</p>
+</div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a><span class="fu">tapply</span>(sc<span class="sc">$</span>survival_pct, sc<span class="sc">$</span>treatment, median)</span></code></pre></div>
+<pre><code>#&gt; control seaweed  manure   mixed 
+#&gt;   81.65   83.30   70.00   73.30</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="fu">kruskal.test</span>(survival_pct <span class="sc">~</span> treatment, <span class="at">data =</span> sc)</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt;  Kruskal-Wallis rank sum test
+#&gt; 
+#&gt; data:  survival_pct by treatment
+#&gt; Kruskal-Wallis chi-squared = 9.3539, df = 3, p-value = 0.02494</code></pre>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a><span class="fu">pairwise.wilcox.test</span>(sc<span class="sc">$</span>survival_pct, sc<span class="sc">$</span>treatment, <span class="at">p.adjust.method =</span> <span class="st">&quot;holm&quot;</span>, <span class="at">exact =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt;  Pairwise comparisons using Wilcoxon rank sum test with continuity correction 
+#&gt; 
+#&gt; data:  sc$survival_pct and sc$treatment 
+#&gt; 
+#&gt;         control seaweed manure
+#&gt; seaweed 0.742   -       -     
+#&gt; manure  0.093   0.214   -     
+#&gt; mixed   0.204   0.429   0.561 
+#&gt; 
+#&gt; P value adjustment method: holm</code></pre>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>kruskal.test(formula, data)</code></td>
+<td>Kruskal–Wallis rank test: do the groups come from the same
+distribution?</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>pairwise.wilcox.test(x, g, p.adjust.method, exact)</code></td>
+<td>Wilcoxon rank-sum tests for all pairs of groups, with adjusted
+p-values (a table)</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>  <code>p.adjust.method</code></td>
+<td>how p-values are adjusted for the number of tests (Session 11):
+<code>"holm"</code> (default, recommended), <code>"bonferroni"</code>,
+<code>"BH"</code>…</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>kruskal.test(formula, data)</code></td>
+<td>test des rangs de Kruskal–Wallis : les groupes viennent-ils de la
+même distribution ?</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>pairwise.wilcox.test(x, g, p.adjust.method, exact)</code></td>
+<td>tests de Wilcoxon des rangs pour toutes les paires de groupes, avec
+p-values ajustées (un tableau)</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>  <code>p.adjust.method</code></td>
+<td>comment les p-values sont ajustées pour le nombre de tests (séance
+11) : <code>"holm"</code> (défaut, recommandé),
+<code>"bonferroni"</code>, <code>"BH"</code>…</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="en">
+<p>Kruskal–Wallis detects a difference, but after adjustment no single
+pair is clearly different: with 6 pens per group, pairwise rank tests
+have little power. This is common — report it honestly (“survival
+differed among treatments overall, mainly lower with manure, but
+pairwise differences were not significant after adjustment”).</p>
+</div>
+<div class="fr">
+<p>Kruskal–Wallis détecte une différence, mais après ajustement aucune
+paire n’est nettement différente : avec 6 enclos par groupe, les tests
+par paires sur les rangs ont peu de puissance. C’est fréquent —
+rapportez-le honnêtement (« la survie différait globalement entre
+traitements, plus faible surtout avec le fumier, mais les différences
+par paires n’étaient pas significatives après ajustement »).</p>
+</div>
+</div>
+<div id="reef" class="section level2">
+<h2><span class="en">An observational ANOVA: fish biomass and
+management</span><span class="fr">Une ANOVA observationnelle : biomasse
+de poissons et gestion</span></h2>
+<div class="en">
+<p>The same tools apply to the 36 reef sites (Session 2), with two
+differences: biomass is right-skewed, so we analyse
+<strong>log(biomass)</strong>; and management was <strong>not</strong>
+assigned at random, so a difference is an <strong>association</strong>
+(Session 1).</p>
+</div>
+<div class="fr">
+<p>Les mêmes outils s’appliquent aux 36 sites récifaux (séance 2), avec
+deux différences : la biomasse est asymétrique à droite, on analyse donc
+<strong>log(biomasse)</strong> ; et la gestion n’a <strong>pas</strong>
+été attribuée au hasard, une différence est donc une
+<strong>association</strong> (séance 1).</p>
+</div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a>rf <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/reef_fish_sites.csv&quot;</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" tabindex="-1"></a>fit_rf <span class="ot">&lt;-</span> <span class="fu">aov</span>(<span class="fu">log</span>(biomass_kg_ha) <span class="sc">~</span> management, <span class="at">data =</span> rf)</span>
+<span id="cb29-3"><a href="#cb29-3" tabindex="-1"></a><span class="fu">summary</span>(fit_rf)</span></code></pre></div>
+<pre><code>#&gt;             Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+#&gt; management   2  7.023   3.512   18.15 4.82e-06 ***
+#&gt; Residuals   33  6.384   0.193                     
+#&gt; ---
+#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a>tk_rf <span class="ot">&lt;-</span> <span class="fu">TukeyHSD</span>(fit_rf)<span class="sc">$</span>management</span>
+<span id="cb31-2"><a href="#cb31-2" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">cbind</span>(<span class="at">ratio =</span> <span class="fu">exp</span>(tk_rf[, <span class="st">&quot;diff&quot;</span>]), <span class="at">lower =</span> <span class="fu">exp</span>(tk_rf[, <span class="st">&quot;lwr&quot;</span>]), <span class="at">upper =</span> <span class="fu">exp</span>(tk_rf[, <span class="st">&quot;upr&quot;</span>]), <span class="at">p =</span> tk_rf[, <span class="st">&quot;p adj&quot;</span>]), <span class="dv">3</span>)</span></code></pre></div>
+<pre><code>#&gt;                     ratio lower upper     p
+#&gt; No-take-LMMA        1.516 0.976 2.356 0.067
+#&gt; Open access-LMMA    0.519 0.334 0.806 0.002
+#&gt; Open access-No-take 0.342 0.220 0.531 0.000</code></pre>
+<div class="en">
+<p>On the log scale, differences become <strong>ratios</strong> after
+<code>exp()</code>: no-take sites have about 2.9 times the biomass of
+open-access sites.</p>
+</div>
+<div class="fr">
+<p>Sur l’échelle log, les différences deviennent des
+<strong>rapports</strong> après <code>exp()</code> : les sites en
+réserve intégrale ont environ 2.9 fois la biomasse des sites en libre
+accès.</p>
+</div>
+</div>
+<div id="application" class="section level2">
+<h2><span class="en">Application work &amp; quiz</span><span
+class="fr">Travail d’application et quiz</span></h2>
+<div class="application">
+<div id="application-work-8" class="section level3 en">
+<h3>Application work 8</h3>
+<p>With <code>sea_cucumber_pens.csv</code> (treatment as a factor,
+levels control, seaweed, manure, mixed):</p>
+<ol style="list-style-type: decimal">
+<li>– 2. One-way ANOVA of <strong>final weight</strong>
+(<code>final_weight_g</code>) by treatment: <em>F</em> value (3
+decimals) and p-value (5 decimals).</li>
+<li>η² of this ANOVA (3 decimals).</li>
+<li>– 5. Tukey HSD: difference <strong>mixed − seaweed</strong> in final
+weight (2 decimals) and its adjusted p-value (4 decimals).</li>
+</ol>
+<p>With <code>reef_fish_sites.csv</code>:</p>
+<ol start="6" style="list-style-type: decimal">
+<li>One-way ANOVA of <strong>species richness</strong> by management:
+p-value (4 decimals).</li>
+<li>Kruskal–Wallis test of <strong>fish density</strong> by management:
+the statistic (<code>Kruskal-Wallis chi-squared</code>, 3
+decimals).</li>
+<li>– 10. Interpretation.</li>
+</ol>
+</div>
+<div id="travail-dapplication-8" class="section level3 fr">
+<h3>Travail d’application 8</h3>
+<p>Avec <code>sea_cucumber_pens.csv</code> (traitement en facteur,
+niveaux control, seaweed, manure, mixed) :</p>
+<ol style="list-style-type: decimal">
+<li>– 2. ANOVA à un facteur du <strong>poids final</strong>
+(<code>final_weight_g</code>) par traitement : valeur de <em>F</em> (3
+décimales) et p-value (5 décimales).</li>
+<li>η² de cette ANOVA (3 décimales).</li>
+<li>– 5. HSD de Tukey : différence <strong>mixed − seaweed</strong> du
+poids final (2 décimales) et sa p-value ajustée (4 décimales).</li>
+</ol>
+<p>Avec <code>reef_fish_sites.csv</code> :</p>
+<ol start="6" style="list-style-type: decimal">
+<li>ANOVA à un facteur de la <strong>richesse spécifique</strong> par
+gestion : p-value (4 décimales).</li>
+<li>Test de Kruskal–Wallis de la <strong>densité de poissons</strong>
+par gestion : la statistique (<code>Kruskal-Wallis chi-squared</code>, 3
+décimales).</li>
+<li>– 10. Interprétation.</li>
+</ol>
+</div>
+</div>
+<div class="hint">
+<div class="en">
+<p>Q3:
+<code>ss &lt;- summary(fit)[[1]][["Sum Sq"]]; ss[1] / sum(ss)</code>.
+Q4–5: the row <code>mixed-seaweed</code> of
+<code>TukeyHSD(fit)$treatment</code>.</p>
+</div>
+<div class="fr">
+<p>Q3 :
+<code>ss &lt;- summary(fit)[[1]][["Sum Sq"]]; ss[1] / sum(ss)</code>.
+Q4–5 : la ligne <code>mixed-seaweed</code> de
+<code>TukeyHSD(fit)$treatment</code>.</p>
+</div>
+</div>
+<div id="quiz-t08" class="quiz" data-quiz-id="t08"
+data-q="W3sidHlwZSI6Im51bSIsImVuIjoiMS4gRiB2YWx1ZSAoZmluYWwgd2VpZ2h0KT8iLCJmciI6IjEuIFZhbGV1ciBkZSBGIChwb2lkcyBmaW5hbCkgPyIsImFuc3dlciI6OC4yNjIsInRvbCI6MC4wMDA2LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiMi4gcC12YWx1ZT8iLCJmciI6IjIuIHAtdmFsdWUgPyIsImFuc3dlciI6MC4wMDA5LCJ0b2wiOjZlLTA2LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiMy4gzrfCsj8iLCJmciI6IjMuIM63wrIgPyIsImFuc3dlciI6MC41NTMsInRvbCI6MC4wMDA2LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiNC4gVHVrZXkgZGlmZmVyZW5jZSBtaXhlZCDiiJIgc2Vhd2VlZCAoZyk/IiwiZnIiOiI0LiBEaWZmw6lyZW5jZSBkZSBUdWtleSBtaXhlZCDiiJIgc2Vhd2VlZCAoZykgPyIsImFuc3dlciI6MTcuNzMsInRvbCI6MC4wMDYsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibnVtIiwiZW4iOiI1LiBJdHMgYWRqdXN0ZWQgcC12YWx1ZT8iLCJmciI6IjUuIFNhIHAtdmFsdWUgYWp1c3TDqWUgPyIsImFuc3dlciI6MC4wODg3LCJ0b2wiOjZlLTA1LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiNi4gQU5PVkEgcC12YWx1ZSwgc3BlY2llcyByaWNobmVzcyBieSBtYW5hZ2VtZW50PyIsImZyIjoiNi4gcC12YWx1ZSBkZSBsJ0FOT1ZBLCByaWNoZXNzZSBwYXIgZ2VzdGlvbiA/IiwiYW5zd2VyIjowLjM1MDUsInRvbCI6NmUtMDUsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibnVtIiwiZW4iOiI3LiBLcnVza2Fs4oCTV2FsbGlzIHN0YXRpc3RpYywgZmlzaCBkZW5zaXR5PyIsImZyIjoiNy4gU3RhdGlzdGlxdWUgZGUgS3J1c2thbOKAk1dhbGxpcywgZGVuc2l0w6kgZGUgcG9pc3NvbnMgPyIsImFuc3dlciI6MTcuMTcxLCJ0b2wiOjAuMDAwNiwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJtY3EiLCJlbiI6IjguIENvbXBhcmluZyA1IGdyb3VwcyB3aXRoIGFsbCBwYWlyd2lzZSB0LXRlc3RzIGF0IM6xID0gMC4wNSAoMTAgdGVzdHMpIG1haW5seeKApiIsImZyIjoiOC4gQ29tcGFyZXIgNSBncm91cGVzIGF2ZWMgdG91cyBsZXMgdGVzdHMgdCBwYXIgcGFpcmVzIGF1IHNldWlsIM6xID0gMCwwNSAoMTAgdGVzdHMpIHN1cnRvdXTigKYiLCJvcHRpb25zX2VuIjpbImluY3JlYXNlcyB0aGUgcmlzayBvZiBhdCBsZWFzdCBvbmUgZmFsc2UgcG9zaXRpdmUiLCJpbmNyZWFzZXMgdGhlIHBvd2VyIG9mIGVhY2ggdGVzdCIsInJlbW92ZXMgdGhlIG5lZWQgZm9yIGluZGVwZW5kZW5jZSIsImlzIGVxdWl2YWxlbnQgdG8gYW4gQU5PVkEiXSwib3B0aW9uc19mciI6WyJhdWdtZW50ZSBsZSByaXNxdWUgZCdhdSBtb2lucyB1biBmYXV4IHBvc2l0aWYiLCJhdWdtZW50ZSBsYSBwdWlzc2FuY2UgZGUgY2hhcXVlIHRlc3QiLCJzdXBwcmltZSBsYSBjb25kaXRpb24gZCdpbmTDqXBlbmRhbmNlIiwiZXN0IMOpcXVpdmFsZW50IMOgIHVuZSBBTk9WQSJdLCJhbnN3ZXIiOjB9LHsidHlwZSI6Im1jcSIsImVuIjoiOS4gQU5PVkEgYXNzdW1wdGlvbnMgb2Ygbm9ybWFsaXR5IGFuZCBlcXVhbCB2YXJpYW5jZXMgYXJlIGNoZWNrZWQgb27igKYiLCJmciI6IjkuIExlcyBjb25kaXRpb25zIGRlIG5vcm1hbGl0w6kgZXQgZGUgdmFyaWFuY2VzIMOpZ2FsZXMgZGUgbCdBTk9WQSBzZSB2w6lyaWZpZW50IHN1cuKApiIsIm9wdGlvbnNfZW4iOlsidGhlIHJhdyBkYXRhIG9mIGFsbCBncm91cHMgcG9vbGVkIHRvZ2V0aGVyIiwidGhlIHJlc2lkdWFscyAoYnkgZ3JvdXApIiwidGhlIGdyb3VwIG1lYW5zIiwidGhlIHAtdmFsdWUiXSwib3B0aW9uc19mciI6WyJsZXMgZG9ubsOpZXMgYnJ1dGVzIGRlIHRvdXMgbGVzIGdyb3VwZXMgcsOpdW5pZXMiLCJsZXMgcsOpc2lkdXMgKHBhciBncm91cGUpIiwibGVzIG1veWVubmVzIGRlcyBncm91cGVzIiwibGEgcC12YWx1ZSJdLCJhbnN3ZXIiOjF9LHsidHlwZSI6Im1jcSIsImVuIjoiMTAuIEEgc2lnbmlmaWNhbnQgQU5PVkEgKHAgPSAwLjAwMikgdGVsbHMgeW91IHRoYXTigKYiLCJmciI6IjEwLiBVbmUgQU5PVkEgc2lnbmlmaWNhdGl2ZSAocCA9IDAsMDAyKSB2b3VzIGRpdCBxdWXigKYiLCJvcHRpb25zX2VuIjpbImFsbCBncm91cHMgZGlmZmVyIGZyb20gZWFjaCBvdGhlciIsImF0IGxlYXN0IG9uZSBncm91cCBtZWFuIGRpZmZlcnMgZnJvbSB0aGUgb3RoZXJzIiwidGhlIGxhcmdlc3QgZ3JvdXAgaXMgZGlmZmVyZW50IiwidGhlIHRyZWF0bWVudCBjYXVzZXMgdGhlIGRpZmZlcmVuY2UsIGV2ZW4gaW4gYW4gb2JzZXJ2YXRpb25hbCBzdHVkeSJdLCJvcHRpb25zX2ZyIjpbInRvdXMgbGVzIGdyb3VwZXMgZGlmZsOocmVudCBlbnRyZSBldXgiLCJhdSBtb2lucyB1bmUgbW95ZW5uZSBkZSBncm91cGUgZGlmZsOocmUgZGVzIGF1dHJlcyIsImxlIHBsdXMgZ3JhbmQgZ3JvdXBlIGVzdCBkaWZmw6lyZW50IiwibGUgdHJhaXRlbWVudCBjYXVzZSBsYSBkaWZmw6lyZW5jZSwgbcOqbWUgZGFucyB1bmUgw6l0dWRlIG9ic2VydmF0aW9ubmVsbGUiXSwiYW5zd2VyIjoxfV0=">
+
+</div>
+<div class="solution" data-quiz="t08">
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a>sc <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/sea_cucumber_pens.csv&quot;</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" tabindex="-1"></a>sc<span class="sc">$</span>treatment <span class="ot">&lt;-</span> <span class="fu">factor</span>(sc<span class="sc">$</span>treatment, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;control&quot;</span>, <span class="st">&quot;seaweed&quot;</span>, <span class="st">&quot;manure&quot;</span>, <span class="st">&quot;mixed&quot;</span>))</span>
+<span id="cb33-3"><a href="#cb33-3" tabindex="-1"></a>fw <span class="ot">&lt;-</span> <span class="fu">aov</span>(final_weight_g <span class="sc">~</span> treatment, <span class="at">data =</span> sc)</span>
+<span id="cb33-4"><a href="#cb33-4" tabindex="-1"></a><span class="fu">summary</span>(fw)                                                <span class="co"># 1, 2</span></span>
+<span id="cb33-5"><a href="#cb33-5" tabindex="-1"></a>ss <span class="ot">&lt;-</span> <span class="fu">summary</span>(fw)[[<span class="dv">1</span>]][[<span class="st">&quot;Sum Sq&quot;</span>]]; ss[<span class="dv">1</span>] <span class="sc">/</span> <span class="fu">sum</span>(ss)        <span class="co"># 3</span></span>
+<span id="cb33-6"><a href="#cb33-6" tabindex="-1"></a><span class="fu">TukeyHSD</span>(fw)<span class="sc">$</span>treatment[<span class="st">&quot;mixed-seaweed&quot;</span>, ]                  <span class="co"># 4, 5</span></span>
+<span id="cb33-7"><a href="#cb33-7" tabindex="-1"></a>rf <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/reef_fish_sites.csv&quot;</span>)</span>
+<span id="cb33-8"><a href="#cb33-8" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">aov</span>(species_richness <span class="sc">~</span> management, <span class="at">data =</span> rf))     <span class="co"># 6</span></span>
+<span id="cb33-9"><a href="#cb33-9" tabindex="-1"></a><span class="fu">kruskal.test</span>(fish_density <span class="sc">~</span> management, <span class="at">data =</span> rf)         <span class="co"># 7</span></span>
+<span id="cb33-10"><a href="#cb33-10" tabindex="-1"></a><span class="co"># 8: inflates the family-wise false-positive risk   9: residuals   10: at least one mean differs</span></span></code></pre></div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

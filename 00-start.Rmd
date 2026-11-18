@@ -1,0 +1,393 @@
+---
+title: "[0 · Why statistics? Variables, populations and samples]{.en}[0 · Pourquoi les statistiques ? Variables, populations et échantillons]{.fr}"
+pagetitle: "R4Marine Stats · Session 0"
+subtitle: "~2 h"
+---
+
+```{r setup, include=FALSE}
+source("R/course_helpers.R")
+library(ggplot2)
+fs <- read.csv("data/fisher_survey.csv")
+```
+
+::: objectives
+::: en
+#### By the end of this session you will be able to
+- set up the project of this course and import its datasets;
+- say what statistics are for: **describe**, **estimate**, **test**, **predict** — always in the presence of **variability**;
+- distinguish a **population** from a **sample**, and a **parameter** (μ, σ, p) from a **statistic** (x̄, s, p̂);
+- classify a variable as **categorical** (nominal or ordinal) or **numeric** (discrete or continuous);
+- store each type correctly in R (`character`, `factor`, ordered factor, `integer`, `numeric`).
+:::
+::: fr
+#### À la fin de cette séance vous saurez
+- installer le projet de ce cours et importer ses jeux de données ;
+- dire à quoi servent les statistiques : **décrire**, **estimer**, **tester**, **prédire** — toujours en présence de **variabilité** ;
+- distinguer une **population** d'un **échantillon**, et un **paramètre** (μ, σ, p) d'une **statistique** (x̄, s, p̂) ;
+- classer une variable comme **catégorielle** (nominale ou ordinale) ou **numérique** (discrète ou continue) ;
+- stocker chaque type correctement dans R (`character`, `factor`, facteur ordonné, `integer`, `numeric`).
+:::
+:::
+
+## [Before you start]{.en}[Avant de commencer]{.fr} {#start}
+
+::: en
+This course teaches **statistics**, with R as the tool. It assumes you can already: open an RStudio project, write a script, import a CSV with `read.csv()`, select columns with `$`, and make a simple graph — the content of the **Beginner level of the R course** (R4Marine Research). If one of these is new to you, do that level first: here, the effort goes into the reasoning, not into the code.
+
+**Set up your project (15 min):**
+
+1. In RStudio: *File → New Project → New Directory → New Project*, name it `intro-stats`.
+2. Inside it, create three folders: `data`, `scripts`, `outputs`.
+3. Download **all the datasets** of the course (one zip) and unzip them into `data/`:
+:::
+::: fr
+Ce cours enseigne les **statistiques**, avec R comme outil. Il suppose que vous savez déjà : ouvrir un projet RStudio, écrire un script, importer un CSV avec `read.csv()`, sélectionner des colonnes avec `$`, et faire un graphique simple — le contenu du **niveau Débutant du cours de R** (R4Marine Research). Si l'un de ces points est nouveau pour vous, faites d'abord ce niveau : ici, l'effort porte sur le raisonnement, pas sur le code.
+
+**Installez votre projet (15 min) :**
+
+1. Dans RStudio : *File → New Project → New Directory → New Project*, nommez-le `intro-stats`.
+2. À l'intérieur, créez trois dossiers : `data`, `scripts`, `outputs`.
+3. Téléchargez **tous les jeux de données** du cours (un zip) et décompressez-les dans `data/` :
+:::
+
+`r dl("intro_stats_data.zip", "intro_stats_data.zip")` `r dl("check_setup.R", "check_setup.R", dir = "templates")`
+
+::: en
+4. Install the packages used in the course (once): `install.packages(c("dplyr", "ggplot2"))`. Everything else is in **base R** (the package `stats`, loaded automatically).
+5. Put `check_setup.R` in your project and run it (**Ctrl + Shift + Enter**): every line should show ✔.
+:::
+::: fr
+4. Installez les packages utilisés dans le cours (une fois) : `install.packages(c("dplyr", "ggplot2"))`. Tout le reste est dans **R de base** (le package `stats`, chargé automatiquement).
+5. Placez `check_setup.R` dans votre projet et exécutez-le (**Ctrl + Maj + Entrée**) : chaque ligne doit afficher ✔.
+:::
+
+::: {.callout .tip}
+::: en
+**One script per session**, e.g. `scripts/s00_variables.R`, starting with the data it needs. Run it from the top after each **Session → Restart R**: if it still works, your analysis is reproducible.
+:::
+::: fr
+**Un script par séance**, ex. `scripts/s00_variables.R`, qui commence par les données dont il a besoin. Relancez-le depuis le début après chaque **Session → Restart R** : s'il fonctionne encore, votre analyse est reproductible.
+:::
+:::
+
+## [What statistics are for]{.en}[À quoi servent les statistiques]{.fr} {#why}
+
+::: en
+If every octopus weighed the same, every reef had the same fish biomass and every fisher gave the same answer, we would not need statistics: one measurement would tell the whole story. Statistics exist because of **variability**: two quadrats a metre apart do not have the same seagrass cover, two fishers of the same village do not catch the same amount. Statistics are the tools to **draw reliable conclusions despite this variability**.
+
+They do four jobs, which give the plan of this course:
+
+| Job | Question | Sessions |
+|---|---|---|
+| **Describe** | What do my data look like? | 2, 3 |
+| **Estimate** | What is the value in the whole population, and how precise is my estimate? | 4, 5 |
+| **Test** | Is the difference / relationship I see larger than what chance alone would produce? | 6 to 9 |
+| **Predict / model** | How much does Y change when X changes? | 10 (then the *Statistical modelling* course) |
+:::
+::: fr
+Si toutes les pieuvres pesaient le même poids, si tous les récifs avaient la même biomasse de poissons et si tous les pêcheurs donnaient la même réponse, nous n'aurions pas besoin de statistiques : une seule mesure raconterait toute l'histoire. Les statistiques existent à cause de la **variabilité** : deux quadrats à un mètre d'écart n'ont pas le même recouvrement d'herbier, deux pêcheurs du même village ne capturent pas la même quantité. Les statistiques sont les outils pour **tirer des conclusions fiables malgré cette variabilité**.
+
+Elles font quatre métiers, qui donnent le plan de ce cours :
+
+| Métier | Question | Séances |
+|---|---|---|
+| **Décrire** | À quoi ressemblent mes données ? | 2, 3 |
+| **Estimer** | Quelle est la valeur dans toute la population, et quelle est la précision de mon estimation ? | 4, 5 |
+| **Tester** | La différence / la relation que je vois est-elle plus grande que ce que le hasard seul produirait ? | 6 à 9 |
+| **Prédire / modéliser** | De combien Y change-t-il quand X change ? | 10 (puis le cours *Modélisation statistique*) |
+:::
+
+`r fig_svg("stat-workflow", "The statistical workflow. The question and the study design come before the data; the choice of test comes from the question and the type of variables, not from the p-value.", "La démarche statistique. La question et le plan d'étude viennent avant les données ; le choix du test vient de la question et du type des variables, pas de la p-value.")`
+
+::: {.callout .warning}
+::: en
+**The most common mistake** is to start from the data ("I have a table, which test can I run?"). Start from the **question**, write it in one sentence, then decide what to measure and how. No statistical test can rescue a badly designed study (Session 1).
+:::
+::: fr
+**L'erreur la plus fréquente** est de partir des données (« j'ai un tableau, quel test puis-je faire ? »). Partez de la **question**, écrivez-la en une phrase, puis décidez quoi mesurer et comment. Aucun test statistique ne peut sauver une étude mal conçue (séance 1).
+:::
+:::
+
+## [Populations and samples]{.en}[Populations et échantillons]{.fr} {#population}
+
+::: en
+- The **population** is the whole set of units your question is about: *all* the fishers registered in the four villages, *all* the octopuses landed in the region in 2026, *all* the 10 × 10 m cells of a lagoon.
+- A **sample** is the part of the population you actually measure: the 240 fishers interviewed, the 345 octopuses weighed.
+- A **parameter** is a value of the population (usually unknown): the true mean weight μ. A **statistic** is the same value computed on the sample: the sample mean x̄. We use the statistic to **estimate** the parameter.
+
+| | Population (parameter) | Sample (statistic) |
+|---|---|---|
+| Mean | μ ("mu") | x̄ ("x bar") — `mean(x)` |
+| Standard deviation | σ ("sigma") | s — `sd(x)` |
+| Proportion | p | p̂ ("p hat") — `mean(x == "yes")` |
+| Size | N | n — `length(x)`, `nrow(df)` |
+
+The whole of inference (Sessions 5 to 11) answers one question: **how far can the statistic be from the parameter, just because we measured a sample and not the whole population?**
+:::
+::: fr
+- La **population** est l'ensemble des unités sur lesquelles porte votre question : *tous* les pêcheurs inscrits dans les quatre villages, *toutes* les pieuvres débarquées dans la région en 2026, *toutes* les cellules de 10 × 10 m d'un lagon.
+- Un **échantillon** est la partie de la population que vous mesurez réellement : les 240 pêcheurs interrogés, les 345 pieuvres pesées.
+- Un **paramètre** est une valeur de la population (en général inconnue) : le vrai poids moyen μ. Une **statistique** est la même valeur calculée sur l'échantillon : la moyenne d'échantillon x̄. On utilise la statistique pour **estimer** le paramètre.
+
+| | Population (paramètre) | Échantillon (statistique) |
+|---|---|---|
+| Moyenne | μ (« mu ») | x̄ (« x barre ») — `mean(x)` |
+| Écart-type | σ (« sigma ») | s — `sd(x)` |
+| Proportion | p | p̂ (« p chapeau ») — `mean(x == "yes")` |
+| Taille | N | n — `length(x)`, `nrow(df)` |
+
+Toute l'inférence (séances 5 à 11) répond à une question : **à quelle distance la statistique peut-elle être du paramètre, simplement parce que nous avons mesuré un échantillon et non toute la population ?**
+:::
+
+::: {.callout .try}
+::: en
+**Try it.** For the octopus dataset (Session 4): what is the population? the sample? Is the mean weight of the 345 octopuses a parameter or a statistic?
+:::
+::: fr
+**À vous.** Pour le jeu de données des pieuvres (séance 4) : quelle est la population ? l'échantillon ? Le poids moyen des 345 pieuvres est-il un paramètre ou une statistique ?
+:::
+:::
+
+## [Types of variables]{.en}[Types de variables]{.fr} {#types}
+
+::: {.callout .ecology}
+::: en
+**Fisher survey** (`fisher_survey.csv`, simulated). In September 2026, enumerators interviewed **240 fishers** in four villages (Ambohibe, Tsifota, Andrevo, Befasy) in Malagasy, face to face. In each village, **60 fishers were drawn at random** from the register of the fishers' association. *One row = one fisher*: village, sex, age, years of fishing, education, household size, main gear, owns a boat, fishing trips per week, declared monthly catch (kg), member of the LMMA (locally managed marine area), supports temporary closures, perceived trend of catches over 5 years.
+:::
+::: fr
+**Enquête pêcheurs** (`fisher_survey.csv`, simulée). En septembre 2026, des enquêteurs ont interrogé **240 pêcheurs** de quatre villages (Ambohibe, Tsifota, Andrevo, Befasy) en malgache, en face à face. Dans chaque village, **60 pêcheurs ont été tirés au hasard** dans le registre de l'association des pêcheurs. *Une ligne = un pêcheur* : village, sexe, âge, années de pêche, éducation, taille du ménage, engin principal, possède une pirogue, sorties de pêche par semaine, capture mensuelle déclarée (kg), membre de la LMMA (aire marine gérée localement), soutient les fermetures temporaires, tendance perçue des captures sur 5 ans.
+:::
+:::
+
+`r dl("fisher_survey.csv", "fisher_survey.csv")`
+
+```{r}
+fs <- read.csv("data/fisher_survey.csv")
+str(fs)
+```
+
+::: en
+The **type** of a variable decides how you summarise it, how you plot it and which test you can use. It is the first thing to check.
+:::
+::: fr
+Le **type** d'une variable décide comment la résumer, comment la représenter et quel test utiliser. C'est la première chose à vérifier.
+:::
+
+`r fig_svg("variable-types", "The four types of variables, with examples from the fisher survey.", "Les quatre types de variables, avec des exemples de l'enquête pêcheurs.")`
+
+::: en
+| Type | Definition | Examples (fisher survey) | Summarised by |
+|---|---|---|---|
+| **Categorical nominal** | categories with no order | `village`, `sex`, `main_gear`, `lmma_member` | counts, proportions |
+| **Categorical ordinal** | categories with a natural order | `education` (none < primary < secondary), `catch_trend` | counts, proportions, median category |
+| **Numeric discrete** | counts: whole numbers | `trips_per_week`, `household_size` | mean, median, SD… |
+| **Numeric continuous** | measurements: any value in a range | `age`*, `monthly_catch_kg` | mean, median, SD… |
+
+\* Age is continuous in nature, recorded in whole years. A **numeric code is not a number**: a village coded 1, 2, 3, 4 is still nominal — its mean makes no sense.
+:::
+::: fr
+| Type | Définition | Exemples (enquête pêcheurs) | Résumé par |
+|---|---|---|---|
+| **Catégorielle nominale** | catégories sans ordre | `village`, `sex`, `main_gear`, `lmma_member` | effectifs, proportions |
+| **Catégorielle ordinale** | catégories avec un ordre naturel | `education` (none < primary < secondary), `catch_trend` | effectifs, proportions, catégorie médiane |
+| **Numérique discrète** | comptages : nombres entiers | `trips_per_week`, `household_size` | moyenne, médiane, ET… |
+| **Numérique continue** | mesures : toute valeur dans un intervalle | `age`*, `monthly_catch_kg` | moyenne, médiane, ET… |
+
+\* L'âge est continu par nature, noté en années entières. Un **code numérique n'est pas un nombre** : un village codé 1, 2, 3, 4 reste nominal — sa moyenne n'a aucun sens.
+:::
+
+## [Storing each type correctly in R]{.en}[Stocker chaque type correctement dans R]{.fr} {#factors}
+
+::: en
+`read.csv()` reads text columns as `character` and numbers as `integer` or `numeric`. For statistics, categorical variables are better stored as **factors**: R then knows the list of possible categories (the **levels**) and their order.
+:::
+::: fr
+`read.csv()` lit les colonnes de texte comme `character` et les nombres comme `integer` ou `numeric`. Pour les statistiques, il vaut mieux stocker les variables catégorielles comme **facteurs** : R connaît alors la liste des catégories possibles (les **niveaux**) et leur ordre.
+:::
+
+```{r}
+fs$village <- factor(fs$village)
+levels(fs$village)            # alphabetical order by default
+table(fs$village)
+
+# an ordinal variable: give the order, and say it is ordered
+fs$education <- factor(fs$education, levels = c("none", "primary", "secondary"), ordered = TRUE)
+table(fs$education)
+fs$education[1:6]
+```
+
+```{r, echo=FALSE}
+fa(c("`factor(x, levels, ordered)`", "turns a vector into a factor (a categorical variable with a fixed list of categories)", "transforme un vecteur en facteur (variable catégorielle avec une liste fixe de catégories)", "", ""),
+   c("&nbsp;&nbsp;`levels`", "the categories, **in the order you want** (tables and graphs follow it); a value not in the list becomes `NA`", "les catégories, **dans l'ordre voulu** (tableaux et graphiques le suivent) ; une valeur absente de la liste devient `NA`", "a character vector", "un vecteur de texte"),
+   c("&nbsp;&nbsp;`ordered`", "`TRUE` = ordinal variable: R prints `none < primary < secondary` and allows comparisons such as `>`", "`TRUE` = variable ordinale : R affiche `none < primary < secondary` et permet des comparaisons comme `>`", "`TRUE` / `FALSE` (default)", "`TRUE` / `FALSE` (défaut)"),
+   c("`levels(f)`", "the categories of a factor, in their order", "les catégories d'un facteur, dans leur ordre", "a factor", "un facteur"),
+   c("`table(x)`", "counts of each category", "effectif de chaque catégorie", "a vector or factor", "un vecteur ou facteur"))
+```
+
+::: {.callout .warning}
+::: en
+**Spelling matters.** If one interview says `"Secondary"` with a capital S, `factor(..., levels = c("none", "primary", "secondary"))` turns it into `NA` — silently. Always compare `table(x, useNA = "ifany")` before and after creating a factor.
+:::
+::: fr
+**L'orthographe compte.** Si un entretien indique `"Secondary"` avec une majuscule, `factor(..., levels = c("none", "primary", "secondary"))` le transforme en `NA` — sans prévenir. Comparez toujours `table(x, useNA = "ifany")` avant et après la création d'un facteur.
+:::
+:::
+
+::: en
+**Numbers.** `class()` tells you how R stores a column. `integer` and `numeric` (also called *double*) are both numbers: you can compute means. Check that numbers are not stored as text (a `%` sign or a comma in the file is enough to turn a whole column into `character`).
+:::
+::: fr
+**Nombres.** `class()` indique comment R stocke une colonne. `integer` et `numeric` (aussi appelé *double*) sont tous deux des nombres : on peut calculer des moyennes. Vérifiez que les nombres ne sont pas stockés comme du texte (un signe `%` ou une virgule dans le fichier suffit à transformer toute une colonne en `character`).
+:::
+
+```{r}
+class(fs$trips_per_week)
+class(fs$monthly_catch_kg)
+sapply(fs, class)            # the class of every column
+```
+
+```{r, echo=FALSE}
+fa(c("`class(x)`", "how R stores an object: `\"character\"`, `\"factor\"`, `\"integer\"`, `\"numeric\"`, `\"data.frame\"`…", "comment R stocke un objet : `\"character\"`, `\"factor\"`, `\"integer\"`, `\"numeric\"`, `\"data.frame\"`…", "any object", "tout objet"),
+   c("`sapply(df, class)`", "applies `class()` to every column of a data frame (Beginner Session 4)", "applique `class()` à chaque colonne d'un data frame (séance 4 du niveau débutant)", "", ""))
+```
+
+## [A first look at proportions]{.en}[Un premier regard sur les proportions]{.fr} {#first-look}
+
+::: en
+For a categorical variable, counts become **proportions** with `prop.table()`. A proportion of a `"yes"/"no"` variable is also simply the mean of a logical test: `TRUE` counts as 1, `FALSE` as 0.
+:::
+::: fr
+Pour une variable catégorielle, les effectifs deviennent des **proportions** avec `prop.table()`. La proportion d'une variable `"yes"/"no"` est aussi simplement la moyenne d'un test logique : `TRUE` compte pour 1, `FALSE` pour 0.
+:::
+
+```{r}
+table(fs$main_gear)
+round(prop.table(table(fs$main_gear)), 3)
+mean(fs$lmma_member == "yes")          # proportion of LMMA members (p-hat)
+```
+
+```{r, echo=FALSE}
+fa(c("`prop.table(tab)`", "turns a table of counts into proportions (each count / total)", "transforme un tableau d'effectifs en proportions (chaque effectif / total)", "a `table()`", "un `table()`"),
+   c("`mean(x == \"yes\")`", "proportion of `\"yes\"`: the test gives `TRUE`/`FALSE`, and the mean of `TRUE`(1)/`FALSE`(0) is the share of `TRUE`", "proportion de `\"yes\"` : le test donne `TRUE`/`FALSE`, et la moyenne de `TRUE`(1)/`FALSE`(0) est la part de `TRUE`", "", ""))
+```
+
+## [The datasets of this course]{.en}[Les jeux de données du cours]{.fr} {#datasets}
+
+::: en
+All datasets are **simulated** for teaching, with invented villages, sites and reserves, but realistic designs. Each session repeats how they were "collected".
+
+| File | Collected how | One row = | Sessions |
+|---|---|---|---|
+| `fisher_survey.csv` | 240 interviews, 60 drawn at random per village, 2026 | one fisher | 0, 2, 9, 11, 12 |
+| `lagoon_population.csv` | complete drone + ground map of a lagoon (1,200 cells of 10 × 10 m) | one cell | 1, 5 |
+| `reef_fish_sites.csv` | underwater visual census, 36 reef sites, 3 transects per site averaged | one site | 2, 3, 8, 10, 12 |
+| `octopus_catch.csv` | every octopus landed on the reopening day of a closure, 2 villages | one octopus | 4, 5, 6, 7, 9 |
+| `coral_tagged_colonies.csv` | 20 tagged colonies photographed in March and July | one colony (2 measures) | 7 |
+| `sea_cucumber_pens.csv` | farm experiment, 4 feeds drawn at random among 24 pens | one pen | 8 |
+| `mangrove_plots.csv` | 40 plots along 4 sea-to-land transects | one plot | 10 |
+| `seagrass_urchins.csv` | 80 random stations inside and outside a no-take zone | one station | 13 |
+:::
+::: fr
+Tous les jeux de données sont **simulés** pour l'enseignement, avec des villages, sites et réserves inventés, mais des plans d'étude réalistes. Chaque séance rappelle comment ils ont été « collectés ».
+
+| Fichier | Collecté comment | Une ligne = | Séances |
+|---|---|---|---|
+| `fisher_survey.csv` | 240 entretiens, 60 tirés au hasard par village, 2026 | un pêcheur | 0, 2, 9, 11, 12 |
+| `lagoon_population.csv` | carte complète drone + terrain d'un lagon (1 200 cellules de 10 × 10 m) | une cellule | 1, 5 |
+| `reef_fish_sites.csv` | comptage visuel sous-marin, 36 sites récifaux, 3 transects par site moyennés | un site | 2, 3, 8, 10, 12 |
+| `octopus_catch.csv` | toutes les pieuvres débarquées le jour de réouverture d'une fermeture, 2 villages | une pieuvre | 4, 5, 6, 7, 9 |
+| `coral_tagged_colonies.csv` | 20 colonies marquées photographiées en mars et juillet | une colonie (2 mesures) | 7 |
+| `sea_cucumber_pens.csv` | expérience en ferme, 4 aliments tirés au hasard parmi 24 enclos | un enclos | 8 |
+| `mangrove_plots.csv` | 40 placettes le long de 4 transects mer-terre | une placette | 10 |
+| `seagrass_urchins.csv` | 80 stations aléatoires dans et hors d'une zone de non-prélèvement | une station | 13 |
+:::
+
+## [Application work & quiz]{.en}[Travail d'application et quiz]{.fr} {#application}
+
+```{r answers00, include=FALSE}
+a1 <- nrow(fs)
+a2 <- sum(fs$village == "Befasy")
+a3 <- round(100 * mean(fs$sex == "F"), 1)
+a4 <- round(100 * mean(fs$supports_closure == "yes"), 1)
+a5 <- sum(fs$education == "secondary")
+a6 <- names(which.max(table(fs$main_gear)))
+a7 <- round(100 * mean(fs$main_gear[fs$sex == "F"] == "gleaning"), 1)
+```
+
+::: application
+::: en
+### Application work 0
+
+In `scripts/s00_variables.R`, import `fisher_survey.csv` and answer:
+
+1. How many fishers were interviewed (n)?
+2. How many fishers were interviewed in **Befasy**?
+3. Percentage of **women** in the sample (one decimal)?
+4. Percentage of fishers who **support temporary closures** (one decimal)?
+5. Turn `education` into an **ordered** factor (none < primary < secondary). How many fishers have a **secondary** education?
+6. Which is the most common **main gear**?
+7. Among **women** only, what percentage use **gleaning** as their main gear (one decimal)?
+8. – 10. Questions on variable types and populations (no code needed).
+:::
+::: fr
+### Travail d'application 0
+
+Dans `scripts/s00_variables.R`, importez `fisher_survey.csv` et répondez :
+
+1. Combien de pêcheurs ont été interrogés (n) ?
+2. Combien de pêcheurs ont été interrogés à **Befasy** ?
+3. Pourcentage de **femmes** dans l'échantillon (une décimale) ?
+4. Pourcentage de pêcheurs qui **soutiennent les fermetures temporaires** (une décimale) ?
+5. Transformez `education` en facteur **ordonné** (none < primary < secondary). Combien de pêcheurs ont une éducation **secondary** ?
+6. Quel est l'**engin principal** le plus fréquent ?
+7. Parmi les **femmes** seulement, quel pourcentage utilise le **glanage** (`gleaning`) comme engin principal (une décimale) ?
+8. – 10. Questions sur les types de variables et les populations (pas de code).
+:::
+:::
+
+::: hint
+::: en
+Q3–Q4: `100 * mean(fs$sex == "F")`. Q7: first select the gear of women, `fs$main_gear[fs$sex == "F"]`, then compute the proportion of `"gleaning"` in it.
+:::
+::: fr
+Q3–Q4 : `100 * mean(fs$sex == "F")`. Q7 : sélectionnez d'abord l'engin des femmes, `fs$main_gear[fs$sex == "F"]`, puis calculez la proportion de `"gleaning"` dedans.
+:::
+:::
+
+```{r quiz00, echo=FALSE}
+quiz("t00", list(
+  q_num("1. Number of fishers interviewed?", "1. Nombre de pêcheurs interrogés ?", a1, tol = 0),
+  q_num("2. Number of fishers interviewed in Befasy?", "2. Nombre de pêcheurs interrogés à Befasy ?", a2, tol = 0),
+  q_num("3. Percentage of women (1 decimal)?", "3. Pourcentage de femmes (1 décimale) ?", a3, tol = 0.06),
+  q_num("4. Percentage supporting temporary closures (1 decimal)?", "4. Pourcentage soutenant les fermetures temporaires (1 décimale) ?", a4, tol = 0.06),
+  q_num("5. Number of fishers with secondary education?", "5. Nombre de pêcheurs avec une éducation secondaire ?", a5, tol = 0),
+  q_text("6. Most common main gear (as written in the data)?", "6. Engin principal le plus fréquent (tel qu'écrit dans les données) ?", a6),
+  q_num("7. % of women using gleaning (1 decimal)?", "7. % des femmes pratiquant le glanage (1 décimale) ?", a7, tol = 0.06),
+  q_mcq("8. `catch_trend` (decreased / stable / increased) is a…", "8. `catch_trend` (decreased / stable / increased) est une variable…",
+        c("nominal categorical variable", "ordinal categorical variable", "discrete numeric variable", "continuous numeric variable"),
+        c("catégorielle nominale", "catégorielle ordinale", "numérique discrète", "numérique continue"), correct = 2),
+  q_mcq("9. `trips_per_week` is a…", "9. `trips_per_week` est une variable…",
+        c("nominal categorical variable", "ordinal categorical variable", "discrete numeric variable", "continuous numeric variable"),
+        c("catégorielle nominale", "catégorielle ordinale", "numérique discrète", "numérique continue"), correct = 3),
+  q_mcq("10. The proportion of LMMA members among the 240 fishers interviewed is…",
+        "10. La proportion de membres de la LMMA parmi les 240 pêcheurs interrogés est…",
+        c("a parameter, written p", "a statistic, written p̂, that estimates p", "the population", "a parameter, written μ"),
+        c("un paramètre, noté p", "une statistique, notée p̂, qui estime p", "la population", "un paramètre, noté μ"), correct = 2)
+))
+```
+
+::: {.solution data-quiz="t00"}
+```{r, eval=FALSE}
+fs <- read.csv("data/fisher_survey.csv")
+nrow(fs)                                                     # 1
+sum(fs$village == "Befasy")                                  # 2  (or table(fs$village))
+round(100 * mean(fs$sex == "F"), 1)                          # 3
+round(100 * mean(fs$supports_closure == "yes"), 1)           # 4
+fs$education <- factor(fs$education, levels = c("none", "primary", "secondary"), ordered = TRUE)
+table(fs$education)                                          # 5
+sort(table(fs$main_gear), decreasing = TRUE)                 # 6
+round(100 * mean(fs$main_gear[fs$sex == "F"] == "gleaning"), 1)   # 7
+# 8: ordinal (the categories have an order)   9: discrete numeric (a count)
+# 10: a statistic (computed on the sample), p-hat, which estimates the population proportion p
+```
+:::

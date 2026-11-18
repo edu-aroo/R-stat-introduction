@@ -1,0 +1,81 @@
+---
+title: "[R4Marine Stats - Introduction to Statistics using R]{.en}[R4Marine Stats - Introduction aux statistiques avec R]{.fr}"
+pagetitle: "R4Marine Stats · Home"
+subtitle: "[From describing your data to choosing, running and reporting the right test]{.en}[De la description des données au choix, à l'exécution et à la rédaction du bon test]{.fr}"
+---
+
+<!--
+  index.Rmd = the HOME page (becomes index.html).
+  ::: en  ...  :::   -> a block shown only in English (class "en")
+  ::: fr  ...  :::   -> a block shown only in French  (class "fr")
+  <div id="dashboard"> is filled by course.js (PART 9) with the student's progress.
+-->
+
+```{r setup, include=FALSE}
+source("R/course_helpers.R")
+```
+
+<div id="dashboard"></div>
+
+## [Welcome]{.en}[Bienvenue]{.fr} {.no-track}
+
+::: en
+This course teaches the **statistics** that marine scientists, students and practitioners use every day — and the reasoning behind them — with **R** as the tool. It follows the classic path of an introductory statistics course, with marine and fisheries examples from Madagascar:
+
+- **Design and description** (Sessions 0–3): populations and samples, study design and sampling, describing and plotting data;
+- **Probability and estimation** (Sessions 4–5): distributions, standard errors, confidence intervals, the bootstrap;
+- **Tests** (Sessions 6–9): p-values and their limits, comparing two or more groups (t-tests, ANOVA, rank-based tests), proportions and χ² tests;
+- **Relationships and practice** (Sessions 10–13): correlation and simple linear regression, power and sample size, reporting, a practice session and a final project.
+
+**Before you start:** you should be able to use R at the level of the *R4Marine Research* Beginner course (scripts, `read.csv()`, `$`, simple `dplyr` and `ggplot2`). Models with several predictors, GLMs and mixed models are in the next course, *Statistical modelling with R*.
+:::
+::: fr
+Ce cours enseigne les **statistiques** que les scientifiques, étudiants et praticiens des sciences marines utilisent tous les jours — et le raisonnement qui les sous-tend — avec **R** comme outil. Il suit le parcours classique d'un cours d'introduction aux statistiques, avec des exemples marins et halieutiques de Madagascar :
+
+- **Plan d'étude et description** (séances 0–3) : populations et échantillons, plan d'étude et échantillonnage, décrire et représenter les données ;
+- **Probabilités et estimation** (séances 4–5) : lois de distribution, erreurs standard, intervalles de confiance, bootstrap ;
+- **Tests** (séances 6–9) : les p-values et leurs limites, comparer deux groupes ou plus (tests t, ANOVA, tests sur les rangs), proportions et tests du χ² ;
+- **Relations et pratique** (séances 10–13) : corrélation et régression linéaire simple, puissance et taille d'échantillon, rédaction, une séance d'exercices et un projet final.
+
+**Avant de commencer :** vous devez savoir utiliser R au niveau du cours *R4Marine Research* Débutant (scripts, `read.csv()`, `$`, `dplyr` et `ggplot2` simples). Les modèles à plusieurs prédicteurs, les GLM et les modèles mixtes sont dans le cours suivant, *Modélisation statistique avec R*.
+:::
+
+## [How the course works]{.en}[Comment fonctionne le cours]{.fr} {.no-track}
+
+::: en
+1. **Follow the sessions in order.** Click **"Mark this section as done"** at the end of each section: your progress is saved, and next time you log in you go back exactly where you stopped.
+2. **Do the application work in your own script**, then enter your results in the **quiz**. Each quiz allows **2 attempts**; your **best** attempt counts. After an attempt, the questions in red show what to check in your script.
+3. The **solution** opens when the quiz is finished (both attempts used, or full marks). **Hints** (💡) are free: they never cost points.
+4. **Moving to the next session:** a session opens when you have finished the quiz of the previous one with at least **75 %** of the points (for the practice session: 75 % of the points of its six exercises together). Locked sessions show a 🔒.
+5. **Certificate:** finish all quizzes with at least **75 %** of the total points and you receive a **certificate**.
+6. If 75 % can no longer be reached on a session after your two attempts, you are taken to a help page with my contacts: we will look at it together.
+:::
+::: fr
+1. **Suivez les séances dans l'ordre.** Cliquez sur **« Marquer cette section comme terminée »** à la fin de chaque section : votre progression est enregistrée, et à la prochaine connexion vous revenez exactement là où vous vous êtes arrêté.
+2. **Faites le travail d'application dans votre propre script**, puis saisissez vos résultats dans le **quiz**. Chaque quiz permet **2 tentatives** ; votre **meilleure** tentative compte. Après une tentative, les questions en rouge indiquent quoi vérifier dans votre script.
+3. La **solution** s'ouvre quand le quiz est terminé (deux tentatives utilisées, ou score parfait). Les **indices** (💡) sont gratuits : ils ne coûtent jamais de points.
+4. **Passer à la séance suivante :** une séance s'ouvre quand vous avez terminé le quiz de la précédente avec au moins **75 %** des points (pour la séance d'exercices : 75 % des points de ses six exercices réunis). Les séances verrouillées portent un 🔒.
+5. **Certificat :** terminez tous les quiz avec au moins **75 %** du total des points et vous recevez un **certificat**.
+6. Si les 75 % ne peuvent plus être atteints à une séance après vos deux tentatives, vous êtes redirigé vers une page d'aide avec mes contacts : nous regarderons cela ensemble.
+:::
+
+## [Resources]{.en}[Ressources]{.fr} {.no-track}
+
+::: en
+- **Which test?** — the decision guide of the whole course on one page.
+- **Cheatsheet** — every function of the course, by task.
+- **Glossary EN–FR** — the statistical vocabulary in both languages.
+- **Common errors & pitfalls** — R error messages of statistical functions, and the classic statistical mistakes.
+- **To go further** — free books and courses to continue.
+- **Data and setup:** `r dl("intro_stats_data.zip", "intro_stats_data.zip")` `r dl("check_setup.R", "check_setup.R", dir = "templates")`
+- All datasets are **simulated** for teaching: names of villages, sites and reserves are invented.
+:::
+::: fr
+- **Quel test ?** — le guide de décision de tout le cours sur une page.
+- **Aide-mémoire** — toutes les fonctions du cours, par tâche.
+- **Glossaire EN–FR** — le vocabulaire statistique dans les deux langues.
+- **Erreurs et pièges fréquents** — messages d'erreur de R des fonctions statistiques, et les erreurs statistiques classiques.
+- **Pour aller plus loin** — livres et cours gratuits pour continuer.
+- **Données et installation :** `r dl("intro_stats_data.zip", "intro_stats_data.zip")` `r dl("check_setup.R", "check_setup.R", dir = "templates")`
+- Toutes les données sont **simulées** pour l'enseignement : les noms de villages, sites et réserves sont inventés.
+:::

@@ -1,0 +1,348 @@
+---
+title: "[5 · Standard error and confidence intervals]{.en}[5 · Erreur standard et intervalles de confiance]{.fr}"
+pagetitle: "R4Marine Stats · Session 5"
+subtitle: "~3 h"
+---
+
+```{r setup, include=FALSE}
+source("R/course_helpers.R")
+library(ggplot2); library(dplyr)
+lag <- read.csv("data/lagoon_population.csv")
+oc  <- read.csv("data/octopus_catch.csv")
+knitr::opts_chunk$set(fig.height = 3.3)
+```
+
+::: objectives
+::: en
+#### By the end of this session you will be able to
+- describe the **sampling distribution** of a mean, and the **central limit theorem**;
+- compute the **standard error** SE = s / √n and explain how it changes with n;
+- compute and **interpret correctly** a 95 % **confidence interval** (CI) for a mean, with the *t* distribution;
+- compute a CI for a **proportion** (`binom.test()`, `prop.test()`);
+- compute a **bootstrap** CI, e.g. for a median;
+- choose between SD, SE and CI for error bars, and say which one you show.
+:::
+::: fr
+#### À la fin de cette séance vous saurez
+- décrire la **distribution d'échantillonnage** d'une moyenne, et le **théorème central limite** ;
+- calculer l'**erreur standard** ES = s / √n et expliquer comment elle change avec n ;
+- calculer et **interpréter correctement** un **intervalle de confiance** (IC) à 95 % d'une moyenne, avec la loi de *t* ;
+- calculer un IC pour une **proportion** (`binom.test()`, `prop.test()`) ;
+- calculer un IC par **bootstrap**, par exemple pour une médiane ;
+- choisir entre ET, ES et IC pour des barres d'erreur, et dire lequel vous montrez.
+:::
+:::
+
+## [The sampling distribution]{.en}[La distribution d'échantillonnage]{.fr} {#sampling-distribution}
+
+::: en
+In Session 1 we drew 1,000 samples from the lagoon and looked at their means. That histogram of sample means has a name: the **sampling distribution of the mean**. It tells how far a sample mean typically falls from the true μ. Let us see how it depends on the sample size n, using the number of **urchins** per cell (a skewed count).
+:::
+::: fr
+À la séance 1, nous avons tiré 1 000 échantillons du lagon et regardé leurs moyennes. Cet histogramme des moyennes d'échantillons a un nom : la **distribution d'échantillonnage de la moyenne**. Elle indique à quelle distance une moyenne d'échantillon tombe habituellement du vrai μ. Voyons comment elle dépend de la taille n de l'échantillon, avec le nombre d'**oursins** par cellule (un comptage asymétrique).
+:::
+
+```{r, fig.height=3.6}
+lag <- read.csv("data/lagoon_population.csv")
+mu <- mean(lag$urchins); sigma <- sd(lag$urchins)
+set.seed(5)
+sims <- do.call(rbind, lapply(c(1, 5, 20, 80), function(n) {
+  data.frame(n = paste("n =", n), mean = replicate(2000, mean(sample(lag$urchins, n))))
+}))
+sims$n <- factor(sims$n, levels = paste("n =", c(1, 5, 20, 80)))
+ggplot(sims, aes(mean)) +
+  geom_histogram(bins = 30, fill = "#1b7f8c", colour = "white") +
+  geom_vline(xintercept = mu, colour = "#d9694a", linewidth = 1) +
+  facet_wrap(~ n, nrow = 1, scales = "free_y") +
+  labs(x = "sample mean (urchins per cell)", y = NULL) + theme_c(11)
+
+sims %>% group_by(n) %>% summarise(sd_of_means = sd(mean)) %>%
+  mutate(sigma_over_sqrt_n = sigma / sqrt(c(1, 5, 20, 80)))
+```
+
+```{r, echo=FALSE}
+fa(c("`lapply(x, function(n) {...})`", "applies the function to each value of `x` and returns a list", "applique la fonction à chaque valeur de `x` et renvoie une liste", "", ""),
+   c("`do.call(rbind, list)`", "stacks all the data frames of a list into one", "empile tous les data frames d'une liste en un seul", "", ""),
+   c("&nbsp;&nbsp;`scales = \"free_y\"` (in `facet_wrap()`)", "each panel has its own y axis", "chaque panneau a son propre axe y", "`\"fixed\"`, `\"free\"`, `\"free_x\"`, `\"free_y\"`", "`\"fixed\"`, `\"free\"`, `\"free_x\"`, `\"free_y\"`"))
+```
+
+::: en
+Three facts, visible on the graph and in the table:
+
+1. The sample means are **centred on μ** (no bias with random sampling).
+2. Their spread **shrinks with n**, exactly as **σ / √n**. To halve the spread you need **four times** more units.
+3. Even though one cell's count is skewed (n = 1), the distribution of the **means** becomes **bell-shaped** as n grows. This is the **central limit theorem**: means of reasonably large random samples are approximately normal, whatever the shape of the data. It is the reason the normal and *t* tools work for means.
+:::
+::: fr
+Trois faits, visibles sur le graphique et dans le tableau :
+
+1. Les moyennes d'échantillons sont **centrées sur μ** (pas de biais avec un échantillonnage aléatoire).
+2. Leur dispersion **diminue avec n**, exactement comme **σ / √n**. Pour diviser la dispersion par deux, il faut **quatre fois** plus d'unités.
+3. Même si le comptage d'une cellule est asymétrique (n = 1), la distribution des **moyennes** devient **en cloche** quand n augmente. C'est le **théorème central limite** : les moyennes d'échantillons aléatoires assez grands sont approximativement normales, quelle que soit la forme des données. C'est la raison pour laquelle les outils de la loi normale et de *t* fonctionnent pour les moyennes.
+:::
+
+## [The standard error, from one sample]{.en}[L'erreur standard, à partir d'un seul échantillon]{.fr} {#se}
+
+::: en
+In real life we have **one** sample, and we do not know σ. We estimate the spread of the sampling distribution with the **standard error**:
+
+**SE = s / √n**
+
+where s is the sample SD. Reminder from the R course: the **SD describes the data** (variation between units, does not shrink with n); the **SE describes the precision of the mean** (shrinks with n).
+:::
+::: fr
+Dans la réalité nous avons **un seul** échantillon, et nous ne connaissons pas σ. On estime la dispersion de la distribution d'échantillonnage par l'**erreur standard** :
+
+**ES = s / √n**
+
+où s est l'ET de l'échantillon. Rappel du cours de R : l'**ET décrit les données** (variation entre unités, ne diminue pas avec n) ; l'**ES décrit la précision de la moyenne** (diminue avec n).
+:::
+
+```{r}
+set.seed(2026)
+s30 <- sample(lag$urchins, 30)
+c(mean = mean(s30), sd = sd(s30), se = sd(s30) / sqrt(30))
+```
+
+## [Confidence interval for a mean]{.en}[Intervalle de confiance d'une moyenne]{.fr} {#ci-mean}
+
+::: en
+A 95 % confidence interval is **estimate ± (critical value × SE)**. For a mean, the critical value comes from the **t distribution** with n − 1 degrees of freedom: like the normal, but with heavier tails, because s is itself uncertain. With large n, t ≈ 1.96; with small n, it is larger (wider interval).
+:::
+::: fr
+Un intervalle de confiance à 95 % vaut **estimation ± (valeur critique × ES)**. Pour une moyenne, la valeur critique vient de la **loi de t** à n − 1 degrés de liberté : comme la normale, mais avec des queues plus lourdes, car s est lui-même incertain. Avec un grand n, t ≈ 1,96 ; avec un petit n, il est plus grand (intervalle plus large).
+:::
+
+```{r}
+qt(0.975, df = c(4, 9, 29, 99, 1000))      # critical t values for 95 %
+
+oc <- read.csv("data/octopus_catch.csv")
+w <- oc$weight_g[oc$area == "reopened"]
+n <- length(w); m <- mean(w); se <- sd(w) / sqrt(n)
+t_crit <- qt(0.975, df = n - 1)
+c(lower = m - t_crit * se, mean = m, upper = m + t_crit * se)
+
+t.test(w)$conf.int                          # the same, in one line
+```
+
+```{r, echo=FALSE}
+fa(c("`qt(p, df)`", "quantile of the *t* distribution; `qt(0.975, df)` = the critical value of a two-sided 95 % interval", "quantile de la loi de *t* ; `qt(0.975, df)` = la valeur critique d'un intervalle bilatéral à 95 %", "", ""),
+   c("&nbsp;&nbsp;`df`", "degrees of freedom: n − 1 for one mean", "degrés de liberté : n − 1 pour une moyenne", "a positive number", "un nombre positif"),
+   c("`t.test(x, conf.level)$conf.int`", "confidence interval of the mean of `x` (the test itself is in Session 6)", "intervalle de confiance de la moyenne de `x` (le test lui-même est à la séance 6)", "", ""),
+   c("&nbsp;&nbsp;`conf.level`", "confidence level", "niveau de confiance", "0.95 (default), 0.90, 0.99…", "0,95 (défaut), 0,90, 0,99…"))
+```
+
+### [What "95 % confidence" means]{.en}[Ce que signifie « 95 % de confiance »]{.fr}
+
+::: en
+The method, repeated on many samples, produces intervals that **contain the true μ 95 % of the time**. Our particular interval either contains μ or not — we cannot know. The simulation below draws 100 samples of 20 cells from the lagoon and their 95 % CIs: about 5 miss the true mean (in orange).
+:::
+::: fr
+La méthode, répétée sur de nombreux échantillons, produit des intervalles qui **contiennent le vrai μ 95 % du temps**. Notre intervalle particulier contient μ ou non — nous ne pouvons pas le savoir. La simulation ci-dessous tire 100 échantillons de 20 cellules du lagon et leurs IC à 95 % : environ 5 ratent la vraie moyenne (en orange).
+:::
+
+```{r, fig.height=4}
+set.seed(12)
+mu_cov <- mean(lag$seagrass_cover)
+cis <- t(replicate(100, t.test(sample(lag$seagrass_cover, 20))$conf.int))
+cis <- data.frame(sample = 1:100, lower = cis[, 1], upper = cis[, 2])
+cis$hit <- cis$lower <= mu_cov & cis$upper >= mu_cov
+sum(cis$hit)
+ggplot(cis, aes(y = sample, xmin = lower, xmax = upper, colour = hit)) +
+  geom_errorbarh(height = 0) + geom_vline(xintercept = mu_cov) +
+  scale_colour_manual(values = c(`TRUE` = "#1b7f8c", `FALSE` = "#d9694a"), guide = "none") +
+  labs(x = "95 % CI of mean seagrass cover (%)", y = "sample") + theme_c(11)
+```
+
+```{r, echo=FALSE}
+fa(c("`t(m)`", "transposes a matrix (rows ↔ columns); here: one row per sample", "transpose une matrice (lignes ↔ colonnes) ; ici : une ligne par échantillon", "a matrix", "une matrice"),
+   c("`geom_errorbarh(aes(xmin, xmax), height)`", "horizontal interval from `xmin` to `xmax`; `height = 0` removes the end caps", "intervalle horizontal de `xmin` à `xmax` ; `height = 0` enlève les petites barres aux bouts", "", ""),
+   c("&nbsp;&nbsp;`guide = \"none\"`", "hides the legend of this scale", "cache la légende de cette échelle", "", ""))
+```
+
+::: {.callout .warning}
+::: en
+**Wrong:** "there is a 95 % probability that μ is between 906 and 1,054 g." μ is fixed; the interval is what varies. **Right:** "we are 95 % confident that the mean weight is between 906 and 1,054 g", meaning the method captures μ in 95 % of samples. The width of the CI is the **precision** of the estimate — report it with every mean.
+:::
+::: fr
+**Faux :** « il y a 95 % de probabilité que μ soit entre 906 et 1 054 g. » μ est fixe ; c'est l'intervalle qui varie. **Juste :** « nous sommes confiants à 95 % que le poids moyen est entre 906 et 1 054 g », c'est-à-dire que la méthode capture μ dans 95 % des échantillons. La largeur de l'IC est la **précision** de l'estimation — donnez-la avec chaque moyenne.
+:::
+:::
+
+## [Confidence interval for a proportion]{.en}[Intervalle de confiance d'une proportion]{.fr} {#ci-prop}
+
+::: en
+For a proportion p̂ = x / n, the SE is √(p̂(1 − p̂)/n). Two functions give the CI directly: `binom.test()` (*exact*, recommended for small n or p̂ near 0 or 1) and `prop.test()` (approximate, with continuity correction).
+:::
+::: fr
+Pour une proportion p̂ = x / n, l'ES vaut √(p̂(1 − p̂)/n). Deux fonctions donnent directement l'IC : `binom.test()` (*exact*, conseillé pour un petit n ou un p̂ proche de 0 ou 1) et `prop.test()` (approché, avec correction de continuité).
+:::
+
+```{r}
+under <- sum(oc$weight_g[oc$area == "open"] < 350)
+n_open <- sum(oc$area == "open")
+c(x = under, n = n_open, p_hat = under / n_open)
+binom.test(under, n_open)$conf.int
+prop.test(under, n_open)$conf.int
+```
+
+```{r, echo=FALSE}
+fa(c("`binom.test(x, n, p, conf.level)`", "exact test and CI for a proportion `x / n` (Clopper–Pearson)", "test et IC exacts pour une proportion `x / n` (Clopper–Pearson)", "`x` successes out of `n`", "`x` succès sur `n`"),
+   c("`prop.test(x, n, correct)`", "approximate test and CI for one or several proportions; `correct = TRUE` (default) applies a continuity correction", "test et IC approchés pour une ou plusieurs proportions ; `correct = TRUE` (défaut) applique une correction de continuité", "", ""))
+```
+
+## [The bootstrap: a CI for (almost) anything]{.en}[Le bootstrap : un IC pour (presque) tout]{.fr} {#bootstrap}
+
+::: en
+There is no simple formula for the CI of a **median**. The **bootstrap** imitates "drawing many samples from the population" by drawing many samples **from the sample itself, with replacement**, each of size n. The spread of the statistic over these resamples estimates its sampling variability; the 2.5 % and 97.5 % quantiles give a 95 % **percentile CI**.
+:::
+::: fr
+Il n'existe pas de formule simple pour l'IC d'une **médiane**. Le **bootstrap** imite « tirer de nombreux échantillons de la population » en tirant de nombreux échantillons **dans l'échantillon lui-même, avec remise**, chacun de taille n. La dispersion de la statistique sur ces ré-échantillons estime sa variabilité d'échantillonnage ; les quantiles 2,5 % et 97,5 % donnent un **IC percentile** à 95 %.
+:::
+
+```{r}
+set.seed(1)
+boot_med <- replicate(5000, median(sample(w, replace = TRUE)))
+median(w)
+quantile(boot_med, c(0.025, 0.975))
+```
+
+::: en
+Use at least 2,000–10,000 resamples; set a seed so that the result can be repeated. The bootstrap needs a **random, representative** sample — it cannot fix bias, and it is unreliable with very small n (< 15–20).
+:::
+::: fr
+Utilisez au moins 2 000 – 10 000 ré-échantillons ; fixez une graine pour que le résultat puisse être refait. Le bootstrap a besoin d'un échantillon **aléatoire et représentatif** — il ne corrige pas un biais, et il est peu fiable avec un très petit n (< 15–20).
+:::
+
+## [Error bars: SD, SE or CI?]{.en}[Barres d'erreur : ET, ES ou IC ?]{.fr} {#error-bars}
+
+::: en
+| Bars show | Use to | Width |
+|---|---|---|
+| ± SD | describe the **variability of the data** | does not shrink with n |
+| ± SE | show the precision of the mean (≈ 68 % CI) | shrinks with √n |
+| 95 % CI | show the precision of the mean, for comparisons | ≈ 2 × SE |
+
+**Always state which one in the caption.** Prefer CIs for comparing means, and show the raw points when n is small.
+:::
+::: fr
+| Les barres montrent | Pour | Largeur |
+|---|---|---|
+| ± ET | décrire la **variabilité des données** | ne diminue pas avec n |
+| ± ES | montrer la précision de la moyenne (≈ IC à 68 %) | diminue avec √n |
+| IC à 95 % | montrer la précision de la moyenne, pour comparer | ≈ 2 × ES |
+
+**Indiquez toujours laquelle dans la légende.** Préférez les IC pour comparer des moyennes, et montrez les points bruts quand n est petit.
+:::
+
+```{r}
+ci_tab <- oc %>% group_by(area) %>%
+  summarise(n = n(), mean = mean(weight_g), se = sd(weight_g) / sqrt(n),
+            lower = mean - qt(0.975, n - 1) * se, upper = mean + qt(0.975, n - 1) * se)
+ci_tab
+ggplot(ci_tab, aes(area, mean)) +
+  geom_jitter(data = oc, aes(area, weight_g), width = 0.15, alpha = 0.25, colour = "#8a969e") +
+  geom_pointrange(aes(ymin = lower, ymax = upper), colour = "#0b3d5c", linewidth = 1) +
+  labs(x = NULL, y = "weight (g): mean and 95 % CI") + theme_c()
+```
+
+```{r, echo=FALSE}
+fa(c("`geom_pointrange(aes(ymin, ymax))`", "a point (the mean) with a vertical line from `ymin` to `ymax` (the CI)", "un point (la moyenne) avec une ligne verticale de `ymin` à `ymax` (l'IC)", "", ""),
+   c("&nbsp;&nbsp;`data = oc` (in a geom)", "this layer uses another data frame than the one given in `ggplot()`", "cette couche utilise un autre data frame que celui donné dans `ggplot()`", "a data frame", "un data frame"))
+```
+
+## [Application work & quiz]{.en}[Travail d'application et quiz]{.fr} {#application}
+
+```{r answers05, include=FALSE}
+wo <- oc$weight_g[oc$area == "open"]
+f1 <- round(sd(wo) / sqrt(length(wo)), 2)
+ci <- t.test(wo)$conf.int
+f2 <- round(ci[1], 1); f3 <- round(ci[2], 1)
+f4 <- round(qt(0.975, df = 9), 3)
+fem_r <- sum(oc$sex[oc$area == "reopened"] == "F"); n_r <- sum(oc$area == "reopened")
+bt <- binom.test(fem_r, n_r)$conf.int
+f5 <- round(bt[1], 3); f6 <- round(bt[2], 3)
+set.seed(1); bm <- replicate(5000, median(sample(wo, replace = TRUE)))
+f7 <- round(quantile(bm, 0.025)[[1]], 1)
+f8 <- round(t.test(wo, conf.level = 0.99)$conf.int[2] - t.test(wo, conf.level = 0.99)$conf.int[1], 1)
+```
+
+::: application
+::: en
+### Application work 5
+
+With `octopus_catch.csv`, **open** area only (`wo <- oc$weight_g[oc$area == "open"]`):
+
+1. Standard error of the mean weight (2 decimals).
+2. – 3. Lower and upper limits of the 95 % CI of the mean weight (1 decimal).
+4. Critical *t* value for a 95 % CI with n = 10 (3 decimals).
+5. – 6. In the **reopened** area, exact 95 % CI (`binom.test()`) of the proportion of **females**: lower and upper limits (3 decimals).
+7. Run exactly `set.seed(1); bm <- replicate(5000, median(sample(wo, replace = TRUE)))`. Lower limit (2.5 % quantile) of the bootstrap CI of the median (1 decimal).
+8. Width (upper − lower) of the **99 %** CI of the mean weight in the open area (1 decimal).
+9. – 10. Interpretation.
+:::
+::: fr
+### Travail d'application 5
+
+Avec `octopus_catch.csv`, zone **ouverte** seulement (`wo <- oc$weight_g[oc$area == "open"]`) :
+
+1. Erreur standard du poids moyen (2 décimales).
+2. – 3. Limites inférieure et supérieure de l'IC à 95 % du poids moyen (1 décimale).
+4. Valeur critique de *t* pour un IC à 95 % avec n = 10 (3 décimales).
+5. – 6. Dans la zone **rouverte**, IC exact à 95 % (`binom.test()`) de la proportion de **femelles** : limites inférieure et supérieure (3 décimales).
+7. Exécutez exactement `set.seed(1); bm <- replicate(5000, median(sample(wo, replace = TRUE)))`. Limite inférieure (quantile 2,5 %) de l'IC bootstrap de la médiane (1 décimale).
+8. Largeur (sup. − inf.) de l'IC à **99 %** du poids moyen dans la zone ouverte (1 décimale).
+9. – 10. Interprétation.
+:::
+:::
+
+::: hint
+::: en
+Q4: `qt(0.975, df = 9)`. Q5–6: count the females of the reopened area and its number of octopuses, then `binom.test(x, n)$conf.int`. Q8: `t.test(wo, conf.level = 0.99)$conf.int`, then `diff()`.
+:::
+::: fr
+Q4 : `qt(0.975, df = 9)`. Q5–6 : comptez les femelles de la zone rouverte et son nombre de pieuvres, puis `binom.test(x, n)$conf.int`. Q8 : `t.test(wo, conf.level = 0.99)$conf.int`, puis `diff()`.
+:::
+:::
+
+```{r quiz05, echo=FALSE}
+quiz("t05", list(
+  q_num("1. SE of the mean weight, open area?", "1. ES du poids moyen, zone ouverte ?", f1, tol = 0.006),
+  q_num("2. Lower limit of the 95 % CI?", "2. Limite inférieure de l'IC à 95 % ?", f2, tol = 0.06),
+  q_num("3. Upper limit of the 95 % CI?", "3. Limite supérieure de l'IC à 95 % ?", f3, tol = 0.06),
+  q_num("4. Critical t for n = 10?", "4. t critique pour n = 10 ?", f4, tol = 0.0006),
+  q_num("5. Lower limit, proportion of females (reopened)?", "5. Limite inférieure, proportion de femelles (rouverte) ?", f5, tol = 0.0006),
+  q_num("6. Upper limit, proportion of females (reopened)?", "6. Limite supérieure, proportion de femelles (rouverte) ?", f6, tol = 0.0006),
+  q_num("7. Bootstrap CI of the median: lower limit?", "7. IC bootstrap de la médiane : limite inférieure ?", f7, tol = 0.06),
+  q_num("8. Width of the 99 % CI (g)?", "8. Largeur de l'IC à 99 % (g) ?", f8, tol = 0.06),
+  q_mcq("9. If you take 4 times more octopuses, the SE of the mean is…",
+        "9. Si vous prenez 4 fois plus de pieuvres, l'ES de la moyenne est…",
+        c("divided by 4", "divided by 2", "unchanged", "multiplied by 2"),
+        c("divisée par 4", "divisée par 2", "inchangée", "multipliée par 2"), correct = 2),
+  q_mcq("10. The correct interpretation of a 95 % CI is…", "10. L'interprétation correcte d'un IC à 95 % est…",
+        c("95 % of the octopuses weigh between the two limits",
+          "the method gives intervals that contain the true mean in 95 % of samples",
+          "there is a 95 % chance that the sample mean is in the interval",
+          "the true mean changes 5 % of the time"),
+        c("95 % des pieuvres pèsent entre les deux limites",
+          "la méthode donne des intervalles qui contiennent la vraie moyenne dans 95 % des échantillons",
+          "il y a 95 % de chances que la moyenne d'échantillon soit dans l'intervalle",
+          "la vraie moyenne change 5 % du temps"), correct = 2)
+))
+```
+
+::: {.solution data-quiz="t05"}
+```{r, eval=FALSE}
+oc <- read.csv("data/octopus_catch.csv")
+wo <- oc$weight_g[oc$area == "open"]
+sd(wo) / sqrt(length(wo))                                 # 1
+t.test(wo)$conf.int                                       # 2, 3
+qt(0.975, df = 9)                                         # 4
+sex_r <- oc$sex[oc$area == "reopened"]
+binom.test(sum(sex_r == "F"), length(sex_r))$conf.int     # 5, 6
+set.seed(1); bm <- replicate(5000, median(sample(wo, replace = TRUE)))
+quantile(bm, c(0.025, 0.975))                             # 7
+diff(t.test(wo, conf.level = 0.99)$conf.int)              # 8
+# 9: divided by 2 (sqrt(4) = 2)   10: the method captures mu in 95 % of samples
+```
+:::

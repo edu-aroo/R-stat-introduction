@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>R4Marine Stats · Session 13</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.1/jquery-3.6.1.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<!-- header.html: inserted inside <head> of every page (see _site.yml) -->
+<!-- config.js (settings) and quiz_index.js (made by R/build_site.R) first,
+     then course.js (the behaviour that reads them) -->
+<script src="assets/config.js"></script>
+<script src="assets/quiz_index.js"></script>
+<script src="assets/course.js"></script>
+<meta name="author" content="Aroo Falinirina">
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<link rel="stylesheet" href="assets/course.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">R4Marine Stats</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Sessions
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="00-start.html">0 · Why statistics?</a>
+    </li>
+    <li>
+      <a href="01-design.html">1 · Study design &amp; sampling</a>
+    </li>
+    <li>
+      <a href="02-describe.html">2 · Describing data</a>
+    </li>
+    <li>
+      <a href="03-explore.html">3 · Exploring distributions</a>
+    </li>
+    <li>
+      <a href="04-probability.html">4 · Probability &amp; distributions</a>
+    </li>
+    <li>
+      <a href="05-estimation.html">5 · Standard error &amp; CIs</a>
+    </li>
+    <li>
+      <a href="06-testing.html">6 · Hypothesis tests &amp; p-values</a>
+    </li>
+    <li>
+      <a href="07-two-groups.html">7 · Comparing two groups</a>
+    </li>
+    <li>
+      <a href="08-anova.html">8 · ANOVA &amp; Kruskal–Wallis</a>
+    </li>
+    <li>
+      <a href="09-categorical.html">9 · Proportions &amp; χ²</a>
+    </li>
+    <li>
+      <a href="10-regression.html">10 · Correlation &amp; regression</a>
+    </li>
+    <li>
+      <a href="11-power-reporting.html">11 · Power, multiple tests, reporting</a>
+    </li>
+    <li>
+      <a href="12-practice.html">12 · Practice</a>
+    </li>
+    <li>
+      <a href="13-final-project.html">13 · Final project</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Resources
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="choose-test.html">Which test? (decision guide)</a>
+    </li>
+    <li>
+      <a href="cheatsheet.html">Cheatsheet</a>
+    </li>
+    <li>
+      <a href="glossary.html">Glossary EN–FR</a>
+    </li>
+    <li>
+      <a href="common-errors.html">Common errors &amp; pitfalls</a>
+    </li>
+    <li>
+      <a href="resources.html">To go further</a>
+    </li>
+    <li>
+      <a href="help.html">Need help?</a>
+    </li>
+    <li>
+      <a href="whats-new.html">What's new</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore"><span class="en">13 · Final project:
+seagrass and sea urchins</span><span class="fr">13 · Projet final :
+herbiers et oursins</span></h1>
+<h3 class="subtitle">~4.5 h</h3>
+
+</div>
+
+
+<div class="objectives">
+<div id="what-this-project-is-for" class="section level4 en">
+<h4>What this project is for</h4>
+<p>A complete analysis, from the question to the written result, on a
+dataset you have not seen. You decide the test for each question,
+justify it, run it, and report it. The quiz checks your numbers; the
+<strong>short report</strong> (step 8) is for you — and for me if you
+want feedback.</p>
+</div>
+<div id="à-quoi-sert-ce-projet" class="section level4 fr">
+<h4>À quoi sert ce projet</h4>
+<p>Une analyse complète, de la question au résultat rédigé, sur un jeu
+de données que vous n’avez pas encore vu. Vous choisissez le test de
+chaque question, le justifiez, l’exécutez et le rédigez. Le quiz vérifie
+vos nombres ; le <strong>court rapport</strong> (étape 8) est pour vous
+— et pour moi si vous voulez un retour.</p>
+</div>
+</div>
+<div class="callout ecology">
+<div class="en">
+<p><strong>Seagrass and sea urchins in a lagoon</strong>
+(<code>seagrass_urchins.csv</code>, simulated). In April 2026, a
+monitoring team placed <strong>80 stations at random</strong> over a
+seagrass lagoon, <strong>stratified by protection</strong>: 40 inside
+the <strong>no-take zone</strong> of an LMMA (created in 2021) and 40
+outside. At each station they laid <strong>one 1 m² quadrat</strong> and
+recorded: depth (dive computer, m), sediment type (<code>sand</code>,
+<code>muddy sand</code>, <code>rubble</code>), % seagrass cover (visual
+estimate), canopy height (cm, mean of 5 shoots) and the number of
+collector sea urchins <em>Tripneustes gratilla</em>, which graze
+seagrass and are harvested by gleaners. <em>One row = one
+station.</em></p>
+<p><strong>The management questions:</strong> (1) What is the seagrass
+cover of the lagoon? (2) Is cover higher inside the no-take zone? (3)
+Are there more or fewer urchins inside? (4) Does cover depend on the
+sediment? (5) Are urchins present at a different share of stations
+inside and outside? (6) Are urchins more abundant where seagrass is
+denser? (7) How does cover change with depth? (8) How many stations
+would be needed next year?</p>
+</div>
+<div class="fr">
+<p><strong>Herbiers et oursins dans un lagon</strong>
+(<code>seagrass_urchins.csv</code>, simulé). En avril 2026, une équipe
+de suivi a placé <strong>80 stations au hasard</strong> dans un lagon à
+herbiers, <strong>stratifiées par protection</strong> : 40 dans la
+<strong>zone de non-prélèvement</strong> d’une LMMA (créée en 2021) et
+40 à l’extérieur. À chaque station, elle a posé <strong>un quadrat de 1
+m²</strong> et noté : profondeur (ordinateur de plongée, m), type de
+sédiment (<code>sand</code>, <code>muddy sand</code>,
+<code>rubble</code>), % de recouvrement d’herbier (estimation visuelle),
+hauteur de canopée (cm, moyenne de 5 pousses) et nombre d’oursins
+collecteurs <em>Tripneustes gratilla</em>, qui broutent l’herbier et
+sont récoltés par les glaneurs. <em>Une ligne = une station.</em></p>
+<p><strong>Les questions de gestion :</strong> (1) Quel est le
+recouvrement d’herbier du lagon ? (2) Le recouvrement est-il plus élevé
+dans la zone de non-prélèvement ? (3) Y a-t-il plus ou moins d’oursins à
+l’intérieur ? (4) Le recouvrement dépend-il du sédiment ? (5) Les
+oursins sont-ils présents dans une part différente des stations à
+l’intérieur et à l’extérieur ? (6) Les oursins sont-ils plus abondants
+là où l’herbier est plus dense ? (7) Comment le recouvrement change-t-il
+avec la profondeur ? (8) Combien de stations faudrait-il l’année
+prochaine ?</p>
+</div>
+</div>
+<p><a class="btn-dl" href="data/seagrass_urchins.csv" download>⇩
+seagrass_urchins.csv</a>
+<a class="btn-dl" href="templates/final_project_template.R" download>⇩
+final_project_template.R</a></p>
+<div id="plan" class="section level2">
+<h2><span class="en">Step 1 — Plan before you look</span><span
+class="fr">Étape 1 — Planifier avant de regarder</span></h2>
+<div class="en">
+<p>Open <code>final_project_template.R</code>. Before running anything,
+fill in the <strong>analysis plan</strong> at the top: for each
+question, the response variable and its type, the grouping variable or
+predictor, independent or paired, the test you expect to use, and what
+you will do if its conditions are not met (Session 11). The sampling
+unit is the <strong>station</strong>.</p>
+</div>
+<div class="fr">
+<p>Ouvrez <code>final_project_template.R</code>. Avant d’exécuter quoi
+que ce soit, remplissez le <strong>plan d’analyse</strong> en haut :
+pour chaque question, la variable réponse et son type, la variable de
+groupe ou le prédicteur, indépendant ou apparié, le test prévu, et ce
+que vous ferez si ses conditions ne sont pas remplies (séance 11).
+L’unité d’échantillonnage est la <strong>station</strong>.</p>
+</div>
+<p>:::</p>
+</div>
+<div id="describe" class="section level2">
+<h2><span class="en">Step 2 — Import, check, describe</span><span
+class="fr">Étape 2 — Importer, vérifier, décrire</span></h2>
+<div class="en">
+<p>Import the data, check the types (<code>str()</code>), make
+<code>protection</code> and <code>sediment</code> factors, look for
+missing values and impossible values (cover &gt; 100, negative counts).
+Build a summary table by protection (n, mean, SD, median, IQR) for
+cover, canopy and urchins (Session 2). Plot each variable (Session 3):
+which are roughly normal, which are skewed?</p>
+</div>
+<div class="fr">
+<p>Importez les données, vérifiez les types (<code>str()</code>),
+transformez <code>protection</code> et <code>sediment</code> en
+facteurs, cherchez les valeurs manquantes et impossibles (recouvrement
+&gt; 100, comptages négatifs). Construisez un tableau de synthèse par
+protection (n, moyenne, ET, médiane, IQR) pour le recouvrement, la
+canopée et les oursins (séance 2). Tracez chaque variable (séance 3) :
+lesquelles sont à peu près normales, lesquelles sont asymétriques ?</p>
+</div>
+</div>
+<div id="estimate" class="section level2">
+<h2><span class="en">Step 3 — Estimate the lagoon’s cover
+(Q1)</span><span class="fr">Étape 3 — Estimer le recouvrement du lagon
+(Q1)</span></h2>
+<div class="en">
+<p>Mean cover of all 80 stations with its 95 % CI (Session 5). (The two
+strata have the same size, so the plain mean is fine.)</p>
+</div>
+<div class="fr">
+<p>Recouvrement moyen des 80 stations avec son IC à 95 % (séance 5).
+(Les deux strates ont la même taille, la moyenne simple convient
+donc.)</p>
+</div>
+</div>
+<div id="protection" class="section level2">
+<h2><span class="en">Step 4 — Inside versus outside (Q2, Q3,
+Q5)</span><span class="fr">Étape 4 — Intérieur contre extérieur (Q2, Q3,
+Q5)</span></h2>
+<div class="en">
+<ul>
+<li><strong>Cover</strong> (Q2): choose between a Welch t-test and a
+Wilcoxon test from your plots; give the difference <strong>Inside −
+Outside</strong> with its CI.</li>
+<li><strong>Urchins</strong> (Q3): counts with many zeros and a long
+tail — which test?</li>
+<li><strong>Presence of urchins</strong> (Q5): create
+<code>present &lt;- su$urchins &gt; 0</code>, cross it with protection
+and test the association (Session 9).</li>
+</ul>
+</div>
+<div class="fr">
+<ul>
+<li><strong>Recouvrement</strong> (Q2) : choisissez entre un test t de
+Welch et un test de Wilcoxon d’après vos graphiques ; donnez la
+différence <strong>Inside − Outside</strong> avec son IC.</li>
+<li><strong>Oursins</strong> (Q3) : des comptages avec beaucoup de zéros
+et une longue queue — quel test ?</li>
+<li><strong>Présence d’oursins</strong> (Q5) : créez
+<code>present &lt;- su$urchins &gt; 0</code>, croisez-le avec la
+protection et testez l’association (séance 9).</li>
+</ul>
+</div>
+</div>
+<div id="sediment" class="section level2">
+<h2><span class="en">Step 5 — Sediment (Q4)</span><span class="fr">Étape
+5 — Sédiment (Q4)</span></h2>
+<div class="en">
+<p>One-way ANOVA of cover by sediment, check the residuals, then Tukey
+HSD (Session 8). Keep the sediment levels in alphabetical order
+(<code>muddy sand</code>, <code>rubble</code>, <code>sand</code>) so
+that your Tukey labels match the quiz.</p>
+</div>
+<div class="fr">
+<p>ANOVA à un facteur du recouvrement par sédiment, vérification des
+résidus, puis HSD de Tukey (séance 8). Gardez les niveaux du sédiment
+dans l’ordre alphabétique (<code>muddy sand</code>, <code>rubble</code>,
+<code>sand</code>) pour que vos étiquettes de Tukey correspondent au
+quiz.</p>
+</div>
+</div>
+<div id="relationships" class="section level2">
+<h2><span class="en">Step 6 — Relationships (Q6, Q7)</span><span
+class="fr">Étape 6 — Relations (Q6, Q7)</span></h2>
+<div class="en">
+<ul>
+<li>Urchins vs cover (Q6): which correlation coefficient suits counts
+with many zeros?</li>
+<li>Cover vs depth (Q7): simple linear regression, residual plots, slope
+with its CI, R² (Session 10).</li>
+</ul>
+</div>
+<div class="fr">
+<ul>
+<li>Oursins vs recouvrement (Q6) : quel coefficient de corrélation
+convient à des comptages avec beaucoup de zéros ?</li>
+<li>Recouvrement vs profondeur (Q7) : régression linéaire simple,
+graphiques des résidus, pente avec son IC, R² (séance 10).</li>
+</ul>
+</div>
+</div>
+<div id="power" class="section level2">
+<h2><span class="en">Step 7 — Next year’s design (Q8)</span><span
+class="fr">Étape 7 — Le plan de l’année prochaine (Q8)</span></h2>
+<div class="en">
+<p>The LMMA wants to detect a difference of <strong>5 %</strong> in
+seagrass cover between inside and outside with 80 % power. Using the SD
+of cover of all 80 stations, how many stations per zone are needed
+(Session 11)?</p>
+</div>
+<div class="fr">
+<p>La LMMA veut détecter une différence de <strong>5 %</strong> de
+recouvrement entre l’intérieur et l’extérieur avec 80 % de puissance.
+Avec l’ET du recouvrement des 80 stations, combien de stations par zone
+faut-il (séance 11) ?</p>
+</div>
+</div>
+<div id="report" class="section level2">
+<h2><span class="en">Step 8 — Write it up</span><span class="fr">Étape 8
+— Rédiger</span></h2>
+<div class="en">
+<p>In a text file or a Word document (one page): a
+<strong>methods</strong> paragraph (design, n, variables, tests and why,
+software) and <strong>one result sentence per question</strong>, in the
+format of Session 11, plus <strong>two figures</strong> (cover by
+protection with the raw points; cover against depth with the regression
+line). End with two sentences for the LMMA committee: what the data
+show, and what they cannot show (Session 1: is the no-take zone the
+<em>cause</em>?).</p>
+</div>
+<div class="fr">
+<p>Dans un fichier texte ou un document Word (une page) : un paragraphe
+de <strong>méthodes</strong> (plan, n, variables, tests et pourquoi,
+logiciel) et <strong>une phrase de résultat par question</strong>, au
+format de la séance 11, plus <strong>deux figures</strong> (recouvrement
+par protection avec les points bruts ; recouvrement selon la profondeur
+avec la droite de régression). Terminez par deux phrases pour le comité
+de la LMMA : ce que montrent les données, et ce qu’elles ne peuvent pas
+montrer (séance 1 : la zone de non-prélèvement est-elle la
+<em>cause</em> ?).</p>
+</div>
+</div>
+<div id="quiz" class="section level2">
+<h2><span class="en">Quiz</span><span class="fr">Quiz</span></h2>
+<div id="quiz-t13" class="quiz" data-quiz-id="t13"
+data-q="W3sidHlwZSI6Im51bSIsImVuIjoiMS4gTWVhbiBzZWFncmFzcyBjb3ZlciBvZiB0aGUgODAgc3RhdGlvbnMgKCUpPyIsImZyIjoiMS4gUmVjb3V2cmVtZW50IG1veWVuIGRlcyA4MCBzdGF0aW9ucyAoJSkgPyIsImFuc3dlciI6NTAuMjEsInRvbCI6MC4wMDYsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibnVtIiwiZW4iOiIyLiBMb3dlciBsaW1pdCBvZiBpdHMgOTUgJSBDST8iLCJmciI6IjIuIExpbWl0ZSBpbmbDqXJpZXVyZSBkZSBzb24gSUMgw6AgOTUgJSA/IiwiYW5zd2VyIjo0Ni4yNCwidG9sIjowLjAwNiwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJudW0iLCJlbiI6IjMuIFVwcGVyIGxpbWl0IG9mIGl0cyA5NSAlIENJPyIsImZyIjoiMy4gTGltaXRlIHN1cMOpcmlldXJlIGRlIHNvbiBJQyDDoCA5NSAlID8iLCJhbnN3ZXIiOjU0LjE4LCJ0b2wiOjAuMDA2LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiNC4gV2VsY2ggdC10ZXN0OiBtZWFuIGNvdmVyIEluc2lkZSDiiJIgT3V0c2lkZT8iLCJmciI6IjQuIFRlc3QgdCBkZSBXZWxjaCA6IHJlY291dnJlbWVudCBtb3llbiBJbnNpZGUg4oiSIE91dHNpZGUgPyIsImFuc3dlciI6OC45MiwidG9sIjowLjAwNiwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJudW0iLCJlbiI6IjUuIEl0cyBwLXZhbHVlPyIsImZyIjoiNS4gU2EgcC12YWx1ZSA/IiwiYW5zd2VyIjowLjAyNDIsInRvbCI6NmUtMDUsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibnVtIiwiZW4iOiI2LiBNZWRpYW4gbnVtYmVyIG9mIHVyY2hpbnMgT3V0c2lkZT8iLCJmciI6IjYuIE5vbWJyZSBtw6lkaWFuIGQnb3Vyc2lucyBPdXRzaWRlID8iLCJhbnN3ZXIiOjMsInRvbCI6MCwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJudW0iLCJlbiI6IjcuIFdpbGNveG9uIHJhbmstc3VtIHAtdmFsdWUsIHVyY2hpbnMgYnkgcHJvdGVjdGlvbiAoZXhhY3QgPSBGQUxTRSk/IiwiZnIiOiI3LiBwLXZhbHVlIGR1IFdpbGNveG9uIGRlcyByYW5ncywgb3Vyc2lucyBwYXIgcHJvdGVjdGlvbiAoZXhhY3QgPSBGQUxTRSkgPyIsImFuc3dlciI6MC4wMDg0LCJ0b2wiOjZlLTA1LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiOC4gQU5PVkEgRiB2YWx1ZSwgY292ZXIgYnkgc2VkaW1lbnQ/IiwiZnIiOiI4LiBWYWxldXIgZGUgRiBkZSBsJ0FOT1ZBLCByZWNvdXZyZW1lbnQgcGFyIHPDqWRpbWVudCA/IiwiYW5zd2VyIjoxMi4xMzYsInRvbCI6MC4wMDA2LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiOS4gVHVrZXkgZGlmZmVyZW5jZSBzYW5kIOKIkiBydWJibGU/IiwiZnIiOiI5LiBEaWZmw6lyZW5jZSBkZSBUdWtleSBzYW5kIOKIkiBydWJibGUgPyIsImFuc3dlciI6MjAuMDUsInRvbCI6MC4wMDYsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibnVtIiwiZW4iOiIxMC4gz4fCsiBwLXZhbHVlLCB1cmNoaW4gcHJlc2VuY2Ugw5cgcHJvdGVjdGlvbiAoZGVmYXVsdCBjb3JyZWN0aW9uKT8iLCJmciI6IjEwLiBwLXZhbHVlIGR1IM+HwrIsIHByw6lzZW5jZSBkJ291cnNpbnMgw5cgcHJvdGVjdGlvbiAoY29ycmVjdGlvbiBwYXIgZMOpZmF1dCkgPyIsImFuc3dlciI6MC4xMjc0LCJ0b2wiOjZlLTA1LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiMTEuIFNwZWFybWFuIM+BLCB1cmNoaW5zIHZzIGNvdmVyPyIsImZyIjoiMTEuIM+BIGRlIFNwZWFybWFuLCBvdXJzaW5zIHZzIHJlY291dnJlbWVudCA/IiwiYW5zd2VyIjotMC4wOTMsInRvbCI6MC4wMDA2LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiMTIuIFJlZ3Jlc3Npb24gc2xvcGUgb2YgY292ZXIgb24gZGVwdGggKCUgcGVyIG0pPyIsImZyIjoiMTIuIFBlbnRlIGRlIGxhIHLDqWdyZXNzaW9uIGR1IHJlY291dnJlbWVudCBzdXIgbGEgcHJvZm9uZGV1ciAoJSBwYXIgbSkgPyIsImFuc3dlciI6LTguMDA1LCJ0b2wiOjAuMDAwNiwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJudW0iLCJlbiI6IjEzLiBSwrIgb2YgdGhpcyByZWdyZXNzaW9uPyIsImZyIjoiMTMuIFLCsiBkZSBjZXR0ZSByw6lncmVzc2lvbiA/IiwiYW5zd2VyIjowLjE3NSwidG9sIjowLjAwMDYsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibWNxIiwiZW4iOiIxNC4gQ292ZXIgaXMgaGlnaGVyIGluc2lkZSB0aGUgbm8tdGFrZSB6b25lLiBUaGUgbW9zdCBhY2N1cmF0ZSBzdGF0ZW1lbnQgaXPigKYiLCJmciI6IjE0LiBMZSByZWNvdXZyZW1lbnQgZXN0IHBsdXMgw6lsZXbDqSBkYW5zIGxhIHpvbmUgZGUgbm9uLXByw6lsw6h2ZW1lbnQuIEwnw6lub25jw6kgbGUgcGx1cyBqdXN0ZSBlc3TigKYiLCJvcHRpb25zX2VuIjpbInByb3RlY3Rpb24gY2F1c2VkIHRoZSBoaWdoZXIgY292ZXIiLCJjb3ZlciBpcyBoaWdoZXIgaW5zaWRlOyBiZWNhdXNlIHRoZSB6b25lIHdhcyBub3QgcGxhY2VkIGF0IHJhbmRvbSwgb3RoZXIgZGlmZmVyZW5jZXMgKGUuZy4gc2VkaW1lbnQsIGRlcHRoKSBjb3VsZCBleHBsYWluIHBhcnQgb2YgaXQiLCJ0aGUgZGlmZmVyZW5jZSBpcyBkdWUgdG8gY2hhbmNlIiwidGhlIHN0YXRpb25zIGFyZSBwc2V1ZG9yZXBsaWNhdGVzLCBzbyBub3RoaW5nIGNhbiBiZSBjb25jbHVkZWQiXSwib3B0aW9uc19mciI6WyJsYSBwcm90ZWN0aW9uIGEgY2F1c8OpIGxlIHJlY291dnJlbWVudCBwbHVzIMOpbGV2w6kiLCJsZSByZWNvdXZyZW1lbnQgZXN0IHBsdXMgw6lsZXbDqSDDoCBsJ2ludMOpcmlldXIgOyBjb21tZSBsYSB6b25lIG4nYSBwYXMgw6l0w6kgcGxhY8OpZSBhdSBoYXNhcmQsIGQnYXV0cmVzIGRpZmbDqXJlbmNlcyAoZXguIHPDqWRpbWVudCwgcHJvZm9uZGV1cikgcG91cnJhaWVudCBlbiBleHBsaXF1ZXIgdW5lIHBhcnRpZSIsImxhIGRpZmbDqXJlbmNlIGVzdCBkdWUgYXUgaGFzYXJkIiwibGVzIHN0YXRpb25zIHNvbnQgZGVzIHBzZXVkby1yw6lwbGljYXRzLCBvbiBuZSBwZXV0IGRvbmMgcmllbiBjb25jbHVyZSJdLCJhbnN3ZXIiOjF9LHsidHlwZSI6Im51bSIsImVuIjoiMTUuIFN0YXRpb25zIHBlciB6b25lIG5lZWRlZCB0byBkZXRlY3QgNSAlICg4MCAlIHBvd2VyKT8iLCJmciI6IjE1LiBTdGF0aW9ucyBwYXIgem9uZSBuw6ljZXNzYWlyZXMgcG91ciBkw6l0ZWN0ZXIgNSAlIChwdWlzc2FuY2UgODAgJSkgPyIsImFuc3dlciI6MjAxLCJ0b2wiOjAsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn1d">
+
+</div>
+<div class="solution" data-quiz="t13">
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(dplyr); <span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>su <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/seagrass_urchins.csv&quot;</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>su<span class="sc">$</span>protection <span class="ot">&lt;-</span> <span class="fu">factor</span>(su<span class="sc">$</span>protection); su<span class="sc">$</span>sediment <span class="ot">&lt;-</span> <span class="fu">factor</span>(su<span class="sc">$</span>sediment)</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="fu">str</span>(su); <span class="fu">summary</span>(su)</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>su <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(protection) <span class="sc">%&gt;%</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>(), <span class="at">mean_cover =</span> <span class="fu">mean</span>(seagrass_cover), <span class="at">sd_cover =</span> <span class="fu">sd</span>(seagrass_cover),</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>            <span class="at">median_urchins =</span> <span class="fu">median</span>(urchins), <span class="at">iqr_urchins =</span> <span class="fu">IQR</span>(urchins))      <span class="co"># 6</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="co"># Q1</span></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="fu">mean</span>(su<span class="sc">$</span>seagrass_cover); <span class="fu">t.test</span>(su<span class="sc">$</span>seagrass_cover)<span class="sc">$</span>conf.int                    <span class="co"># 1-3</span></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="co"># Q2: cover is roughly normal in each group (QQ plots) -&gt; Welch t-test</span></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="fu">ggplot</span>(su, <span class="fu">aes</span>(protection, seagrass_cover)) <span class="sc">+</span> <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">height =</span> <span class="dv">0</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a><span class="fu">t.test</span>(seagrass_cover <span class="sc">~</span> protection, <span class="at">data =</span> su)                                 <span class="co"># 4, 5</span></span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="co"># Q3: counts, many zeros, skewed -&gt; Wilcoxon rank-sum</span></span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a><span class="fu">wilcox.test</span>(urchins <span class="sc">~</span> protection, <span class="at">data =</span> su, <span class="at">exact =</span> <span class="cn">FALSE</span>)                    <span class="co"># 7</span></span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a><span class="co"># Q4</span></span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">aov</span>(seagrass_cover <span class="sc">~</span> sediment, <span class="at">data =</span> su)</span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a><span class="fu">summary</span>(fit); <span class="fu">plot</span>(fit, <span class="at">which =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>); <span class="fu">TukeyHSD</span>(fit)                            <span class="co"># 8, 9</span></span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a><span class="co"># Q5</span></span>
+<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a>present <span class="ot">&lt;-</span> su<span class="sc">$</span>urchins <span class="sc">&gt;</span> <span class="dv">0</span></span>
+<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">table</span>(su<span class="sc">$</span>protection, present); tab; <span class="fu">prop.table</span>(tab, <span class="dv">1</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a><span class="fu">chisq.test</span>(tab)                                                                <span class="co"># 10</span></span>
+<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a><span class="co"># Q6</span></span>
+<span id="cb1-23"><a href="#cb1-23" tabindex="-1"></a><span class="fu">cor.test</span>(su<span class="sc">$</span>urchins, su<span class="sc">$</span>seagrass_cover, <span class="at">method =</span> <span class="st">&quot;spearman&quot;</span>, <span class="at">exact =</span> <span class="cn">FALSE</span>)    <span class="co"># 11</span></span>
+<span id="cb1-24"><a href="#cb1-24" tabindex="-1"></a><span class="co"># Q7</span></span>
+<span id="cb1-25"><a href="#cb1-25" tabindex="-1"></a>lm7 <span class="ot">&lt;-</span> <span class="fu">lm</span>(seagrass_cover <span class="sc">~</span> depth_m, <span class="at">data =</span> su)</span>
+<span id="cb1-26"><a href="#cb1-26" tabindex="-1"></a><span class="fu">summary</span>(lm7); <span class="fu">confint</span>(lm7); <span class="fu">plot</span>(lm7, <span class="at">which =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)                             <span class="co"># 12, 13</span></span>
+<span id="cb1-27"><a href="#cb1-27" tabindex="-1"></a><span class="co"># Q8</span></span>
+<span id="cb1-28"><a href="#cb1-28" tabindex="-1"></a><span class="fu">ceiling</span>(<span class="fu">power.t.test</span>(<span class="at">delta =</span> <span class="dv">5</span>, <span class="at">sd =</span> <span class="fu">sd</span>(su<span class="sc">$</span>seagrass_cover), <span class="at">power =</span> <span class="fl">0.8</span>)<span class="sc">$</span>n)    <span class="co"># 15</span></span>
+<span id="cb1-29"><a href="#cb1-29" tabindex="-1"></a><span class="co"># 14: association; the zone was not assigned at random (observational comparison)</span></span></code></pre></div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

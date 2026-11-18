@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>R4Marine Stats · Session 6</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.1/jquery-3.6.1.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<!-- header.html: inserted inside <head> of every page (see _site.yml) -->
+<!-- config.js (settings) and quiz_index.js (made by R/build_site.R) first,
+     then course.js (the behaviour that reads them) -->
+<script src="assets/config.js"></script>
+<script src="assets/quiz_index.js"></script>
+<script src="assets/course.js"></script>
+<meta name="author" content="Aroo Falinirina">
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<link rel="stylesheet" href="assets/course.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">R4Marine Stats</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Sessions
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="00-start.html">0 · Why statistics?</a>
+    </li>
+    <li>
+      <a href="01-design.html">1 · Study design &amp; sampling</a>
+    </li>
+    <li>
+      <a href="02-describe.html">2 · Describing data</a>
+    </li>
+    <li>
+      <a href="03-explore.html">3 · Exploring distributions</a>
+    </li>
+    <li>
+      <a href="04-probability.html">4 · Probability &amp; distributions</a>
+    </li>
+    <li>
+      <a href="05-estimation.html">5 · Standard error &amp; CIs</a>
+    </li>
+    <li>
+      <a href="06-testing.html">6 · Hypothesis tests &amp; p-values</a>
+    </li>
+    <li>
+      <a href="07-two-groups.html">7 · Comparing two groups</a>
+    </li>
+    <li>
+      <a href="08-anova.html">8 · ANOVA &amp; Kruskal–Wallis</a>
+    </li>
+    <li>
+      <a href="09-categorical.html">9 · Proportions &amp; χ²</a>
+    </li>
+    <li>
+      <a href="10-regression.html">10 · Correlation &amp; regression</a>
+    </li>
+    <li>
+      <a href="11-power-reporting.html">11 · Power, multiple tests, reporting</a>
+    </li>
+    <li>
+      <a href="12-practice.html">12 · Practice</a>
+    </li>
+    <li>
+      <a href="13-final-project.html">13 · Final project</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Resources
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="choose-test.html">Which test? (decision guide)</a>
+    </li>
+    <li>
+      <a href="cheatsheet.html">Cheatsheet</a>
+    </li>
+    <li>
+      <a href="glossary.html">Glossary EN–FR</a>
+    </li>
+    <li>
+      <a href="common-errors.html">Common errors &amp; pitfalls</a>
+    </li>
+    <li>
+      <a href="resources.html">To go further</a>
+    </li>
+    <li>
+      <a href="help.html">Need help?</a>
+    </li>
+    <li>
+      <a href="whats-new.html">What's new</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore"><span class="en">6 · Hypothesis tests and
+p-values</span><span class="fr">6 · Tests d’hypothèse et
+p-values</span></h1>
+<h3 class="subtitle">~3 h</h3>
+
+</div>
+
+
+<div class="objectives">
+<div id="by-the-end-of-this-session-you-will-be-able-to"
+class="section level4 en">
+<h4>By the end of this session you will be able to</h4>
+<ul>
+<li>state a <strong>null hypothesis</strong> H0 and an
+<strong>alternative</strong> H1 for a question;</li>
+<li>explain the logic of a test with a <strong>permutation
+test</strong>: “how often would chance alone give a difference this
+large?”;</li>
+<li>define the <strong>p-value</strong> correctly — and list what it is
+<strong>not</strong>;</li>
+<li>run and read a <strong>one-sample t-test</strong>
+(<code>t.test(x, mu = …)</code>), two-sided or one-sided;</li>
+<li>explain <strong>type I</strong> and <strong>type II</strong> errors,
+the level α and the <strong>power</strong>;</li>
+<li>distinguish <strong>statistical significance</strong> from
+<strong>practical importance</strong>, and report an <strong>effect size
+with its CI</strong>.</li>
+</ul>
+</div>
+<div id="à-la-fin-de-cette-séance-vous-saurez"
+class="section level4 fr">
+<h4>À la fin de cette séance vous saurez</h4>
+<ul>
+<li>formuler une <strong>hypothèse nulle</strong> H0 et une
+<strong>alternative</strong> H1 pour une question ;</li>
+<li>expliquer la logique d’un test avec un <strong>test de
+permutation</strong> : « à quelle fréquence le hasard seul donnerait-il
+une différence aussi grande ? » ;</li>
+<li>définir correctement la <strong>p-value</strong> — et dire ce
+qu’elle n’est <strong>pas</strong> ;</li>
+<li>réaliser et lire un <strong>test t à un échantillon</strong>
+(<code>t.test(x, mu = …)</code>), bilatéral ou unilatéral ;</li>
+<li>expliquer les erreurs de <strong>type I</strong> et de <strong>type
+II</strong>, le seuil α et la <strong>puissance</strong> ;</li>
+<li>distinguer la <strong>significativité statistique</strong> de
+l’<strong>importance pratique</strong>, et rapporter une <strong>taille
+d’effet avec son IC</strong>.</li>
+</ul>
+</div>
+</div>
+<div id="logic" class="section level2">
+<h2><span class="en">The logic of a test</span><span class="fr">La
+logique d’un test</span></h2>
+<div class="en">
+<p>Every test follows the same five steps:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Question</strong> → two hypotheses. <strong>H0</strong>
+(null): “no effect, no difference” — the boring explanation, chance
+alone. <strong>H1</strong> (alternative): there is a difference.</li>
+<li>A <strong>test statistic</strong> that measures how far the data are
+from H0 (a difference of means, a <em>t</em>, a χ²…).</li>
+<li>The <strong>distribution of this statistic if H0 were true</strong>
+(by simulation, or by theory).</li>
+<li>The <strong>p-value</strong>: the probability, <strong>if H0 were
+true</strong>, of getting a statistic <strong>at least as
+extreme</strong> as the one observed.</li>
+<li>A <strong>conclusion in words</strong>, with the size of the
+effect.</li>
+</ol>
+</div>
+<div class="fr">
+<p>Chaque test suit les mêmes cinq étapes :</p>
+<ol style="list-style-type: decimal">
+<li><strong>Question</strong> → deux hypothèses. <strong>H0</strong>
+(nulle) : « pas d’effet, pas de différence » — l’explication ennuyeuse,
+le hasard seul. <strong>H1</strong> (alternative) : il y a une
+différence.</li>
+<li>Une <strong>statistique de test</strong> qui mesure à quelle
+distance les données sont de H0 (une différence de moyennes, un
+<em>t</em>, un χ²…).</li>
+<li>La <strong>distribution de cette statistique si H0 était
+vraie</strong> (par simulation, ou par la théorie).</li>
+<li>La <strong>p-value</strong> : la probabilité, <strong>si H0 était
+vraie</strong>, d’obtenir une statistique <strong>au moins aussi
+extrême</strong> que celle observée.</li>
+<li>Une <strong>conclusion en mots</strong>, avec la taille de
+l’effet.</li>
+</ol>
+</div>
+</div>
+<div id="permutation" class="section level2">
+<h2><span class="en">A test you can see: the permutation
+test</span><span class="fr">Un test qu’on peut voir : le test de
+permutation</span></h2>
+<div class="callout ecology">
+<div class="en">
+<p><strong>Data:</strong> <code>octopus_catch.csv</code> (Session 3):
+every octopus landed on the reopening day of a temporary closure, in
+Tsifota (area <strong>reopened</strong>) and Andrevo
+(<strong>open</strong> areas). The sex of the <strong>fisher</strong>
+(woman or man) was also recorded.</p>
+</div>
+<div class="fr">
+<p><strong>Données :</strong> <code>octopus_catch.csv</code> (séance 3)
+: toutes les pieuvres débarquées le jour de réouverture d’une fermeture
+temporaire, à Tsifota (zone <strong>rouverte</strong>) et Andrevo (zones
+<strong>ouvertes</strong>). Le sexe du <strong>pêcheur</strong> (femme
+ou homme) a aussi été noté.</p>
+</div>
+</div>
+<div class="en">
+<p><strong>Question:</strong> in the reopened area, do octopuses caught
+by women and by men differ in mean weight? H0: the fisher’s sex has
+nothing to do with the weight; the labels “F” and “M” could be shuffled
+without changing anything. H1: the mean weights differ.</p>
+<p>If H0 is true, <strong>shuffling the labels</strong> at random
+produces differences of the size that chance alone creates. We shuffle
+5,000 times and see where the observed difference falls.</p>
+</div>
+<div class="fr">
+<p><strong>Question :</strong> dans la zone rouverte, les pieuvres
+capturées par des femmes et par des hommes diffèrent-elles en poids
+moyen ? H0 : le sexe du pêcheur n’a rien à voir avec le poids ; on
+pourrait mélanger les étiquettes « F » et « M » sans rien changer. H1 :
+les poids moyens diffèrent.</p>
+<p>Si H0 est vraie, <strong>mélanger les étiquettes</strong> au hasard
+produit des différences de la taille que crée le hasard seul. On mélange
+5 000 fois et on regarde où tombe la différence observée.</p>
+</div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>oc <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/octopus_catch.csv&quot;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>re <span class="ot">&lt;-</span> oc[oc<span class="sc">$</span>area <span class="sc">==</span> <span class="st">&quot;reopened&quot;</span>, ]</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>obs <span class="ot">&lt;-</span> <span class="fu">mean</span>(re<span class="sc">$</span>weight_g[re<span class="sc">$</span>fisher_sex <span class="sc">==</span> <span class="st">&quot;F&quot;</span>]) <span class="sc">-</span> <span class="fu">mean</span>(re<span class="sc">$</span>weight_g[re<span class="sc">$</span>fisher_sex <span class="sc">==</span> <span class="st">&quot;M&quot;</span>])</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>obs</span></code></pre></div>
+<pre><code>#&gt; [1] -3.428571</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">6</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>perm <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">5000</span>, {</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  shuffled <span class="ot">&lt;-</span> <span class="fu">sample</span>(re<span class="sc">$</span>fisher_sex)                  <span class="co"># random labels: H0 world</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="fu">mean</span>(re<span class="sc">$</span>weight_g[shuffled <span class="sc">==</span> <span class="st">&quot;F&quot;</span>]) <span class="sc">-</span> <span class="fu">mean</span>(re<span class="sc">$</span>weight_g[shuffled <span class="sc">==</span> <span class="st">&quot;M&quot;</span>])</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>})</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>p_perm <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(perm) <span class="sc">&gt;=</span> <span class="fu">abs</span>(obs))                <span class="co"># two-sided p-value</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>p_perm</span></code></pre></div>
+<pre><code>#&gt; [1] 0.9672</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">diff =</span> perm), <span class="fu">aes</span>(diff)) <span class="sc">+</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">40</span>, <span class="at">fill =</span> <span class="st">&quot;#bfdfe4&quot;</span>, <span class="at">colour =</span> <span class="st">&quot;white&quot;</span>) <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">c</span>(<span class="sc">-</span>obs, obs), <span class="at">colour =</span> <span class="st">&quot;#d9694a&quot;</span>, <span class="at">linewidth =</span> <span class="dv">1</span>, <span class="at">linetype =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;difference of means F − M if H0 is true (g)&quot;</span>, <span class="at">y =</span> <span class="st">&quot;number of shuffles&quot;</span>) <span class="sc">+</span> <span class="fu">theme_c</span>()</span></code></pre></div>
+<p><img src="06-testing_files/figure-html/unnamed-chunk-2-1.png" width="85%" style="display: block; margin: auto;" /></p>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>sample(x)</code></td>
+<td>random permutation of <code>x</code> (Session 1): here, the labels
+are redistributed at random among the octopuses</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>mean(abs(perm) &gt;= abs(obs))</code></td>
+<td>share of shuffles giving a difference at least as large (in either
+direction) as the observed one = the p-value</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>sample(x)</code></td>
+<td>permutation aléatoire de <code>x</code> (séance 1) : ici, les
+étiquettes sont redistribuées au hasard entre les pieuvres</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>mean(abs(perm) &gt;= abs(obs))</code></td>
+<td>part des mélanges donnant une différence au moins aussi grande (dans
+un sens ou l’autre) que celle observée = la p-value</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="en">
+<p>The observed difference (solid line) sits well inside the cloud of
+differences produced by shuffling: such a difference happens in about 97
+% of shuffles. <strong>No evidence</strong> that the fisher’s sex
+matters (p = 0.97).</p>
+<p>Now the main question of the closure: are octopuses heavier in the
+<strong>reopened</strong> area than in the <strong>open</strong>
+area?</p>
+</div>
+<div class="fr">
+<p>La différence observée (trait plein) se situe bien à l’intérieur du
+nuage des différences produites par les mélanges : une telle différence
+arrive dans environ 97 % des mélanges. <strong>Pas de preuve</strong>
+que le sexe du pêcheur compte (p = 0.97).</p>
+<p>Maintenant la question principale de la fermeture : les pieuvres
+sont-elles plus lourdes dans la zone <strong>rouverte</strong> que dans
+la zone <strong>ouverte</strong> ?</p>
+</div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>obs2 <span class="ot">&lt;-</span> <span class="fu">mean</span>(oc<span class="sc">$</span>weight_g[oc<span class="sc">$</span>area <span class="sc">==</span> <span class="st">&quot;reopened&quot;</span>]) <span class="sc">-</span> <span class="fu">mean</span>(oc<span class="sc">$</span>weight_g[oc<span class="sc">$</span>area <span class="sc">==</span> <span class="st">&quot;open&quot;</span>])</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">6</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>perm2 <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">5000</span>, {</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  a <span class="ot">&lt;-</span> <span class="fu">sample</span>(oc<span class="sc">$</span>area)</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>  <span class="fu">mean</span>(oc<span class="sc">$</span>weight_g[a <span class="sc">==</span> <span class="st">&quot;reopened&quot;</span>]) <span class="sc">-</span> <span class="fu">mean</span>(oc<span class="sc">$</span>weight_g[a <span class="sc">==</span> <span class="st">&quot;open&quot;</span>])</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>})</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>obs2</span></code></pre></div>
+<pre><code>#&gt; [1] 349.3041</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">max</span>(<span class="fu">abs</span>(perm2))                    <span class="co"># the largest difference chance produced in 5,000 shuffles</span></span></code></pre></div>
+<pre><code>#&gt; [1] 170.527</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">abs</span>(perm2) <span class="sc">&gt;=</span> <span class="fu">abs</span>(obs2))      <span class="co"># p-value: 0 shuffles out of 5,000 -&gt; p &lt; 1/5000</span></span></code></pre></div>
+<pre><code>#&gt; [1] 0</code></pre>
+<div class="en">
+<p>In 5,000 shuffles, chance never produced a difference as large as 349
+g. We report <strong>p &lt; 0.001</strong> (never “p = 0”): the data are
+very unlikely under H0, so we reject it. The difference is
+<strong>real</strong> — but the test does not say <em>why</em> (Session
+1: this is an observational comparison of two villages).</p>
+</div>
+<div class="fr">
+<p>En 5 000 mélanges, le hasard n’a jamais produit une différence aussi
+grande que 349 g. On écrit <strong>p &lt; 0,001</strong> (jamais « p = 0
+») : les données sont très improbables sous H0, on la rejette donc. La
+différence est <strong>réelle</strong> — mais le test ne dit pas
+<em>pourquoi</em> (séance 1 : c’est une comparaison observationnelle de
+deux villages).</p>
+</div>
+</div>
+<div id="pvalue" class="section level2">
+<h2><span class="en">What a p-value is — and is not</span><span
+class="fr">Ce qu’est une p-value — et ce qu’elle n’est pas</span></h2>
+<div class="en">
+<p><strong>It is:</strong> the probability of data at least as extreme
+as ours <strong>if H0 were true</strong>. Small p → the data are
+surprising under H0.</p>
+<p><strong>It is not:</strong></p>
+<ul>
+<li>the probability that H0 is true (p = 0.03 does <strong>not</strong>
+mean “3 % chance there is no effect”);</li>
+<li>the probability that the result is due to chance;</li>
+<li>a measure of the <strong>size</strong> or the
+<strong>importance</strong> of the effect (a tiny effect can give a tiny
+p with a huge sample);</li>
+<li>a proof of “no effect” when it is large: <strong>absence of evidence
+is not evidence of absence</strong> — maybe the sample was too small
+(power, Session 11).</li>
+</ul>
+<p>By convention, p &lt; α = 0.05 is called “statistically significant”.
+The 0.05 threshold is arbitrary: p = 0.049 and p = 0.051 carry the same
+evidence. Report the <strong>exact p-value</strong> (e.g. p = 0.034),
+not only “p &lt; 0.05” or stars.</p>
+</div>
+<div class="fr">
+<p><strong>C’est :</strong> la probabilité de données au moins aussi
+extrêmes que les nôtres <strong>si H0 était vraie</strong>. p petite →
+les données sont surprenantes sous H0.</p>
+<p><strong>Ce n’est pas :</strong></p>
+<ul>
+<li>la probabilité que H0 soit vraie (p = 0,03 ne veut
+<strong>pas</strong> dire « 3 % de chances qu’il n’y ait pas d’effet »)
+;</li>
+<li>la probabilité que le résultat soit dû au hasard ;</li>
+<li>une mesure de la <strong>taille</strong> ou de
+l’<strong>importance</strong> de l’effet (un effet minuscule peut donner
+une p minuscule avec un énorme échantillon) ;</li>
+<li>une preuve d’« absence d’effet » quand elle est grande :
+<strong>l’absence de preuve n’est pas la preuve de l’absence</strong> —
+l’échantillon était peut-être trop petit (puissance, séance 11).</li>
+</ul>
+<p>Par convention, p &lt; α = 0,05 est dite « statistiquement
+significative ». Le seuil 0,05 est arbitraire : p = 0,049 et p = 0,051
+apportent la même preuve. Donnez la <strong>p-value exacte</strong> (ex.
+p = 0,034), pas seulement « p &lt; 0,05 » ou des étoiles.</p>
+</div>
+</div>
+<div id="one-sample" class="section level2">
+<h2><span class="en">The one-sample t-test</span><span class="fr">Le
+test t à un échantillon</span></h2>
+<div class="en">
+<p>Shuffling needs two groups. With one sample and a <strong>reference
+value</strong> μ₀, theory gives the null distribution directly. Example:
+the fisheries service considers a fishery healthy if the mean octopus
+landed weighs <strong>at least 700 g</strong>. In the
+<strong>open</strong> area, is the mean weight different from 700 g?</p>
+<ul>
+<li>H0: μ = 700 g; H1: μ ≠ 700 g (two-sided).</li>
+<li>Statistic: <strong>t = (x̄ − μ₀) / SE</strong>: the distance to 700
+g, in standard errors.</li>
+<li>Under H0, t follows a <em>t</em> distribution with n − 1 df (Session
+5).</li>
+</ul>
+</div>
+<div class="fr">
+<p>Le mélange demande deux groupes. Avec un seul échantillon et une
+<strong>valeur de référence</strong> μ₀, la théorie donne directement la
+distribution sous H0. Exemple : le service des pêches considère qu’une
+pêcherie est en bonne santé si la pieuvre moyenne débarquée pèse
+<strong>au moins 700 g</strong>. Dans la zone <strong>ouverte</strong>,
+le poids moyen diffère-t-il de 700 g ?</p>
+<ul>
+<li>H0 : μ = 700 g ; H1 : μ ≠ 700 g (bilatéral).</li>
+<li>Statistique : <strong>t = (x̄ − μ₀) / ES</strong> : la distance à 700
+g, en erreurs standard.</li>
+<li>Sous H0, t suit une loi de <em>t</em> à n − 1 ddl (séance 5).</li>
+</ul>
+</div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>wo <span class="ot">&lt;-</span> oc<span class="sc">$</span>weight_g[oc<span class="sc">$</span>area <span class="sc">==</span> <span class="st">&quot;open&quot;</span>]</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(wo)</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>t_stat <span class="ot">&lt;-</span> (<span class="fu">mean</span>(wo) <span class="sc">-</span> <span class="dv">700</span>) <span class="sc">/</span> (<span class="fu">sd</span>(wo) <span class="sc">/</span> <span class="fu">sqrt</span>(n))</span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>t_stat</span></code></pre></div>
+<pre><code>#&gt; [1] -2.775127</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="dv">2</span> <span class="sc">*</span> <span class="fu">pt</span>(<span class="sc">-</span><span class="fu">abs</span>(t_stat), <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">1</span>)          <span class="co"># two-sided p-value &quot;by hand&quot;</span></span></code></pre></div>
+<pre><code>#&gt; [1] 0.006179812</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">t.test</span>(wo, <span class="at">mu =</span> <span class="dv">700</span>)                      <span class="co"># the same with t.test()</span></span></code></pre></div>
+<pre><code>#&gt; 
+#&gt;  One Sample t-test
+#&gt; 
+#&gt; data:  wo
+#&gt; t = -2.7751, df = 159, p-value = 0.00618
+#&gt; alternative hypothesis: true mean is not equal to 700
+#&gt; 95 percent confidence interval:
+#&gt;  581.4663 680.0337
+#&gt; sample estimates:
+#&gt; mean of x 
+#&gt;    630.75</code></pre>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>pt(q, df)</code></td>
+<td>P(T ≤ q) for a <em>t</em> distribution;
+<code>2 * pt(-abs(t), df)</code> = the two tails beyond ±t</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>t.test(x, mu, alternative, conf.level)</code></td>
+<td>one-sample t-test of H0: mean of <code>x</code> =
+<code>mu</code></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>  <code>mu</code></td>
+<td>the reference value μ₀</td>
+<td>a number (default 0)</td>
+</tr>
+<tr class="even">
+<td>  <code>alternative</code></td>
+<td><code>"two.sided"</code> (default): μ ≠ μ₀; <code>"less"</code>: μ
+&lt; μ₀; <code>"greater"</code>: μ &gt; μ₀</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>pt(q, df)</code></td>
+<td>P(T ≤ q) pour une loi de <em>t</em> ;
+<code>2 * pt(-abs(t), df)</code> = les deux queues au-delà de ±t</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>t.test(x, mu, alternative, conf.level)</code></td>
+<td>test t à un échantillon de H0 : moyenne de <code>x</code> =
+<code>mu</code></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>  <code>mu</code></td>
+<td>la valeur de référence μ₀</td>
+<td>un nombre (défaut 0)</td>
+</tr>
+<tr class="even">
+<td>  <code>alternative</code></td>
+<td><code>"two.sided"</code> (défaut) : μ ≠ μ₀ ; <code>"less"</code> : μ
+&lt; μ₀ ; <code>"greater"</code> : μ &gt; μ₀</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="en">
+<p>How to read the output: <code>t</code> and <code>df</code>; the
+<code>p-value</code>; the <strong>95 % CI</strong> of the mean (581 to
+680 g) — it does <strong>not</strong> contain 700, which is the same
+conclusion as p &lt; 0.05 (a two-sided test at α = 0.05 rejects μ₀
+exactly when the 95 % CI excludes μ₀). <strong>Report:</strong> “In the
+open area, octopuses weighed on average 631 g (95 % CI 581–680 g), below
+the 700 g reference (one-sample t-test, t = −2.78, df = 159, p =
+0.006).”</p>
+</div>
+<div class="fr">
+<p>Lecture de la sortie : <code>t</code> et <code>df</code> ; la
+<code>p-value</code> ; l’<strong>IC à 95 %</strong> de la moyenne (581 à
+680 g) — il ne contient <strong>pas</strong> 700, ce qui est la même
+conclusion que p &lt; 0,05 (un test bilatéral au seuil α = 0,05 rejette
+μ₀ exactement quand l’IC à 95 % exclut μ₀). <strong>Rédaction :</strong>
+« Dans la zone ouverte, les pieuvres pesaient en moyenne 631 g (IC 95 %
+581–680 g), en dessous de la référence de 700 g (test t à un
+échantillon, t = −2,78, ddl = 159, p = 0,006). »</p>
+</div>
+<div id="one-sided-or-two-sidedunilatéral-ou-bilatéral"
+class="section level3">
+<h3><span class="en">One-sided or two-sided?</span><span
+class="fr">Unilatéral ou bilatéral ?</span></h3>
+<div class="en">
+<p>A <strong>one-sided</strong> test (<code>alternative = "less"</code>)
+looks only in one direction and halves the p-value. It is justified only
+if the direction was fixed <strong>before</strong> seeing the data
+<strong>and</strong> a difference in the other direction would be
+treated exactly like “no difference”. In practice, use
+<strong>two-sided</strong> tests unless you have a strong,
+pre-registered reason.</p>
+</div>
+<div class="fr">
+<p>Un test <strong>unilatéral</strong>
+(<code>alternative = "less"</code>) ne regarde que dans un sens et
+divise la p-value par deux. Il n’est justifié que si le sens a été fixé
+<strong>avant</strong> de voir les données <strong>et</strong> qu’une
+différence dans l’autre sens serait traitée exactement comme « pas de
+différence ». En pratique, utilisez des tests
+<strong>bilatéraux</strong> sauf raison forte et décidée à l’avance.</p>
+</div>
+</div>
+</div>
+<div id="errors" class="section level2">
+<h2><span class="en">Two kinds of errors</span><span class="fr">Deux
+sortes d’erreurs</span></h2>
+<figure class="svg-fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 250" role="img" aria-label="Type I and type II errors" font-family="Source Sans 3, Arial, sans-serif">
+<g font-size="15" text-anchor="middle">
+<text class="en" x="470" y="22" font-weight="700" fill="#0b3d5c">The truth (unknown)</text><text class="fr" x="470" y="22" font-weight="700" fill="#0b3d5c">La réalité (inconnue)</text>
+<rect x="250" y="34" width="220" height="40" fill="#0b3d5c"/><rect x="470" y="34" width="220" height="40" fill="#1b7f8c"/>
+<text class="en" x="360" y="60" fill="#fff" font-weight="700">H0 true (no effect)</text><text class="fr" x="360" y="60" fill="#fff" font-weight="700">H0 vraie (pas d'effet)</text>
+<text class="en" x="580" y="60" fill="#fff" font-weight="700">H0 false (real effect)</text><text class="fr" x="580" y="60" fill="#fff" font-weight="700">H0 fausse (effet réel)</text>
+<rect x="30" y="74" width="220" height="80" fill="#f6f1e7" stroke="#fff"/><rect x="30" y="154" width="220" height="80" fill="#f6f1e7" stroke="#fff"/>
+<text class="en" x="140" y="110" font-weight="700" fill="#0b3d5c">Test: reject H0</text><text class="fr" x="140" y="110" font-weight="700" fill="#0b3d5c">Test : rejeter H0</text>
+<text class="en" x="140" y="130" fill="#5d6b75" font-size="13">p &lt; α, "significant"</text><text class="fr" x="140" y="130" fill="#5d6b75" font-size="13">p &lt; α, « significatif »</text>
+<text class="en" x="140" y="190" font-weight="700" fill="#0b3d5c">Test: do not reject H0</text><text class="fr" x="140" y="190" font-weight="700" fill="#0b3d5c">Test : ne pas rejeter H0</text>
+<text class="en" x="140" y="210" fill="#5d6b75" font-size="13">p ≥ α</text><text class="fr" x="140" y="210" fill="#5d6b75" font-size="13">p ≥ α</text>
+<rect x="250" y="74" width="220" height="80" fill="#fdf0eb" stroke="#d9694a" stroke-width="2"/>
+<text class="en" x="360" y="108" font-weight="700" fill="#d9694a">Type I error</text><text class="fr" x="360" y="108" font-weight="700" fill="#d9694a">Erreur de type I</text>
+<text class="en" x="360" y="130" fill="#3c4a52" font-size="13">false positive · probability α</text><text class="fr" x="360" y="130" fill="#3c4a52" font-size="13">faux positif · probabilité α</text>
+<rect x="470" y="74" width="220" height="80" fill="#eef5ea" stroke="#4a7d3a" stroke-width="2"/>
+<text class="en" x="580" y="108" font-weight="700" fill="#4a7d3a">Correct: detection</text><text class="fr" x="580" y="108" font-weight="700" fill="#4a7d3a">Correct : détection</text>
+<text class="en" x="580" y="130" fill="#3c4a52" font-size="13">power = 1 − β</text><text class="fr" x="580" y="130" fill="#3c4a52" font-size="13">puissance = 1 − β</text>
+<rect x="250" y="154" width="220" height="80" fill="#eef5ea" stroke="#4a7d3a" stroke-width="2"/>
+<text class="en" x="360" y="188" font-weight="700" fill="#4a7d3a">Correct</text><text class="fr" x="360" y="188" font-weight="700" fill="#4a7d3a">Correct</text>
+<text class="en" x="360" y="210" fill="#3c4a52" font-size="13">probability 1 − α</text><text class="fr" x="360" y="210" fill="#3c4a52" font-size="13">probabilité 1 − α</text>
+<rect x="470" y="154" width="220" height="80" fill="#fdf0eb" stroke="#d9694a" stroke-width="2"/>
+<text class="en" x="580" y="188" font-weight="700" fill="#d9694a">Type II error</text><text class="fr" x="580" y="188" font-weight="700" fill="#d9694a">Erreur de type II</text>
+<text class="en" x="580" y="210" fill="#3c4a52" font-size="13">false negative · probability β</text><text class="fr" x="580" y="210" fill="#3c4a52" font-size="13">faux négatif · probabilité β</text>
+</g></svg><figcaption><span class="en">The four possible outcomes of a test. α is fixed by you (usually 0.05); β depends on the effect size, the variability and n.</span><span class="fr">Les quatre issues possibles d'un test. α est fixé par vous (en général 0,05) ; β dépend de la taille de l'effet, de la variabilité et de n.</span></figcaption></figure>
+<div class="en">
+<ul>
+<li><strong>Type I error</strong> (false positive): rejecting H0 when it
+is true. Its probability is α: with α = 0.05, <strong>1 test in
+20</strong> on pure noise is “significant”.</li>
+<li><strong>Type II error</strong> (false negative): not rejecting H0
+when there is a real effect. Its probability is β.</li>
+<li><strong>Power</strong> = 1 − β: the probability of detecting a real
+effect. Small samples have low power (Session 11).</li>
+</ul>
+<p>Let us check α by simulation: 2,000 samples drawn from a population
+where H0 is <strong>true</strong>.</p>
+</div>
+<div class="fr">
+<ul>
+<li><strong>Erreur de type I</strong> (faux positif) : rejeter H0 alors
+qu’elle est vraie. Sa probabilité est α : avec α = 0,05, <strong>1 test
+sur 20</strong> sur du pur bruit est « significatif ».</li>
+<li><strong>Erreur de type II</strong> (faux négatif) : ne pas rejeter
+H0 alors qu’il existe un vrai effet. Sa probabilité est β.</li>
+<li><strong>Puissance</strong> = 1 − β : la probabilité de détecter un
+effet réel. Les petits échantillons ont une faible puissance (séance
+11).</li>
+</ul>
+<p>Vérifions α par simulation : 2 000 échantillons tirés d’une
+population où H0 est <strong>vraie</strong>.</p>
+</div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">66</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>p_null <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">2000</span>, <span class="fu">t.test</span>(<span class="fu">rnorm</span>(<span class="dv">15</span>, <span class="at">mean =</span> <span class="dv">700</span>, <span class="at">sd =</span> <span class="dv">200</span>), <span class="at">mu =</span> <span class="dv">700</span>)<span class="sc">$</span>p.value)</span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a><span class="fu">mean</span>(p_null <span class="sc">&lt;</span> <span class="fl">0.05</span>)            <span class="co"># close to 0.05: the false-positive rate</span></span></code></pre></div>
+<pre><code>#&gt; [1] 0.049</code></pre>
+<div class="en">
+<p>That is why running many tests and reporting only the significant
+ones is misleading: with 20 tests on noise, you expect one “discovery”
+(multiple testing, Session 11).</p>
+</div>
+<div class="fr">
+<p>C’est pourquoi faire beaucoup de tests et ne rapporter que les
+significatifs est trompeur : avec 20 tests sur du bruit, on s’attend à
+une « découverte » (tests multiples, séance 11).</p>
+</div>
+</div>
+<div id="importance" class="section level2">
+<h2><span class="en">Significant is not the same as
+important</span><span class="fr">Significatif n’est pas la même chose
+qu’important</span></h2>
+<div class="en">
+<p>A p-value answers “is there an effect?”; the <strong>effect
+size</strong> answers “how big?”, and its <strong>CI</strong> “how
+precisely do we know it?”. Always report the effect, in the units of the
+data:</p>
+<ul>
+<li>the difference of mean weights between areas, with its CI (Session
+7);</li>
+<li>or a standardised effect, such as <strong>Cohen’s d</strong> =
+difference / SD (≈ 0.2 small, 0.5 medium, 0.8 large — rough guides
+only).</li>
+</ul>
+<p>Whether 50 g more per octopus matters is a <strong>fisheries</strong>
+question (price, reproduction), not a statistical one.</p>
+</div>
+<div class="fr">
+<p>Une p-value répond à « y a-t-il un effet ? » ; la <strong>taille
+d’effet</strong> répond à « de quelle taille ? », et son
+<strong>IC</strong> à « avec quelle précision le connaissons-nous ? ».
+Donnez toujours l’effet, dans les unités des données :</p>
+<ul>
+<li>la différence de poids moyens entre zones, avec son IC (séance 7)
+;</li>
+<li>ou un effet standardisé, comme le <strong>d de Cohen</strong> =
+différence / ET (≈ 0,2 petit, 0,5 moyen, 0,8 grand — repères grossiers
+seulement).</li>
+</ul>
+<p>Savoir si 50 g de plus par pieuvre comptent est une question
+<strong>halieutique</strong> (prix, reproduction), pas statistique.</p>
+</div>
+</div>
+<div id="application" class="section level2">
+<h2><span class="en">Application work &amp; quiz</span><span
+class="fr">Travail d’application et quiz</span></h2>
+<div class="application">
+<div id="application-work-6" class="section level3 en">
+<h3>Application work 6</h3>
+<ol style="list-style-type: decimal">
+<li>Mean weight of octopuses in the <strong>reopened</strong> area (1
+decimal).</li>
+<li>– 4. One-sample t-test of H0: μ = <strong>900 g</strong> in the
+reopened area. Give <em>t</em> (3 decimals), the p-value (4 decimals)
+and the lower limit of the 95 % CI (1 decimal).</li>
+<li>In the <strong>open</strong> area, difference of mean weights
+<strong>spear − hook</strong> (1 decimal).</li>
+<li>Permutation test of this difference: run <strong>exactly</strong>
+<code>set.seed(60)</code> then 5,000 shuffles of the <code>gear</code>
+labels <strong>of the open area</strong>, as in the session, and give
+the two-sided p-value (3 decimals).</li>
+<li>– 10. Interpretation.</li>
+</ol>
+</div>
+<div id="travail-dapplication-6" class="section level3 fr">
+<h3>Travail d’application 6</h3>
+<ol style="list-style-type: decimal">
+<li>Poids moyen des pieuvres de la zone <strong>rouverte</strong> (1
+décimale).</li>
+<li>– 4. Test t à un échantillon de H0 : μ = <strong>900 g</strong> dans
+la zone rouverte. Donnez <em>t</em> (3 décimales), la p-value (4
+décimales) et la limite inférieure de l’IC à 95 % (1 décimale).</li>
+<li>Dans la zone <strong>ouverte</strong>, différence des poids moyens
+<strong>spear − hook</strong> (harpon − crochet, 1 décimale).</li>
+<li>Test de permutation de cette différence : exécutez
+<strong>exactement</strong> <code>set.seed(60)</code> puis 5 000
+mélanges des étiquettes <code>gear</code> <strong>de la zone
+ouverte</strong>, comme dans la séance, et donnez la p-value bilatérale
+(3 décimales).</li>
+<li>– 10. Interprétation.</li>
+</ol>
+</div>
+</div>
+<div class="hint">
+<div class="en">
+<p>Q6: <code>op &lt;- oc[oc$area == "open", ]</code>, then inside
+<code>replicate()</code>: <code>s &lt;- sample(op$gear)</code> and the
+difference of means of <code>op$weight_g</code> for
+<code>s == "spear"</code> and <code>s == "hook"</code>. The seed must be
+set just before <code>replicate()</code>.</p>
+</div>
+<div class="fr">
+<p>Q6 : <code>op &lt;- oc[oc$area == "open", ]</code>, puis dans
+<code>replicate()</code> : <code>s &lt;- sample(op$gear)</code> et la
+différence des moyennes de <code>op$weight_g</code> pour
+<code>s == "spear"</code> et <code>s == "hook"</code>. La graine doit
+être fixée juste avant <code>replicate()</code>.</p>
+</div>
+</div>
+<div id="quiz-t06" class="quiz" data-quiz-id="t06"
+data-q="W3sidHlwZSI6Im51bSIsImVuIjoiMS4gTWVhbiB3ZWlnaHQsIHJlb3BlbmVkIGFyZWE/IiwiZnIiOiIxLiBQb2lkcyBtb3llbiwgem9uZSByb3V2ZXJ0ZSA/IiwiYW5zd2VyIjo5ODAuMSwidG9sIjowLjA2LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiMi4gdCBzdGF0aXN0aWMgKEgwOiDOvCA9IDkwMCk/IiwiZnIiOiIyLiBTdGF0aXN0aXF1ZSB0IChIMCA6IM68ID0gOTAwKSA/IiwiYW5zd2VyIjoyLjEzLCJ0b2wiOjAuMDAwNiwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJudW0iLCJlbiI6IjMuIHAtdmFsdWU/IiwiZnIiOiIzLiBwLXZhbHVlID8iLCJhbnN3ZXIiOjAuMDM0NSwidG9sIjo2ZS0wNSwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJudW0iLCJlbiI6IjQuIExvd2VyIGxpbWl0IG9mIHRoZSA5NSAlIENJPyIsImZyIjoiNC4gTGltaXRlIGluZsOpcmlldXJlIGRlIGwnSUMgw6AgOTUgJSA/IiwiYW5zd2VyIjo5MDUuOSwidG9sIjowLjA2LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiNS4gRGlmZmVyZW5jZSBzcGVhciDiiJIgaG9vaywgb3BlbiBhcmVhIChnKT8iLCJmciI6IjUuIERpZmbDqXJlbmNlIGhhcnBvbiDiiJIgY3JvY2hldCwgem9uZSBvdXZlcnRlIChnKSA/IiwiYW5zd2VyIjotMTcuOCwidG9sIjowLjA2LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiNi4gUGVybXV0YXRpb24gcC12YWx1ZT8iLCJmciI6IjYuIHAtdmFsdWUgZGUgcGVybXV0YXRpb24gPyIsImFuc3dlciI6MC43NTYsInRvbCI6MC4wMDA2LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im1jcSIsImVuIjoiNy4gcCA9IDAuMDMgbWVhbnPigKYiLCJmciI6IjcuIHAgPSAwLDAzIHNpZ25pZmll4oCmIiwib3B0aW9uc19lbiI6WyJ0aGVyZSBpcyBhIDMgJSBjaGFuY2UgdGhhdCBIMCBpcyB0cnVlIiwiaWYgSDAgd2VyZSB0cnVlLCBkYXRhIGF0IGxlYXN0IHRoaXMgZXh0cmVtZSB3b3VsZCBvY2N1ciBhYm91dCAzICUgb2YgdGhlIHRpbWUiLCJ0aGUgZWZmZWN0IGlzIHNtYWxsIiwiOTcgJSBvZiB0aGUgZGF0YSBzdXBwb3J0IEgxIl0sIm9wdGlvbnNfZnIiOlsiaWwgeSBhIDMgJSBkZSBjaGFuY2VzIHF1ZSBIMCBzb2l0IHZyYWllIiwic2kgSDAgw6l0YWl0IHZyYWllLCBkZXMgZG9ubsOpZXMgYXUgbW9pbnMgYXVzc2kgZXh0csOqbWVzIGFycml2ZXJhaWVudCBlbnZpcm9uIDMgJSBkdSB0ZW1wcyIsImwnZWZmZXQgZXN0IHBldGl0IiwiOTcgJSBkZXMgZG9ubsOpZXMgc291dGllbm5lbnQgSDEiXSwiYW5zd2VyIjoxfSx7InR5cGUiOiJtY3EiLCJlbiI6IjguIEEgc3R1ZHkgZmluZHMgcCA9IDAuNDAgd2l0aCA4IHNpdGVzIHBlciBncm91cC4gVGhlIGJlc3QgY29uY2x1c2lvbiBpc+KApiIsImZyIjoiOC4gVW5lIMOpdHVkZSB0cm91dmUgcCA9IDAsNDAgYXZlYyA4IHNpdGVzIHBhciBncm91cGUuIExhIG1laWxsZXVyZSBjb25jbHVzaW9uIGVzdOKApiIsIm9wdGlvbnNfZW4iOlsidGhlcmUgaXMgbm8gZGlmZmVyZW5jZSIsIm5vIGV2aWRlbmNlIG9mIGEgZGlmZmVyZW5jZTsgdGhlIHN0dWR5IG1heSBsYWNrIHBvd2VyIiwiSDAgaXMgcHJvdmVuIiwidGhlIGRpZmZlcmVuY2UgaXMgNDAgJSJdLCJvcHRpb25zX2ZyIjpbImlsIG4neSBhIHBhcyBkZSBkaWZmw6lyZW5jZSIsInBhcyBkZSBwcmV1dmUgZCd1bmUgZGlmZsOpcmVuY2UgOyBsJ8OpdHVkZSBtYW5xdWUgcGV1dC3DqnRyZSBkZSBwdWlzc2FuY2UiLCJIMCBlc3QgcHJvdXbDqWUiLCJsYSBkaWZmw6lyZW5jZSBlc3QgZGUgNDAgJSJdLCJhbnN3ZXIiOjF9LHsidHlwZSI6Im1jcSIsImVuIjoiOS4gUmVqZWN0aW5nIEgwIHdoZW4gaXQgaXMgYWN0dWFsbHkgdHJ1ZSBpcyBh4oCmIiwiZnIiOiI5LiBSZWpldGVyIEgwIGFsb3JzIHF1J2VsbGUgZXN0IHZyYWllIGVzdCB1bmXigKYiLCJvcHRpb25zX2VuIjpbInR5cGUgSSBlcnJvciAoZmFsc2UgcG9zaXRpdmUpIiwidHlwZSBJSSBlcnJvciAoZmFsc2UgbmVnYXRpdmUpIiwicG93ZXIiLCJjb25maWRlbmNlIGxldmVsIl0sIm9wdGlvbnNfZnIiOlsiZXJyZXVyIGRlIHR5cGUgSSAoZmF1eCBwb3NpdGlmKSIsImVycmV1ciBkZSB0eXBlIElJIChmYXV4IG7DqWdhdGlmKSIsInB1aXNzYW5jZSIsIm5pdmVhdSBkZSBjb25maWFuY2UiXSwiYW5zd2VyIjowfSx7InR5cGUiOiJtY3EiLCJlbiI6IjEwLiBUaGUgOTUgJSBDSSBvZiBhIG1lYW4gaXMgODEy4oCTOTY4IGcuIEEgdHdvLXNpZGVkIHRlc3Qgb2YgSDA6IM68ID0gOTAwIGcgYXQgzrEgPSAwLjA14oCmIiwiZnIiOiIxMC4gTCdJQyDDoCA5NSAlIGQndW5lIG1veWVubmUgZXN0IDgxMuKAkzk2OCBnLiBVbiB0ZXN0IGJpbGF0w6lyYWwgZGUgSDAgOiDOvCA9IDkwMCBnIGF1IHNldWlsIM6xID0gMCwwNeKApiIsIm9wdGlvbnNfZW4iOlsicmVqZWN0cyBIMCIsImRvZXMgbm90IHJlamVjdCBIMCwgYmVjYXVzZSA5MDAgaXMgaW5zaWRlIHRoZSBDSSIsImNhbm5vdCBiZSBkZWNpZGVkIiwicmVqZWN0cyBIMCBvbmx5IGlmIG4gPiAzMCJdLCJvcHRpb25zX2ZyIjpbInJlamV0dGUgSDAiLCJuZSByZWpldHRlIHBhcyBIMCwgY2FyIDkwMCBlc3QgZGFucyBsJ0lDIiwibmUgcGV1dCBwYXMgw6p0cmUgZMOpY2lkw6kiLCJyZWpldHRlIEgwIHNldWxlbWVudCBzaSBuID4gMzAiXSwiYW5zd2VyIjoxfV0=">
+
+</div>
+<div class="solution" data-quiz="t06">
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>oc <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/octopus_catch.csv&quot;</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a>wr <span class="ot">&lt;-</span> oc<span class="sc">$</span>weight_g[oc<span class="sc">$</span>area <span class="sc">==</span> <span class="st">&quot;reopened&quot;</span>]</span>
+<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a><span class="fu">mean</span>(wr)                                                   <span class="co"># 1</span></span>
+<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a><span class="fu">t.test</span>(wr, <span class="at">mu =</span> <span class="dv">900</span>)                                       <span class="co"># 2, 3, 4</span></span>
+<span id="cb20-5"><a href="#cb20-5" tabindex="-1"></a>op <span class="ot">&lt;-</span> oc[oc<span class="sc">$</span>area <span class="sc">==</span> <span class="st">&quot;open&quot;</span>, ]</span>
+<span id="cb20-6"><a href="#cb20-6" tabindex="-1"></a>obs <span class="ot">&lt;-</span> <span class="fu">mean</span>(op<span class="sc">$</span>weight_g[op<span class="sc">$</span>gear <span class="sc">==</span> <span class="st">&quot;spear&quot;</span>]) <span class="sc">-</span> <span class="fu">mean</span>(op<span class="sc">$</span>weight_g[op<span class="sc">$</span>gear <span class="sc">==</span> <span class="st">&quot;hook&quot;</span>])</span>
+<span id="cb20-7"><a href="#cb20-7" tabindex="-1"></a>obs                                                        <span class="co"># 5</span></span>
+<span id="cb20-8"><a href="#cb20-8" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">60</span>)</span>
+<span id="cb20-9"><a href="#cb20-9" tabindex="-1"></a>pg <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">5000</span>, {</span>
+<span id="cb20-10"><a href="#cb20-10" tabindex="-1"></a>  s <span class="ot">&lt;-</span> <span class="fu">sample</span>(op<span class="sc">$</span>gear)</span>
+<span id="cb20-11"><a href="#cb20-11" tabindex="-1"></a>  <span class="fu">mean</span>(op<span class="sc">$</span>weight_g[s <span class="sc">==</span> <span class="st">&quot;spear&quot;</span>]) <span class="sc">-</span> <span class="fu">mean</span>(op<span class="sc">$</span>weight_g[s <span class="sc">==</span> <span class="st">&quot;hook&quot;</span>])</span>
+<span id="cb20-12"><a href="#cb20-12" tabindex="-1"></a>})</span>
+<span id="cb20-13"><a href="#cb20-13" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">abs</span>(pg) <span class="sc">&gt;=</span> <span class="fu">abs</span>(obs))                                  <span class="co"># 6</span></span>
+<span id="cb20-14"><a href="#cb20-14" tabindex="-1"></a><span class="co"># 7: probability of data this extreme IF H0 were true   8: no evidence (low power?)</span></span>
+<span id="cb20-15"><a href="#cb20-15" tabindex="-1"></a><span class="co"># 9: type I error   10: 900 is inside the CI -&gt; not rejected</span></span></code></pre></div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

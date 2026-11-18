@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>R4Marine Stats · Glossary</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.1/jquery-3.6.1.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<!-- header.html: inserted inside <head> of every page (see _site.yml) -->
+<!-- config.js (settings) and quiz_index.js (made by R/build_site.R) first,
+     then course.js (the behaviour that reads them) -->
+<script src="assets/config.js"></script>
+<script src="assets/quiz_index.js"></script>
+<script src="assets/course.js"></script>
+<meta name="author" content="Aroo Falinirina">
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+
+
+
+
+<link rel="stylesheet" href="assets/course.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">R4Marine Stats</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Sessions
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="00-start.html">0 · Why statistics?</a>
+    </li>
+    <li>
+      <a href="01-design.html">1 · Study design &amp; sampling</a>
+    </li>
+    <li>
+      <a href="02-describe.html">2 · Describing data</a>
+    </li>
+    <li>
+      <a href="03-explore.html">3 · Exploring distributions</a>
+    </li>
+    <li>
+      <a href="04-probability.html">4 · Probability &amp; distributions</a>
+    </li>
+    <li>
+      <a href="05-estimation.html">5 · Standard error &amp; CIs</a>
+    </li>
+    <li>
+      <a href="06-testing.html">6 · Hypothesis tests &amp; p-values</a>
+    </li>
+    <li>
+      <a href="07-two-groups.html">7 · Comparing two groups</a>
+    </li>
+    <li>
+      <a href="08-anova.html">8 · ANOVA &amp; Kruskal–Wallis</a>
+    </li>
+    <li>
+      <a href="09-categorical.html">9 · Proportions &amp; χ²</a>
+    </li>
+    <li>
+      <a href="10-regression.html">10 · Correlation &amp; regression</a>
+    </li>
+    <li>
+      <a href="11-power-reporting.html">11 · Power, multiple tests, reporting</a>
+    </li>
+    <li>
+      <a href="12-practice.html">12 · Practice</a>
+    </li>
+    <li>
+      <a href="13-final-project.html">13 · Final project</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Resources
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="choose-test.html">Which test? (decision guide)</a>
+    </li>
+    <li>
+      <a href="cheatsheet.html">Cheatsheet</a>
+    </li>
+    <li>
+      <a href="glossary.html">Glossary EN–FR</a>
+    </li>
+    <li>
+      <a href="common-errors.html">Common errors &amp; pitfalls</a>
+    </li>
+    <li>
+      <a href="resources.html">To go further</a>
+    </li>
+    <li>
+      <a href="help.html">Need help?</a>
+    </li>
+    <li>
+      <a href="whats-new.html">What's new</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore"><span class="en">Glossary English –
+French</span><span class="fr">Glossaire anglais – français</span></h1>
+<h3 class="subtitle"><span class="en">The words of statistics in both
+languages, with the session where they appear</span><span class="fr">Les
+mots des statistiques dans les deux langues, avec la séance où ils
+apparaissent</span></h3>
+
+</div>
+
+
+<table>
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>English</th>
+<th>Français</th>
+<th><span class="en">Short definition</span><span class="fr">Définition
+courte</span></th>
+<th><span class="en">Session</span><span class="fr">Séance</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>alternative hypothesis (H1)</td>
+<td>hypothèse alternative (H1)</td>
+<td><span class="en">there is an effect / a difference</span><span
+class="fr">il y a un effet / une différence</span></td>
+<td>6</td>
+</tr>
+<tr class="even">
+<td>analysis of variance (ANOVA)</td>
+<td>analyse de variance (ANOVA)</td>
+<td><span class="en">compares several means using variances</span><span
+class="fr">compare plusieurs moyennes à l’aide de variances</span></td>
+<td>8</td>
+</tr>
+<tr class="odd">
+<td>bias</td>
+<td>biais</td>
+<td><span class="en">systematic difference between estimate and
+truth</span><span class="fr">écart systématique entre estimation et
+vérité</span></td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>bootstrap</td>
+<td>bootstrap (ré-échantillonnage)</td>
+<td><span class="en">resampling the sample with replacement</span><span
+class="fr">ré-échantillonner l’échantillon avec remise</span></td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td>categorical (nominal, ordinal)</td>
+<td>catégorielle (nominale, ordinale)</td>
+<td><span class="en">variable made of categories (unordered,
+ordered)</span><span class="fr">variable faite de catégories (sans
+ordre, ordonnées)</span></td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>central limit theorem</td>
+<td>théorème central limite</td>
+<td><span class="en">means of large samples are ≈ normal</span><span
+class="fr">les moyennes de grands échantillons sont ≈
+normales</span></td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td>coefficient of variation</td>
+<td>coefficient de variation</td>
+<td><span class="en">SD / mean × 100</span><span class="fr">ET / moyenne
+× 100</span></td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td>confidence interval (CI)</td>
+<td>intervalle de confiance (IC)</td>
+<td><span class="en">range of plausible values for a
+parameter</span><span class="fr">intervalle de valeurs plausibles d’un
+paramètre</span></td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td>confounding variable</td>
+<td>variable de confusion</td>
+<td><span class="en">related to both “treatment” and
+response</span><span class="fr">liée à la fois au « traitement » et à la
+réponse</span></td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>contingency table</td>
+<td>tableau de contingence</td>
+<td><span class="en">two-way table of counts</span><span
+class="fr">tableau croisé d’effectifs</span></td>
+<td>2, 9</td>
+</tr>
+<tr class="odd">
+<td>convenience sample</td>
+<td>échantillon de commodité</td>
+<td><span class="en">units chosen because easy to reach</span><span
+class="fr">unités choisies parce que faciles d’accès</span></td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>correlation coefficient</td>
+<td>coefficient de corrélation</td>
+<td><span class="en">strength of a linear (Pearson) or monotonic
+(Spearman) relation</span><span class="fr">force d’une relation linéaire
+(Pearson) ou monotone (Spearman)</span></td>
+<td>10</td>
+</tr>
+<tr class="odd">
+<td>count data</td>
+<td>données de comptage</td>
+<td><span class="en">whole numbers 0, 1, 2…</span><span
+class="fr">nombres entiers 0, 1, 2…</span></td>
+<td>0, 4</td>
+</tr>
+<tr class="even">
+<td>degrees of freedom (df)</td>
+<td>degrés de liberté (ddl)</td>
+<td><span class="en">number of independent pieces of
+information</span><span class="fr">nombre d’informations
+indépendantes</span></td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td>distribution</td>
+<td>loi (de distribution) / distribution</td>
+<td><span class="en">values a variable takes and their
+probabilities</span><span class="fr">valeurs que prend une variable et
+leurs probabilités</span></td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>effect size</td>
+<td>taille d’effet</td>
+<td><span class="en">how big the difference / relationship
+is</span><span class="fr">taille de la différence / relation</span></td>
+<td>6</td>
+</tr>
+<tr class="odd">
+<td>expected count</td>
+<td>effectif attendu (théorique)</td>
+<td><span class="en">count predicted under H0</span><span
+class="fr">effectif prédit sous H0</span></td>
+<td>9</td>
+</tr>
+<tr class="even">
+<td>experimental unit</td>
+<td>unité expérimentale</td>
+<td><span class="en">unit to which a treatment is applied</span><span
+class="fr">unité à laquelle on applique un traitement</span></td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>false discovery rate</td>
+<td>taux de fausses découvertes</td>
+<td><span class="en">expected share of false positives among
+discoveries</span><span class="fr">part attendue de faux positifs parmi
+les découvertes</span></td>
+<td>11</td>
+</tr>
+<tr class="even">
+<td>fitted value</td>
+<td>valeur ajustée (prédite)</td>
+<td><span class="en">value predicted by the model</span><span
+class="fr">valeur prédite par le modèle</span></td>
+<td>8, 10</td>
+</tr>
+<tr class="odd">
+<td>geometric mean</td>
+<td>moyenne géométrique</td>
+<td><span class="en">exp(mean(log(x)))</span><span
+class="fr">exp(mean(log(x)))</span></td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>goodness of fit</td>
+<td>ajustement (adéquation)</td>
+<td><span class="en">do counts follow expected proportions?</span><span
+class="fr">les effectifs suivent-ils des proportions attendues
+?</span></td>
+<td>9</td>
+</tr>
+<tr class="odd">
+<td>interquartile range (IQR)</td>
+<td>écart interquartile (EI)</td>
+<td><span class="en">Q3 − Q1</span><span class="fr">Q3 − Q1</span></td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td>intercept</td>
+<td>ordonnée à l’origine</td>
+<td><span class="en">value of y when x = 0</span><span class="fr">valeur
+de y quand x = 0</span></td>
+<td>10</td>
+</tr>
+<tr class="odd">
+<td>least squares</td>
+<td>moindres carrés</td>
+<td><span class="en">fit minimising the sum of squared
+residuals</span><span class="fr">ajustement minimisant la somme des
+carrés des résidus</span></td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td>mean square</td>
+<td>carré moyen</td>
+<td><span class="en">sum of squares / df</span><span class="fr">somme
+des carrés / ddl</span></td>
+<td>8</td>
+</tr>
+<tr class="odd">
+<td>median</td>
+<td>médiane</td>
+<td><span class="en">middle value</span><span class="fr">valeur du
+milieu</span></td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td>multiple testing</td>
+<td>tests multiples</td>
+<td><span class="en">many tests → more false positives</span><span
+class="fr">beaucoup de tests → plus de faux positifs</span></td>
+<td>11</td>
+</tr>
+<tr class="odd">
+<td>null hypothesis (H0)</td>
+<td>hypothèse nulle (H0)</td>
+<td><span class="en">no effect / no difference</span><span
+class="fr">pas d’effet / pas de différence</span></td>
+<td>6</td>
+</tr>
+<tr class="even">
+<td>odds ratio</td>
+<td>rapport des cotes (odds ratio)</td>
+<td><span class="en">ratio of the odds of an event in two
+groups</span><span class="fr">rapport des cotes d’un événement dans deux
+groupes</span></td>
+<td>9</td>
+</tr>
+<tr class="odd">
+<td>one-sided / two-sided test</td>
+<td>test unilatéral / bilatéral</td>
+<td><span class="en">looks in one / both directions</span><span
+class="fr">regarde dans un sens / les deux sens</span></td>
+<td>6</td>
+</tr>
+<tr class="even">
+<td>outlier</td>
+<td>valeur extrême (aberrante)</td>
+<td><span class="en">value far from the others</span><span
+class="fr">valeur éloignée des autres</span></td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td>overdispersion</td>
+<td>surdispersion</td>
+<td><span class="en">variance of counts &gt; mean (clumping)</span><span
+class="fr">variance des comptages &gt; moyenne (agrégation)</span></td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>paired data</td>
+<td>données appariées</td>
+<td><span class="en">same units measured twice</span><span
+class="fr">mêmes unités mesurées deux fois</span></td>
+<td>7</td>
+</tr>
+<tr class="odd">
+<td>parameter</td>
+<td>paramètre</td>
+<td><span class="en">value in the population (μ, σ, p)</span><span
+class="fr">valeur dans la population (μ, σ, p)</span></td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>parametric / non-parametric test</td>
+<td>test paramétrique / non paramétrique</td>
+<td><span class="en">based on values and a distribution / on
+ranks</span><span class="fr">fondé sur les valeurs et une loi / sur les
+rangs</span></td>
+<td>7</td>
+</tr>
+<tr class="odd">
+<td>permutation test</td>
+<td>test de permutation</td>
+<td><span class="en">null distribution built by shuffling
+labels</span><span class="fr">distribution sous H0 construite en
+mélangeant les étiquettes</span></td>
+<td>6</td>
+</tr>
+<tr class="even">
+<td>population</td>
+<td>population</td>
+<td><span class="en">all the units the question is about</span><span
+class="fr">toutes les unités concernées par la question</span></td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>post-hoc test</td>
+<td>test post hoc (a posteriori)</td>
+<td><span class="en">pairwise comparisons after an ANOVA</span><span
+class="fr">comparaisons par paires après une ANOVA</span></td>
+<td>8</td>
+</tr>
+<tr class="even">
+<td>power</td>
+<td>puissance</td>
+<td><span class="en">probability of detecting a real effect</span><span
+class="fr">probabilité de détecter un effet réel</span></td>
+<td>6, 11</td>
+</tr>
+<tr class="odd">
+<td>prediction interval</td>
+<td>intervalle de prédiction</td>
+<td><span class="en">range for one new observation</span><span
+class="fr">intervalle pour une nouvelle observation</span></td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td>pseudoreplication</td>
+<td>pseudo-réplication</td>
+<td><span class="en">non-independent measures treated as
+replicates</span><span class="fr">mesures non indépendantes traitées
+comme des réplicats</span></td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>p-value</td>
+<td>p-value (valeur p)</td>
+<td><span class="en">P(data at least as extreme, if H0 is
+true)</span><span class="fr">P(données au moins aussi extrêmes, si H0
+est vraie)</span></td>
+<td>6</td>
+</tr>
+<tr class="even">
+<td>quantile, quartile, percentile</td>
+<td>quantile, quartile, centile</td>
+<td><span class="en">value below which a share of data lies</span><span
+class="fr">valeur sous laquelle se trouve une part des
+données</span></td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td>random assignment</td>
+<td>attribution aléatoire (randomisation)</td>
+<td><span class="en">treatments given to units by chance</span><span
+class="fr">traitements donnés aux unités par tirage au sort</span></td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>rank</td>
+<td>rang</td>
+<td><span class="en">position of a value once sorted</span><span
+class="fr">position d’une valeur une fois triée</span></td>
+<td>7</td>
+</tr>
+<tr class="odd">
+<td>regression slope</td>
+<td>pente de régression</td>
+<td><span class="en">change in y per unit of x</span><span
+class="fr">variation de y par unité de x</span></td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td>residual</td>
+<td>résidu</td>
+<td><span class="en">observed − fitted</span><span class="fr">observé −
+ajusté</span></td>
+<td>8, 10</td>
+</tr>
+<tr class="odd">
+<td>response / predictor</td>
+<td>réponse / prédicteur (variable explicative)</td>
+<td><span class="en">variable explained / explaining</span><span
+class="fr">variable expliquée / explicative</span></td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td>sample</td>
+<td>échantillon</td>
+<td><span class="en">the units actually measured</span><span
+class="fr">les unités réellement mesurées</span></td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>sampling distribution</td>
+<td>distribution d’échantillonnage</td>
+<td><span class="en">distribution of a statistic over many
+samples</span><span class="fr">distribution d’une statistique sur de
+nombreux échantillons</span></td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td>sampling unit</td>
+<td>unité d’échantillonnage</td>
+<td><span class="en">unit independently selected; what n
+counts</span><span class="fr">unité sélectionnée indépendamment ; ce que
+n compte</span></td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>significance level (α)</td>
+<td>seuil de signification (α)</td>
+<td><span class="en">accepted risk of a false positive, often
+0.05</span><span class="fr">risque accepté de faux positif, souvent
+0,05</span></td>
+<td>6</td>
+</tr>
+<tr class="even">
+<td>skewness (right-skewed)</td>
+<td>asymétrie (asymétrique à droite)</td>
+<td><span class="en">long tail of large values</span><span
+class="fr">longue queue de grandes valeurs</span></td>
+<td>2, 3</td>
+</tr>
+<tr class="odd">
+<td>standard deviation (SD)</td>
+<td>écart-type (ET)</td>
+<td><span class="en">typical distance of values to the mean</span><span
+class="fr">distance typique des valeurs à la moyenne</span></td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td>standard error (SE)</td>
+<td>erreur standard (ES, erreur type)</td>
+<td><span class="en">precision of an estimate: SD / √n for a
+mean</span><span class="fr">précision d’une estimation : ET / √n pour
+une moyenne</span></td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td>statistic</td>
+<td>statistique</td>
+<td><span class="en">value computed on the sample (x̄, s, p̂)</span><span
+class="fr">valeur calculée sur l’échantillon (x̄, s, p̂)</span></td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>stratified sampling</td>
+<td>échantillonnage stratifié</td>
+<td><span class="en">random sample within each stratum</span><span
+class="fr">échantillon aléatoire dans chaque strate</span></td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>sum of squares</td>
+<td>somme des carrés</td>
+<td><span class="en">sum of squared deviations</span><span
+class="fr">somme des écarts au carré</span></td>
+<td>8</td>
+</tr>
+<tr class="even">
+<td>systematic sampling</td>
+<td>échantillonnage systématique</td>
+<td><span class="en">units at regular intervals</span><span
+class="fr">unités à intervalles réguliers</span></td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>type I / type II error</td>
+<td>erreur de type I / de type II</td>
+<td><span class="en">false positive / false negative</span><span
+class="fr">faux positif / faux négatif</span></td>
+<td>6</td>
+</tr>
+<tr class="even">
+<td>variance</td>
+<td>variance</td>
+<td><span class="en">mean squared deviation (n − 1)</span><span
+class="fr">écart quadratique moyen (n − 1)</span></td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td>z-score</td>
+<td>score z (cote z)</td>
+<td><span class="en">(x − mean) / SD</span><span class="fr">(x −
+moyenne) / ET</span></td>
+<td>4</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

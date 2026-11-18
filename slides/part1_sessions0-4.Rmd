@@ -1,0 +1,161 @@
+---
+title: "Introduction aux statistiques avec R"
+subtitle: "Partie 1 · Séances 0 à 4 — Variables, plan d'étude, description, probabilités"
+author: "Aroo Falinirina"
+output:
+  html_document:
+    theme: null
+    highlight: tango
+    mathjax: null
+    self_contained: true
+    css: slides.css
+    includes:
+      in_header: slides-engine.html
+---
+
+<!-- "## Titre" = one slide · "## Titre {.segue}" = section divider slide
+     <div class="notes"> = speaker notes (press N during the presentation)
+     Keys: arrows / space = navigate · F = full screen · O = overview -->
+
+```{r, include=FALSE}
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+```{r, include=FALSE}
+source("slides/_setup.R")
+```
+
+## Pourquoi des statistiques ?
+
+- Parce que **tout varie** : deux quadrats voisins, deux pêcheurs du même village…
+- Quatre métiers : **décrire**, **estimer**, **tester**, **prédire**
+- Une démarche : question → plan → données → exploration → estimation / test → rédaction
+
+`r fig_svg("stat-workflow")`
+
+<div class="notes">
+~5 min. Insister : on part de la QUESTION, pas du tableau.
+</div>
+
+## Séance 0 — Variables, populations, échantillons {.segue}
+
+## Population et échantillon
+
+| | Population (paramètre) | Échantillon (statistique) |
+|---|---|---|
+| Moyenne | μ | x̄ — `mean(x)` |
+| Écart-type | σ | s — `sd(x)` |
+| Proportion | p | p̂ — `mean(x == "yes")` |
+
+<div class="box tip">
+Toute l'inférence répond à : **à quelle distance la statistique peut-elle être du paramètre ?**
+</div>
+
+## Quatre types de variables
+
+`r fig_svg("variable-types")`
+
+## Dans R : facteurs et proportions
+
+```{r}
+fs$education <- factor(fs$education, levels = c("none", "primary", "secondary"), ordered = TRUE)
+table(fs$education)
+mean(fs$lmma_member == "yes")
+```
+
+## Séance 1 — Plan d'étude et échantillonnage {.segue}
+
+## Observer ou expérimenter ?
+
+- **Étude observationnelle** : réserves vs récifs pêchés → **association**, variables de confusion possibles
+- **Expérience** : aliments **tirés au sort** entre 24 enclos → **cause**
+- **Unité d'échantillonnage** = ce que n compte (l'enclos, pas l'holothurie ; le site, pas le transect)
+
+<div class="box warn">
+**Pseudo-réplication** : 30 quadrats dans *une* réserve ≠ 30 réserves.
+</div>
+
+## Quatre plans d'échantillonnage
+
+`r fig_svg("sampling-designs")`
+
+## Le stratifié est plus précis
+
+```{r, echo=FALSE}
+set.seed(42)
+m_srs <- replicate(1000, mean(lag$seagrass_cover[sample(1:nrow(lag), 30)]))
+m_str <- replicate(1000, mean(lag$seagrass_cover[c(sample(which(lag$zone == "inshore"), 10),
+  sample(which(lag$zone == "middle"), 10), sample(which(lag$zone == "reef_flat"), 10))]))
+ggplot(data.frame(plan = rep(c("aléatoire simple", "stratifié"), each = 1000), m = c(m_srs, m_str)),
+       aes(m, fill = plan)) + geom_histogram(binwidth = 1, alpha = .6, position = "identity") +
+  geom_vline(xintercept = mean(lag$seagrass_cover)) + labs(x = "moyenne de 30 cellules (%)", y = NULL) + theme_c()
+```
+
+## Séance 2 — Décrire {.segue}
+
+## Centre et dispersion
+
+```{r}
+b <- rf$biomass_kg_ha
+c(moyenne = mean(b), mediane = median(b), et = sd(b), iqr = IQR(b))
+boxplot.stats(b)$out
+```
+
+- Asymétrie à droite → **médiane (Q1–Q3)** plutôt que moyenne ± ET
+- Valeur extrême = une **question**, pas une erreur
+
+## Tableau par groupe
+
+```{r, message=FALSE}
+library(dplyr)
+rf %>% group_by(management) %>%
+  summarise(n = n(), mediane = median(biomass_kg_ha), q1 = quantile(biomass_kg_ha, .25), q3 = quantile(biomass_kg_ha, .75))
+```
+
+## Séance 3 — Explorer en graphiques {.segue}
+
+## Tracez d'abord : Anscombe
+
+```{r, echo=FALSE, fig.height=3.6}
+ans <- data.frame(set = rep(paste("jeu", 1:4), each = 11),
+                  x = c(anscombe$x1, anscombe$x2, anscombe$x3, anscombe$x4),
+                  y = c(anscombe$y1, anscombe$y2, anscombe$y3, anscombe$y4))
+ggplot(ans, aes(x, y)) + geom_point() + geom_smooth(method = "lm", se = FALSE, formula = y ~ x) +
+  facet_wrap(~ set, nrow = 1) + theme_c(11)
+```
+
+Mêmes moyennes, mêmes ET, même corrélation (0,82).
+
+## Boîte + points, QQ plot, échelle log
+
+```{r, echo=FALSE, fig.height=3.4, message=FALSE}
+library(patchwork)
+p1 <- ggplot(rf, aes(management, biomass_kg_ha)) + geom_boxplot(outlier.shape = NA) +
+  geom_jitter(width = .1, height = 0) + labs(x = NULL, y = "biomasse (kg/ha)") + theme_c(11)
+p2 <- ggplot(oc, aes(sample = log(weight_g))) + stat_qq() + stat_qq_line() + labs(title = "log(poids)") + theme_c(11)
+p1 + p2
+```
+
+## Séance 4 — Probabilités {.segue}
+
+## Les quatre fonctions d…, p…, q…, r…
+
+| | binomiale | Poisson | normale |
+|---|---|---|---|
+| P(X = x) / densité | `dbinom()` | `dpois()` | `dnorm()` |
+| P(X ≤ q) | `pbinom()` | `ppois()` | `pnorm()` |
+| quantile | `qbinom()` | `qpois()` | `qnorm()` |
+| tirage | `rbinom()` | `rpois()` | `rnorm()` |
+
+```{r}
+1 - pbinom(1, size = 10, prob = 0.06)    # 2 pieuvres trop petites ou plus sur 10
+qnorm(c(0.025, 0.975))                   # ± 1,96
+```
+
+## La loi normale
+
+`r fig_svg("normal-rule")`
+
+<div class="box tip">
+Poids, biomasses, revenus : souvent **log-normaux** → analyser le **log**.
+</div>

@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>R4Marine Stats · Session 3</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.1/jquery-3.6.1.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<!-- header.html: inserted inside <head> of every page (see _site.yml) -->
+<!-- config.js (settings) and quiz_index.js (made by R/build_site.R) first,
+     then course.js (the behaviour that reads them) -->
+<script src="assets/config.js"></script>
+<script src="assets/quiz_index.js"></script>
+<script src="assets/course.js"></script>
+<meta name="author" content="Aroo Falinirina">
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<link rel="stylesheet" href="assets/course.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">R4Marine Stats</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Sessions
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="00-start.html">0 · Why statistics?</a>
+    </li>
+    <li>
+      <a href="01-design.html">1 · Study design &amp; sampling</a>
+    </li>
+    <li>
+      <a href="02-describe.html">2 · Describing data</a>
+    </li>
+    <li>
+      <a href="03-explore.html">3 · Exploring distributions</a>
+    </li>
+    <li>
+      <a href="04-probability.html">4 · Probability &amp; distributions</a>
+    </li>
+    <li>
+      <a href="05-estimation.html">5 · Standard error &amp; CIs</a>
+    </li>
+    <li>
+      <a href="06-testing.html">6 · Hypothesis tests &amp; p-values</a>
+    </li>
+    <li>
+      <a href="07-two-groups.html">7 · Comparing two groups</a>
+    </li>
+    <li>
+      <a href="08-anova.html">8 · ANOVA &amp; Kruskal–Wallis</a>
+    </li>
+    <li>
+      <a href="09-categorical.html">9 · Proportions &amp; χ²</a>
+    </li>
+    <li>
+      <a href="10-regression.html">10 · Correlation &amp; regression</a>
+    </li>
+    <li>
+      <a href="11-power-reporting.html">11 · Power, multiple tests, reporting</a>
+    </li>
+    <li>
+      <a href="12-practice.html">12 · Practice</a>
+    </li>
+    <li>
+      <a href="13-final-project.html">13 · Final project</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Resources
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="choose-test.html">Which test? (decision guide)</a>
+    </li>
+    <li>
+      <a href="cheatsheet.html">Cheatsheet</a>
+    </li>
+    <li>
+      <a href="glossary.html">Glossary EN–FR</a>
+    </li>
+    <li>
+      <a href="common-errors.html">Common errors &amp; pitfalls</a>
+    </li>
+    <li>
+      <a href="resources.html">To go further</a>
+    </li>
+    <li>
+      <a href="help.html">Need help?</a>
+    </li>
+    <li>
+      <a href="whats-new.html">What's new</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore"><span class="en">3 · Exploring
+distributions with graphs</span><span class="fr">3 · Explorer les
+distributions en graphiques</span></h1>
+<h3 class="subtitle">~2.5 h</h3>
+
+</div>
+
+
+<div class="objectives">
+<div id="by-the-end-of-this-session-you-will-be-able-to"
+class="section level4 en">
+<h4>By the end of this session you will be able to</h4>
+<ul>
+<li>explain why we <strong>always plot before computing a test</strong>
+(Anscombe’s quartet);</li>
+<li>show the distribution of a numeric variable with a
+<strong>histogram</strong>, a <strong>density curve</strong>, a
+<strong>boxplot</strong> and the <strong>raw points</strong>, and choose
+between them;</li>
+<li>recognise <strong>symmetric</strong>, <strong>right-skewed</strong>,
+<strong>bimodal</strong> distributions and outliers on a graph;</li>
+<li>read a <strong>normal QQ plot</strong>;</li>
+<li>use a <strong>log scale</strong> for right-skewed data, and compute
+a <strong>geometric mean</strong>.</li>
+</ul>
+</div>
+<div id="à-la-fin-de-cette-séance-vous-saurez"
+class="section level4 fr">
+<h4>À la fin de cette séance vous saurez</h4>
+<ul>
+<li>expliquer pourquoi on <strong>trace toujours avant de calculer un
+test</strong> (le quartet d’Anscombe) ;</li>
+<li>montrer la distribution d’une variable numérique avec un
+<strong>histogramme</strong>, une <strong>courbe de densité</strong>,
+une <strong>boîte à moustaches</strong> et les <strong>points
+bruts</strong>, et choisir entre eux ;</li>
+<li>reconnaître sur un graphique les distributions
+<strong>symétriques</strong>, <strong>asymétriques à droite</strong>,
+<strong>bimodales</strong> et les valeurs extrêmes ;</li>
+<li>lire un <strong>diagramme quantile-quantile (QQ plot)</strong>
+normal ;</li>
+<li>utiliser une <strong>échelle log</strong> pour des données
+asymétriques à droite, et calculer une <strong>moyenne
+géométrique</strong>.</li>
+</ul>
+</div>
+</div>
+<div id="anscombe" class="section level2">
+<h2><span class="en">Why plot first: Anscombe’s quartet</span><span
+class="fr">Pourquoi tracer d’abord : le quartet d’Anscombe</span></h2>
+<div class="en">
+<p>In 1973 the statistician Frank Anscombe built four small datasets
+that have <strong>the same means, the same standard deviations and the
+same correlation</strong> — and look completely different. They are in R
+as <code>anscombe</code>.</p>
+</div>
+<div class="fr">
+<p>En 1973, le statisticien Frank Anscombe a construit quatre petits
+jeux de données qui ont <strong>les mêmes moyennes, les mêmes
+écarts-types et la même corrélation</strong> — et qui sont complètement
+différents. Ils sont dans R sous le nom <code>anscombe</code>.</p>
+</div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">sapply</span>(anscombe, mean)</span></code></pre></div>
+<pre><code>#&gt;       x1       x2       x3       x4       y1       y2       y3       y4 
+#&gt; 9.000000 9.000000 9.000000 9.000000 7.500909 7.500909 7.500000 7.500909</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">c</span>(<span class="fu">cor</span>(anscombe<span class="sc">$</span>x1, anscombe<span class="sc">$</span>y1), <span class="fu">cor</span>(anscombe<span class="sc">$</span>x2, anscombe<span class="sc">$</span>y2),</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>        <span class="fu">cor</span>(anscombe<span class="sc">$</span>x3, anscombe<span class="sc">$</span>y3), <span class="fu">cor</span>(anscombe<span class="sc">$</span>x4, anscombe<span class="sc">$</span>y4)), <span class="dv">3</span>)</span></code></pre></div>
+<pre><code>#&gt; [1] 0.816 0.816 0.816 0.817</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co"># long format: one row per point, with its set number (1 to 4)</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>ans <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">set =</span> <span class="fu">rep</span>(<span class="fu">paste</span>(<span class="st">&quot;set&quot;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>), <span class="at">each =</span> <span class="dv">11</span>),</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>                  <span class="at">x =</span> <span class="fu">c</span>(anscombe<span class="sc">$</span>x1, anscombe<span class="sc">$</span>x2, anscombe<span class="sc">$</span>x3, anscombe<span class="sc">$</span>x4),</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>                  <span class="at">y =</span> <span class="fu">c</span>(anscombe<span class="sc">$</span>y1, anscombe<span class="sc">$</span>y2, anscombe<span class="sc">$</span>y3, anscombe<span class="sc">$</span>y4))</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="fu">ggplot</span>(ans, <span class="fu">aes</span>(x, y)) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">colour =</span> <span class="st">&quot;#0b3d5c&quot;</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">colour =</span> <span class="st">&quot;#d9694a&quot;</span>, <span class="at">formula =</span> y <span class="sc">~</span> x) <span class="sc">+</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> set) <span class="sc">+</span> <span class="fu">theme_c</span>()</span></code></pre></div>
+<p><img src="03-explore_files/figure-html/unnamed-chunk-1-1.png" width="85%" style="display: block; margin: auto;" /></p>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>cor(x, y)</code></td>
+<td>correlation coefficient (Session 10)</td>
+<td>two numeric vectors</td>
+</tr>
+<tr class="even">
+<td><code>geom_smooth(method = "lm", se, formula)</code></td>
+<td>adds a straight fitted line (linear model, Session 10);
+<code>se = FALSE</code> hides the confidence band</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><code>facet_wrap(~ var)</code></td>
+<td>one small panel per value of <code>var</code></td>
+<td>a formula <code>~ column</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>cor(x, y)</code></td>
+<td>coefficient de corrélation (séance 10)</td>
+<td>deux vecteurs numériques</td>
+</tr>
+<tr class="even">
+<td><code>geom_smooth(method = "lm", se, formula)</code></td>
+<td>ajoute une droite ajustée (modèle linéaire, séance 10) ;
+<code>se = FALSE</code> cache la bande de confiance</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><code>facet_wrap(~ var)</code></td>
+<td>un petit panneau par valeur de <code>var</code></td>
+<td>une formule <code>~ colonne</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="en">
+<p>Set 1 is a reasonable straight-line relationship; set 2 is a curve;
+set 3 is a perfect line spoiled by one outlier; in set 4 one single
+point creates the whole “correlation”. The numbers alone cannot tell
+them apart. <strong>Every analysis in this course starts with a
+graph.</strong></p>
+</div>
+<div class="fr">
+<p>Le jeu 1 est une relation linéaire raisonnable ; le jeu 2 est une
+courbe ; le jeu 3 est une droite parfaite gâchée par une valeur extrême
+; dans le jeu 4 un seul point crée toute la « corrélation ». Les
+chiffres seuls ne peuvent pas les distinguer. <strong>Chaque analyse de
+ce cours commence par un graphique.</strong></p>
+</div>
+</div>
+<div id="data" class="section level2">
+<h2><span class="en">Octopus weights on reopening day</span><span
+class="fr">Poids des pieuvres le jour de la réouverture</span></h2>
+<div class="callout ecology">
+<div class="en">
+<p><strong>Octopus landings</strong> (<code>octopus_catch.csv</code>,
+simulated). On <strong>14 March 2026</strong>, a 3-month temporary
+closure of an octopus fishing area ended. That day, trained community
+data collectors weighed (spring balance, to the nearest 10 g) and sexed
+<strong>every octopus landed</strong> in two villages:
+<strong>Tsifota</strong>, whose fishers fished in the area that had just
+<strong>reopened</strong>, and <strong>Andrevo</strong>, whose fishers
+fished in <strong>open</strong> areas only. They also noted the gear
+(spear or hook) and the sex of the fisher. <em>One row = one
+octopus</em> (345 octopuses).</p>
+</div>
+<div class="fr">
+<p><strong>Débarquements de pieuvres</strong>
+(<code>octopus_catch.csv</code>, simulé). Le <strong>14 mars
+2026</strong>, une fermeture temporaire de 3 mois d’une zone de pêche au
+poulpe a pris fin. Ce jour-là, des collecteurs communautaires formés ont
+pesé (peson, à 10 g près) et sexé <strong>chaque pieuvre
+débarquée</strong> dans deux villages : <strong>Tsifota</strong>, dont
+les pêcheurs ont pêché dans la zone qui venait d’être
+<strong>rouverte</strong>, et <strong>Andrevo</strong>, dont les
+pêcheurs ont pêché dans des zones <strong>ouvertes</strong> uniquement.
+Ils ont aussi noté l’engin (harpon ou crochet) et le sexe du pêcheur.
+<em>Une ligne = une pieuvre</em> (345 pieuvres).</p>
+</div>
+</div>
+<p><a class="btn-dl" href="data/octopus_catch.csv" download>⇩
+octopus_catch.csv</a></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>oc <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/octopus_catch.csv&quot;</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="fu">str</span>(oc)</span></code></pre></div>
+<pre><code>#&gt; &#39;data.frame&#39;:    345 obs. of  7 variables:
+#&gt;  $ octopus_id: chr  &quot;O001&quot; &quot;O002&quot; &quot;O003&quot; &quot;O004&quot; ...
+#&gt;  $ village   : chr  &quot;Tsifota&quot; &quot;Tsifota&quot; &quot;Tsifota&quot; &quot;Tsifota&quot; ...
+#&gt;  $ area      : chr  &quot;reopened&quot; &quot;reopened&quot; &quot;reopened&quot; &quot;reopened&quot; ...
+#&gt;  $ weight_g  : int  430 1300 550 590 930 720 590 880 1200 330 ...
+#&gt;  $ sex       : chr  &quot;F&quot; &quot;M&quot; &quot;F&quot; &quot;M&quot; ...
+#&gt;  $ gear      : chr  &quot;spear&quot; &quot;hook&quot; &quot;hook&quot; &quot;hook&quot; ...
+#&gt;  $ fisher_sex: chr  &quot;M&quot; &quot;M&quot; &quot;M&quot; &quot;F&quot; ...</code></pre>
+</div>
+<div id="histogram" class="section level2">
+<h2><span class="en">Histograms and densities</span><span
+class="fr">Histogrammes et densités</span></h2>
+<div class="en">
+<p>A <strong>histogram</strong> cuts the range into intervals
+(<em>bins</em>) and counts the values in each. The width of the bins
+changes the picture: too wide hides the shape, too narrow shows noise.
+Try two or three widths.</p>
+</div>
+<div class="fr">
+<p>Un <strong>histogramme</strong> découpe l’étendue en intervalles
+(<em>classes</em>) et compte les valeurs dans chacun. La largeur des
+classes change l’image : trop larges cachent la forme, trop étroites
+montrent du bruit. Essayez deux ou trois largeurs.</p>
+</div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">ggplot</span>(oc, <span class="fu">aes</span>(weight_g)) <span class="sc">+</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">100</span>, <span class="at">fill =</span> <span class="st">&quot;#1b7f8c&quot;</span>, <span class="at">colour =</span> <span class="st">&quot;white&quot;</span>) <span class="sc">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;weight (g)&quot;</span>, <span class="at">y =</span> <span class="st">&quot;number of octopuses&quot;</span>) <span class="sc">+</span> <span class="fu">theme_c</span>()</span></code></pre></div>
+<p><img src="03-explore_files/figure-html/unnamed-chunk-4-1.png" width="85%" style="display: block; margin: auto;" /></p>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>geom_histogram(binwidth, bins, boundary)</code></td>
+<td>histogram of one numeric variable (<code>aes(x)</code>)</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>  <code>binwidth</code></td>
+<td>width of each bin, in the units of x</td>
+<td>a number</td>
+</tr>
+<tr class="odd">
+<td>  <code>bins</code></td>
+<td>or: the number of bins (default 30); give <code>binwidth</code>
+<strong>or</strong> <code>bins</code></td>
+<td>a whole number</td>
+</tr>
+<tr class="even">
+<td>  <code>boundary</code></td>
+<td>where a bin starts (e.g. <code>0</code>): bins then cover 0–100,
+100–200…</td>
+<td>a number</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>geom_histogram(binwidth, bins, boundary)</code></td>
+<td>histogramme d’une variable numérique (<code>aes(x)</code>)</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>  <code>binwidth</code></td>
+<td>largeur de chaque classe, dans les unités de x</td>
+<td>un nombre</td>
+</tr>
+<tr class="odd">
+<td>  <code>bins</code></td>
+<td>ou : le nombre de classes (défaut 30) ; donnez <code>binwidth</code>
+<strong>ou</strong> <code>bins</code></td>
+<td>un entier</td>
+</tr>
+<tr class="even">
+<td>  <code>boundary</code></td>
+<td>où commence une classe (ex. <code>0</code>) : les classes couvrent
+alors 0–100, 100–200…</td>
+<td>un nombre</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="en">
+<p>The distribution is <strong>right-skewed</strong>: most octopuses
+weigh 400–1,000 g, and a long tail goes up to 3 kg. Weights, lengths of
+large animals, abundances, incomes are often like this, because they
+result from <strong>multiplicative</strong> processes (growth is a
+percentage of the current size).</p>
+<p>A <strong>density curve</strong> is a smoothed histogram; its area is
+1. It is convenient to <strong>compare groups</strong> on one graph:</p>
+</div>
+<div class="fr">
+<p>La distribution est <strong>asymétrique à droite</strong> : la
+plupart des pieuvres pèsent 400–1 000 g, et une longue queue monte
+jusqu’à 3 kg. Les poids, les tailles des grands animaux, les abondances,
+les revenus sont souvent ainsi, parce qu’ils résultent de processus
+<strong>multiplicatifs</strong> (la croissance est un pourcentage de la
+taille actuelle).</p>
+<p>Une <strong>courbe de densité</strong> est un histogramme lissé ; son
+aire vaut 1. Elle est pratique pour <strong>comparer des
+groupes</strong> sur un seul graphique :</p>
+</div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">ggplot</span>(oc, <span class="fu">aes</span>(weight_g, <span class="at">fill =</span> area)) <span class="sc">+</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="at">open =</span> <span class="st">&quot;#e8c27a&quot;</span>, <span class="at">reopened =</span> <span class="st">&quot;#1b7f8c&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;weight (g)&quot;</span>, <span class="at">y =</span> <span class="st">&quot;density&quot;</span>) <span class="sc">+</span> <span class="fu">theme_c</span>()</span></code></pre></div>
+<p><img src="03-explore_files/figure-html/unnamed-chunk-6-1.png" width="85%" style="display: block; margin: auto;" /></p>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>geom_density(alpha, adjust)</code></td>
+<td>smoothed distribution; <code>alpha</code> = transparency;
+<code>adjust</code> &gt; 1 smooths more, &lt; 1 less</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>scale_fill_manual(values)</code></td>
+<td>chooses the fill colour of each group</td>
+<td>a named vector <code>c(group = "colour")</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>geom_density(alpha, adjust)</code></td>
+<td>distribution lissée ; <code>alpha</code> = transparence ;
+<code>adjust</code> &gt; 1 lisse plus, &lt; 1 moins</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>scale_fill_manual(values)</code></td>
+<td>choisit la couleur de remplissage de chaque groupe</td>
+<td>un vecteur nommé <code>c(groupe = "couleur")</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="boxplot" class="section level2">
+<h2><span class="en">Boxplots and the raw points</span><span
+class="fr">Boîtes à moustaches et points bruts</span></h2>
+<figure class="svg-fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 230" role="img" aria-label="Anatomy of a boxplot" font-family="Source Sans 3, Arial, sans-serif">
+<defs><marker id="arb" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5d6b75"/></marker></defs>
+<!-- axis -->
+<line x1="40" y1="190" x2="820" y2="190" stroke="#8a969e"/>
+<!-- whiskers -->
+<line x1="120" y1="110" x2="300" y2="110" stroke="#0b3d5c" stroke-width="2.5"/>
+<line x1="470" y1="110" x2="640" y2="110" stroke="#0b3d5c" stroke-width="2.5"/>
+<line x1="120" y1="95" x2="120" y2="125" stroke="#0b3d5c" stroke-width="2.5"/>
+<line x1="640" y1="95" x2="640" y2="125" stroke="#0b3d5c" stroke-width="2.5"/>
+<!-- box -->
+<rect x="300" y="75" width="170" height="70" fill="#e9f4f6" stroke="#0b3d5c" stroke-width="2.5"/>
+<line x1="370" y1="75" x2="370" y2="145" stroke="#d9694a" stroke-width="4"/>
+<!-- outliers -->
+<circle cx="740" cy="110" r="7" fill="none" stroke="#0b3d5c" stroke-width="2.5"/>
+<circle cx="785" cy="110" r="7" fill="none" stroke="#0b3d5c" stroke-width="2.5"/>
+<!-- labels top -->
+<g font-size="15" fill="#0b3d5c" text-anchor="middle">
+<text class="en" x="300" y="62">Q1 (25 %)</text><text class="fr" x="300" y="62">Q1 (25 %)</text>
+<text class="en" x="370" y="40" fill="#d9694a" font-weight="700">median</text><text class="fr" x="370" y="40" fill="#d9694a" font-weight="700">médiane</text>
+<text class="en" x="470" y="62">Q3 (75 %)</text><text class="fr" x="470" y="62">Q3 (75 %)</text>
+<text class="en" x="120" y="82">lowest value within 1.5 × IQR</text><text class="fr" x="120" y="82">plus petite valeur à moins de 1,5 × IQR</text>
+<text class="en" x="640" y="82">highest value within 1.5 × IQR</text><text class="fr" x="640" y="82">plus grande valeur à moins de 1,5 × IQR</text>
+<text class="en" x="762" y="146">outliers</text><text class="fr" x="762" y="146">valeurs extrêmes</text>
+</g>
+<!-- IQR brace -->
+<line x1="300" y1="165" x2="470" y2="165" stroke="#5d6b75" stroke-width="1.5" marker-start="url(#arb)" marker-end="url(#arb)"/>
+<text class="en" x="385" y="182" text-anchor="middle" font-size="14" fill="#5d6b75">IQR = Q3 − Q1: the middle 50 %</text>
+<text class="fr" x="385" y="182" text-anchor="middle" font-size="14" fill="#5d6b75">IQR = Q3 − Q1 : les 50 % centraux</text>
+<line x1="470" y1="210" x2="725" y2="210" stroke="#d9694a" stroke-width="1.5" stroke-dasharray="5 4" marker-start="url(#arb)" marker-end="url(#arb)"/>
+<text class="en" x="598" y="226" text-anchor="middle" font-size="13" fill="#d9694a">limit: Q3 + 1.5 × IQR</text>
+<text class="fr" x="598" y="226" text-anchor="middle" font-size="13" fill="#d9694a">limite : Q3 + 1,5 × IQR</text>
+</svg><figcaption><span class="en">How to read a boxplot. The whiskers stop at the most extreme values within 1.5 × IQR of the box; points beyond are drawn individually (Session 2).</span><span class="fr">Comment lire une boîte à moustaches. Les moustaches s'arrêtent aux valeurs les plus extrêmes situées à moins de 1,5 × IQR de la boîte ; les points au-delà sont dessinés individuellement (séance 2).</span></figcaption></figure>
+<div class="en">
+<p>A boxplot summarises 5 numbers; it hides the <strong>number of
+points</strong> and shapes such as two peaks. With fewer than ~50 points
+per group, <strong>add the raw points</strong>
+(<code>geom_jitter()</code> spreads them sideways so they do not
+overlap).</p>
+</div>
+<div class="fr">
+<p>Une boîte à moustaches résume 5 nombres ; elle cache le
+<strong>nombre de points</strong> et des formes comme deux pics. Avec
+moins de ~50 points par groupe, <strong>ajoutez les points
+bruts</strong> (<code>geom_jitter()</code> les écarte sur le côté pour
+qu’ils ne se superposent pas).</p>
+</div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">ggplot</span>(rf, <span class="fu">aes</span>(management, biomass_kg_ha)) <span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.shape =</span> <span class="cn">NA</span>, <span class="at">width =</span> <span class="fl">0.5</span>, <span class="at">fill =</span> <span class="st">&quot;#e9f4f6&quot;</span>) <span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.12</span>, <span class="at">height =</span> <span class="dv">0</span>, <span class="at">colour =</span> <span class="st">&quot;#0b3d5c&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">&quot;fish biomass (kg/ha)&quot;</span>) <span class="sc">+</span> <span class="fu">theme_c</span>()</span></code></pre></div>
+<p><img src="03-explore_files/figure-html/unnamed-chunk-8-1.png" width="85%" style="display: block; margin: auto;" /></p>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>  <code>outlier.shape = NA</code> (in
+<code>geom_boxplot()</code>)</td>
+<td>does not draw the outliers of the box, because
+<code>geom_jitter()</code> already draws every point (otherwise they
+appear twice)</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>geom_jitter(width, height)</code></td>
+<td>points moved randomly a little: sideways by up to
+<code>width</code>, vertically by <code>height</code> (keep
+<strong>0</strong> so values are not changed)</td>
+<td>numbers</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>  <code>outlier.shape = NA</code> (in
+<code>geom_boxplot()</code>)</td>
+<td>ne dessine pas les valeurs extrêmes de la boîte, car
+<code>geom_jitter()</code> dessine déjà chaque point (sinon ils
+apparaissent deux fois)</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>geom_jitter(width, height)</code></td>
+<td>points déplacés un peu au hasard : sur le côté jusqu’à
+<code>width</code>, verticalement de <code>height</code> (gardez
+<strong>0</strong> pour ne pas modifier les valeurs)</td>
+<td>des nombres</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="qq" class="section level2">
+<h2><span class="en">Is it close to a normal distribution? The QQ
+plot</span><span class="fr">Est-ce proche d’une loi normale ? Le QQ
+plot</span></h2>
+<div class="en">
+<p>Many tests of Sessions 5–10 assume that data (or model residuals) are
+roughly <strong>normal</strong> — the symmetric bell curve of Session 4.
+A <strong>normal QQ plot</strong> compares the sorted data with the
+values a normal distribution would give: <strong>if the data are normal,
+the points fall on a straight line.</strong></p>
+<ul>
+<li>Points curving <strong>upwards</strong> at the right end (a
+“banana”) → <strong>right skew</strong>;</li>
+<li>an S-shape → tails heavier or lighter than normal;</li>
+<li>a few points far off the line at the ends → outliers.</li>
+</ul>
+</div>
+<div class="fr">
+<p>Beaucoup de tests des séances 5–10 supposent que les données (ou les
+résidus d’un modèle) sont à peu près <strong>normales</strong> — la
+courbe en cloche symétrique de la séance 4. Un <strong>QQ plot
+normal</strong> compare les données triées aux valeurs que donnerait une
+loi normale : <strong>si les données sont normales, les points tombent
+sur une droite.</strong></p>
+<ul>
+<li>Points qui <strong>remontent</strong> à l’extrémité droite (une «
+banane ») → <strong>asymétrie à droite</strong> ;</li>
+<li>une forme en S → queues plus lourdes ou plus légères que la normale
+;</li>
+<li>quelques points loin de la droite aux extrémités → valeurs
+extrêmes.</li>
+</ul>
+</div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">library</span>(patchwork)   <span class="co"># optional: places two ggplots side by side with &quot;+&quot;</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(oc, <span class="fu">aes</span>(<span class="at">sample =</span> weight_g)) <span class="sc">+</span> <span class="fu">stat_qq</span>(<span class="at">colour =</span> <span class="st">&quot;#1b7f8c&quot;</span>) <span class="sc">+</span> <span class="fu">stat_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;weight (g)&quot;</span>, <span class="at">x =</span> <span class="st">&quot;theoretical quantiles&quot;</span>, <span class="at">y =</span> <span class="st">&quot;sample quantiles&quot;</span>) <span class="sc">+</span> <span class="fu">theme_c</span>(<span class="dv">11</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(oc, <span class="fu">aes</span>(<span class="at">sample =</span> <span class="fu">log</span>(weight_g))) <span class="sc">+</span> <span class="fu">stat_qq</span>(<span class="at">colour =</span> <span class="st">&quot;#1b7f8c&quot;</span>) <span class="sc">+</span> <span class="fu">stat_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;log(weight)&quot;</span>, <span class="at">x =</span> <span class="st">&quot;theoretical quantiles&quot;</span>, <span class="at">y =</span> <span class="st">&quot;sample quantiles&quot;</span>) <span class="sc">+</span> <span class="fu">theme_c</span>(<span class="dv">11</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>p1 <span class="sc">+</span> p2</span></code></pre></div>
+<p><img src="03-explore_files/figure-html/unnamed-chunk-10-1.png" width="85%" style="display: block; margin: auto;" /></p>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>aes(sample = x)</code></td>
+<td>for QQ plots, the variable goes in <code>sample</code>, not in
+<code>x</code></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>stat_qq()</code>, <code>stat_qq_line()</code></td>
+<td>the points of the QQ plot, and the reference line through Q1 and
+Q3</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><code>p1 + p2</code></td>
+<td>with the <strong>patchwork</strong> package: two plots side by side
+(<code>p1 / p2</code> = one above the other)</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>qqnorm(x); qqline(x)</code></td>
+<td>the same in base R, without ggplot2</td>
+<td>a numeric vector</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>aes(sample = x)</code></td>
+<td>pour les QQ plots, la variable va dans <code>sample</code>, pas dans
+<code>x</code></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>stat_qq()</code>, <code>stat_qq_line()</code></td>
+<td>les points du QQ plot, et la droite de référence passant par Q1 et
+Q3</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><code>p1 + p2</code></td>
+<td>avec le package <strong>patchwork</strong> : deux graphiques côte à
+côte (<code>p1 / p2</code> = l’un au-dessus de l’autre)</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>qqnorm(x); qqline(x)</code></td>
+<td>la même chose en R de base, sans ggplot2</td>
+<td>un vecteur numérique</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="en">
+<p>The raw weights bend upwards (right skew); the <strong>log</strong>
+of the weights follows the line well. Session 4 explains why (the
+<em>log-normal</em> distribution). You may meet the Shapiro–Wilk test
+(<code>shapiro.test()</code>) to “test normality”: use it with care —
+with large samples it rejects normality for tiny, harmless departures,
+with small samples it misses big ones. <strong>The QQ plot and your
+knowledge of the variable are more informative.</strong></p>
+</div>
+<div class="fr">
+<p>Les poids bruts se courbent vers le haut (asymétrie à droite) ; le
+<strong>log</strong> des poids suit bien la droite. La séance 4 explique
+pourquoi (la loi <em>log-normale</em>). Vous rencontrerez le test de
+Shapiro–Wilk (<code>shapiro.test()</code>) pour « tester la normalité »
+: utilisez-le avec prudence — avec de grands échantillons il rejette la
+normalité pour des écarts minimes et sans conséquence, avec de petits
+échantillons il rate de gros écarts. <strong>Le QQ plot et votre
+connaissance de la variable sont plus informatifs.</strong></p>
+</div>
+</div>
+<div id="log" class="section level2">
+<h2><span class="en">Log scale and geometric mean</span><span
+class="fr">Échelle log et moyenne géométrique</span></h2>
+<div class="en">
+<p>On a log scale, equal distances mean equal <strong>ratios</strong>
+(×2, ×10) instead of equal differences. For right-skewed data it spreads
+the crowded small values and pulls in the long tail. Two ways:</p>
+<ol style="list-style-type: decimal">
+<li>keep the data and change the <strong>axis</strong>:
+<code>scale_x_log10()</code> — the labels stay in grams;</li>
+<li>analyse the <strong>log of the variable</strong>:
+<code>log(weight_g)</code> (natural log). The back-transformed mean,
+<code>exp(mean(log(x)))</code>, is the <strong>geometric mean</strong>:
+a “typical value” that is not pulled by the tail, close to the
+median.</li>
+</ol>
+</div>
+<div class="fr">
+<p>Sur une échelle log, des distances égales signifient des
+<strong>rapports</strong> égaux (×2, ×10) au lieu de différences égales.
+Pour des données asymétriques à droite, elle écarte les petites valeurs
+entassées et rapproche la longue queue. Deux façons :</p>
+<ol style="list-style-type: decimal">
+<li>garder les données et changer l’<strong>axe</strong> :
+<code>scale_x_log10()</code> — les étiquettes restent en grammes ;</li>
+<li>analyser le <strong>log de la variable</strong> :
+<code>log(weight_g)</code> (log népérien). La moyenne retransformée,
+<code>exp(mean(log(x)))</code>, est la <strong>moyenne
+géométrique</strong> : une « valeur typique » qui n’est pas tirée par la
+queue, proche de la médiane.</li>
+</ol>
+</div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">ggplot</span>(oc, <span class="fu">aes</span>(weight_g)) <span class="sc">+</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">25</span>, <span class="at">fill =</span> <span class="st">&quot;#1b7f8c&quot;</span>, <span class="at">colour =</span> <span class="st">&quot;white&quot;</span>) <span class="sc">+</span></span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>() <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;weight (g, log scale)&quot;</span>, <span class="at">y =</span> <span class="st">&quot;number&quot;</span>) <span class="sc">+</span> <span class="fu">theme_c</span>()</span></code></pre></div>
+<p><img src="03-explore_files/figure-html/unnamed-chunk-12-1.png" width="85%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>w <span class="ot">&lt;-</span> oc<span class="sc">$</span>weight_g</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="fu">c</span>(<span class="at">mean =</span> <span class="fu">mean</span>(w), <span class="at">median =</span> <span class="fu">median</span>(w), <span class="at">geometric_mean =</span> <span class="fu">exp</span>(<span class="fu">mean</span>(<span class="fu">log</span>(w))))</span></code></pre></div>
+<pre><code>#&gt;           mean         median geometric_mean 
+#&gt;       818.0580       740.0000       704.3735</code></pre>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>scale_x_log10()</code>, <code>scale_y_log10()</code></td>
+<td>log scale on an axis; the data are not changed, only the axis</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>log(x)</code>, <code>exp(x)</code></td>
+<td>natural logarithm and its inverse: <code>exp(log(x))</code> = x</td>
+<td>positive numbers for <code>log()</code></td>
+</tr>
+<tr class="odd">
+<td><code>log10(x)</code>, <code>log1p(x)</code></td>
+<td>log base 10; <code>log(1 + x)</code>, for counts that include
+<strong>zeros</strong> (log(0) = −Inf)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>scale_x_log10()</code>, <code>scale_y_log10()</code></td>
+<td>échelle log sur un axe ; les données ne changent pas, seulement
+l’axe</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>log(x)</code>, <code>exp(x)</code></td>
+<td>logarithme népérien et son inverse : <code>exp(log(x))</code> =
+x</td>
+<td>des nombres positifs pour <code>log()</code></td>
+</tr>
+<tr class="odd">
+<td><code>log10(x)</code>, <code>log1p(x)</code></td>
+<td>log en base 10 ; <code>log(1 + x)</code>, pour des comptages qui
+contiennent des <strong>zéros</strong> (log(0) = −Inf)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="bars" class="section level2">
+<h2><span class="en">Categorical variables: bar charts of
+percentages</span><span class="fr">Variables catégorielles : diagrammes
+en barres de pourcentages</span></h2>
+<div class="en">
+<p>To compare the <strong>composition</strong> of groups of different
+sizes, show percentages, not counts: <code>position = "fill"</code>
+stacks the bars to 100 %.</p>
+</div>
+<div class="fr">
+<p>Pour comparer la <strong>composition</strong> de groupes de tailles
+différentes, montrez des pourcentages, pas des effectifs :
+<code>position = "fill"</code> empile les barres jusqu’à 100 %.</p>
+</div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">ggplot</span>(oc, <span class="fu">aes</span>(area, <span class="at">fill =</span> gear)) <span class="sc">+</span></span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">&quot;fill&quot;</span>, <span class="at">width =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="cf">function</span>(p) <span class="fu">paste0</span>(<span class="dv">100</span> <span class="sc">*</span> p, <span class="st">&quot; %&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="at">hook =</span> <span class="st">&quot;#e8c27a&quot;</span>, <span class="at">spear =</span> <span class="st">&quot;#0b3d5c&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">&quot;share of octopuses&quot;</span>) <span class="sc">+</span> <span class="fu">theme_c</span>()</span></code></pre></div>
+<p><img src="03-explore_files/figure-html/unnamed-chunk-14-1.png" width="85%" style="display: block; margin: auto;" /></p>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>geom_bar(position = "fill")</code></td>
+<td>counts the rows of each category; <code>"fill"</code> turns each bar
+into proportions (0 to 1)</td>
+<td><code>"stack"</code> (default), <code>"dodge"</code>,
+<code>"fill"</code></td>
+</tr>
+<tr class="even">
+<td><code>scale_y_continuous(labels = f)</code></td>
+<td>changes the labels of the y axis with a function (here 0.25 → “25
+%”)</td>
+<td>a function</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>geom_bar(position = "fill")</code></td>
+<td>compte les lignes de chaque catégorie ; <code>"fill"</code>
+transforme chaque barre en proportions (0 à 1)</td>
+<td><code>"stack"</code> (défaut), <code>"dodge"</code>,
+<code>"fill"</code></td>
+</tr>
+<tr class="even">
+<td><code>scale_y_continuous(labels = f)</code></td>
+<td>change les étiquettes de l’axe y avec une fonction (ici 0.25 → « 25
+% »)</td>
+<td>une fonction</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="application" class="section level2">
+<h2><span class="en">Application work &amp; quiz</span><span
+class="fr">Travail d’application et quiz</span></h2>
+<div class="application">
+<div id="application-work-3" class="section level3 en">
+<h3>Application work 3</h3>
+<ol style="list-style-type: decimal">
+<li>Mean of <code>y4</code> in <code>anscombe</code> (2 decimals).</li>
+<li>Geometric mean of all octopus weights (1 decimal).</li>
+<li>Geometric mean of the weights in the <strong>reopened</strong> area
+(1 decimal).</li>
+<li>How many octopuses weigh <strong>2,000 g or more</strong>?</li>
+<li>Median weight in the <strong>open</strong> area (1 decimal).</li>
+<li>Percentage of octopuses caught with a <strong>hook</strong> in the
+open area (1 decimal).</li>
+<li>Draw the histogram of <code>herbivore_pct</code> (reef sites) and
+its QQ plot. Then answer questions 7 – 10.</li>
+</ol>
+</div>
+<div id="travail-dapplication-3" class="section level3 fr">
+<h3>Travail d’application 3</h3>
+<ol style="list-style-type: decimal">
+<li>Moyenne de <code>y4</code> dans <code>anscombe</code> (2
+décimales).</li>
+<li>Moyenne géométrique de tous les poids de pieuvres (1 décimale).</li>
+<li>Moyenne géométrique des poids dans la zone <strong>rouverte</strong>
+(<code>reopened</code>, 1 décimale).</li>
+<li>Combien de pieuvres pèsent <strong>2 000 g ou plus</strong> ?</li>
+<li>Poids médian dans la zone <strong>ouverte</strong>
+(<code>open</code>, 1 décimale).</li>
+<li>Pourcentage de pieuvres capturées au <strong>crochet</strong>
+(<code>hook</code>) dans la zone ouverte (1 décimale).</li>
+<li>Tracez l’histogramme de <code>herbivore_pct</code> (sites récifaux)
+et son QQ plot. Puis répondez aux questions 7 – 10.</li>
+</ol>
+</div>
+</div>
+<div class="hint">
+<div class="en">
+<p>Q2–Q3: <code>exp(mean(log(x)))</code>. Q4:
+<code>sum(oc$weight_g &gt;= 2000)</code>. Q6: select the gear of the
+open area first.</p>
+</div>
+<div class="fr">
+<p>Q2–Q3 : <code>exp(mean(log(x)))</code>. Q4 :
+<code>sum(oc$weight_g &gt;= 2000)</code>. Q6 : sélectionnez d’abord
+l’engin de la zone ouverte.</p>
+</div>
+</div>
+<div id="quiz-t03" class="quiz" data-quiz-id="t03"
+data-q="W3sidHlwZSI6Im51bSIsImVuIjoiMS4gTWVhbiBvZiBhbnNjb21iZSR5ND8iLCJmciI6IjEuIE1veWVubmUgZGUgYW5zY29tYmUkeTQgPyIsImFuc3dlciI6Ny41LCJ0b2wiOjAuMDA2LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiMi4gR2VvbWV0cmljIG1lYW4gb2YgYWxsIHdlaWdodHMgKGcpPyIsImZyIjoiMi4gTW95ZW5uZSBnw6lvbcOpdHJpcXVlIGRlIHRvdXMgbGVzIHBvaWRzIChnKSA/IiwiYW5zd2VyIjo3MDQuNCwidG9sIjowLjA2LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiMy4gR2VvbWV0cmljIG1lYW4gaW4gdGhlIHJlb3BlbmVkIGFyZWEgKGcpPyIsImZyIjoiMy4gTW95ZW5uZSBnw6lvbcOpdHJpcXVlIGRhbnMgbGEgem9uZSByb3V2ZXJ0ZSAoZykgPyIsImFuc3dlciI6ODU5LjUsInRvbCI6MC4wNiwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJudW0iLCJlbiI6IjQuIE51bWJlciBvZiBvY3RvcHVzZXMgb2YgMiwwMDAgZyBvciBtb3JlPyIsImZyIjoiNC4gTm9tYnJlIGRlIHBpZXV2cmVzIGRlIDIgMDAwIGcgb3UgcGx1cyA/IiwiYW5zd2VyIjo5LCJ0b2wiOjAsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibnVtIiwiZW4iOiI1LiBNZWRpYW4gd2VpZ2h0IGluIHRoZSBvcGVuIGFyZWEgKGcpPyIsImZyIjoiNS4gUG9pZHMgbcOpZGlhbiBkYW5zIGxhIHpvbmUgb3V2ZXJ0ZSAoZykgPyIsImFuc3dlciI6NTcwLCJ0b2wiOjAuMDYsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibnVtIiwiZW4iOiI2LiAlIGNhdWdodCB3aXRoIGEgaG9vayBpbiB0aGUgb3BlbiBhcmVhPyIsImZyIjoiNi4gJSBjYXB0dXLDqWVzIGF1IGNyb2NoZXQgZGFucyBsYSB6b25lIG91dmVydGUgPyIsImFuc3dlciI6MjcuNSwidG9sIjowLjA2LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im1jcSIsImVuIjoiNy4gT24gYSBub3JtYWwgUVEgcGxvdCwgdGhlIHBvaW50cyBiZW5kIHVwd2FyZHMgYXQgdGhlIHJpZ2h0IGVuZC4gVGhlIGRhdGEgYXJl4oCmIiwiZnIiOiI3LiBTdXIgdW4gUVEgcGxvdCBub3JtYWwsIGxlcyBwb2ludHMgcmVtb250ZW50IMOgIGwnZXh0csOpbWl0w6kgZHJvaXRlLiBMZXMgZG9ubsOpZXMgc29udOKApiIsIm9wdGlvbnNfZW4iOlsibm9ybWFsIiwicmlnaHQtc2tld2VkIiwibGVmdC1za2V3ZWQiLCJiaW1vZGFsIl0sIm9wdGlvbnNfZnIiOlsibm9ybWFsZXMiLCJhc3ltw6l0cmlxdWVzIMOgIGRyb2l0ZSIsImFzeW3DqXRyaXF1ZXMgw6AgZ2F1Y2hlIiwiYmltb2RhbGVzIl0sImFuc3dlciI6MX0seyJ0eXBlIjoibWNxIiwiZW4iOiI4LiBGb3IgcmlnaHQtc2tld2VkIGRhdGEsIHdoaWNoIHZhbHVlIGlzIGNsb3Nlc3QgdG8gdGhlIG1lZGlhbj8iLCJmciI6IjguIFBvdXIgZGVzIGRvbm7DqWVzIGFzeW3DqXRyaXF1ZXMgw6AgZHJvaXRlLCBxdWVsbGUgdmFsZXVyIGVzdCBsYSBwbHVzIHByb2NoZSBkZSBsYSBtw6lkaWFuZSA/Iiwib3B0aW9uc19lbiI6WyJ0aGUgYXJpdGhtZXRpYyBtZWFuIiwidGhlIGdlb21ldHJpYyBtZWFuIiwidGhlIG1heGltdW0iLCJ0aGUgc3RhbmRhcmQgZGV2aWF0aW9uIl0sIm9wdGlvbnNfZnIiOlsibGEgbW95ZW5uZSBhcml0aG3DqXRpcXVlIiwibGEgbW95ZW5uZSBnw6lvbcOpdHJpcXVlIiwibGUgbWF4aW11bSIsImwnw6ljYXJ0LXR5cGUiXSwiYW5zd2VyIjoxfSx7InR5cGUiOiJtY3EiLCJlbiI6IjkuIDEyIHNpdGVzIHBlciBncm91cDogd2hpY2ggZ3JhcGggc2hvd3MgdGhlIGRhdGEgbW9zdCBob25lc3RseT8iLCJmciI6IjkuIDEyIHNpdGVzIHBhciBncm91cGUgOiBxdWVsIGdyYXBoaXF1ZSBtb250cmUgbGVzIGRvbm7DqWVzIGxlIHBsdXMgaG9ubsOqdGVtZW50ID8iLCJvcHRpb25zX2VuIjpbImEgYmFyIGNoYXJ0IG9mIHRoZSBtZWFucyIsImEgYm94cGxvdCB3aXRoIHRoZSByYXcgcG9pbnRzIChqaXR0ZXIpIiwiYSBwaWUgY2hhcnQiLCJhIGxpbmUgY2hhcnQiXSwib3B0aW9uc19mciI6WyJ1biBkaWFncmFtbWUgZW4gYmFycmVzIGRlcyBtb3llbm5lcyIsInVuZSBib8OudGUgw6AgbW91c3RhY2hlcyBhdmVjIGxlcyBwb2ludHMgYnJ1dHMgKGppdHRlcikiLCJ1biBjYW1lbWJlcnQiLCJ1biBncmFwaGlxdWUgZW4gbGlnbmVzIl0sImFuc3dlciI6MX0seyJ0eXBlIjoibWNxIiwiZW4iOiIxMC4gV2hhdCBkb2VzIEFuc2NvbWJlJ3MgcXVhcnRldCBzaG93PyIsImZyIjoiMTAuIFF1ZSBtb250cmUgbGUgcXVhcnRldCBkJ0Fuc2NvbWJlID8iLCJvcHRpb25zX2VuIjpbIkNvcnJlbGF0aW9uIHByb3ZlcyBjYXVzYXRpb24iLCJJZGVudGljYWwgc3VtbWFyeSBzdGF0aXN0aWNzIGNhbiBoaWRlIHZlcnkgZGlmZmVyZW50IGRhdGE6IHBsb3QgZmlyc3QiLCJUaGUgbWVhbiBpcyBhbHdheXMgYmV0dGVyIHRoYW4gdGhlIG1lZGlhbiIsIlNtYWxsIHNhbXBsZXMgYXJlIGFsd2F5cyBub3JtYWwiXSwib3B0aW9uc19mciI6WyJMYSBjb3Jyw6lsYXRpb24gcHJvdXZlIGxhIGNhdXNhbGl0w6kiLCJEZXMgc3RhdGlzdGlxdWVzIHLDqXN1bcOpZXMgaWRlbnRpcXVlcyBwZXV2ZW50IGNhY2hlciBkZXMgZG9ubsOpZXMgdHLDqHMgZGlmZsOpcmVudGVzIDogdHJhY2V6IGQnYWJvcmQiLCJMYSBtb3llbm5lIGVzdCB0b3Vqb3VycyBtZWlsbGV1cmUgcXVlIGxhIG3DqWRpYW5lIiwiTGVzIHBldGl0cyDDqWNoYW50aWxsb25zIHNvbnQgdG91am91cnMgbm9ybWF1eCJdLCJhbnN3ZXIiOjF9XQ==">
+
+</div>
+<div class="solution" data-quiz="t03">
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">mean</span>(anscombe<span class="sc">$</span>y4)                                            <span class="co"># 1</span></span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>oc <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/octopus_catch.csv&quot;</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">mean</span>(<span class="fu">log</span>(oc<span class="sc">$</span>weight_g)))                                  <span class="co"># 2</span></span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a><span class="fu">tapply</span>(oc<span class="sc">$</span>weight_g, oc<span class="sc">$</span>area, <span class="cf">function</span>(w) <span class="fu">exp</span>(<span class="fu">mean</span>(<span class="fu">log</span>(w))))  <span class="co"># 3</span></span>
+<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a><span class="fu">sum</span>(oc<span class="sc">$</span>weight_g <span class="sc">&gt;=</span> <span class="dv">2000</span>)                                     <span class="co"># 4</span></span>
+<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a><span class="fu">tapply</span>(oc<span class="sc">$</span>weight_g, oc<span class="sc">$</span>area, median)                         <span class="co"># 5</span></span>
+<span id="cb16-7"><a href="#cb16-7" tabindex="-1"></a><span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> <span class="fu">prop.table</span>(<span class="fu">table</span>(oc<span class="sc">$</span>area, oc<span class="sc">$</span>gear), <span class="dv">1</span>), <span class="dv">1</span>)       <span class="co"># 6</span></span>
+<span id="cb16-8"><a href="#cb16-8" tabindex="-1"></a>rf <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/reef_fish_sites.csv&quot;</span>)</span>
+<span id="cb16-9"><a href="#cb16-9" tabindex="-1"></a><span class="fu">ggplot</span>(rf, <span class="fu">aes</span>(herbivore_pct)) <span class="sc">+</span> <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="fl">2.5</span>)</span>
+<span id="cb16-10"><a href="#cb16-10" tabindex="-1"></a><span class="fu">ggplot</span>(rf, <span class="fu">aes</span>(<span class="at">sample =</span> herbivore_pct)) <span class="sc">+</span> <span class="fu">stat_qq</span>() <span class="sc">+</span> <span class="fu">stat_qq_line</span>()</span>
+<span id="cb16-11"><a href="#cb16-11" tabindex="-1"></a><span class="co"># 7: right skew   8: the geometric mean   9: boxplot + points   10: plot first</span></span></code></pre></div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

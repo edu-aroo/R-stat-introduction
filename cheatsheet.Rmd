@@ -1,0 +1,116 @@
+---
+title: "[Cheatsheet]{.en}[Aide-mémoire]{.fr}"
+pagetitle: "R4Marine Stats · Cheatsheet"
+subtitle: "[Every function of the course, by task]{.en}[Toutes les fonctions du cours, par tâche]{.fr}"
+---
+
+## [Variables and data]{.en}[Variables et données]{.fr} {.no-track}
+
+| Code | [What it does]{.en}[Ce qu'il fait]{.fr} | [Session]{.en}[Séance]{.fr} |
+|---|---|---|
+| `str(df)`, `sapply(df, class)` | [type of every column]{.en}[type de chaque colonne]{.fr} | 0 |
+| `factor(x, levels = c(...), ordered = TRUE)` | [categorical (ordinal) variable with a fixed order]{.en}[variable catégorielle (ordinale) avec un ordre fixé]{.fr} | 0 |
+| `table(x)`, `table(a, b)`, `addmargins()` | [counts, two-way table, totals]{.en}[effectifs, tableau croisé, totaux]{.fr} | 0, 2 |
+| `prop.table(tab, 1)` / `prop.table(tab, 2)` | [% within rows / within columns]{.en}[% dans les lignes / dans les colonnes]{.fr} | 2 |
+| `mean(x == "yes")` | [proportion of "yes"]{.en}[proportion de « yes »]{.fr} | 0 |
+| `set.seed(1); sample(x, n)` | [reproducible random sample]{.en}[échantillon aléatoire reproductible]{.fr} | 1 |
+| `replicate(1000, expr)` | [repeat a simulation]{.en}[répéter une simulation]{.fr} | 1, 5 |
+
+## [Describing]{.en}[Décrire]{.fr} {.no-track}
+
+| Code | [What it does]{.en}[Ce qu'il fait]{.fr} | [Session]{.en}[Séance]{.fr} |
+|---|---|---|
+| `mean(x, na.rm = TRUE)`, `median(x)`, `mean(x, trim = 0.1)` | [centre]{.en}[centre]{.fr} | 2 |
+| `sd(x)`, `var(x)`, `IQR(x)`, `range(x)`, `quantile(x, probs)` | [spread and position]{.en}[dispersion et position]{.fr} | 2 |
+| `sd(x) / mean(x) * 100` | [coefficient of variation (%)]{.en}[coefficient de variation (%)]{.fr} | 2 |
+| `boxplot.stats(x)$out` | [potential outliers (1.5 × IQR rule)]{.en}[valeurs extrêmes potentielles (règle 1,5 × IQR)]{.fr} | 2 |
+| `df %>% group_by(g) %>% summarise(n = n(), m = mean(y))` | [summary table by group]{.en}[tableau de synthèse par groupe]{.fr} | 2 |
+| `exp(mean(log(x)))` | [geometric mean]{.en}[moyenne géométrique]{.fr} | 3 |
+| `scale(x)` | [z-scores]{.en}[scores z]{.fr} | 4 |
+
+## [Plotting distributions]{.en}[Représenter des distributions]{.fr} {.no-track}
+
+| Code | [What it does]{.en}[Ce qu'il fait]{.fr} | [Session]{.en}[Séance]{.fr} |
+|---|---|---|
+| `geom_histogram(binwidth = )`, `geom_density()` | [shape of one variable]{.en}[forme d'une variable]{.fr} | 3 |
+| `geom_boxplot(outlier.shape = NA) + geom_jitter(width = 0.1, height = 0)` | [groups with raw points]{.en}[groupes avec points bruts]{.fr} | 3 |
+| `ggplot(df, aes(sample = y)) + stat_qq() + stat_qq_line()` | [normal QQ plot]{.en}[QQ plot normal]{.fr} | 3 |
+| `scale_x_log10()` | [log axis]{.en}[axe log]{.fr} | 3 |
+| `geom_bar(position = "fill")` | [composition (%) of groups]{.en}[composition (%) des groupes]{.fr} | 3 |
+| `geom_pointrange(aes(ymin = lower, ymax = upper))` | [means with CIs]{.en}[moyennes avec IC]{.fr} | 5 |
+| `geom_smooth(method = "lm", formula = y ~ x)` | [regression line with its CI band]{.en}[droite de régression avec sa bande d'IC]{.fr} | 10 |
+
+## [Distributions]{.en}[Lois de distribution]{.fr} {.no-track}
+
+| [Distribution]{.en}[Loi]{.fr} | d / p / q / r | [Use]{.en}[Usage]{.fr} |
+|---|---|---|
+| [binomial]{.en}[binomiale]{.fr} | `dbinom(x, size, prob)`, `pbinom()`, `qbinom()`, `rbinom()` | [successes out of n trials]{.en}[succès sur n essais]{.fr} |
+| Poisson | `dpois(x, lambda)`, `ppois()`, `rpois()` | [counts per unit area / time]{.en}[comptages par unité de surface / temps]{.fr} |
+| [normal]{.en}[normale]{.fr} | `dnorm(x, mean, sd)`, `pnorm()`, `qnorm()`, `rnorm()` | [measurements, means]{.en}[mesures, moyennes]{.fr} |
+| [log-normal]{.en}[log-normale]{.fr} | `plnorm(q, meanlog, sdlog)`, `rlnorm()` | [positive, right-skewed]{.en}[positives, asymétriques à droite]{.fr} |
+| *t*, χ², F | `qt(0.975, df)`, `pt()`, `pchisq()`, `pf()` | [test statistics]{.en}[statistiques de test]{.fr} |
+
+[`p…(q)` = P(X ≤ q). For "q or more" with counts: `1 - p…(q - 1)`.]{.en}[`p…(q)` = P(X ≤ q). Pour « q ou plus » avec des comptages : `1 - p…(q - 1)`.]{.fr}
+
+## [Estimating]{.en}[Estimer]{.fr} {.no-track}
+
+| Code | [What it does]{.en}[Ce qu'il fait]{.fr} | [Session]{.en}[Séance]{.fr} |
+|---|---|---|
+| `sd(x) / sqrt(length(x))` | [standard error of the mean]{.en}[erreur standard de la moyenne]{.fr} | 5 |
+| `t.test(x, conf.level = 0.95)$conf.int` | [CI of a mean]{.en}[IC d'une moyenne]{.fr} | 5 |
+| `binom.test(x, n)$conf.int`, `prop.test(x, n)$conf.int` | [CI of a proportion]{.en}[IC d'une proportion]{.fr} | 5 |
+| `quantile(replicate(5000, median(sample(x, replace = TRUE))), c(0.025, 0.975))` | [bootstrap CI (here of a median)]{.en}[IC bootstrap (ici d'une médiane)]{.fr} | 5 |
+
+## [Testing]{.en}[Tester]{.fr} {.no-track}
+
+| Code | [What it does]{.en}[Ce qu'il fait]{.fr} | [Session]{.en}[Séance]{.fr} |
+|---|---|---|
+| `t.test(x, mu = m)` | [one-sample t-test]{.en}[test t à un échantillon]{.fr} | 6 |
+| `t.test(y ~ g, data = df)` | [Welch two-sample t-test]{.en}[test t de Welch à deux échantillons]{.fr} | 7 |
+| `t.test(x1, x2, paired = TRUE)` | [paired t-test]{.en}[test t apparié]{.fr} | 7 |
+| `wilcox.test(y ~ g)`, `wilcox.test(x1, x2, paired = TRUE)` | [rank-sum / signed-rank tests]{.en}[tests des rangs / des rangs signés]{.fr} | 7 |
+| `fit <- aov(y ~ g, data = df); summary(fit); TukeyHSD(fit)` | [one-way ANOVA + all pairs]{.en}[ANOVA à un facteur + toutes les paires]{.fr} | 8 |
+| `oneway.test(y ~ g)` | [Welch ANOVA (unequal variances)]{.en}[ANOVA de Welch (variances inégales)]{.fr} | 8 |
+| `kruskal.test(y ~ g)`; `pairwise.wilcox.test(y, g, p.adjust.method = "holm")` | [rank-based ANOVA + pairs]{.en}[ANOVA sur les rangs + paires]{.fr} | 8 |
+| `plot(fit, which = 1:2)` | [residual diagnostics (aov, lm)]{.en}[diagnostic des résidus (aov, lm)]{.fr} | 8, 10 |
+| `binom.test(x, n, p = )` | [one proportion vs reference]{.en}[une proportion vs référence]{.fr} | 9 |
+| `chisq.test(table(x), p = )` | [goodness of fit]{.en}[ajustement]{.fr} | 9 |
+| `prop.test(c(x1, x2), c(n1, n2))` | [two proportions]{.en}[deux proportions]{.fr} | 9 |
+| `chisq.test(table(a, b))`; `$expected`, `$stdres` | [independence test, expected counts, residuals]{.en}[test d'indépendance, effectifs attendus, résidus]{.fr} | 9 |
+| `fisher.test(tab)` | [exact test; odds ratio for 2 × 2]{.en}[test exact ; odds ratio pour 2 × 2]{.fr} | 9 |
+
+## [Relationships]{.en}[Relations]{.fr} {.no-track}
+
+| Code | [What it does]{.en}[Ce qu'il fait]{.fr} | [Session]{.en}[Séance]{.fr} |
+|---|---|---|
+| `cor(x, y)`, `cor.test(x, y)` | [Pearson correlation and test]{.en}[corrélation de Pearson et test]{.fr} | 10 |
+| `cor.test(x, y, method = "spearman", exact = FALSE)` | [Spearman (ranks)]{.en}[Spearman (rangs)]{.fr} | 10 |
+| `fit <- lm(y ~ x, data = df); summary(fit); confint(fit)` | [simple linear regression]{.en}[régression linéaire simple]{.fr} | 10 |
+| `predict(fit, newdata, interval = "confidence" / "prediction")` | [predictions with intervals]{.en}[prédictions avec intervalles]{.fr} | 10 |
+| `100 * (exp(coef(fit)[2]) - 1)` | [% change per unit of x when y was logged]{.en}[% de variation par unité de x quand y a été logué]{.fr} | 10 |
+
+## [Planning and reporting]{.en}[Planifier et rédiger]{.fr} {.no-track}
+
+| Code | [What it does]{.en}[Ce qu'il fait]{.fr} | [Session]{.en}[Séance]{.fr} |
+|---|---|---|
+| `power.t.test(delta, sd, power = 0.8)` | [n per group for a t-test]{.en}[n par groupe pour un test t]{.fr} | 11 |
+| `power.prop.test(p1, p2, power = 0.8)` | [n per group for two proportions]{.en}[n par groupe pour deux proportions]{.fr} | 11 |
+| `p.adjust(p, "holm")`, `"BH"`, `"bonferroni"` | [adjust for multiple tests]{.en}[ajuster pour tests multiples]{.fr} | 11 |
+| `citation()`, `sessionInfo()` | [cite R; record versions]{.en}[citer R ; noter les versions]{.fr} | 11 |
+
+## [Reporting templates]{.en}[Modèles de rédaction]{.fr} {.no-track}
+
+::: en
+- **Mean with CI:** "Mean weight was 631 g (95 % CI 581–680 g, n = 160)."
+- **Two groups:** "X was higher in A than in B (mean 54.7 vs 45.8 %; difference 8.9, 95 % CI 1.2–16.7; Welch t-test, t = 2.30, df = 78.0, p = 0.024)."
+- **ANOVA:** "Y differed among groups (one-way ANOVA, F₃,₂₀ = 8.19, p < 0.001, η² = 0.55); only C differed from D (Tukey HSD, …)."
+- **χ²:** "The share of A was higher among B (68 % vs 45 %; χ² = 19.4, df = 1, p < 0.001; odds ratio 4.3, 95 % CI …)."
+- **Regression:** "Height decreased by 0.17 m per PSU of salinity (95 % CI −0.24 to −0.11; R² = 0.47, n = 40)."
+:::
+::: fr
+- **Moyenne avec IC :** « Le poids moyen était de 631 g (IC 95 % 581–680 g, n = 160). »
+- **Deux groupes :** « X était plus élevé en A qu'en B (moyenne 54,7 contre 45,8 % ; différence 8,9, IC 95 % 1,2–16,7 ; test t de Welch, t = 2,30, ddl = 78,0, p = 0,024). »
+- **ANOVA :** « Y différait entre groupes (ANOVA à un facteur, F₃,₂₀ = 8,19, p < 0,001, η² = 0,55) ; seul C différait de D (HSD de Tukey, …). »
+- **χ² :** « La part de A était plus élevée chez B (68 % contre 45 % ; χ² = 19,4, ddl = 1, p < 0,001 ; odds ratio 4,3, IC 95 % …). »
+- **Régression :** « La hauteur diminuait de 0,17 m par PSU de salinité (IC 95 % −0,24 à −0,11 ; R² = 0,47, n = 40). »
+:::

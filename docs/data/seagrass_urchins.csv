@@ -1,0 +1,81 @@
+"station","protection","sediment","depth_m","seagrass_cover","canopy_cm","urchins"
+"S01","Inside","sand",2.8,44,19.5,1
+"S02","Inside","muddy sand",3.2,55,20.7,2
+"S03","Inside","muddy sand",1.3,73,22.2,7
+"S04","Inside","sand",3,51,22.8,2
+"S05","Inside","muddy sand",0.8,42,13.5,3
+"S06","Inside","sand",1.9,56,19.3,6
+"S07","Inside","muddy sand",1.6,71,20.7,1
+"S08","Inside","muddy sand",3.3,17,12.5,3
+"S09","Inside","muddy sand",2.4,65,21.8,2
+"S10","Inside","muddy sand",2.2,78,16.2,0
+"S11","Inside","sand",1.5,57,16.7,0
+"S12","Inside","sand",3.1,32,18.5,0
+"S13","Inside","muddy sand",2,33,15.8,0
+"S14","Inside","rubble",2.4,31,8.8,3
+"S15","Inside","sand",2.2,55,21.6,0
+"S16","Inside","sand",0.6,61,17.2,0
+"S17","Inside","sand",1.1,80,21.9,1
+"S18","Inside","sand",2.8,53,17.6,0
+"S19","Inside","muddy sand",2,77,20.7,2
+"S20","Inside","rubble",0.7,47,19,0
+"S21","Inside","muddy sand",1.9,99,26.2,3
+"S22","Inside","sand",3.1,59,17.9,0
+"S23","Inside","sand",1.1,62,13.7,0
+"S24","Inside","muddy sand",0.8,54,15.1,5
+"S25","Inside","sand",2.6,58,14,1
+"S26","Inside","sand",2.1,60,18.8,2
+"S27","Inside","rubble",3,18,14.5,2
+"S28","Inside","sand",1.1,80,22.5,1
+"S29","Inside","muddy sand",1.1,63,15.9,0
+"S30","Inside","sand",2.8,41,11.4,1
+"S31","Inside","muddy sand",3.1,53,18.6,2
+"S32","Inside","muddy sand",1.7,62,18.3,0
+"S33","Inside","sand",1.2,67,20.5,3
+"S34","Inside","sand",3.3,42,17,3
+"S35","Inside","sand",0.7,74,24.8,4
+"S36","Inside","sand",0.5,60,20.6,3
+"S37","Inside","rubble",3,36,10.6,5
+"S38","Inside","sand",0.7,41,12.2,1
+"S39","Inside","sand",2.4,45,14.1,0
+"S40","Inside","sand",3.3,35,14.6,0
+"S41","Outside","sand",1.4,67,21.6,1
+"S42","Outside","sand",0.7,30,12.4,3
+"S43","Outside","sand",3.3,37,10.7,2
+"S44","Outside","muddy sand",1.4,78,26.6,0
+"S45","Outside","muddy sand",1.6,63,20.1,0
+"S46","Outside","muddy sand",2.8,34,15,2
+"S47","Outside","sand",3,31,7.6,1
+"S48","Outside","rubble",0.9,17,14.9,7
+"S49","Outside","muddy sand",2.8,43,12.3,0
+"S50","Outside","sand",2.8,43,15.3,3
+"S51","Outside","sand",2.1,28,11.8,1
+"S52","Outside","sand",0.7,71,17.9,4
+"S53","Outside","rubble",3.4,44,18.2,3
+"S54","Outside","muddy sand",0.6,67,24.8,7
+"S55","Outside","rubble",1.7,56,16.1,5
+"S56","Outside","sand",1.9,44,14.8,0
+"S57","Outside","rubble",0.9,40,11.3,3
+"S58","Outside","sand",1.7,49,20.5,0
+"S59","Outside","sand",2.6,42,12.2,9
+"S60","Outside","rubble",2.8,38,13.8,2
+"S61","Outside","sand",1.5,58,19.3,8
+"S62","Outside","sand",3.3,73,21.9,16
+"S63","Outside","muddy sand",3,34,9,0
+"S64","Outside","muddy sand",2.3,44,16.8,11
+"S65","Outside","rubble",1.7,22,11.2,6
+"S66","Outside","sand",1.3,60,20.2,4
+"S67","Outside","sand",1.3,52,18.2,3
+"S68","Outside","rubble",3.4,15,10.5,7
+"S69","Outside","muddy sand",1.1,78,21.5,1
+"S70","Outside","rubble",2.2,23,12,4
+"S71","Outside","muddy sand",3.1,46,13.9,4
+"S72","Outside","muddy sand",2.6,50,16.2,13
+"S73","Outside","sand",3.5,29,12,3
+"S74","Outside","rubble",1.5,37,18,1
+"S75","Outside","sand",3.5,27,13,2
+"S76","Outside","sand",1,69,17.9,1
+"S77","Outside","rubble",1.4,25,10.5,0
+"S78","Outside","sand",0.6,58,19.3,25
+"S79","Outside","sand",1.1,40,18.7,4
+"S80","Outside","sand",0.7,68,19.3,1

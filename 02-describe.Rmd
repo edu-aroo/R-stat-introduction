@@ -1,0 +1,350 @@
+---
+title: "[2 · Describing data: centre, spread, shape]{.en}[2 · Décrire les données : centre, dispersion, forme]{.fr}"
+pagetitle: "R4Marine Stats · Session 2"
+subtitle: "~3 h"
+---
+
+```{r setup, include=FALSE}
+source("R/course_helpers.R")
+library(dplyr)
+rf <- read.csv("data/reef_fish_sites.csv")
+fs <- read.csv("data/fisher_survey.csv")
+```
+
+::: objectives
+::: en
+#### By the end of this session you will be able to
+- summarise the **centre** of a numeric variable (mean, median, trimmed mean) and choose between them;
+- summarise its **spread** (range, variance, standard deviation, IQR, coefficient of variation);
+- detect **skewness** and **outliers** (the 1.5 × IQR rule) and decide what to do with them;
+- build a **summary table by group** with `dplyr` (`group_by()` + `summarise()`);
+- summarise **categorical** variables with one- and two-way tables of counts and percentages.
+:::
+::: fr
+#### À la fin de cette séance vous saurez
+- résumer le **centre** d'une variable numérique (moyenne, médiane, moyenne tronquée) et choisir entre eux ;
+- résumer sa **dispersion** (étendue, variance, écart-type, écart interquartile, coefficient de variation) ;
+- détecter l'**asymétrie** et les **valeurs extrêmes** (règle des 1,5 × IQR) et décider quoi en faire ;
+- construire un **tableau de synthèse par groupe** avec `dplyr` (`group_by()` + `summarise()`) ;
+- résumer des variables **catégorielles** avec des tableaux à une et deux entrées, en effectifs et pourcentages.
+:::
+:::
+
+::: {.callout .ecology}
+::: en
+**Reef fish survey** (`reef_fish_sites.csv`, simulated). October–November 2025, **36 reef sites**: 12 in **no-take** reserves, 12 in **LMMAs** (fishing with rules) and 12 in **open access**, in two regions. At each site, two divers counted and sized fish on three 50 × 5 m belt transects; fish biomass was computed from lengths, and the three transects were **averaged** (Session 1: the site is the replicate). *One row = one site*: depth (m), live coral cover (%), rugosity (chain method, 1 = flat), fish density (fish per 250 m²), species richness, total fish biomass (kg/ha), % of herbivores in the biomass.
+:::
+::: fr
+**Suivi des poissons récifaux** (`reef_fish_sites.csv`, simulé). Octobre–novembre 2025, **36 sites récifaux** : 12 en réserve **intégrale** (*no-take*), 12 en **LMMA** (pêche réglementée) et 12 en **libre accès**, dans deux régions. Sur chaque site, deux plongeurs ont compté et mesuré les poissons sur trois transects-couloirs de 50 × 5 m ; la biomasse a été calculée à partir des tailles, et les trois transects ont été **moyennés** (séance 1 : le site est le réplicat). *Une ligne = un site* : profondeur (m), recouvrement en corail vivant (%), rugosité (méthode de la chaîne, 1 = plat), densité de poissons (poissons par 250 m²), richesse spécifique, biomasse totale (kg/ha), % d'herbivores dans la biomasse.
+:::
+:::
+
+`r dl("reef_fish_sites.csv", "reef_fish_sites.csv")`
+
+```{r}
+rf <- read.csv("data/reef_fish_sites.csv")
+head(rf)
+summary(rf$biomass_kg_ha)
+```
+
+## [The centre: mean, median, trimmed mean]{.en}[Le centre : moyenne, médiane, moyenne tronquée]{.fr} {#centre}
+
+::: en
+- The **mean** x̄ = (sum of the values) / n: the "balance point" of the data. It uses every value, so it is **pulled by extreme values**.
+- The **median** is the middle value once sorted: half of the values are below, half above. It ignores how far the extremes are.
+- The **trimmed mean** removes a share of the smallest and largest values before averaging (`trim = 0.1` removes 10 % at each end): a compromise.
+:::
+::: fr
+- La **moyenne** x̄ = (somme des valeurs) / n : le « point d'équilibre » des données. Elle utilise toutes les valeurs, elle est donc **tirée par les valeurs extrêmes**.
+- La **médiane** est la valeur du milieu une fois triées : la moitié des valeurs est en dessous, la moitié au-dessus. Elle ignore à quelle distance sont les extrêmes.
+- La **moyenne tronquée** enlève une part des plus petites et des plus grandes valeurs avant de moyenner (`trim = 0.1` enlève 10 % à chaque bout) : un compromis.
+:::
+
+```{r}
+b <- rf$biomass_kg_ha
+mean(b)
+median(b)
+mean(b, trim = 0.1)
+```
+
+```{r, echo=FALSE}
+fa(c("`mean(x, trim, na.rm)`", "arithmetic mean", "moyenne arithmétique", "a numeric vector", "un vecteur numérique"),
+   c("&nbsp;&nbsp;`trim`", "share of values removed at **each** end before averaging", "part des valeurs enlevée à **chaque** bout avant de moyenner", "0 (default) to 0.5", "0 (défaut) à 0,5"),
+   c("&nbsp;&nbsp;`na.rm`", "`TRUE` = ignore missing values (otherwise the result is `NA`)", "`TRUE` = ignore les valeurs manquantes (sinon le résultat est `NA`)", "`TRUE` / `FALSE`", "`TRUE` / `FALSE`"),
+   c("`median(x, na.rm)`", "middle value of the sorted data", "valeur du milieu des données triées", "a numeric vector", "un vecteur numérique"))
+```
+
+::: en
+The mean (≈ `r round(mean(b))` kg/ha) is above the median (≈ `r round(median(b))`): a few sites with very high biomass pull the mean up. This is a **right-skewed** distribution, typical of biomass, abundance, income, catch weight… When mean and median differ a lot, **report the median** (or both), or analyse the log of the variable (Session 3).
+:::
+::: fr
+La moyenne (≈ `r round(mean(b))` kg/ha) est au-dessus de la médiane (≈ `r round(median(b))`) : quelques sites à très forte biomasse tirent la moyenne vers le haut. C'est une distribution **asymétrique à droite**, typique des biomasses, abondances, revenus, poids de capture… Quand moyenne et médiane diffèrent beaucoup, **donnez la médiane** (ou les deux), ou analysez le log de la variable (séance 3).
+:::
+
+## [The spread: how different are the values?]{.en}[La dispersion : à quel point les valeurs diffèrent-elles ?]{.fr} {#spread}
+
+::: en
+Two reefs can have the same mean biomass, one with all sites close to it, the other with very rich and very poor sites. The spread is as important as the centre.
+
+| Measure | Formula / idea | R |
+|---|---|---|
+| Range | max − min (depends only on 2 values) | `range(x)`, `diff(range(x))` |
+| Variance s² | mean squared distance to the mean, dividing by **n − 1** | `var(x)` |
+| Standard deviation s | √variance, in the **units of the data** | `sd(x)` |
+| Interquartile range | Q3 − Q1: width of the middle 50 % | `IQR(x)` |
+| Coefficient of variation | s / x̄ × 100: spread relative to the mean (no unit) | `sd(x) / mean(x) * 100` |
+:::
+::: fr
+Deux récifs peuvent avoir la même biomasse moyenne, l'un avec tous ses sites proches de cette moyenne, l'autre avec des sites très riches et très pauvres. La dispersion est aussi importante que le centre.
+
+| Mesure | Formule / idée | R |
+|---|---|---|
+| Étendue | max − min (dépend de 2 valeurs seulement) | `range(x)`, `diff(range(x))` |
+| Variance s² | distance au carré moyenne à la moyenne, en divisant par **n − 1** | `var(x)` |
+| Écart-type s | √variance, dans les **unités des données** | `sd(x)` |
+| Écart interquartile | Q3 − Q1 : largeur des 50 % centraux | `IQR(x)` |
+| Coefficient de variation | s / x̄ × 100 : dispersion relative à la moyenne (sans unité) | `sd(x) / mean(x) * 100` |
+:::
+
+```{r}
+x <- rf$coral_cover
+dev <- x - mean(x)                        # distance of each site to the mean
+sum(dev^2) / (length(x) - 1)              # variance "by hand"
+var(x)                                    # the same
+sd(x)
+quantile(x)
+IQR(x)
+sd(x) / mean(x) * 100                     # CV (%) of coral cover
+sd(b) / mean(b) * 100                     # CV (%) of biomass: much more variable
+```
+
+```{r, echo=FALSE}
+fa(c("`var(x)`, `sd(x)`", "sample variance and standard deviation (dividing by n − 1)", "variance et écart-type d'échantillon (division par n − 1)", "a numeric vector", "un vecteur numérique"),
+   c("`quantile(x, probs, type)`", "values below which a given share of the data lies; default: min, Q1, median, Q3, max", "valeurs sous lesquelles se trouve une part donnée des données ; par défaut : min, Q1, médiane, Q3, max", "", ""),
+   c("&nbsp;&nbsp;`type`", "one of 9 calculation rules; R's default (7) can differ slightly from Excel or SPSS on small samples", "une des 9 règles de calcul ; celle de R par défaut (7) peut différer légèrement d'Excel ou SPSS sur de petits échantillons", "1 to 9", "1 à 9"),
+   c("`IQR(x)`", "interquartile range Q3 − Q1", "écart interquartile Q3 − Q1", "a numeric vector", "un vecteur numérique"),
+   c("`range(x)`", "minimum and maximum (a vector of 2 values)", "minimum et maximum (un vecteur de 2 valeurs)", "", ""))
+```
+
+::: {.callout .tip}
+::: en
+**Why n − 1?** The sample mean is, by construction, the value closest to the sample's own data, so distances to x̄ are slightly smaller than distances to the true μ. Dividing by n − 1 instead of n corrects this underestimate. R's `var()` and `sd()` always do it.
+
+**Which pair to report?** Roughly symmetric data: **mean ± SD**. Skewed data or outliers: **median (Q1–Q3)**. Always give **n**.
+:::
+::: fr
+**Pourquoi n − 1 ?** La moyenne d'échantillon est, par construction, la valeur la plus proche des données de l'échantillon lui-même, donc les distances à x̄ sont un peu plus petites que les distances au vrai μ. Diviser par n − 1 au lieu de n corrige cette sous-estimation. `var()` et `sd()` de R le font toujours.
+
+**Quelle paire rapporter ?** Données à peu près symétriques : **moyenne ± ET**. Données asymétriques ou valeurs extrêmes : **médiane (Q1–Q3)**. Donnez toujours **n**.
+:::
+:::
+
+## [Shape and outliers]{.en}[Forme et valeurs extrêmes]{.fr} {#outliers}
+
+::: en
+A common rule (Tukey) flags as **potential outliers** the values below Q1 − 1.5 × IQR or above Q3 + 1.5 × IQR. These are the points drawn individually by a boxplot. `boxplot.stats()` returns them.
+:::
+::: fr
+Une règle courante (Tukey) signale comme **valeurs extrêmes potentielles** les valeurs sous Q1 − 1,5 × IQR ou au-dessus de Q3 + 1,5 × IQR. Ce sont les points dessinés individuellement par une boîte à moustaches. `boxplot.stats()` les renvoie.
+:::
+
+```{r}
+q <- quantile(b, c(0.25, 0.75))
+upper <- q[[2]] + 1.5 * IQR(b)
+upper
+b[b > upper]
+boxplot.stats(b)$out
+rf[rf$biomass_kg_ha > upper, c("site", "management", "biomass_kg_ha")]
+```
+
+```{r, echo=FALSE}
+fa(c("`boxplot.stats(x)$out`", "the values beyond 1.5 × IQR from the box (the boxplot's individual points)", "les valeurs au-delà de 1,5 × IQR de la boîte (les points isolés de la boîte à moustaches)", "a numeric vector", "un vecteur numérique"),
+   c("`q[[2]]`", "the 2nd value of `q`, without its name", "la 2e valeur de `q`, sans son nom", "", ""))
+```
+
+::: {.callout .warning}
+::: en
+**An outlier is a question, not an error.** Check it: data-entry mistake (an extra zero)? Different unit? Or a real, rare value — a very rich no-take site? **Correct** errors; **keep** real values and, if they matter, use methods that are robust to them (median, rank-based tests in Sessions 7–8) or a log scale. Never delete a value only because it makes the result "less clean", and always report what you did.
+:::
+::: fr
+**Une valeur extrême est une question, pas une erreur.** Vérifiez-la : erreur de saisie (un zéro en trop) ? Autre unité ? Ou une valeur réelle et rare — un site intégral très riche ? **Corrigez** les erreurs ; **gardez** les valeurs réelles et, si elles comptent, utilisez des méthodes qui y résistent (médiane, tests sur les rangs des séances 7–8) ou une échelle log. Ne supprimez jamais une valeur seulement parce qu'elle rend le résultat « moins propre », et dites toujours ce que vous avez fait.
+:::
+:::
+
+## [Summary table by group with dplyr]{.en}[Tableau de synthèse par groupe avec dplyr]{.fr} {#by-group}
+
+::: en
+In the R course you used `tapply()` and `aggregate()`. For a table with several statistics at once, `dplyr` is clearer: `group_by()` splits the rows, `summarise()` computes one row per group. `n()` counts the rows of each group.
+:::
+::: fr
+Dans le cours de R vous avez utilisé `tapply()` et `aggregate()`. Pour un tableau avec plusieurs statistiques à la fois, `dplyr` est plus clair : `group_by()` découpe les lignes, `summarise()` calcule une ligne par groupe. `n()` compte les lignes de chaque groupe.
+:::
+
+```{r}
+library(dplyr)
+tab <- rf %>%
+  group_by(management) %>%
+  summarise(n      = n(),
+            mean   = mean(biomass_kg_ha),
+            sd     = sd(biomass_kg_ha),
+            median = median(biomass_kg_ha),
+            q1     = quantile(biomass_kg_ha, 0.25),
+            q3     = quantile(biomass_kg_ha, 0.75)) %>%
+  arrange(desc(median))
+tab
+```
+
+```{r, echo=FALSE}
+fa(c("`df %>% f()`", "the pipe: passes `df` as the first argument of `f()`; read it \"then\"", "le pipe : passe `df` comme premier argument de `f()` ; lisez « puis »", "", ""),
+   c("`group_by(...)`", "marks the groups: the next `summarise()` works group by group", "marque les groupes : le `summarise()` suivant travaille groupe par groupe", "column names", "noms de colonnes"),
+   c("`summarise(name = f(col), ...)`", "one row per group, one column per statistic", "une ligne par groupe, une colonne par statistique", "", ""),
+   c("`n()`", "number of rows of the group (only inside `summarise()` / `mutate()`)", "nombre de lignes du groupe (seulement dans `summarise()` / `mutate()`)", "nothing", "rien"),
+   c("`arrange(desc(col))`", "sorts the rows by `col`, `desc()` = decreasing", "trie les lignes selon `col`, `desc()` = décroissant", "", ""))
+```
+
+::: en
+To save it for a report, round first: `tab %>% mutate(across(mean:q3, \(v) round(v)))`, then `write.csv(tab, "outputs/biomass_by_management.csv", row.names = FALSE)`.
+:::
+::: fr
+Pour l'enregistrer dans un rapport, arrondissez d'abord : `tab %>% mutate(across(mean:q3, \(v) round(v)))`, puis `write.csv(tab, "outputs/biomass_by_management.csv", row.names = FALSE)`.
+:::
+
+::: {.callout .try}
+::: en
+**Try it.** Same table for `species_richness` grouped by `management` **and** `region` (`group_by(management, region)`). Is richness skewed like biomass? Compare mean and median.
+:::
+::: fr
+**À vous.** Même tableau pour `species_richness` groupé par `management` **et** `region` (`group_by(management, region)`). La richesse est-elle asymétrique comme la biomasse ? Comparez moyenne et médiane.
+:::
+:::
+
+## [Describing categorical variables]{.en}[Décrire des variables catégorielles]{.fr} {#categorical}
+
+::: en
+For categories there is no mean: we report **counts** and **percentages**. With two variables, a **contingency table** crosses them. Be careful about **which total** the percentages refer to: `prop.table(tab, 1)` gives percentages **within each row** (they sum to 100 % by row), `prop.table(tab, 2)` **within each column**.
+:::
+::: fr
+Pour des catégories il n'y a pas de moyenne : on donne des **effectifs** et des **pourcentages**. Avec deux variables, un **tableau de contingence** les croise. Attention au **total** auquel se rapportent les pourcentages : `prop.table(tab, 1)` donne les pourcentages **dans chaque ligne** (ils somment à 100 % par ligne), `prop.table(tab, 2)` **dans chaque colonne**.
+:::
+
+```{r}
+fs <- read.csv("data/fisher_survey.csv")
+tab2 <- table(fs$sex, fs$main_gear)
+tab2
+addmargins(tab2)                                  # with totals
+round(100 * prop.table(tab2, margin = 1), 1)      # % of each gear WITHIN each sex
+round(100 * prop.table(tab2, margin = 2), 1)      # % of women and men WITHIN each gear
+```
+
+```{r, echo=FALSE}
+fa(c("`table(a, b)`", "two-way table of counts: rows = `a`, columns = `b`", "tableau croisé d'effectifs : lignes = `a`, colonnes = `b`", "two vectors of the same length", "deux vecteurs de même longueur"),
+   c("`addmargins(tab)`", "adds the row and column totals (`Sum`)", "ajoute les totaux de lignes et de colonnes (`Sum`)", "a table", "un tableau"),
+   c("`prop.table(tab, margin)`", "proportions; `margin = 1` within rows, `2` within columns, none = of the grand total", "proportions ; `margin = 1` dans les lignes, `2` dans les colonnes, rien = du total général", "1, 2 or nothing", "1, 2 ou rien"))
+```
+
+::: en
+Two sentences from the same table, both true, that say different things: "**63 %** of women glean" (row %) and "**71 %** of gleaners are women" (column %). Always say which one you give.
+:::
+::: fr
+Deux phrases tirées du même tableau, toutes deux vraies, qui disent des choses différentes : « **63 %** des femmes glanent » (% en ligne) et « **71 %** des glaneurs sont des femmes » (% en colonne). Dites toujours lequel vous donnez.
+:::
+
+```{r, include=FALSE}
+# check of the two numbers quoted above (they come from the data)
+stopifnot(round(100 * prop.table(tab2, 1)["F", "gleaning"]) == 63,
+          round(100 * prop.table(tab2, 2)["F", "gleaning"]) == 71)
+```
+
+## [Application work & quiz]{.en}[Travail d'application et quiz]{.fr} {#application}
+
+```{r answers02, include=FALSE}
+c1 <- round(median(rf$biomass_kg_ha), 1)
+c2 <- round(mean(rf$biomass_kg_ha) - median(rf$biomass_kg_ha), 1)
+c3 <- round(sd(rf$coral_cover), 2)
+c4 <- round(IQR(rf$species_richness), 2)
+c5 <- round(sd(rf$fish_density) / mean(rf$fish_density) * 100, 1)
+c6 <- round(median(rf$biomass_kg_ha[rf$management == "Open access"]), 1)
+c7 <- round(sd(rf$biomass_kg_ha[rf$management == "No-take"]), 1)
+c8 <- length(boxplot.stats(rf$fish_density)$out)
+tb <- table(fs$village, fs$lmma_member)
+c9 <- round(100 * prop.table(tb, 1)["Andrevo", "yes"], 1)
+```
+
+::: application
+::: en
+### Application work 2
+
+With `reef_fish_sites.csv` and `fisher_survey.csv`:
+
+1. Median fish biomass of the 36 sites (1 decimal).
+2. Mean biomass **minus** median biomass (1 decimal). What does its sign tell you?
+3. Standard deviation of coral cover (2 decimals).
+4. Interquartile range of species richness (2 decimals).
+5. Coefficient of variation of fish density, in % (1 decimal).
+6. Median biomass of **Open access** sites (1 decimal).
+7. SD of biomass of **No-take** sites (1 decimal).
+8. How many sites are flagged as potential outliers for **fish density** by the 1.5 × IQR rule?
+9. In the fisher survey, percentage of LMMA members **within the village of Andrevo** (1 decimal).
+10. A concept question.
+:::
+::: fr
+### Travail d'application 2
+
+Avec `reef_fish_sites.csv` et `fisher_survey.csv` :
+
+1. Biomasse médiane des 36 sites (1 décimale).
+2. Biomasse moyenne **moins** biomasse médiane (1 décimale). Que dit son signe ?
+3. Écart-type du recouvrement corallien (2 décimales).
+4. Écart interquartile de la richesse spécifique (2 décimales).
+5. Coefficient de variation de la densité de poissons, en % (1 décimale).
+6. Biomasse médiane des sites en **Open access** (1 décimale).
+7. ET de la biomasse des sites **No-take** (1 décimale).
+8. Combien de sites sont signalés comme valeurs extrêmes potentielles pour la **densité de poissons** par la règle des 1,5 × IQR ?
+9. Dans l'enquête pêcheurs, pourcentage de membres de la LMMA **dans le village d'Andrevo** (1 décimale).
+10. Une question de cours.
+:::
+:::
+
+::: hint
+::: en
+Q6–Q7: the `dplyr` table of this session gives them all at once. Q8: `length(boxplot.stats(rf$fish_density)$out)`. Q9: a two-way table village × LMMA member, then `prop.table(..., 1)`.
+:::
+::: fr
+Q6–Q7 : le tableau `dplyr` de cette séance les donne tous à la fois. Q8 : `length(boxplot.stats(rf$fish_density)$out)`. Q9 : un tableau croisé village × membre LMMA, puis `prop.table(..., 1)`.
+:::
+:::
+
+```{r quiz02, echo=FALSE}
+quiz("t02", list(
+  q_num("1. Median biomass (kg/ha)?", "1. Biomasse médiane (kg/ha) ?", c1, tol = 0.06),
+  q_num("2. Mean − median biomass?", "2. Moyenne − médiane de la biomasse ?", c2, tol = 0.06),
+  q_num("3. SD of coral cover?", "3. ET du recouvrement corallien ?", c3, tol = 0.006),
+  q_num("4. IQR of species richness?", "4. Écart interquartile de la richesse ?", c4, tol = 0.006),
+  q_num("5. CV of fish density (%)?", "5. CV de la densité de poissons (%) ?", c5, tol = 0.06),
+  q_num("6. Median biomass in Open access?", "6. Biomasse médiane en Open access ?", c6, tol = 0.06),
+  q_num("7. SD of biomass in No-take sites?", "7. ET de la biomasse des sites No-take ?", c7, tol = 0.06),
+  q_num("8. Number of potential outliers for fish density?", "8. Nombre de valeurs extrêmes potentielles de densité ?", c8, tol = 0),
+  q_num("9. % of LMMA members in Andrevo?", "9. % de membres de la LMMA à Andrevo ?", c9, tol = 0.06),
+  q_mcq("10. Biomass is strongly right-skewed. The best short summary is…",
+        "10. La biomasse est fortement asymétrique à droite. Le meilleur résumé court est…",
+        c("mean ± SD", "median (Q1–Q3) and n", "the range only", "the mode"),
+        c("moyenne ± ET", "médiane (Q1–Q3) et n", "l'étendue seulement", "le mode"), correct = 2)
+))
+```
+
+::: {.solution data-quiz="t02"}
+```{r, eval=FALSE}
+library(dplyr)
+rf <- read.csv("data/reef_fish_sites.csv")
+median(rf$biomass_kg_ha)                                   # 1
+mean(rf$biomass_kg_ha) - median(rf$biomass_kg_ha)          # 2: positive -> right skew
+sd(rf$coral_cover)                                         # 3
+IQR(rf$species_richness)                                   # 4
+sd(rf$fish_density) / mean(rf$fish_density) * 100          # 5
+rf %>% group_by(management) %>%
+  summarise(median = median(biomass_kg_ha), sd = sd(biomass_kg_ha))   # 6, 7
+length(boxplot.stats(rf$fish_density)$out)                 # 8
+fs <- read.csv("data/fisher_survey.csv")
+round(100 * prop.table(table(fs$village, fs$lmma_member), 1), 1)      # 9
+```
+:::

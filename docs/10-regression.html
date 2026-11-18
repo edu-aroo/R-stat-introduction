@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>R4Marine Stats · Session 10</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.1/jquery-3.6.1.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<!-- header.html: inserted inside <head> of every page (see _site.yml) -->
+<!-- config.js (settings) and quiz_index.js (made by R/build_site.R) first,
+     then course.js (the behaviour that reads them) -->
+<script src="assets/config.js"></script>
+<script src="assets/quiz_index.js"></script>
+<script src="assets/course.js"></script>
+<meta name="author" content="Aroo Falinirina">
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<link rel="stylesheet" href="assets/course.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">R4Marine Stats</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Sessions
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="00-start.html">0 · Why statistics?</a>
+    </li>
+    <li>
+      <a href="01-design.html">1 · Study design &amp; sampling</a>
+    </li>
+    <li>
+      <a href="02-describe.html">2 · Describing data</a>
+    </li>
+    <li>
+      <a href="03-explore.html">3 · Exploring distributions</a>
+    </li>
+    <li>
+      <a href="04-probability.html">4 · Probability &amp; distributions</a>
+    </li>
+    <li>
+      <a href="05-estimation.html">5 · Standard error &amp; CIs</a>
+    </li>
+    <li>
+      <a href="06-testing.html">6 · Hypothesis tests &amp; p-values</a>
+    </li>
+    <li>
+      <a href="07-two-groups.html">7 · Comparing two groups</a>
+    </li>
+    <li>
+      <a href="08-anova.html">8 · ANOVA &amp; Kruskal–Wallis</a>
+    </li>
+    <li>
+      <a href="09-categorical.html">9 · Proportions &amp; χ²</a>
+    </li>
+    <li>
+      <a href="10-regression.html">10 · Correlation &amp; regression</a>
+    </li>
+    <li>
+      <a href="11-power-reporting.html">11 · Power, multiple tests, reporting</a>
+    </li>
+    <li>
+      <a href="12-practice.html">12 · Practice</a>
+    </li>
+    <li>
+      <a href="13-final-project.html">13 · Final project</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Resources
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="choose-test.html">Which test? (decision guide)</a>
+    </li>
+    <li>
+      <a href="cheatsheet.html">Cheatsheet</a>
+    </li>
+    <li>
+      <a href="glossary.html">Glossary EN–FR</a>
+    </li>
+    <li>
+      <a href="common-errors.html">Common errors &amp; pitfalls</a>
+    </li>
+    <li>
+      <a href="resources.html">To go further</a>
+    </li>
+    <li>
+      <a href="help.html">Need help?</a>
+    </li>
+    <li>
+      <a href="whats-new.html">What's new</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore"><span class="en">10 · Correlation and
+simple linear regression</span><span class="fr">10 · Corrélation et
+régression linéaire simple</span></h1>
+<h3 class="subtitle">~3.5 h</h3>
+
+</div>
+
+
+<div class="objectives">
+<div id="by-the-end-of-this-session-you-will-be-able-to"
+class="section level4 en">
+<h4>By the end of this session you will be able to</h4>
+<ul>
+<li>describe the relationship between two numeric variables with a
+<strong>scatterplot</strong> and a <strong>correlation
+coefficient</strong> (Pearson <em>r</em> or Spearman ρ), and test it
+with <code>cor.test()</code>;</li>
+<li>explain why <strong>correlation is not causation</strong>, and how
+outliers and restricted ranges distort <em>r</em>;</li>
+<li>fit a <strong>simple linear regression</strong> with
+<code>lm()</code>, and interpret the <strong>intercept</strong>, the
+<strong>slope</strong> and its CI, and <strong>R²</strong>;</li>
+<li>check the regression assumptions with <strong>residual
+plots</strong>;</li>
+<li><strong>predict</strong> new values with a confidence or prediction
+interval, without extrapolating;</li>
+<li>interpret a slope on a <strong>log-transformed</strong> response as
+a % change.</li>
+</ul>
+</div>
+<div id="à-la-fin-de-cette-séance-vous-saurez"
+class="section level4 fr">
+<h4>À la fin de cette séance vous saurez</h4>
+<ul>
+<li>décrire la relation entre deux variables numériques avec un
+<strong>nuage de points</strong> et un <strong>coefficient de
+corrélation</strong> (<em>r</em> de Pearson ou ρ de Spearman), et la
+tester avec <code>cor.test()</code> ;</li>
+<li>expliquer pourquoi <strong>corrélation n’est pas causalité</strong>,
+et comment les valeurs extrêmes et les étendues restreintes faussent
+<em>r</em> ;</li>
+<li>ajuster une <strong>régression linéaire simple</strong> avec
+<code>lm()</code>, et interpréter l’<strong>ordonnée à
+l’origine</strong>, la <strong>pente</strong> et son IC, et le
+<strong>R²</strong> ;</li>
+<li>vérifier les conditions de la régression avec les <strong>graphiques
+des résidus</strong> ;</li>
+<li><strong>prédire</strong> de nouvelles valeurs avec un intervalle de
+confiance ou de prédiction, sans extrapoler ;</li>
+<li>interpréter une pente sur une réponse <strong>transformée en
+log</strong> comme une variation en %.</li>
+</ul>
+</div>
+</div>
+<div class="callout ecology">
+<div class="en">
+<p><strong>Mangrove plots</strong> (<code>mangrove_plots.csv</code>,
+simulated). In 2025, a team placed <strong>40 plots of 10 × 10
+m</strong>, every 25 m along <strong>4 transects</strong> running from
+the sea front to the landward edge of a mangrove. In each plot: distance
+from the sea front (m), pore-water salinity (refractometer, PSU), mean
+tree height (clinometer, m), mean trunk diameter at breast height (DBH,
+cm) and number of seedlings. <em>One row = one plot.</em> (Plots of the
+same transect are spatially close; for this course we treat them as
+independent — the <em>Statistical modelling</em> course shows how to
+account for transects.)</p>
+</div>
+<div class="fr">
+<p><strong>Placettes de mangrove</strong>
+(<code>mangrove_plots.csv</code>, simulé). En 2025, une équipe a placé
+<strong>40 placettes de 10 × 10 m</strong>, tous les 25 m le long de
+<strong>4 transects</strong> allant du front de mer à la limite
+terrestre d’une mangrove. Dans chaque placette : distance au front de
+mer (m), salinité de l’eau interstitielle (réfractomètre, PSU), hauteur
+moyenne des arbres (clinomètre, m), diamètre moyen à hauteur de poitrine
+(DHP, cm) et nombre de plantules. <em>Une ligne = une placette.</em>
+(Les placettes d’un même transect sont proches dans l’espace ; dans ce
+cours nous les traitons comme indépendantes — le cours <em>Modélisation
+statistique</em> montre comment tenir compte des transects.)</p>
+</div>
+</div>
+<p><a class="btn-dl" href="data/mangrove_plots.csv" download>⇩
+mangrove_plots.csv</a></p>
+<div id="correlation" class="section level2">
+<h2><span class="en">Correlation</span><span
+class="fr">Corrélation</span></h2>
+<div class="en">
+<p><strong>Pearson’s r</strong> measures the strength and direction of a
+<strong>linear</strong> relationship, from −1 (perfect decreasing line)
+through 0 (no linear relationship) to +1 (perfect increasing line). It
+has no unit and is symmetric (cor(x, y) = cor(y, x)).</p>
+</div>
+<div class="fr">
+<p>Le <strong>r de Pearson</strong> mesure la force et le sens d’une
+relation <strong>linéaire</strong>, de −1 (droite décroissante parfaite)
+à +1 (droite croissante parfaite), en passant par 0 (pas de relation
+linéaire). Il est sans unité et symétrique (cor(x, y) = cor(y, x)).</p>
+</div>
+<figure class="svg-fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 210" role="img" aria-label="Examples of correlations" font-family="Source Sans 3, Arial, sans-serif">
+<rect x="10" y="30" width="160" height="150" fill="#fff" stroke="#c9d3d8"/>
+<circle cx="46.7" cy="133.4" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="62.7" cy="109.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="58.1" cy="119.7" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="67.1" cy="94.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="100.7" cy="82.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="22.1" cy="139.1" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="66.6" cy="117.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="61.8" cy="112.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="49.0" cy="137.1" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="73.7" cy="123.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="77.5" cy="100.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="157.1" cy="55.8" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="87.2" cy="102.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="77.2" cy="92.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="105.4" cy="62.9" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="43.7" cy="127.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="58.1" cy="122.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="95.3" cy="80.2" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="61.3" cy="103.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="45.7" cy="120.4" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="58.8" cy="126.9" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="33.8" cy="141.4" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="114.4" cy="62.7" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="118.3" cy="84.7" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="162.0" cy="38.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="68.1" cy="95.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="70.1" cy="96.1" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="71.1" cy="115.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="94.7" cy="93.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="77.9" cy="104.8" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="103.0" cy="96.4" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="67.5" cy="109.2" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="31.5" cy="147.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="128.8" cy="56.7" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="61.5" cy="127.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="114.8" cy="81.9" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="66.6" cy="117.9" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="82.1" cy="98.7" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="23.9" cy="172.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="46.0" cy="115.2" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="90.2" cy="95.7" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="96.6" cy="86.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="69.9" cy="93.7" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="82.1" cy="98.9" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="18.0" cy="142.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="78.7" cy="100.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="55.7" cy="109.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="44.1" cy="119.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="88.7" cy="80.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="63.0" cy="114.2" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="49.0" cy="136.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="64.7" cy="109.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="64.8" cy="125.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="68.1" cy="109.8" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="79.8" cy="104.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="63.1" cy="138.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="106.8" cy="84.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="128.0" cy="76.1" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="109.9" cy="93.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="66.4" cy="131.9" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<text class="en" x="90.0" y="20" text-anchor="middle" font-size="15" font-weight="700" fill="#0b3d5c">r = 0.91</text>
+<text class="fr" x="90.0" y="20" text-anchor="middle" font-size="15" font-weight="700" fill="#0b3d5c">r = 0,91</text>
+<rect x="188" y="30" width="160" height="150" fill="#fff" stroke="#c9d3d8"/>
+<circle cx="287.6" cy="93.1" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="293.3" cy="66.7" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="240.1" cy="127.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="242.6" cy="80.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="248.9" cy="128.4" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="242.5" cy="106.1" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="291.5" cy="113.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="243.7" cy="104.7" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="302.6" cy="97.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="200.7" cy="155.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="218.5" cy="111.2" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="298.8" cy="106.8" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="261.8" cy="86.7" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="211.2" cy="172.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="340.0" cy="38.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="294.2" cy="90.2" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="283.0" cy="56.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="196.0" cy="110.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="299.8" cy="84.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="271.7" cy="100.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="266.4" cy="107.8" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="259.7" cy="85.8" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="217.3" cy="120.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="235.6" cy="139.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="284.8" cy="94.9" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="301.4" cy="72.8" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="292.4" cy="84.7" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="284.4" cy="84.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="278.3" cy="82.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="288.0" cy="137.8" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="339.2" cy="64.8" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="274.5" cy="62.7" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="225.0" cy="102.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="286.1" cy="95.8" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="262.0" cy="121.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="239.3" cy="119.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="234.2" cy="70.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="295.7" cy="94.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="251.8" cy="91.2" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="266.3" cy="98.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="246.1" cy="91.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="307.3" cy="105.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="259.9" cy="139.1" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="259.5" cy="107.4" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="226.1" cy="110.4" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="234.6" cy="162.7" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="305.6" cy="87.2" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="242.2" cy="103.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="303.9" cy="87.2" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="288.5" cy="97.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="283.4" cy="130.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="280.1" cy="110.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="273.6" cy="118.9" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="308.7" cy="66.1" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="277.2" cy="89.4" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="231.2" cy="102.2" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="265.0" cy="132.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="321.2" cy="103.7" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="237.9" cy="105.1" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="273.1" cy="96.7" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<text class="en" x="268.0" y="20" text-anchor="middle" font-size="15" font-weight="700" fill="#0b3d5c">r = 0.56</text>
+<text class="fr" x="268.0" y="20" text-anchor="middle" font-size="15" font-weight="700" fill="#0b3d5c">r = 0,56</text>
+<rect x="366" y="30" width="160" height="150" fill="#fff" stroke="#c9d3d8"/>
+<circle cx="492.5" cy="56.7" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="443.6" cy="64.1" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="443.0" cy="101.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="485.4" cy="70.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="436.2" cy="128.4" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="447.7" cy="141.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="497.6" cy="128.1" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="508.6" cy="41.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="449.6" cy="121.4" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="421.0" cy="119.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="445.7" cy="97.1" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="374.0" cy="93.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="486.3" cy="69.1" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="510.9" cy="56.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="472.9" cy="97.2" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="435.9" cy="104.9" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="429.6" cy="113.9" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="448.7" cy="117.4" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="471.8" cy="118.4" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="490.9" cy="106.2" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="501.0" cy="87.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="518.0" cy="66.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="477.1" cy="74.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="500.2" cy="96.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="386.8" cy="69.7" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="426.0" cy="119.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="468.5" cy="45.9" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="433.4" cy="68.9" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="453.9" cy="38.2" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="467.5" cy="86.8" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="485.4" cy="126.7" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="469.1" cy="38.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="469.9" cy="96.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="457.8" cy="119.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="479.8" cy="152.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="499.2" cy="152.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="448.4" cy="83.4" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="475.6" cy="75.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="469.2" cy="105.7" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="457.9" cy="41.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="434.7" cy="92.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="442.3" cy="71.1" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="449.6" cy="121.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="477.2" cy="117.8" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="476.8" cy="124.4" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="487.0" cy="74.9" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="461.3" cy="89.7" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="426.9" cy="92.1" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="471.3" cy="83.2" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="399.8" cy="91.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="489.6" cy="82.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="515.7" cy="172.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="433.3" cy="72.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="445.4" cy="72.7" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="397.7" cy="62.2" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="455.5" cy="89.9" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="450.3" cy="113.9" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="469.2" cy="126.9" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="475.4" cy="63.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="457.0" cy="113.8" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<text class="en" x="446.0" y="20" text-anchor="middle" font-size="15" font-weight="700" fill="#0b3d5c">r = −0.03</text>
+<text class="fr" x="446.0" y="20" text-anchor="middle" font-size="15" font-weight="700" fill="#0b3d5c">r = −0,03</text>
+<rect x="544" y="30" width="160" height="150" fill="#fff" stroke="#c9d3d8"/>
+<circle cx="661.3" cy="172.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="639.1" cy="132.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="595.1" cy="99.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="635.9" cy="114.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="678.1" cy="145.2" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="638.6" cy="126.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="569.6" cy="63.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="631.5" cy="112.1" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="618.1" cy="130.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="638.1" cy="103.4" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="625.2" cy="79.7" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="650.3" cy="123.2" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="606.8" cy="120.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="632.6" cy="84.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="667.1" cy="117.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="648.8" cy="162.4" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="638.4" cy="113.7" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="640.9" cy="123.8" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="669.4" cy="80.9" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="667.0" cy="130.2" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="650.9" cy="146.7" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="564.4" cy="58.8" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="580.9" cy="56.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="603.4" cy="132.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="628.3" cy="107.8" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="588.5" cy="93.1" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="569.2" cy="55.4" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="623.9" cy="95.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="593.7" cy="104.4" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="589.7" cy="80.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="599.7" cy="90.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="591.1" cy="121.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="634.5" cy="135.7" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="658.2" cy="103.7" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="613.6" cy="80.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="591.6" cy="38.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="649.9" cy="117.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="599.7" cy="78.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="618.6" cy="131.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="611.4" cy="68.9" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="605.4" cy="119.4" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="696.0" cy="162.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="650.8" cy="110.1" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="673.6" cy="150.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="677.3" cy="73.7" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="636.2" cy="126.1" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="552.0" cy="97.8" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="651.2" cy="126.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="656.5" cy="104.9" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="570.9" cy="96.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="598.4" cy="68.9" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="674.0" cy="109.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="651.6" cy="158.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="662.8" cy="114.1" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="595.5" cy="87.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="654.1" cy="117.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="623.6" cy="98.1" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="652.6" cy="108.1" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="574.1" cy="86.9" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="620.8" cy="92.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<text class="en" x="624.0" y="20" text-anchor="middle" font-size="15" font-weight="700" fill="#0b3d5c">r = −0.60</text>
+<text class="fr" x="624.0" y="20" text-anchor="middle" font-size="15" font-weight="700" fill="#0b3d5c">r = −0,60</text>
+<rect x="722" y="30" width="160" height="150" fill="#fff" stroke="#c9d3d8"/>
+<circle cx="777.7" cy="148.9" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="814.7" cy="160.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="751.8" cy="96.2" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="799.6" cy="143.2" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="780.9" cy="157.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="730.0" cy="38.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="827.1" cy="140.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="802.0" cy="161.1" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="841.9" cy="122.2" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="856.5" cy="95.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="736.3" cy="57.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="832.9" cy="140.2" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="795.9" cy="168.2" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="856.1" cy="96.1" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="746.0" cy="103.9" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="851.0" cy="104.4" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="791.6" cy="160.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="742.7" cy="81.9" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="796.3" cy="151.8" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="856.5" cy="94.2" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="739.9" cy="81.4" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="784.2" cy="160.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="740.9" cy="100.2" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="730.3" cy="52.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="849.2" cy="125.4" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="809.2" cy="159.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="812.1" cy="165.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="859.7" cy="81.7" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="741.6" cy="81.1" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="866.3" cy="82.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="838.5" cy="137.9" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="852.7" cy="109.2" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="847.6" cy="109.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="786.4" cy="154.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="732.7" cy="58.9" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="874.0" cy="55.1" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="821.1" cy="155.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="832.5" cy="149.9" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="830.2" cy="136.3" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="772.6" cy="139.8" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="824.6" cy="157.2" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="794.7" cy="163.4" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="762.2" cy="121.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="801.8" cy="142.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="797.1" cy="172.0" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="773.1" cy="150.4" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="838.0" cy="122.5" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="861.1" cy="82.4" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="816.0" cy="153.7" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="732.7" cy="50.7" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="808.3" cy="167.2" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="820.8" cy="150.2" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="847.6" cy="115.4" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="773.3" cy="149.4" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="763.3" cy="116.8" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="783.5" cy="159.9" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="752.6" cy="124.1" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="842.3" cy="125.8" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="733.2" cy="74.8" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<circle cx="811.2" cy="165.6" r="3" fill="#1b7f8c" fill-opacity="0.75"/>
+<text class="en" x="802.0" y="20" text-anchor="middle" font-size="15" font-weight="700" fill="#0b3d5c">r = −0.23</text>
+<text class="fr" x="802.0" y="20" text-anchor="middle" font-size="15" font-weight="700" fill="#0b3d5c">r = −0,23</text>
+<text class="en" x="90" y="200" text-anchor="middle" font-size="13" fill="#5d6b75">strong +</text>
+<text class="fr" x="90" y="200" text-anchor="middle" font-size="13" fill="#5d6b75">forte +</text>
+<text class="en" x="268" y="200" text-anchor="middle" font-size="13" fill="#5d6b75">moderate +</text>
+<text class="fr" x="268" y="200" text-anchor="middle" font-size="13" fill="#5d6b75">modérée +</text>
+<text class="en" x="446" y="200" text-anchor="middle" font-size="13" fill="#5d6b75">none</text>
+<text class="fr" x="446" y="200" text-anchor="middle" font-size="13" fill="#5d6b75">aucune</text>
+<text class="en" x="624" y="200" text-anchor="middle" font-size="13" fill="#5d6b75">strong −</text>
+<text class="fr" x="624" y="200" text-anchor="middle" font-size="13" fill="#5d6b75">forte −</text>
+<text class="en" x="802" y="200" text-anchor="middle" font-size="13" fill="#d9694a">curved, r ≈ 0!</text>
+<text class="fr" x="802" y="200" text-anchor="middle" font-size="13" fill="#d9694a">courbe, r ≈ 0 !</text>
+</svg><figcaption><span class="en">What different values of r look like. r measures LINEAR association only: the last panel has a strong relationship and r ≈ 0.</span><span class="fr">À quoi ressemblent différentes valeurs de r. r ne mesure que l'association LINÉAIRE : le dernier panneau montre une relation forte avec r ≈ 0.</span></figcaption></figure>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>mp <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/mangrove_plots.csv&quot;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">ggplot</span>(mp, <span class="fu">aes</span>(salinity_psu, tree_height_m)) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">colour =</span> <span class="st">&quot;#4a7d3a&quot;</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;pore-water salinity (PSU)&quot;</span>, <span class="at">y =</span> <span class="st">&quot;mean tree height (m)&quot;</span>) <span class="sc">+</span> <span class="fu">theme_c</span>()</span></code></pre></div>
+<p><img src="10-regression_files/figure-html/unnamed-chunk-1-1.png" width="85%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">cor</span>(mp<span class="sc">$</span>salinity_psu, mp<span class="sc">$</span>tree_height_m)</span></code></pre></div>
+<pre><code>#&gt; [1] -0.6840544</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">cor.test</span>(mp<span class="sc">$</span>salinity_psu, mp<span class="sc">$</span>tree_height_m)</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt;  Pearson&#39;s product-moment correlation
+#&gt; 
+#&gt; data:  mp$salinity_psu and mp$tree_height_m
+#&gt; t = -5.7809, df = 38, p-value = 1.137e-06
+#&gt; alternative hypothesis: true correlation is not equal to 0
+#&gt; 95 percent confidence interval:
+#&gt;  -0.8206846 -0.4734274
+#&gt; sample estimates:
+#&gt;        cor 
+#&gt; -0.6840544</code></pre>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>cor(x, y, method)</code></td>
+<td>correlation coefficient</td>
+<td>two numeric vectors</td>
+</tr>
+<tr class="even">
+<td>  <code>method</code></td>
+<td><code>"pearson"</code> (default, linear), <code>"spearman"</code>
+(ranks, monotonic)</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>  <code>use = "complete.obs"</code></td>
+<td>ignores pairs with <code>NA</code> (otherwise the result is
+<code>NA</code>)</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>cor.test(x, y, method, exact)</code></td>
+<td>tests H0: correlation = 0; gives the CI of r (Pearson)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>cor(x, y, method)</code></td>
+<td>coefficient de corrélation</td>
+<td>deux vecteurs numériques</td>
+</tr>
+<tr class="even">
+<td>  <code>method</code></td>
+<td><code>"pearson"</code> (défaut, linéaire), <code>"spearman"</code>
+(rangs, monotone)</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>  <code>use = "complete.obs"</code></td>
+<td>ignore les paires avec des <code>NA</code> (sinon le résultat est
+<code>NA</code>)</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>cor.test(x, y, method, exact)</code></td>
+<td>teste H0 : corrélation = 0 ; donne l’IC de r (Pearson)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="en">
+<p><strong>Spearman’s ρ</strong> is Pearson’s r computed on the
+<strong>ranks</strong>: it measures a <strong>monotonic</strong>
+relationship (always increasing or always decreasing, not necessarily
+straight) and resists outliers. Use it for counts with many small
+values, ordinal variables, or curved but monotonic relationships —
+e.g. seedling counts:</p>
+</div>
+<div class="fr">
+<p>Le <strong>ρ de Spearman</strong> est le r de Pearson calculé sur les
+<strong>rangs</strong> : il mesure une relation
+<strong>monotone</strong> (toujours croissante ou toujours décroissante,
+pas forcément droite) et résiste aux valeurs extrêmes. Utilisez-le pour
+des comptages avec beaucoup de petites valeurs, des variables ordinales,
+ou des relations courbes mais monotones — ex. les comptages de plantules
+:</p>
+</div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">cor.test</span>(mp<span class="sc">$</span>salinity_psu, mp<span class="sc">$</span>seedlings, <span class="at">method =</span> <span class="st">&quot;spearman&quot;</span>, <span class="at">exact =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt;  Spearman&#39;s rank correlation rho
+#&gt; 
+#&gt; data:  mp$salinity_psu and mp$seedlings
+#&gt; S = 16475, p-value = 0.000272
+#&gt; alternative hypothesis: true rho is not equal to 0
+#&gt; sample estimates:
+#&gt;        rho 
+#&gt; -0.5455343</code></pre>
+<div class="callout warning">
+<div class="en">
+<p><strong>Four traps.</strong> (1) <strong>Causation:</strong> salinity
+and height are correlated, but both also change with distance from the
+sea; a correlation alone does not tell which causes which. (2)
+<strong>Outliers</strong> can create or hide a correlation (Anscombe,
+Session 3) — always plot. (3) <strong>Restricted range:</strong>
+sampling only the seaward 50 m would show a much weaker correlation. (4)
+<strong>Non-linear</strong> relationships can have r ≈ 0.</p>
+</div>
+<div class="fr">
+<p><strong>Quatre pièges.</strong> (1) <strong>Causalité :</strong>
+salinité et hauteur sont corrélées, mais toutes deux changent aussi avec
+la distance à la mer ; une corrélation seule ne dit pas qui cause quoi.
+(2) Les <strong>valeurs extrêmes</strong> peuvent créer ou cacher une
+corrélation (Anscombe, séance 3) — tracez toujours. (3) <strong>Étendue
+restreinte :</strong> échantillonner seulement les 50 m côté mer
+montrerait une corrélation bien plus faible. (4) Les relations
+<strong>non linéaires</strong> peuvent avoir r ≈ 0.</p>
+</div>
+</div>
+</div>
+<div id="regression" class="section level2">
+<h2><span class="en">Simple linear regression</span><span
+class="fr">Régression linéaire simple</span></h2>
+<div class="en">
+<p>Correlation says “how strongly”; <strong>regression</strong> says
+“<strong>by how much</strong>”: how much does tree height change per PSU
+of salinity? It fits the straight line</p>
+<p><strong>height = β₀ + β₁ × salinity + error</strong></p>
+<p>that minimises the sum of squared vertical distances between points
+and line (<strong>least squares</strong>). Unlike correlation,
+regression is <strong>not symmetric</strong>: y is the
+<strong>response</strong>, x the <strong>predictor</strong>.</p>
+</div>
+<div class="fr">
+<p>La corrélation dit « avec quelle force » ; la
+<strong>régression</strong> dit « <strong>de combien</strong> » : de
+combien la hauteur des arbres change-t-elle par PSU de salinité ? Elle
+ajuste la droite</p>
+<p><strong>hauteur = β₀ + β₁ × salinité + erreur</strong></p>
+<p>qui minimise la somme des carrés des distances verticales entre les
+points et la droite (<strong>moindres carrés</strong>). Contrairement à
+la corrélation, la régression n’est <strong>pas symétrique</strong> : y
+est la <strong>réponse</strong>, x le <strong>prédicteur</strong>.</p>
+</div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(tree_height_m <span class="sc">~</span> salinity_psu, <span class="at">data =</span> mp)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt; Call:
+#&gt; lm(formula = tree_height_m ~ salinity_psu, data = mp)
+#&gt; 
+#&gt; Residuals:
+#&gt;      Min       1Q   Median       3Q      Max 
+#&gt; -1.97198 -0.87731  0.05537  0.72392  2.22104 
+#&gt; 
+#&gt; Coefficients:
+#&gt;              Estimate Std. Error t value Pr(&gt;|t|)    
+#&gt; (Intercept)  14.00050    1.16951  11.971 1.83e-14 ***
+#&gt; salinity_psu -0.17421    0.03014  -5.781 1.14e-06 ***
+#&gt; ---
+#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+#&gt; 
+#&gt; Residual standard error: 1.026 on 38 degrees of freedom
+#&gt; Multiple R-squared:  0.4679, Adjusted R-squared:  0.4539 
+#&gt; F-statistic: 33.42 on 1 and 38 DF,  p-value: 1.137e-06</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">confint</span>(fit)</span></code></pre></div>
+<pre><code>#&gt;                   2.5 %     97.5 %
+#&gt; (Intercept)  11.6329542 16.3680494
+#&gt; salinity_psu -0.2352218 -0.1132073</code></pre>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>lm(formula, data)</code></td>
+<td>fits a linear model by least squares</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>  <code>formula</code></td>
+<td><code>response ~ predictor</code></td>
+<td>column names</td>
+</tr>
+<tr class="odd">
+<td><code>summary(fit)</code></td>
+<td>coefficients with SE, t and p-values, residual SE, R², F test</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>confint(fit, level)</code></td>
+<td>confidence intervals of the coefficients</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><code>coef(fit)</code></td>
+<td>the estimated coefficients β₀ and β₁</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>lm(formula, data)</code></td>
+<td>ajuste un modèle linéaire par moindres carrés</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>  <code>formula</code></td>
+<td><code>réponse ~ prédicteur</code></td>
+<td>noms de colonnes</td>
+</tr>
+<tr class="odd">
+<td><code>summary(fit)</code></td>
+<td>coefficients avec ES, t et p-values, ES résiduelle, R², test F</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>confint(fit, level)</code></td>
+<td>intervalles de confiance des coefficients</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><code>coef(fit)</code></td>
+<td>les coefficients estimés β₀ et β₁</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<figure class="svg-fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 330" role="img" aria-label="Simple linear regression" font-family="Source Sans 3, Arial, sans-serif">
+<defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#5d6b75"/></marker></defs>
+<line x1="70" y1="290" x2="490" y2="290" stroke="#5d6b75" marker-end="url(#arr)"/>
+<line x1="70" y1="290" x2="70" y2="30" stroke="#5d6b75" marker-end="url(#arr)"/>
+<text x="490" y="312" text-anchor="end" font-size="14" fill="#3c4a52">x</text><text x="56" y="40" font-size="14" fill="#3c4a52">y</text>
+<line x1="70" y1="230.0" x2="470" y2="30.0" stroke="#0b3d5c" stroke-width="2.5"/>
+<line x1="100" y1="214.0" x2="100" y2="215.0" stroke="#8a969e" stroke-dasharray="3 2" stroke-width="1"/>
+<circle cx="100" cy="214.0" r="4.5" fill="#1b7f8c"/>
+<line x1="130" y1="188.4" x2="130" y2="200.0" stroke="#8a969e" stroke-dasharray="3 2" stroke-width="1"/>
+<circle cx="130" cy="188.4" r="4.5" fill="#1b7f8c"/>
+<line x1="160" y1="196.5" x2="160" y2="185.0" stroke="#8a969e" stroke-dasharray="3 2" stroke-width="1"/>
+<circle cx="160" cy="196.5" r="4.5" fill="#1b7f8c"/>
+<line x1="190" y1="161.2" x2="190" y2="170.0" stroke="#8a969e" stroke-dasharray="3 2" stroke-width="1"/>
+<circle cx="190" cy="161.2" r="4.5" fill="#1b7f8c"/>
+<line x1="220" y1="131.8" x2="220" y2="155.0" stroke="#8a969e" stroke-dasharray="3 2" stroke-width="1"/>
+<circle cx="220" cy="131.8" r="4.5" fill="#1b7f8c"/>
+<line x1="250" y1="129.7" x2="250" y2="140.0" stroke="#8a969e" stroke-dasharray="3 2" stroke-width="1"/>
+<circle cx="250" cy="129.7" r="4.5" fill="#1b7f8c"/>
+<line x1="280" y1="85.9" x2="280" y2="125.0" stroke="#8a969e" stroke-dasharray="3 2" stroke-width="1"/>
+<circle cx="280" cy="85.9" r="4.5" fill="#1b7f8c"/>
+<line x1="310" y1="132.1" x2="310" y2="110.0" stroke="#d9694a" stroke-dasharray="3 2" stroke-width="2"/>
+<circle cx="310" cy="132.1" r="4.5" fill="#1b7f8c"/>
+<line x1="340" y1="93.3" x2="340" y2="95.0" stroke="#8a969e" stroke-dasharray="3 2" stroke-width="1"/>
+<circle cx="340" cy="93.3" r="4.5" fill="#1b7f8c"/>
+<line x1="370" y1="97.6" x2="370" y2="80.0" stroke="#8a969e" stroke-dasharray="3 2" stroke-width="1"/>
+<circle cx="370" cy="97.6" r="4.5" fill="#1b7f8c"/>
+<line x1="400" y1="84.6" x2="400" y2="65.0" stroke="#8a969e" stroke-dasharray="3 2" stroke-width="1"/>
+<circle cx="400" cy="84.6" r="4.5" fill="#1b7f8c"/>
+<line x1="430" y1="54.6" x2="430" y2="50.0" stroke="#8a969e" stroke-dasharray="3 2" stroke-width="1"/>
+<circle cx="430" cy="54.6" r="4.5" fill="#1b7f8c"/>
+<line x1="460" y1="29.5" x2="460" y2="35.0" stroke="#8a969e" stroke-dasharray="3 2" stroke-width="1"/>
+<circle cx="460" cy="29.5" r="4.5" fill="#1b7f8c"/>
+<path d="M170 180.0 L250 180.0 L250 140.0" fill="none" stroke="#4a7d3a" stroke-width="2"/>
+<text class="en" x="210.0" y="198.0" text-anchor="middle" font-size="13" fill="#4a7d3a">+1 unit of x</text><text class="fr" x="210.0" y="198.0" text-anchor="middle" font-size="13" fill="#4a7d3a">+1 unité de x</text>
+<text x="256" y="165.0" font-size="14" font-weight="700" fill="#4a7d3a">β₁</text>
+<circle cx="70" cy="230.0" r="5" fill="#0b3d5c"/><text x="78" y="250.0" font-size="14" font-weight="700" fill="#0b3d5c">β₀</text>
+<text class="en" x="318" y="125.1" font-size="13" fill="#d9694a">residual</text><text class="fr" x="318" y="125.1" font-size="13" fill="#d9694a">résidu</text>
+<text class="en" x="520" y="60" font-weight="700" font-size="17" fill="#0b3d5c">ŷ = β₀ + β₁ x</text><text class="fr" x="520" y="60" font-weight="700" font-size="17" fill="#0b3d5c">ŷ = β₀ + β₁ x</text>
+<text class="en" x="520" y="87" font-size="14" fill="#0b3d5c">β₀ intercept: y when x = 0</text><text class="fr" x="520" y="87" font-size="14" fill="#0b3d5c">β₀ ordonnée à l'origine : y quand x = 0</text>
+<text class="en" x="520" y="114" font-size="14" fill="#4a7d3a">β₁ slope: change of y</text><text class="fr" x="520" y="114" font-size="14" fill="#4a7d3a">β₁ pente : variation de y</text>
+<text class="en" x="520" y="141" font-size="14" fill="#4a7d3a">    for +1 unit of x</text><text class="fr" x="520" y="141" font-size="14" fill="#4a7d3a">    pour +1 unité de x</text>
+<text class="en" x="520" y="168" font-size="14" fill="#d9694a">residual = observed − fitted</text><text class="fr" x="520" y="168" font-size="14" fill="#d9694a">résidu = observé − ajusté</text>
+<text class="en" x="520" y="195" font-size="14" fill="#3c4a52">least squares: the line that</text><text class="fr" x="520" y="195" font-size="14" fill="#3c4a52">moindres carrés : la droite qui</text>
+<text class="en" x="520" y="222" font-size="14" fill="#3c4a52">    minimises Σ residual²</text><text class="fr" x="520" y="222" font-size="14" fill="#3c4a52">    minimise Σ résidu²</text>
+<text class="en" x="520" y="249" font-size="14" fill="#3c4a52">R²: share of the variance of y</text><text class="fr" x="520" y="249" font-size="14" fill="#3c4a52">R² : part de la variance de y</text>
+<text class="en" x="520" y="276" font-size="14" fill="#3c4a52">    explained by the line</text><text class="fr" x="520" y="276" font-size="14" fill="#3c4a52">    expliquée par la droite</text>
+</svg><figcaption><span class="en">Anatomy of a simple linear regression: the slope is the change in y for +1 unit of x; residuals are the vertical distances from the points to the line.</span><span class="fr">Anatomie d'une régression linéaire simple : la pente est la variation de y pour +1 unité de x ; les résidus sont les distances verticales des points à la droite.</span></figcaption></figure>
+<div class="en">
+<p><strong>Reading <code>summary(fit)</code>:</strong></p>
+<ul>
+<li><code>(Intercept)</code> β₀ = 14 m: predicted height at salinity
+<strong>0</strong> — outside the data (salinities about 29–50), so it
+has no ecological meaning here; it just positions the line.</li>
+<li><code>salinity_psu</code> β₁ = -0.174: each extra PSU of salinity is
+associated with trees <strong>0.17 m shorter</strong> on average (95 %
+CI -0.24 to -0.11). The p-value tests H0: β₁ = 0 (no linear
+relationship); with one predictor it equals the p-value of
+<code>cor.test()</code>.</li>
+<li><code>Residual standard error</code> (1.03 m): typical distance of
+the points to the line.</li>
+<li><code>Multiple R-squared</code> = 0.47: salinity “explains” 47 % of
+the variance of height. With one predictor, R² = r².</li>
+</ul>
+</div>
+<div class="fr">
+<p><strong>Lecture de <code>summary(fit)</code> :</strong></p>
+<ul>
+<li><code>(Intercept)</code> β₀ = 14 m : hauteur prédite pour une
+salinité <strong>0</strong> — hors des données (salinités d’environ
+29–50), elle n’a donc pas de sens écologique ici ; elle positionne
+seulement la droite.</li>
+<li><code>salinity_psu</code> β₁ = -0.174 : chaque PSU de salinité en
+plus est associé à des arbres <strong>plus petits de 0.17 m</strong> en
+moyenne (IC 95 % -0.24 à -0.11). La p-value teste H0 : β₁ = 0 (pas de
+relation linéaire) ; avec un seul prédicteur, elle est égale à celle de
+<code>cor.test()</code>.</li>
+<li><code>Residual standard error</code> (1.03 m) : distance typique des
+points à la droite.</li>
+<li><code>Multiple R-squared</code> = 0.47 : la salinité « explique » 47
+% de la variance de la hauteur. Avec un seul prédicteur, R² = r².</li>
+</ul>
+</div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">ggplot</span>(mp, <span class="fu">aes</span>(salinity_psu, tree_height_m)) <span class="sc">+</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">colour =</span> <span class="st">&quot;#4a7d3a&quot;</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">formula =</span> y <span class="sc">~</span> x, <span class="at">colour =</span> <span class="st">&quot;#0b3d5c&quot;</span>, <span class="at">fill =</span> <span class="st">&quot;#bfdfe4&quot;</span>) <span class="sc">+</span></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;pore-water salinity (PSU)&quot;</span>, <span class="at">y =</span> <span class="st">&quot;mean tree height (m)&quot;</span>) <span class="sc">+</span> <span class="fu">theme_c</span>()</span></code></pre></div>
+<p><img src="10-regression_files/figure-html/unnamed-chunk-6-1.png" width="85%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="diagnostics" class="section level2">
+<h2><span class="en">Checking the assumptions: residuals</span><span
+class="fr">Vérifier les conditions : les résidus</span></h2>
+<div class="en">
+<p>Like ANOVA (which is in fact a linear model), regression assumes: (1)
+<strong>independent</strong> observations; (2) a <strong>linear</strong>
+relationship; (3) <strong>constant spread</strong> of residuals along
+the line; (4) roughly <strong>normal residuals</strong> (least important
+with large n). Check (2)–(4) on the residual plots:</p>
+</div>
+<div class="fr">
+<p>Comme l’ANOVA (qui est en fait un modèle linéaire), la régression
+suppose : (1) des observations <strong>indépendantes</strong> ; (2) une
+relation <strong>linéaire</strong> ; (3) une <strong>dispersion
+constante</strong> des résidus le long de la droite ; (4) des
+<strong>résidus à peu près normaux</strong> (le moins important avec un
+grand n). Vérifiez (2)–(4) sur les graphiques des résidus :</p>
+</div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="fu">plot</span>(fit, <span class="at">which =</span> <span class="dv">1</span>)     <span class="co"># residuals vs fitted: no curve, no funnel</span></span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="fu">plot</span>(fit, <span class="at">which =</span> <span class="dv">2</span>)     <span class="co"># QQ plot of residuals</span></span></code></pre></div>
+<p><img src="10-regression_files/figure-html/unnamed-chunk-7-1.png" width="85%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div>
+<div class="en">
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Pattern in “Residuals vs Fitted”</th>
+<th>Problem</th>
+<th>What to do</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>a <strong>curve</strong> (U or ∩)</td>
+<td>relationship not linear</td>
+<td>transform x or y, add a curve (<em>Modelling</em> course)</td>
+</tr>
+<tr class="even">
+<td>a <strong>funnel</strong> (spread grows with fitted values)</td>
+<td>non-constant variance</td>
+<td>log-transform y (often fixes both skew and funnel)</td>
+</tr>
+<tr class="odd">
+<td>one point far away</td>
+<td>outlier / influential point</td>
+<td>check it; report results with and without</td>
+</tr>
+</tbody>
+</table>
+<p>Here: no pattern, residuals close to the QQ line → the model is
+adequate.</p>
+</div>
+<div class="fr">
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Motif dans « Residuals vs Fitted »</th>
+<th>Problème</th>
+<th>Que faire</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>une <strong>courbe</strong> (U ou ∩)</td>
+<td>relation non linéaire</td>
+<td>transformer x ou y, ajouter une courbe (cours
+<em>Modélisation</em>)</td>
+</tr>
+<tr class="even">
+<td>un <strong>entonnoir</strong> (la dispersion augmente avec les
+valeurs ajustées)</td>
+<td>variance non constante</td>
+<td>log-transformer y (corrige souvent asymétrie et entonnoir)</td>
+</tr>
+<tr class="odd">
+<td>un point très éloigné</td>
+<td>valeur extrême / point influent</td>
+<td>le vérifier ; donner les résultats avec et sans</td>
+</tr>
+</tbody>
+</table>
+<p>Ici : pas de motif, résidus proches de la droite du QQ plot → le
+modèle convient.</p>
+</div>
+</div>
+<div id="predict" class="section level2">
+<h2><span class="en">Prediction</span><span
+class="fr">Prédiction</span></h2>
+<div class="en">
+<p><code>predict()</code> gives the fitted height for new salinities,
+with two kinds of interval:</p>
+<ul>
+<li><strong>confidence interval</strong>
+(<code>interval = "confidence"</code>): where the <strong>mean</strong>
+height of all plots at that salinity lies — narrow;</li>
+<li><strong>prediction interval</strong>
+(<code>interval = "prediction"</code>): where <strong>one new
+plot</strong> will probably fall — wide, because it adds the scatter of
+individual plots.</li>
+</ul>
+</div>
+<div class="fr">
+<p><code>predict()</code> donne la hauteur ajustée pour de nouvelles
+salinités, avec deux sortes d’intervalle :</p>
+<ul>
+<li><strong>intervalle de confiance</strong>
+(<code>interval = "confidence"</code>) : où se trouve la hauteur
+<strong>moyenne</strong> de toutes les placettes à cette salinité —
+étroit ;</li>
+<li><strong>intervalle de prédiction</strong>
+(<code>interval = "prediction"</code>) : où tombera probablement
+<strong>une nouvelle placette</strong> — large, car il ajoute la
+dispersion des placettes individuelles.</li>
+</ul>
+</div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>new <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">salinity_psu =</span> <span class="fu">c</span>(<span class="dv">35</span>, <span class="dv">45</span>))</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="fu">predict</span>(fit, <span class="at">newdata =</span> new, <span class="at">interval =</span> <span class="st">&quot;confidence&quot;</span>)</span></code></pre></div>
+<pre><code>#&gt;        fit      lwr      upr
+#&gt; 1 7.902992 7.513506 8.292477
+#&gt; 2 6.160846 5.642791 6.678900</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="fu">predict</span>(fit, <span class="at">newdata =</span> new, <span class="at">interval =</span> <span class="st">&quot;prediction&quot;</span>)</span></code></pre></div>
+<pre><code>#&gt;        fit      lwr       upr
+#&gt; 1 7.902992 5.789792 10.016191
+#&gt; 2 6.160846 4.020216  8.301475</code></pre>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>predict(fit, newdata, interval, level)</code></td>
+<td>predicted values of a model for new x values</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>  <code>newdata</code></td>
+<td>a data frame with a column <strong>named exactly like the
+predictor</strong></td>
+<td>a data frame</td>
+</tr>
+<tr class="odd">
+<td>  <code>interval</code></td>
+<td><code>"none"</code>, <code>"confidence"</code> (mean) or
+<code>"prediction"</code> (one new observation)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>predict(fit, newdata, interval, level)</code></td>
+<td>valeurs prédites d’un modèle pour de nouvelles valeurs de x</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>  <code>newdata</code></td>
+<td>un data frame avec une colonne <strong>nommée exactement comme le
+prédicteur</strong></td>
+<td>un data frame</td>
+</tr>
+<tr class="odd">
+<td>  <code>interval</code></td>
+<td><code>"none"</code>, <code>"confidence"</code> (moyenne) ou
+<code>"prediction"</code> (une nouvelle observation)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="callout warning">
+<div class="en">
+<p><strong>Do not extrapolate.</strong> The data cover salinities of
+about 29–50 PSU. Predicting at 100 PSU would give a negative height: the
+straight line is only a good description <strong>within</strong> the
+observed range.</p>
+</div>
+<div class="fr">
+<p><strong>N’extrapolez pas.</strong> Les données couvrent des salinités
+d’environ 29–50 PSU. Prédire à 100 PSU donnerait une hauteur négative :
+la droite n’est une bonne description qu’<strong>à l’intérieur</strong>
+de l’étendue observée.</p>
+</div>
+</div>
+</div>
+<div id="log-response" class="section level2">
+<h2><span class="en">A log-transformed response: fish biomass and coral
+cover</span><span class="fr">Une réponse transformée en log : biomasse
+de poissons et corail</span></h2>
+<div class="en">
+<p>Fish biomass is right-skewed and its spread grows with its level
+(Sessions 2–3). Regressing <strong>log(biomass)</strong> on coral cover
+often gives straight, evenly spread residuals. The slope then means a
+<strong>proportional</strong> change: each extra % of coral multiplies
+biomass by exp(β₁), i.e. a change of 100 × (exp(β₁) − 1) %.</p>
+</div>
+<div class="fr">
+<p>La biomasse de poissons est asymétrique à droite et sa dispersion
+augmente avec son niveau (séances 2–3). Régresser
+<strong>log(biomasse)</strong> sur le recouvrement corallien donne
+souvent des résidus alignés et de dispersion régulière. La pente
+signifie alors une variation <strong>proportionnelle</strong> : chaque %
+de corail en plus multiplie la biomasse par exp(β₁), soit une variation
+de 100 × (exp(β₁) − 1) %.</p>
+</div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a>rf <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/reef_fish_sites.csv&quot;</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>fit_rf <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(biomass_kg_ha) <span class="sc">~</span> coral_cover, <span class="at">data =</span> rf)</span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a><span class="fu">coef</span>(fit_rf)</span></code></pre></div>
+<pre><code>#&gt; (Intercept) coral_cover 
+#&gt;   4.5244534   0.0446862</code></pre>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="dv">100</span> <span class="sc">*</span> (<span class="fu">exp</span>(<span class="fu">coef</span>(fit_rf)[<span class="dv">2</span>]) <span class="sc">-</span> <span class="dv">1</span>)                    <span class="co"># % change in biomass per +1 % coral</span></span></code></pre></div>
+<pre><code>#&gt; coral_cover 
+#&gt;    4.569967</code></pre>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a><span class="dv">100</span> <span class="sc">*</span> (<span class="fu">exp</span>(<span class="fu">confint</span>(fit_rf)[<span class="dv">2</span>, ]) <span class="sc">-</span> <span class="dv">1</span>)</span></code></pre></div>
+<pre><code>#&gt;    2.5 %   97.5 % 
+#&gt; 2.474057 6.708744</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="fu">summary</span>(fit_rf)<span class="sc">$</span>r.squared</span></code></pre></div>
+<pre><code>#&gt; [1] 0.3717457</code></pre>
+<div class="en">
+<p>Each extra percentage point of coral cover is associated with about
+4.6 % more fish biomass. But R² is only 0.37, and management (Session 8)
+is also related to both coral and fish: to separate them we need a model
+with <strong>several predictors</strong> — the starting point of the
+<em>Statistical modelling with R</em> course.</p>
+</div>
+<div class="fr">
+<p>Chaque point de pourcentage de corail en plus est associé à environ
+4.6 % de biomasse de poissons en plus. Mais le R² n’est que de 0.37, et
+la gestion (séance 8) est aussi liée au corail et aux poissons : pour
+les séparer il faut un modèle à <strong>plusieurs prédicteurs</strong> —
+le point de départ du cours <em>Modélisation statistique avec
+R</em>.</p>
+</div>
+</div>
+<div id="application" class="section level2">
+<h2><span class="en">Application work &amp; quiz</span><span
+class="fr">Travail d’application et quiz</span></h2>
+<div class="application">
+<div id="application-work-10" class="section level3 en">
+<h3>Application work 10</h3>
+<p>With <code>mangrove_plots.csv</code>:</p>
+<ol style="list-style-type: decimal">
+<li>Pearson correlation between <strong>tree height</strong> and
+<strong>DBH</strong> (3 decimals).</li>
+<li>Spearman correlation between <strong>distance</strong> and
+<strong>seedlings</strong> (3 decimals).</li>
+<li>– 5. Regression <code>lm(dbh_cm ~ tree_height_m)</code>: slope (3
+decimals), lower limit of its 95 % CI (3 decimals), R² (3
+decimals).</li>
+<li>– 7. Predicted DBH for a tree height of <strong>8 m</strong> (2
+decimals), and the <strong>upper</strong> limit of the 95 %
+<strong>prediction</strong> interval (2 decimals).</li>
+<li>Regression <code>lm(salinity_psu ~ distance_m)</code>: by how many
+PSU does salinity increase per <strong>100 m</strong> inland (2
+decimals)?</li>
+<li>– 10. Interpretation.</li>
+</ol>
+</div>
+<div id="travail-dapplication-10" class="section level3 fr">
+<h3>Travail d’application 10</h3>
+<p>Avec <code>mangrove_plots.csv</code> :</p>
+<ol style="list-style-type: decimal">
+<li>Corrélation de Pearson entre <strong>hauteur des arbres</strong> et
+<strong>DHP</strong> (3 décimales).</li>
+<li>Corrélation de Spearman entre <strong>distance</strong> et
+<strong>plantules</strong> (3 décimales).</li>
+<li>– 5. Régression <code>lm(dbh_cm ~ tree_height_m)</code> : pente (3
+décimales), limite inférieure de son IC à 95 % (3 décimales), R² (3
+décimales).</li>
+<li>– 7. DHP prédit pour une hauteur d’arbre de <strong>8 m</strong> (2
+décimales), et la limite <strong>supérieure</strong> de l’intervalle de
+<strong>prédiction</strong> à 95 % (2 décimales).</li>
+<li>Régression <code>lm(salinity_psu ~ distance_m)</code> : de combien
+de PSU la salinité augmente-t-elle tous les <strong>100 m</strong> vers
+l’intérieur (2 décimales) ?</li>
+<li>– 10. Interprétation.</li>
+</ol>
+</div>
+</div>
+<div class="hint">
+<div class="en">
+<p>Q2: <code>cor(x, y, method = "spearman")</code>. Q6–7:
+<code>predict(fit, data.frame(tree_height_m = 8), interval = "prediction")</code>.
+Q8: the slope is per metre; multiply by 100.</p>
+</div>
+<div class="fr">
+<p>Q2 : <code>cor(x, y, method = "spearman")</code>. Q6–7 :
+<code>predict(fit, data.frame(tree_height_m = 8), interval = "prediction")</code>.
+Q8 : la pente est par mètre ; multipliez par 100.</p>
+</div>
+</div>
+<div id="quiz-t10" class="quiz" data-quiz-id="t10"
+data-q="W3sidHlwZSI6Im51bSIsImVuIjoiMS4gUGVhcnNvbiByLCBoZWlnaHTigJNEQkg/IiwiZnIiOiIxLiByIGRlIFBlYXJzb24sIGhhdXRldXLigJNESFAgPyIsImFuc3dlciI6MC43NTgsInRvbCI6MC4wMDA2LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiMi4gU3BlYXJtYW4gz4EsIGRpc3RhbmNl4oCTc2VlZGxpbmdzPyIsImZyIjoiMi4gz4EgZGUgU3BlYXJtYW4sIGRpc3RhbmNl4oCTcGxhbnR1bGVzID8iLCJhbnN3ZXIiOi0wLjQwNSwidG9sIjowLjAwMDYsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibnVtIiwiZW4iOiIzLiBTbG9wZSBvZiBEQkggb24gaGVpZ2h0IChjbSBwZXIgbSk/IiwiZnIiOiIzLiBQZW50ZSBkdSBESFAgc3VyIGxhIGhhdXRldXIgKGNtIHBhciBtKSA/IiwiYW5zd2VyIjoyLjI1OSwidG9sIjowLjAwMDYsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibnVtIiwiZW4iOiI0LiBMb3dlciBsaW1pdCBvZiB0aGUgc2xvcGUncyA5NSAlIENJPyIsImZyIjoiNC4gTGltaXRlIGluZsOpcmlldXJlIGRlIGwnSUMgw6AgOTUgJSBkZSBsYSBwZW50ZSA/IiwiYW5zd2VyIjoxLjYyLCJ0b2wiOjAuMDAwNiwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJudW0iLCJlbiI6IjUuIFLCsj8iLCJmciI6IjUuIFLCsiA/IiwiYW5zd2VyIjowLjU3NCwidG9sIjowLjAwMDYsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibnVtIiwiZW4iOiI2LiBQcmVkaWN0ZWQgREJIIGF0IDggbSAoY20pPyIsImZyIjoiNi4gREhQIHByw6lkaXQgw6AgOCBtIChjbSkgPyIsImFuc3dlciI6MTcuNTMsInRvbCI6MC4wMDYsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibnVtIiwiZW4iOiI3LiBVcHBlciBsaW1pdCBvZiB0aGUgcHJlZGljdGlvbiBpbnRlcnZhbCAoY20pPyIsImZyIjoiNy4gTGltaXRlIHN1cMOpcmlldXJlIGRlIGwnaW50ZXJ2YWxsZSBkZSBwcsOpZGljdGlvbiAoY20pID8iLCJhbnN3ZXIiOjIzLjE1LCJ0b2wiOjAuMDA2LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiOC4gU2FsaW5pdHkgaW5jcmVhc2UgcGVyIDEwMCBtIChQU1UpPyIsImZyIjoiOC4gQXVnbWVudGF0aW9uIGRlIHNhbGluaXTDqSBwYXIgMTAwIG0gKFBTVSkgPyIsImFuc3dlciI6NS42MSwidG9sIjowLjAwNiwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJtY3EiLCJlbiI6IjkuIFRoZSByZXNpZHVhbHMgdnMgZml0dGVkIHBsb3Qgc2hvd3MgYSBmdW5uZWwgb3BlbmluZyB0byB0aGUgcmlnaHQuIFRoZSBiZXN0IGZpcnN0IHN0ZXAgaXPigKYiLCJmciI6IjkuIExlIGdyYXBoaXF1ZSByw6lzaWR1cyB2cyB2YWxldXJzIGFqdXN0w6llcyBtb250cmUgdW4gZW50b25ub2lyIHF1aSBzJ291dnJlIHZlcnMgbGEgZHJvaXRlLiBMYSBtZWlsbGV1cmUgcHJlbWnDqHJlIMOpdGFwZSBlc3TigKYiLCJvcHRpb25zX2VuIjpbImlnbm9yZSBpdCBpZiBwIDwgMC4wNSIsImxvZy10cmFuc2Zvcm0gdGhlIHJlc3BvbnNlIiwicmVtb3ZlIHRoZSBsYXJnZXN0IHZhbHVlcyIsInVzZSBTcGVhcm1hbiBpbnN0ZWFkIG9mIGEgcmVncmVzc2lvbiJdLCJvcHRpb25zX2ZyIjpbImwnaWdub3JlciBzaSBwIDwgMCwwNSIsImxvZy10cmFuc2Zvcm1lciBsYSByw6lwb25zZSIsInN1cHByaW1lciBsZXMgcGx1cyBncmFuZGVzIHZhbGV1cnMiLCJ1dGlsaXNlciBTcGVhcm1hbiBhdSBsaWV1IGQndW5lIHLDqWdyZXNzaW9uIl0sImFuc3dlciI6MX0seyJ0eXBlIjoibWNxIiwiZW4iOiIxMC4gSW4gbG9nKGJpb21hc3MpID0gNS4yICsgMC4wMyDDlyBjb3JhbCwgKzEgJSBjb3JhbCBpcyBhc3NvY2lhdGVkIHdpdGjigKYiLCJmciI6IjEwLiBEYW5zIGxvZyhiaW9tYXNzZSkgPSA1LDIgKyAwLDAzIMOXIGNvcmFpbCwgKzEgJSBkZSBjb3JhaWwgZXN0IGFzc29jacOpIMOg4oCmIiwib3B0aW9uc19lbiI6WyIrMC4wMyBrZy9oYSBvZiBiaW9tYXNzIiwiYWJvdXQgKzMgJSBvZiBiaW9tYXNzIiwiKzMwICUgb2YgYmlvbWFzcyIsIis1LjIga2cvaGEiXSwib3B0aW9uc19mciI6WyIrMCwwMyBrZy9oYSBkZSBiaW9tYXNzZSIsImVudmlyb24gKzMgJSBkZSBiaW9tYXNzZSIsIiszMCAlIGRlIGJpb21hc3NlIiwiKzUsMiBrZy9oYSJdLCJhbnN3ZXIiOjF9XQ==">
+
+</div>
+<div class="solution" data-quiz="t10">
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a>mp <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/mangrove_plots.csv&quot;</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a><span class="fu">cor</span>(mp<span class="sc">$</span>tree_height_m, mp<span class="sc">$</span>dbh_cm)                                  <span class="co"># 1</span></span>
+<span id="cb27-3"><a href="#cb27-3" tabindex="-1"></a><span class="fu">cor</span>(mp<span class="sc">$</span>distance_m, mp<span class="sc">$</span>seedlings, <span class="at">method =</span> <span class="st">&quot;spearman&quot;</span>)             <span class="co"># 2</span></span>
+<span id="cb27-4"><a href="#cb27-4" tabindex="-1"></a>f2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(dbh_cm <span class="sc">~</span> tree_height_m, <span class="at">data =</span> mp)</span>
+<span id="cb27-5"><a href="#cb27-5" tabindex="-1"></a><span class="fu">coef</span>(f2); <span class="fu">confint</span>(f2); <span class="fu">summary</span>(f2)<span class="sc">$</span>r.squared                      <span class="co"># 3, 4, 5</span></span>
+<span id="cb27-6"><a href="#cb27-6" tabindex="-1"></a><span class="fu">predict</span>(f2, <span class="fu">data.frame</span>(<span class="at">tree_height_m =</span> <span class="dv">8</span>), <span class="at">interval =</span> <span class="st">&quot;prediction&quot;</span>)   <span class="co"># 6, 7</span></span>
+<span id="cb27-7"><a href="#cb27-7" tabindex="-1"></a>f3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(salinity_psu <span class="sc">~</span> distance_m, <span class="at">data =</span> mp)</span>
+<span id="cb27-8"><a href="#cb27-8" tabindex="-1"></a><span class="fu">coef</span>(f3)[<span class="dv">2</span>] <span class="sc">*</span> <span class="dv">100</span>                                                 <span class="co"># 8</span></span>
+<span id="cb27-9"><a href="#cb27-9" tabindex="-1"></a><span class="co"># 9: log-transform y   10: exp(0.03) = 1.03 -&gt; about +3 %</span></span></code></pre></div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

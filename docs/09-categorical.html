@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>R4Marine Stats · Session 9</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.1/jquery-3.6.1.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<!-- header.html: inserted inside <head> of every page (see _site.yml) -->
+<!-- config.js (settings) and quiz_index.js (made by R/build_site.R) first,
+     then course.js (the behaviour that reads them) -->
+<script src="assets/config.js"></script>
+<script src="assets/quiz_index.js"></script>
+<script src="assets/course.js"></script>
+<meta name="author" content="Aroo Falinirina">
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<link rel="stylesheet" href="assets/course.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">R4Marine Stats</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Sessions
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="00-start.html">0 · Why statistics?</a>
+    </li>
+    <li>
+      <a href="01-design.html">1 · Study design &amp; sampling</a>
+    </li>
+    <li>
+      <a href="02-describe.html">2 · Describing data</a>
+    </li>
+    <li>
+      <a href="03-explore.html">3 · Exploring distributions</a>
+    </li>
+    <li>
+      <a href="04-probability.html">4 · Probability &amp; distributions</a>
+    </li>
+    <li>
+      <a href="05-estimation.html">5 · Standard error &amp; CIs</a>
+    </li>
+    <li>
+      <a href="06-testing.html">6 · Hypothesis tests &amp; p-values</a>
+    </li>
+    <li>
+      <a href="07-two-groups.html">7 · Comparing two groups</a>
+    </li>
+    <li>
+      <a href="08-anova.html">8 · ANOVA &amp; Kruskal–Wallis</a>
+    </li>
+    <li>
+      <a href="09-categorical.html">9 · Proportions &amp; χ²</a>
+    </li>
+    <li>
+      <a href="10-regression.html">10 · Correlation &amp; regression</a>
+    </li>
+    <li>
+      <a href="11-power-reporting.html">11 · Power, multiple tests, reporting</a>
+    </li>
+    <li>
+      <a href="12-practice.html">12 · Practice</a>
+    </li>
+    <li>
+      <a href="13-final-project.html">13 · Final project</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Resources
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="choose-test.html">Which test? (decision guide)</a>
+    </li>
+    <li>
+      <a href="cheatsheet.html">Cheatsheet</a>
+    </li>
+    <li>
+      <a href="glossary.html">Glossary EN–FR</a>
+    </li>
+    <li>
+      <a href="common-errors.html">Common errors &amp; pitfalls</a>
+    </li>
+    <li>
+      <a href="resources.html">To go further</a>
+    </li>
+    <li>
+      <a href="help.html">Need help?</a>
+    </li>
+    <li>
+      <a href="whats-new.html">What's new</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore"><span class="en">9 · Categorical data:
+proportions and χ²</span><span class="fr">9 · Données catégorielles :
+proportions et χ²</span></h1>
+<h3 class="subtitle">~3 h</h3>
+
+</div>
+
+
+<div class="objectives">
+<div id="by-the-end-of-this-session-you-will-be-able-to"
+class="section level4 en">
+<h4>By the end of this session you will be able to</h4>
+<ul>
+<li>test <strong>one proportion</strong> against a reference value
+(<code>binom.test()</code>);</li>
+<li>test whether counts follow expected proportions (<strong>χ² goodness
+of fit</strong>);</li>
+<li>compare <strong>two proportions</strong> with
+<code>prop.test()</code> and report the difference with its CI;</li>
+<li>test the <strong>association between two categorical
+variables</strong> (χ² test of independence), read <strong>expected
+counts</strong> and <strong>residuals</strong>, and check the
+conditions;</li>
+<li>use <strong>Fisher’s exact test</strong> for small tables, and
+report an effect size (<strong>odds ratio</strong>, <strong>Cramér’s
+V</strong>).</li>
+</ul>
+</div>
+<div id="à-la-fin-de-cette-séance-vous-saurez"
+class="section level4 fr">
+<h4>À la fin de cette séance vous saurez</h4>
+<ul>
+<li>tester <strong>une proportion</strong> par rapport à une valeur de
+référence (<code>binom.test()</code>) ;</li>
+<li>tester si des effectifs suivent des proportions attendues
+(<strong>χ² d’ajustement</strong>) ;</li>
+<li>comparer <strong>deux proportions</strong> avec
+<code>prop.test()</code> et rapporter la différence avec son IC ;</li>
+<li>tester l’<strong>association entre deux variables
+catégorielles</strong> (χ² d’indépendance), lire les <strong>effectifs
+attendus</strong> et les <strong>résidus</strong>, et vérifier les
+conditions ;</li>
+<li>utiliser le <strong>test exact de Fisher</strong> pour les petits
+tableaux, et rapporter une taille d’effet (<strong>odds ratio</strong>,
+<strong>V de Cramér</strong>).</li>
+</ul>
+</div>
+</div>
+<div class="callout ecology">
+<div class="en">
+<p><strong>Data of this session.</strong> The <strong>fisher
+survey</strong> (<code>fisher_survey.csv</code>, Session 0: 240 fishers,
+60 drawn at random in each of 4 villages, 2026) and the <strong>octopus
+landings</strong> (<code>octopus_catch.csv</code>, Session 3: every
+octopus landed on reopening day in two villages). With categorical
+variables, the data are <strong>counts</strong> of units in each
+category; each unit (fisher, octopus) must be counted
+<strong>once</strong> and be independent of the others.</p>
+</div>
+<div class="fr">
+<p><strong>Données de cette séance.</strong> L’<strong>enquête
+pêcheurs</strong> (<code>fisher_survey.csv</code>, séance 0 : 240
+pêcheurs, 60 tirés au hasard dans chacun des 4 villages, 2026) et les
+<strong>débarquements de pieuvres</strong>
+(<code>octopus_catch.csv</code>, séance 3 : toutes les pieuvres
+débarquées le jour de réouverture dans deux villages). Avec des
+variables catégorielles, les données sont des <strong>effectifs</strong>
+d’unités dans chaque catégorie ; chaque unité (pêcheur, pieuvre) doit
+être comptée <strong>une seule fois</strong> et être indépendante des
+autres.</p>
+</div>
+</div>
+<div id="one-prop" class="section level2">
+<h2><span class="en">One proportion against a reference</span><span
+class="fr">Une proportion par rapport à une référence</span></h2>
+<div class="en">
+<p>The LMMA committee says closures need the support of <strong>more
+than two thirds</strong> of fishers to be respected. In the sample, what
+share supports them, and is it different from 2/3?</p>
+</div>
+<div class="fr">
+<p>Le comité de la LMMA estime que les fermetures ont besoin du soutien
+de <strong>plus des deux tiers</strong> des pêcheurs pour être
+respectées. Dans l’échantillon, quelle part les soutient, et est-elle
+différente de 2/3 ?</p>
+</div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>fs <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/fisher_survey.csv&quot;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">sum</span>(fs<span class="sc">$</span>supports_closure <span class="sc">==</span> <span class="st">&quot;yes&quot;</span>); n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(fs)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">c</span>(<span class="at">x =</span> x, <span class="at">n =</span> n, <span class="at">p_hat =</span> <span class="fu">round</span>(x <span class="sc">/</span> n, <span class="dv">3</span>))</span></code></pre></div>
+<pre><code>#&gt;       x       n   p_hat 
+#&gt; 155.000 240.000   0.646</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">binom.test</span>(x, n, <span class="at">p =</span> <span class="dv">2</span><span class="sc">/</span><span class="dv">3</span>)</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt;  Exact binomial test
+#&gt; 
+#&gt; data:  x and n
+#&gt; number of successes = 155, number of trials = 240, p-value = 0.4941
+#&gt; alternative hypothesis: true probability of success is not equal to 0.6666667
+#&gt; 95 percent confidence interval:
+#&gt;  0.5817306 0.7062834
+#&gt; sample estimates:
+#&gt; probability of success 
+#&gt;              0.6458333</code></pre>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>binom.test(x, n, p, alternative)</code></td>
+<td>exact test of H0: the true proportion = <code>p</code>, with the
+exact 95 % CI (Session 5)</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>  <code>p</code></td>
+<td>the reference proportion under H0</td>
+<td>between 0 and 1 (default 0.5)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>binom.test(x, n, p, alternative)</code></td>
+<td>test exact de H0 : la vraie proportion = <code>p</code>, avec l’IC
+exact à 95 % (séance 5)</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>  <code>p</code></td>
+<td>la proportion de référence sous H0</td>
+<td>entre 0 et 1 (défaut 0,5)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="en">
+<p>65 % support closures (95 % CI 58–71 %). The CI contains 2/3 (67 %):
+<strong>no evidence</strong> that support differs from two thirds — but
+the data are also compatible with a support as low as 58 %, which the
+committee should know.</p>
+</div>
+<div class="fr">
+<p>65 % soutiennent les fermetures (IC 95 % 58–71 %). L’IC contient 2/3
+(67 %) : <strong>pas de preuve</strong> que le soutien diffère des deux
+tiers — mais les données sont aussi compatibles avec un soutien aussi
+bas que 58 %, ce que le comité devrait savoir.</p>
+</div>
+</div>
+<div id="gof" class="section level2">
+<h2><span class="en">Goodness of fit: do counts follow expected
+proportions?</span><span class="fr">Ajustement : les effectifs
+suivent-ils des proportions attendues ?</span></h2>
+<div class="en">
+<p>For more than two categories, the <strong>χ² (chi-square)
+test</strong> compares <strong>observed</strong> counts O with the
+counts <strong>expected</strong> under H0, E: χ² = Σ (O − E)² / E. Large
+χ² → observed far from expected.</p>
+<p>Example: is the sex ratio of landed octopuses 1 : 1?</p>
+</div>
+<div class="fr">
+<p>Pour plus de deux catégories, le <strong>test du χ²
+(khi-deux)</strong> compare les effectifs <strong>observés</strong> O
+aux effectifs <strong>attendus</strong> sous H0, E : χ² = Σ (O − E)² /
+E. χ² grand → observé loin de l’attendu.</p>
+<p>Exemple : le sex-ratio des pieuvres débarquées est-il de 1 : 1 ?</p>
+</div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>oc <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/octopus_catch.csv&quot;</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>obs <span class="ot">&lt;-</span> <span class="fu">table</span>(oc<span class="sc">$</span>sex)</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>obs</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt;   F   M 
+#&gt; 175 170</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">chisq.test</span>(obs, <span class="at">p =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>))</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt;  Chi-squared test for given probabilities
+#&gt; 
+#&gt; data:  obs
+#&gt; X-squared = 0.072464, df = 1, p-value = 0.7878</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">chisq.test</span>(obs, <span class="at">p =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>))<span class="sc">$</span>expected</span></code></pre></div>
+<pre><code>#&gt;     F     M 
+#&gt; 172.5 172.5</code></pre>
+<div class="en">
+<p>And the perceived trend of catches: national surveys report that
+about 60 % of fishers say catches have decreased, 30 % stable and 10 %
+increased. Do our villages differ?</p>
+</div>
+<div class="fr">
+<p>Et la tendance perçue des captures : des enquêtes nationales
+rapportent qu’environ 60 % des pêcheurs disent que les captures ont
+diminué, 30 % stables et 10 % augmenté. Nos villages diffèrent-ils ?</p>
+</div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>trend <span class="ot">&lt;-</span> <span class="fu">table</span>(<span class="fu">factor</span>(fs<span class="sc">$</span>catch_trend, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;decreased&quot;</span>, <span class="st">&quot;stable&quot;</span>, <span class="st">&quot;increased&quot;</span>)))</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>trend</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt; decreased    stable increased 
+#&gt;       164        57        19</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">chisq.test</span>(trend, <span class="at">p =</span> <span class="fu">c</span>(<span class="fl">0.60</span>, <span class="fl">0.30</span>, <span class="fl">0.10</span>))</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt;  Chi-squared test for given probabilities
+#&gt; 
+#&gt; data:  trend
+#&gt; X-squared = 6.9444, df = 2, p-value = 0.03105</code></pre>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>chisq.test(x, p)</code></td>
+<td>with <strong>one</strong> table of counts: goodness-of-fit test
+against the proportions <code>p</code></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>  <code>p</code></td>
+<td>expected proportions, in the <strong>same order</strong> as the
+categories of the table; they must sum to 1</td>
+<td>a numeric vector (default: all equal)</td>
+</tr>
+<tr class="odd">
+<td><code>$expected</code></td>
+<td>the expected counts E under H0</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>chisq.test(x, p)</code></td>
+<td>avec <strong>un</strong> tableau d’effectifs : test d’ajustement aux
+proportions <code>p</code></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>  <code>p</code></td>
+<td>proportions attendues, dans le <strong>même ordre</strong> que les
+catégories du tableau ; leur somme doit valoir 1</td>
+<td>un vecteur numérique (défaut : toutes égales)</td>
+</tr>
+<tr class="odd">
+<td><code>$expected</code></td>
+<td>les effectifs attendus E sous H0</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="two-props" class="section level2">
+<h2><span class="en">Comparing two proportions</span><span
+class="fr">Comparer deux proportions</span></h2>
+<div class="en">
+<p>Are undersized octopuses (&lt; 350 g) less frequent in the reopened
+area? <code>prop.test()</code> takes the <strong>number of
+“successes”</strong> and the <strong>number of trials</strong> of each
+group.</p>
+</div>
+<div class="fr">
+<p>Les pieuvres trop petites (&lt; 350 g) sont-elles moins fréquentes
+dans la zone rouverte ? <code>prop.test()</code> prend le <strong>nombre
+de « succès »</strong> et le <strong>nombre d’essais</strong> de chaque
+groupe.</p>
+</div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>small <span class="ot">&lt;-</span> <span class="fu">tapply</span>(oc<span class="sc">$</span>weight_g <span class="sc">&lt;</span> <span class="dv">350</span>, oc<span class="sc">$</span>area, sum)</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>total <span class="ot">&lt;-</span> <span class="fu">table</span>(oc<span class="sc">$</span>area)</span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a><span class="fu">rbind</span>(<span class="at">small =</span> small, <span class="at">total =</span> total, <span class="at">prop =</span> <span class="fu">round</span>(small <span class="sc">/</span> total, <span class="dv">3</span>))</span></code></pre></div>
+<pre><code>#&gt;          open reopened
+#&gt; small  25.000   10.000
+#&gt; total 160.000  185.000
+#&gt; prop    0.156    0.054</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a>pt2 <span class="ot">&lt;-</span> <span class="fu">prop.test</span>(small, total)</span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>pt2</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt;  2-sample test for equality of proportions with continuity correction
+#&gt; 
+#&gt; data:  small out of total
+#&gt; X-squared = 8.7408, df = 1, p-value = 0.003112
+#&gt; alternative hypothesis: two.sided
+#&gt; 95 percent confidence interval:
+#&gt;  0.03135281 0.17303908
+#&gt; sample estimates:
+#&gt;     prop 1     prop 2 
+#&gt; 0.15625000 0.05405405</code></pre>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>prop.test(x, n, correct)</code></td>
+<td>with vectors: compares the proportions <code>x/n</code> of 2 (or
+more) groups; gives the CI of the <strong>difference</strong> for 2
+groups</td>
+<td><code>x</code> successes and <code>n</code> totals, in the same
+order</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>prop.test(x, n, correct)</code></td>
+<td>avec des vecteurs : compare les proportions <code>x/n</code> de 2
+groupes (ou plus) ; donne l’IC de la <strong>différence</strong> pour 2
+groupes</td>
+<td><code>x</code> succès et <code>n</code> totaux, dans le même
+ordre</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="en">
+<p><strong>Report:</strong> “Undersized octopuses made up 15.6 % of the
+catch in the open area and 5.4 % in the reopened area (difference 10.2
+percentage points, 95 % CI 3.1–17.3; χ² test, χ² = 8.74, df = 1, p =
+0.003).”</p>
+</div>
+<div class="fr">
+<p><strong>Rédaction :</strong> « Les pieuvres sous la taille
+représentaient 15,6 % des captures dans la zone ouverte et 5,4 % dans la
+zone rouverte (différence de 10,2 points de pourcentage, IC 95 %
+3,1–17,3 ; test du χ², χ² = 8,74, ddl = 1, p = 0,003). »</p>
+</div>
+</div>
+<div id="independence" class="section level2">
+<h2><span class="en">Two categorical variables: the χ² test of
+independence</span><span class="fr">Deux variables catégorielles : le χ²
+d’indépendance</span></h2>
+<div class="en">
+<p>Is support for closures <strong>associated</strong> with LMMA
+membership? H0: the two variables are <strong>independent</strong> (the
+% of supporters is the same among members and non-members). Expected
+count of each cell under H0 = row total × column total / grand
+total.</p>
+</div>
+<div class="fr">
+<p>Le soutien aux fermetures est-il <strong>associé</strong> à
+l’adhésion à la LMMA ? H0 : les deux variables sont
+<strong>indépendantes</strong> (le % de partisans est le même chez les
+membres et les non-membres). Effectif attendu de chaque case sous H0 =
+total de ligne × total de colonne / total général.</p>
+</div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">table</span>(<span class="at">member =</span> fs<span class="sc">$</span>lmma_member, <span class="at">supports =</span> fs<span class="sc">$</span>supports_closure)</span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>tab</span></code></pre></div>
+<pre><code>#&gt;       supports
+#&gt; member no yes
+#&gt;    no  71  84
+#&gt;    yes 14  71</code></pre>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> <span class="fu">prop.table</span>(tab, <span class="dv">1</span>), <span class="dv">1</span>)       <span class="co"># % supporting, within members and non-members</span></span></code></pre></div>
+<pre><code>#&gt;       supports
+#&gt; member   no  yes
+#&gt;    no  45.8 54.2
+#&gt;    yes 16.5 83.5</code></pre>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a>ct <span class="ot">&lt;-</span> <span class="fu">chisq.test</span>(tab)</span>
+<span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a>ct</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt;  Pearson&#39;s Chi-squared test with Yates&#39; continuity correction
+#&gt; 
+#&gt; data:  tab
+#&gt; X-squared = 19.392, df = 1, p-value = 1.065e-05</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a>ct<span class="sc">$</span>expected</span></code></pre></div>
+<pre><code>#&gt;       supports
+#&gt; member       no       yes
+#&gt;    no  54.89583 100.10417
+#&gt;    yes 30.10417  54.89583</code></pre>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a><span class="fu">round</span>(ct<span class="sc">$</span>stdres, <span class="dv">2</span>)                       <span class="co"># standardised residuals</span></span></code></pre></div>
+<pre><code>#&gt;       supports
+#&gt; member    no   yes
+#&gt;    no   4.54 -4.54
+#&gt;    yes -4.54  4.54</code></pre>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a><span class="fu">ggplot</span>(fs, <span class="fu">aes</span>(lmma_member, <span class="at">fill =</span> supports_closure)) <span class="sc">+</span></span>
+<span id="cb29-2"><a href="#cb29-2" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">&quot;fill&quot;</span>, <span class="at">width =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb29-3"><a href="#cb29-3" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="at">no =</span> <span class="st">&quot;#e8c27a&quot;</span>, <span class="at">yes =</span> <span class="st">&quot;#4a7d3a&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb29-4"><a href="#cb29-4" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;LMMA member&quot;</span>, <span class="at">y =</span> <span class="st">&quot;share of fishers&quot;</span>, <span class="at">fill =</span> <span class="st">&quot;supports closure&quot;</span>) <span class="sc">+</span> <span class="fu">theme_c</span>()</span></code></pre></div>
+<p><img src="09-categorical_files/figure-html/unnamed-chunk-9-1.png" width="85%" style="display: block; margin: auto;" /></p>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>table(name1 = a, name2 = b)</code></td>
+<td>two-way table; the names become the titles of the rows and
+columns</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>chisq.test(tab, correct)</code></td>
+<td>with a <strong>two-way</strong> table: test of independence; for 2 ×
+2 tables, <code>correct = TRUE</code> (default) applies Yates’
+continuity correction</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><code>$stdres</code></td>
+<td>standardised residuals (O − E scaled): beyond ±2, the cell
+contributes clearly to the association</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>table(name1 = a, name2 = b)</code></td>
+<td>tableau croisé ; les noms deviennent les titres des lignes et des
+colonnes</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>chisq.test(tab, correct)</code></td>
+<td>avec un tableau <strong>croisé</strong> : test d’indépendance ; pour
+les tableaux 2 × 2, <code>correct = TRUE</code> (défaut) applique la
+correction de continuité de Yates</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><code>$stdres</code></td>
+<td>résidus standardisés (O − E mis à l’échelle) : au-delà de ±2, la
+case contribue nettement à l’association</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="en">
+<p><strong>Conditions.</strong> (1) Each unit is counted once, units are
+independent. (2) <strong>Expected</strong> counts (not observed) should
+be <strong>≥ 5</strong> in (almost) all cells — R warns “<em>Chi-squared
+approximation may be incorrect</em>” otherwise. Then use
+<strong>Fisher’s exact test</strong>, or group rare categories if it
+makes sense.</p>
+<p><strong>Degrees of freedom</strong> = (rows − 1) × (columns − 1).</p>
+</div>
+<div class="fr">
+<p><strong>Conditions.</strong> (1) Chaque unité est comptée une fois,
+les unités sont indépendantes. (2) Les effectifs
+<strong>attendus</strong> (pas observés) doivent être <strong>≥
+5</strong> dans (presque) toutes les cases — sinon R avertit «
+<em>Chi-squared approximation may be incorrect</em> ». Utilisez alors le
+<strong>test exact de Fisher</strong>, ou regroupez des catégories rares
+si cela a du sens.</p>
+<p><strong>Degrés de liberté</strong> = (lignes − 1) × (colonnes −
+1).</p>
+</div>
+<div
+id="effect-sizes-odds-ratio-and-cramérs-vtailles-deffet-odds-ratio-et-v-de-cramér"
+class="section level3">
+<h3><span class="en">Effect sizes: odds ratio and Cramér’s V</span><span
+class="fr">Tailles d’effet : odds ratio et V de Cramér</span></h3>
+<div class="en">
+<p>For a 2 × 2 table, <code>fisher.test()</code> gives the <strong>odds
+ratio</strong> (OR) and its CI: the odds of supporting closures among
+members divided by the odds among non-members (OR = 1: no association).
+For larger tables, <strong>Cramér’s V</strong> = √(χ² / (n × (min(rows,
+columns) − 1))) goes from 0 (no association) to 1.</p>
+</div>
+<div class="fr">
+<p>Pour un tableau 2 × 2, <code>fisher.test()</code> donne
+l’<strong>odds ratio</strong> (OR, rapport des cotes) et son IC : la
+cote de soutien aux fermetures chez les membres divisée par la cote chez
+les non-membres (OR = 1 : pas d’association). Pour des tableaux plus
+grands, le <strong>V de Cramér</strong> = √(χ² / (n × (min(lignes,
+colonnes) − 1))) va de 0 (pas d’association) à 1.</p>
+</div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a>tab2 <span class="ot">&lt;-</span> tab[<span class="fu">c</span>(<span class="st">&quot;yes&quot;</span>, <span class="st">&quot;no&quot;</span>), <span class="fu">c</span>(<span class="st">&quot;yes&quot;</span>, <span class="st">&quot;no&quot;</span>)]      <span class="co"># put &quot;yes&quot; first in rows and columns</span></span>
+<span id="cb30-2"><a href="#cb30-2" tabindex="-1"></a><span class="fu">fisher.test</span>(tab2)</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt;  Fisher&#39;s Exact Test for Count Data
+#&gt; 
+#&gt; data:  tab2
+#&gt; p-value = 4.866e-06
+#&gt; alternative hypothesis: true odds ratio is not equal to 1
+#&gt; 95 percent confidence interval:
+#&gt;  2.155822 8.909699
+#&gt; sample estimates:
+#&gt; odds ratio 
+#&gt;   4.261454</code></pre>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" tabindex="-1"></a>cramers_v <span class="ot">&lt;-</span> <span class="cf">function</span>(tab) {</span>
+<span id="cb32-2"><a href="#cb32-2" tabindex="-1"></a>  chi2 <span class="ot">&lt;-</span> <span class="fu">suppressWarnings</span>(<span class="fu">chisq.test</span>(tab, <span class="at">correct =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>statistic)</span>
+<span id="cb32-3"><a href="#cb32-3" tabindex="-1"></a>  <span class="fu">as.numeric</span>(<span class="fu">sqrt</span>(chi2 <span class="sc">/</span> (<span class="fu">sum</span>(tab) <span class="sc">*</span> (<span class="fu">min</span>(<span class="fu">dim</span>(tab)) <span class="sc">-</span> <span class="dv">1</span>))))</span>
+<span id="cb32-4"><a href="#cb32-4" tabindex="-1"></a>}</span>
+<span id="cb32-5"><a href="#cb32-5" tabindex="-1"></a><span class="fu">cramers_v</span>(tab)</span></code></pre></div>
+<pre><code>#&gt; [1] 0.2933586</code></pre>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>fisher.test(tab)</code></td>
+<td>Fisher’s exact test of independence (any table size, best for small
+counts); for 2 × 2 tables also the odds ratio and its CI</td>
+<td>a table of counts</td>
+</tr>
+<tr class="even">
+<td><code>tab[c("yes", "no"), c("yes", "no")]</code></td>
+<td>reorders rows and columns; the odds ratio compares the <strong>1st
+row</strong> with the 2nd, for the <strong>1st column</strong></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><code>suppressWarnings(expr)</code></td>
+<td>runs <code>expr</code> without printing its warnings (use only when
+you know why they appear)</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>dim(tab)</code></td>
+<td>number of rows and columns</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>fisher.test(tab)</code></td>
+<td>test exact de Fisher d’indépendance (toute taille de tableau, idéal
+pour de petits effectifs) ; pour les tableaux 2 × 2 aussi l’odds ratio
+et son IC</td>
+<td>un tableau d’effectifs</td>
+</tr>
+<tr class="even">
+<td><code>tab[c("yes", "no"), c("yes", "no")]</code></td>
+<td>réordonne lignes et colonnes ; l’odds ratio compare la <strong>1re
+ligne</strong> à la 2e, pour la <strong>1re colonne</strong></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><code>suppressWarnings(expr)</code></td>
+<td>exécute <code>expr</code> sans afficher ses avertissements
+(seulement quand vous savez pourquoi ils apparaissent)</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>dim(tab)</code></td>
+<td>nombre de lignes et de colonnes</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="callout warning">
+<div class="en">
+<p><strong>Association is not causation</strong> (Session 1): members
+may support closures <em>because</em> they are members, or join the LMMA
+<em>because</em> they already supported closures, or both may depend on
+a third variable (the village).</p>
+</div>
+<div class="fr">
+<p><strong>Association n’est pas causalité</strong> (séance 1) : les
+membres soutiennent peut-être les fermetures <em>parce qu’</em>ils sont
+membres, ou adhèrent à la LMMA <em>parce qu’</em>ils soutenaient déjà
+les fermetures, ou les deux dépendent d’une troisième variable (le
+village).</p>
+</div>
+</div>
+</div>
+<div
+id="a-table-with-small-expected-countsun-tableau-avec-de-petits-effectifs-attendus"
+class="section level3">
+<h3><span class="en">A table with small expected counts</span><span
+class="fr">Un tableau avec de petits effectifs attendus</span></h3>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" tabindex="-1"></a>spear <span class="ot">&lt;-</span> fs[fs<span class="sc">$</span>main_gear <span class="sc">==</span> <span class="st">&quot;speargun&quot;</span>, ]</span>
+<span id="cb34-2"><a href="#cb34-2" tabindex="-1"></a>tab_s <span class="ot">&lt;-</span> <span class="fu">table</span>(spear<span class="sc">$</span>sex, spear<span class="sc">$</span>boat)</span>
+<span id="cb34-3"><a href="#cb34-3" tabindex="-1"></a>tab_s</span></code></pre></div>
+<pre><code>#&gt;    
+#&gt;     no yes
+#&gt;   F  3   3
+#&gt;   M  4  26</code></pre>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" tabindex="-1"></a><span class="fu">suppressWarnings</span>(<span class="fu">chisq.test</span>(tab_s)<span class="sc">$</span>expected)    <span class="co"># some expected counts &lt; 5</span></span></code></pre></div>
+<pre><code>#&gt;    
+#&gt;           no       yes
+#&gt;   F 1.166667  4.833333
+#&gt;   M 5.833333 24.166667</code></pre>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" tabindex="-1"></a><span class="fu">fisher.test</span>(tab_s)<span class="sc">$</span>p.value</span></code></pre></div>
+<pre><code>#&gt; [1] 0.07327066</code></pre>
+</div>
+</div>
+<div id="application" class="section level2">
+<h2><span class="en">Application work &amp; quiz</span><span
+class="fr">Travail d’application et quiz</span></h2>
+<div class="application">
+<div id="application-work-9" class="section level3 en">
+<h3>Application work 9</h3>
+<p>With <code>fisher_survey.csv</code> (and
+<code>octopus_catch.csv</code> for Q7):</p>
+<ol style="list-style-type: decimal">
+<li>The regional office reports that <strong>45 %</strong> of fishers
+are LMMA members. Exact test (<code>binom.test()</code>) of H0: p = 0.45
+in these four villages. p-value (4 decimals).</li>
+<li>χ² goodness-of-fit test of H0: the four <strong>main gears</strong>
+are equally common. χ² statistic (3 decimals).</li>
+<li>– 5. χ² test of independence between <strong>village</strong> and
+<strong>main gear</strong>: χ² (3 decimals), degrees of freedom, p-value
+(4 decimals).</li>
+<li>Cramér’s V for <strong>village × LMMA member</strong> (3 decimals;
+use the function of the session, without continuity correction).</li>
+<li>Octopuses: compare the proportion caught with a
+<strong>hook</strong> between the two areas with
+<code>prop.test()</code> (counts of hooks per area and totals per area).
+p-value (4 decimals).</li>
+<li>– 10. Concepts.</li>
+</ol>
+</div>
+<div id="travail-dapplication-9" class="section level3 fr">
+<h3>Travail d’application 9</h3>
+<p>Avec <code>fisher_survey.csv</code> (et
+<code>octopus_catch.csv</code> pour Q7) :</p>
+<ol style="list-style-type: decimal">
+<li>Le bureau régional indique que <strong>45 %</strong> des pêcheurs
+sont membres d’une LMMA. Test exact (<code>binom.test()</code>) de H0 :
+p = 0,45 dans ces quatre villages. p-value (4 décimales).</li>
+<li>Test du χ² d’ajustement de H0 : les quatre <strong>engins
+principaux</strong> sont également fréquents. Statistique χ² (3
+décimales).</li>
+<li>– 5. Test du χ² d’indépendance entre <strong>village</strong> et
+<strong>engin principal</strong> : χ² (3 décimales), degrés de liberté,
+p-value (4 décimales).</li>
+<li>V de Cramér pour <strong>village × membre LMMA</strong> (3 décimales
+; utilisez la fonction de la séance, sans correction de
+continuité).</li>
+<li>Pieuvres : comparez la proportion capturée au
+<strong>crochet</strong> (<code>hook</code>) entre les deux zones avec
+<code>prop.test()</code> (effectifs de crochets par zone et totaux par
+zone). p-value (4 décimales).</li>
+<li>– 10. Questions de cours.</li>
+</ol>
+</div>
+</div>
+<div class="hint">
+<div class="en">
+<p>Q2: <code>chisq.test(table(fs$main_gear))</code> (equal proportions
+are the default). Q7:
+<code>prop.test(tapply(oc$gear == "hook", oc$area, sum), table(oc$area))</code>.</p>
+</div>
+<div class="fr">
+<p>Q2 : <code>chisq.test(table(fs$main_gear))</code> (les proportions
+égales sont le défaut). Q7 :
+<code>prop.test(tapply(oc$gear == "hook", oc$area, sum), table(oc$area))</code>.</p>
+</div>
+</div>
+<div id="quiz-t09" class="quiz" data-quiz-id="t09"
+data-q="W3sidHlwZSI6Im51bSIsImVuIjoiMS4gcC12YWx1ZSwgSDA6IHAgPSAwLjQ1IG9mIExNTUEgbWVtYmVycz8iLCJmciI6IjEuIHAtdmFsdWUsIEgwIDogcCA9IDAsNDUgZGUgbWVtYnJlcyA/IiwiYW5zd2VyIjowLjAwMjgsInRvbCI6NmUtMDUsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibnVtIiwiZW4iOiIyLiDPh8KyIGdvb2RuZXNzIG9mIGZpdCwgbWFpbiBnZWFyPyIsImZyIjoiMi4gz4fCsiBkJ2FqdXN0ZW1lbnQsIGVuZ2luIHByaW5jaXBhbCA/IiwiYW5zd2VyIjoxOC41LCJ0b2wiOjAuMDAwNiwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJudW0iLCJlbiI6IjMuIM+HwrIgdmlsbGFnZSDDlyBnZWFyPyIsImZyIjoiMy4gz4fCsiB2aWxsYWdlIMOXIGVuZ2luID8iLCJhbnN3ZXIiOjguNDA3LCJ0b2wiOjAuMDAwNiwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJudW0iLCJlbiI6IjQuIERlZ3JlZXMgb2YgZnJlZWRvbT8iLCJmciI6IjQuIERlZ3LDqXMgZGUgbGliZXJ0w6kgPyIsImFuc3dlciI6OSwidG9sIjowLCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiNS4gcC12YWx1ZSB2aWxsYWdlIMOXIGdlYXI/IiwiZnIiOiI1LiBwLXZhbHVlIHZpbGxhZ2Ugw5cgZW5naW4gPyIsImFuc3dlciI6MC40OTM3LCJ0b2wiOjZlLTA1LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiNi4gQ3JhbcOpcidzIFYsIHZpbGxhZ2Ugw5cgTE1NQSBtZW1iZXI/IiwiZnIiOiI2LiBWIGRlIENyYW3DqXIsIHZpbGxhZ2Ugw5cgbWVtYnJlIExNTUEgPyIsImFuc3dlciI6MC40NTEsInRvbCI6MC4wMDA2LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiNy4gcC12YWx1ZSwgaG9vayB1c2UgYmV0d2VlbiBhcmVhcz8iLCJmciI6IjcuIHAtdmFsdWUsIHVzYWdlIGR1IGNyb2NoZXQgZW50cmUgem9uZXMgPyIsImFuc3dlciI6MC41Nzg3LCJ0b2wiOjZlLTA1LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im1jcSIsImVuIjoiOC4gVGhlIM+HwrIgdGVzdCBpcyB1bnJlbGlhYmxlIHdoZW7igKYiLCJmciI6IjguIExlIHRlc3QgZHUgz4fCsiBlc3QgcGV1IGZpYWJsZSBxdWFuZOKApiIsIm9wdGlvbnNfZW4iOlsib2JzZXJ2ZWQgY291bnRzIGFyZSBiZWxvdyA1IiwiZXhwZWN0ZWQgY291bnRzIGFyZSBiZWxvdyA1IGluIHNldmVyYWwgY2VsbHMiLCJ0aGUgdGFibGUgaGFzIG1vcmUgdGhhbiAyIHJvd3MiLCJuIGlzIGxhcmdlciB0aGFuIDEwMCJdLCJvcHRpb25zX2ZyIjpbImxlcyBlZmZlY3RpZnMgb2JzZXJ2w6lzIHNvbnQgc291cyA1IiwibGVzIGVmZmVjdGlmcyBhdHRlbmR1cyBzb250IHNvdXMgNSBkYW5zIHBsdXNpZXVycyBjYXNlcyIsImxlIHRhYmxlYXUgYSBwbHVzIGRlIDIgbGlnbmVzIiwibiBkw6lwYXNzZSAxMDAiXSwiYW5zd2VyIjoxfSx7InR5cGUiOiJtY3EiLCJlbiI6IjkuIDQwIHF1YWRyYXRzIHdlcmUgZWFjaCByZWNvcmRlZCAzIHRpbWVzICgzIGRpdmVycyksIGdpdmluZyAxMjAgcm93cyBpbiBhIHRhYmxlIG9mIGhhYml0YXQgw5cgdXJjaGluIHByZXNlbmNlLiBUaGUgz4fCsiB0ZXN0IGlz4oCmIiwiZnIiOiI5LiA0MCBxdWFkcmF0cyBvbnQgw6l0w6kgbm90w6lzIDMgZm9pcyBjaGFjdW4gKDMgcGxvbmdldXJzKSwgZG9ubmFudCAxMjAgbGlnbmVzIGRhbnMgdW4gdGFibGVhdSBoYWJpdGF0IMOXIHByw6lzZW5jZSBkJ291cnNpbnMuIExlIHRlc3QgZHUgz4fCsiBlc3TigKYiLCJvcHRpb25zX2VuIjpbImZpbmUsIG4gPSAxMjAiLCJub3QgdmFsaWQ6IHRoZSBvYnNlcnZhdGlvbnMgYXJlIG5vdCBpbmRlcGVuZGVudCAobiBpcyByZWFsbHkgNDApIiwidmFsaWQgb25seSB3aXRoIEZpc2hlcidzIHRlc3QiLCJ2YWxpZCBpZiBwIDwgMC4wNSJdLCJvcHRpb25zX2ZyIjpbImNvcnJlY3QsIG4gPSAxMjAiLCJub24gdmFsaWRlIDogbGVzIG9ic2VydmF0aW9ucyBuZSBzb250IHBhcyBpbmTDqXBlbmRhbnRlcyAobiB2YXV0IGVuIHLDqWFsaXTDqSA0MCkiLCJ2YWxpZGUgc2V1bGVtZW50IGF2ZWMgbGUgdGVzdCBkZSBGaXNoZXIiLCJ2YWxpZGUgc2kgcCA8IDAsMDUiXSwiYW5zd2VyIjoxfSx7InR5cGUiOiJtY3EiLCJlbiI6IjEwLiBBbiBvZGRzIHJhdGlvIG9mIDMuNiAoOTUgJSBDSSAyLjDigJM2LjUpIGZvciBzdXBwb3J0aW5nIGNsb3N1cmVzLCBtZW1iZXJzIHZzIG5vbi1tZW1iZXJzLCBtZWFuc+KApiIsImZyIjoiMTAuIFVuIG9kZHMgcmF0aW8gZGUgMyw2IChJQyA5NSAlIDIsMOKAkzYsNSkgcG91ciBsZSBzb3V0aWVuIGF1eCBmZXJtZXR1cmVzLCBtZW1icmVzIHZzIG5vbi1tZW1icmVzLCBzaWduaWZpZeKApiIsIm9wdGlvbnNfZW4iOlsibWVtYmVycyBhcmUgMy42ICUgbW9yZSBsaWtlbHkgdG8gc3VwcG9ydCIsInRoZSBvZGRzIG9mIHN1cHBvcnQgYXJlIGFib3V0IDMuNiB0aW1lcyBoaWdoZXIgYW1vbmcgbWVtYmVyczsgY2xlYXJseSBhYm92ZSAxIiwibm8gYXNzb2NpYXRpb24sIGJlY2F1c2UgdGhlIENJIGlzIHdpZGUiLCJtZW1iZXJzaGlwIGNhdXNlcyBzdXBwb3J0Il0sIm9wdGlvbnNfZnIiOlsibGVzIG1lbWJyZXMgb250IDMsNiAlIGRlIGNoYW5jZXMgZW4gcGx1cyBkZSBzb3V0ZW5pciIsImxhIGNvdGUgZGUgc291dGllbiBlc3QgZW52aXJvbiAzLDYgZm9pcyBwbHVzIMOpbGV2w6llIGNoZXogbGVzIG1lbWJyZXMgOyBuZXR0ZW1lbnQgYXUtZGVzc3VzIGRlIDEiLCJwYXMgZCdhc3NvY2lhdGlvbiwgY2FyIGwnSUMgZXN0IGxhcmdlIiwibCdhZGjDqXNpb24gY2F1c2UgbGUgc291dGllbiJdLCJhbnN3ZXIiOjF9XQ==">
+
+</div>
+<div class="solution" data-quiz="t09">
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" tabindex="-1"></a>fs <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/fisher_survey.csv&quot;</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" tabindex="-1"></a><span class="fu">binom.test</span>(<span class="fu">sum</span>(fs<span class="sc">$</span>lmma_member <span class="sc">==</span> <span class="st">&quot;yes&quot;</span>), <span class="fu">nrow</span>(fs), <span class="at">p =</span> <span class="fl">0.45</span>)         <span class="co"># 1</span></span>
+<span id="cb40-3"><a href="#cb40-3" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(fs<span class="sc">$</span>main_gear))                                      <span class="co"># 2</span></span>
+<span id="cb40-4"><a href="#cb40-4" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(fs<span class="sc">$</span>village, fs<span class="sc">$</span>main_gear))                          <span class="co"># 3, 4, 5</span></span>
+<span id="cb40-5"><a href="#cb40-5" tabindex="-1"></a>cramers_v <span class="ot">&lt;-</span> <span class="cf">function</span>(tab) {</span>
+<span id="cb40-6"><a href="#cb40-6" tabindex="-1"></a>  chi2 <span class="ot">&lt;-</span> <span class="fu">suppressWarnings</span>(<span class="fu">chisq.test</span>(tab, <span class="at">correct =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>statistic)</span>
+<span id="cb40-7"><a href="#cb40-7" tabindex="-1"></a>  <span class="fu">as.numeric</span>(<span class="fu">sqrt</span>(chi2 <span class="sc">/</span> (<span class="fu">sum</span>(tab) <span class="sc">*</span> (<span class="fu">min</span>(<span class="fu">dim</span>(tab)) <span class="sc">-</span> <span class="dv">1</span>))))</span>
+<span id="cb40-8"><a href="#cb40-8" tabindex="-1"></a>}</span>
+<span id="cb40-9"><a href="#cb40-9" tabindex="-1"></a><span class="fu">cramers_v</span>(<span class="fu">table</span>(fs<span class="sc">$</span>village, fs<span class="sc">$</span>lmma_member))                         <span class="co"># 6</span></span>
+<span id="cb40-10"><a href="#cb40-10" tabindex="-1"></a>oc <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/octopus_catch.csv&quot;</span>)</span>
+<span id="cb40-11"><a href="#cb40-11" tabindex="-1"></a><span class="fu">prop.test</span>(<span class="fu">tapply</span>(oc<span class="sc">$</span>gear <span class="sc">==</span> <span class="st">&quot;hook&quot;</span>, oc<span class="sc">$</span>area, sum), <span class="fu">table</span>(oc<span class="sc">$</span>area))   <span class="co"># 7</span></span>
+<span id="cb40-12"><a href="#cb40-12" tabindex="-1"></a><span class="co"># 8: expected counts &lt; 5   9: pseudoreplication (not independent)   10: odds ~3.6 times higher</span></span></code></pre></div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

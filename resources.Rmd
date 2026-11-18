@@ -1,0 +1,57 @@
+---
+title: "[To go further]{.en}[Pour aller plus loin]{.fr}"
+pagetitle: "R4Marine Stats · To go further"
+---
+
+## [Free online books]{.en}[Livres gratuits en ligne]{.fr} {.no-track}
+
+::: en
+- **OpenIntro Statistics** (Diez, Çetinkaya-Rundel & Barr) — a complete introductory course: data, probability, distributions, inference for means and proportions, regression. Free PDF. <https://www.openintro.org/book/os/>
+- **Introductory Statistics for the Life and Biomedical Sciences** (OpenIntro) — the same approach with biological examples and R labs. <https://www.openintro.org/book/biostat>
+- **Introduction to Modern Statistics** (OpenIntro) — teaches inference with randomisation and the bootstrap first, as in Sessions 5–6 of this course. <https://openintro-ims.netlify.app/>
+- **Learning Statistics with R** (Danielle Navarro) — a gentle, very well explained course with R, from descriptive statistics to ANOVA and regression. <https://learningstatisticswithr.com>
+:::
+::: fr
+- **OpenIntro Statistics** (Diez, Çetinkaya-Rundel & Barr) — un cours d'introduction complet : données, probabilités, lois, inférence pour moyennes et proportions, régression. PDF gratuit (en anglais). <https://www.openintro.org/book/os/>
+- **Introductory Statistics for the Life and Biomedical Sciences** (OpenIntro) — la même approche avec des exemples biologiques et des travaux pratiques sous R. <https://www.openintro.org/book/biostat>
+- **Introduction to Modern Statistics** (OpenIntro) — enseigne d'abord l'inférence par randomisation et bootstrap, comme les séances 5–6 de ce cours. <https://openintro-ims.netlify.app/>
+- **Learning Statistics with R** (Danielle Navarro) — un cours progressif et très bien expliqué avec R, des statistiques descriptives à l'ANOVA et à la régression. <https://learningstatisticswithr.com>
+- **En français :** *analyse-R* (Joseph Larmarange et coll.), un manuel d'analyse de données avec R, des statistiques descriptives aux modèles. <https://larmarange.github.io/analyse-R/>
+:::
+
+## [Reference books (biology and ecology)]{.en}[Livres de référence (biologie et écologie)]{.fr} {.no-track}
+
+::: en
+- Whitlock M. C. & Schluter D. *The Analysis of Biological Data*. Roberts / Macmillan. — The clearest introductory textbook for biologists.
+- Quinn G. P. & Keough M. J. *Experimental Design and Data Analysis for Biologists*. Cambridge University Press. — Design, ANOVA and regression in depth; excellent on sampling units and replication.
+- Hector A. *The New Statistics with R: An Introduction for Biologists*. Oxford University Press. — Emphasis on effect sizes and confidence intervals.
+- Qian S. S. *Environmental and Ecological Statistics with R*. Chapman & Hall/CRC.
+:::
+::: fr
+- Whitlock M. C. & Schluter D. *The Analysis of Biological Data*. Roberts / Macmillan. — Le manuel d'introduction le plus clair pour les biologistes.
+- Quinn G. P. & Keough M. J. *Experimental Design and Data Analysis for Biologists*. Cambridge University Press. — Plans d'étude, ANOVA et régression en profondeur ; excellent sur les unités d'échantillonnage et la réplication.
+- Hector A. *The New Statistics with R: An Introduction for Biologists*. Oxford University Press. — Accent sur les tailles d'effet et les intervalles de confiance.
+- Qian S. S. *Environmental and Ecological Statistics with R*. Chapman & Hall/CRC.
+:::
+
+## [Two papers every field scientist should read]{.en}[Deux articles que tout scientifique de terrain devrait lire]{.fr} {.no-track}
+
+::: en
+- Hurlbert S. H. (1984). Pseudoreplication and the design of ecological field experiments. *Ecological Monographs* 54: 187–211. — The origin of the word "pseudoreplication" (Session 1).
+- Wasserstein R. L. & Lazar N. A. (2016). The ASA statement on p-values: context, process, and purpose. *The American Statistician* 70: 129–133. — What p-values do and do not mean (Session 6).
+:::
+::: fr
+- Hurlbert S. H. (1984). Pseudoreplication and the design of ecological field experiments. *Ecological Monographs* 54 : 187–211. — L'origine du mot « pseudo-réplication » (séance 1).
+- Wasserstein R. L. & Lazar N. A. (2016). The ASA statement on p-values: context, process, and purpose. *The American Statistician* 70 : 129–133. — Ce que signifient — et ne signifient pas — les p-values (séance 6).
+:::
+
+## [Next steps]{.en}[Étapes suivantes]{.fr} {.no-track}
+
+::: en
+- **Statistical modelling with R** (next course): multiple regression, ANCOVA and two-way ANOVA, generalised linear models for counts and proportions (Poisson, negative binomial, binomial), mixed models for nested and repeated designs.
+- **R4Marine Research – Advanced level**: reproducible projects, R Markdown and Quarto reports, so that your statistics end up in clean, automatic reports.
+:::
+::: fr
+- **Modélisation statistique avec R** (cours suivant) : régression multiple, ANCOVA et ANOVA à deux facteurs, modèles linéaires généralisés pour comptages et proportions (Poisson, binomiale négative, binomiale), modèles mixtes pour les plans emboîtés et les mesures répétées.
+- **R4Marine Research – niveau avancé** : projets reproductibles, rapports R Markdown et Quarto, pour que vos statistiques finissent dans des rapports propres et automatiques.
+:::

@@ -1,0 +1,180 @@
+# =============================================================================
+# course_helpers.R
+# -----------------------------------------------------------------------------
+# Small helper functions used INSIDE the .Rmd pages (sourced in each page's
+# setup chunk). They write HTML that the JavaScript file assets/course.js
+# turns into interactive elements.
+#
+#   fig_svg("rstudio-panes")   -> inserts assets/img/rstudio-panes.svg inline
+#   quiz("s01", list(...))     -> inserts an interactive, scored quiz
+#   q_num(), q_mcq(), q_text() -> build one quiz question each
+#
+# Nothing here is needed by the students: it is only used when YOU knit.
+# =============================================================================
+
+# ---- knitr options for every page -------------------------------------------
+knitr::opts_chunk$set(
+  comment   = "#>",    # prefix of printed results (easy to tell from code)
+  collapse  = FALSE,   # keep code and output in separate boxes
+  fig.align = "center",
+  fig.width = 7, fig.height = 4.2,
+  dpi       = 110,
+  out.width = "85%"
+)
+
+# ---- Insert an SVG illustration -----------------------------------------------
+# The SVG is pasted *inline* (not as <img>) so that the CSS can hide the
+# English or French labels (class "en" / "fr") when the language changes.
+fig_svg <- function(name, caption_en = NULL, caption_fr = NULL) {
+  path <- file.path("assets", "img", paste0(name, ".svg"))
+  svg  <- paste(readLines(path, warn = FALSE, encoding = "UTF-8"), collapse = "\n")
+  svg  <- gsub("$", "&#36;", svg, fixed = TRUE)   # a "$" would be read by pandoc as the start of a math formula
+  cap  <- ""
+  if (!is.null(caption_en)) {
+    cap <- sprintf('<figcaption><span class="en">%s</span><span class="fr">%s</span></figcaption>',
+                   caption_en, caption_fr)
+  }
+  # asis_output() tells knitr: "this is raw HTML, do not escape it"
+  # The ```{=html} fence makes pandoc copy the SVG untouched (no markdown processing of its texts:
+  # spaces and straight quotes are kept).
+  knitr::asis_output(sprintf('\n\n```{=html}\n<figure class="svg-fig">%s%s</figure>\n```\n\n', svg, cap))
+}
+
+# ---- Quiz questions -----------------------------------------------------------
+# Each function returns a simple list. en/fr = question text in both languages.
+
+# Numeric answer, accepted if |student - answer| <= tol
+q_num <- function(en, fr, answer, tol = 0.05, hint_en = "", hint_fr = "") {
+  list(type = "num", en = en, fr = fr, answer = answer, tol = tol,
+       hint_en = hint_en, hint_fr = hint_fr)
+}
+
+# Multiple choice; 'correct' is the position (1, 2, 3...) of the right option
+q_mcq <- function(en, fr, options_en, options_fr = options_en, correct) {
+  list(type = "mcq", en = en, fr = fr,
+       options_en = as.list(options_en), options_fr = as.list(options_fr),
+       answer = correct - 1)            # JavaScript counts from 0, R from 1
+}
+
+# Short text answer, compared without case and spaces; several answers allowed
+q_text <- function(en, fr, answers) {
+  list(type = "text", en = en, fr = fr, answer = as.list(answers))
+}
+
+# ---- The quiz block -----------------------------------------------------------
+# id      : unique quiz id, e.g. "s01" (used to save the score)
+# title_en/title_fr : optional title shown above the questions
+# qs      : list of questions built with q_num/q_mcq/q_text
+# The questions are converted to JSON and then base64-encoded. Base64 is NOT
+# encryption: it only stops students from reading the answers at a glance in
+# the page source.
+# `code` in a question or option text -> <code>code</code> (the quiz is HTML, not Markdown)
+quiz_code <- function(x) gsub("`([^`]+)`", "<code>\\1</code>", x)
+
+quiz <- function(id, qs, title_en = NULL, title_fr = NULL) {
+  register_quiz(id, length(qs))      # remember id + number of questions (see below)
+  qs <- lapply(qs, function(q) {
+    for (k in intersect(names(q), c("en", "fr", "options_en", "options_fr")))
+      q[[k]] <- if (is.list(q[[k]])) lapply(q[[k]], quiz_code) else quiz_code(q[[k]])
+    q
+  })
+  json <- jsonlite::toJSON(qs, auto_unbox = TRUE, digits = NA)
+  b64  <- jsonlite::base64_enc(charToRaw(enc2utf8(as.character(json))))
+  b64  <- gsub("\n", "", b64)
+  # optional title, e.g. for the exercises of the practice session
+  ttl  <- if (is.null(title_en)) "" else
+    sprintf(' data-title-en="%s" data-title-fr="%s"', title_en, title_fr)
+  knitr::asis_output(sprintf(
+    '<div class="quiz" id="quiz-%s" data-quiz-id="%s"%s data-q="%s"></div>', id, id, ttl, b64))
+}
+
+# ---- Quiz registry ------------------------------------------------------------
+# Every quiz() call writes a tiny file .quiz_registry/<id>.json with its number
+# of questions, its page and its level. R/build_site.R combines them into
+# assets/quiz_index.json (read by the Google Apps Script) and
+# assets/quiz_index.js (read by course.js) -> the site knows the maximum score of
+# EVERY quiz of a level, even the pages a student has not opened yet.
+# Level: this course has ONE level, "stats" (same id as in assets/config.js).
+# (If you add a level one day, decide it from the file name, as in the R course.)
+COURSE_LEVEL <- "stats"
+register_quiz <- function(id, n) {
+  page  <- sub("\\..*$", "", basename(knitr::current_input()))
+  level <- COURSE_LEVEL
+  dir.create(".quiz_registry", showWarnings = FALSE)
+  writeLines(jsonlite::toJSON(list(id = id, max = n, page = page, level = level), auto_unbox = TRUE),
+             file.path(".quiz_registry", paste0(id, ".json")))
+}
+
+# ---- Download button for a data file -----------------------------------------
+dl <- function(file, label = file, dir = "data") {
+  knitr::asis_output(sprintf(
+    '<a class="btn-dl" href="%s/%s" download>&#8681; %s</a>', dir, file, label))
+}
+
+# ---- Show a whole file as a code block (Advanced level) -----------------------
+# `r show_file("templates/advanced/mpa_report.Rmd")` on its own line prints the file
+# exactly as it is (chunks and inline code are NOT run): handy to show .Rmd/.qmd/.yml.
+show_file <- function(path, lang = NULL, lines = NULL) {
+  x <- readLines(path, warn = FALSE, encoding = "UTF-8")
+  if (!is.null(lines)) x <- x[lines]
+  if (is.null(lang)) lang <- switch(tolower(tools::file_ext(path)), rmd = "markdown", qmd = "markdown",
+                                    r = "r", yml = "yaml", yaml = "yaml", bib = "bibtex", json = "json", "")
+  fence <- "`````"
+  knitr::asis_output(paste0("\n\n", fence, lang, "\n", paste(x, collapse = "\n"), "\n", fence, "\n\n"))
+}
+
+# ---- Illustration that can be replaced by a real screenshot ---------------------
+# fig_shot("git-pane", "caption EN", "légende FR")
+#   - if assets/img/screens/git-pane.png exists (your own Windows screenshot), it is shown;
+#   - otherwise the drawn illustration assets/img/git-pane.svg is shown.
+# The list of screenshots to take is in assets/img/screens/README.md.
+fig_shot <- function(name, caption_en = NULL, caption_fr = NULL) {
+  png <- file.path("assets", "img", "screens", paste0(name, ".png"))
+  if (!file.exists(png)) return(fig_svg(name, caption_en, caption_fr))
+  cap <- if (is.null(caption_en)) "" else
+    sprintf('<figcaption><span class="en">%s</span><span class="fr">%s</span></figcaption>', caption_en, caption_fr)
+  knitr::asis_output(sprintf('\n\n```{=html}\n<figure class="svg-fig"><img src="%s" alt="%s" style="max-width:100%%">%s</figure>\n```\n\n',
+                             png, name, cap))
+}
+
+# fa(): "Functions and arguments" table, in English and French.
+# Each row: c(code, what it does (en), what it does (fr), value expected (en), value expected (fr))
+# Use "" for the value when it does not apply. The result is written as two
+# Markdown tables (::: en / ::: fr) inside a box with class "fa-box".
+fa <- function(..., title = TRUE) {
+  rows <- list(...)
+  esc <- function(x) {
+    # code spans containing "|" become <code> HTML (a "|" would cut the table cell)
+    m <- gregexpr("`[^`]*\\|[^`]*`", x)
+    regmatches(x, m) <- lapply(regmatches(x, m), function(v) {
+      v <- substr(v, 2, nchar(v) - 1)
+      v <- gsub("&", "&amp;", v, fixed = TRUE); v <- gsub("<", "&lt;", v, fixed = TRUE)
+      v <- gsub("|", "&#124;", v, fixed = TRUE); v <- gsub("\\", "&#92;", v, fixed = TRUE)
+      paste0("<code>", v, "</code>")
+    })
+    gsub("|", "&#124;", x, fixed = TRUE)
+  }
+  tab <- function(k, head) {
+    lines <- vapply(rows, function(r) {
+      r <- c(r, rep("", 5 - length(r)))
+      sprintf("| %s | %s | %s |", esc(r[1]), esc(r[k]), esc(r[k + 2]))
+    }, "")
+    paste(c(head, "|---|---|---|", lines), collapse = "\n")
+  }
+  en <- tab(2, "| Function / argument | What it does | Value it expects |")
+  fr <- tab(3, "| Fonction / argument | Ce qu'il fait | Valeur attendue |")
+  t_en <- if (title) "**Functions and arguments used here**\n\n" else ""
+  t_fr <- if (title) "**Fonctions et arguments utilisés ici**\n\n" else ""
+  knitr::asis_output(paste0("\n\n::: fa-box\n::: en\n", t_en, en, "\n:::\n::: fr\n", t_fr, fr, "\n:::\n:::\n\n"))
+}
+
+# ---- Statistics course: shared settings -------------------------------------
+# ggplot2 theme used in every page (students can use theme_minimal() too)
+theme_c <- function(base_size = 13) {
+  if (requireNamespace("ggplot2", quietly = TRUE)) ggplot2::theme_minimal(base_size = base_size) else NULL
+}
+# Course colours (also used in the SVG figures)
+COL <- c(ocean = "#0b3d5c", lagoon = "#1b7f8c", seagrass = "#4a7d3a", coral = "#d9694a",
+         sand = "#e8c27a", grey = "#8a969e")
+# p-value written as in a report: "p < 0.001" or "p = 0.034"
+fmt_p <- function(p) ifelse(p < 0.001, "p < 0.001", paste("p =", formatC(p, digits = 3, format = "f")))

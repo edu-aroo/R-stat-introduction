@@ -1,0 +1,97 @@
+{
+  "t00": {
+    "max": 10,
+    "page": "00-start",
+    "level": "stats"
+  },
+  "t01": {
+    "max": 10,
+    "page": "01-design",
+    "level": "stats"
+  },
+  "t02": {
+    "max": 10,
+    "page": "02-describe",
+    "level": "stats"
+  },
+  "t03": {
+    "max": 10,
+    "page": "03-explore",
+    "level": "stats"
+  },
+  "t04": {
+    "max": 10,
+    "page": "04-probability",
+    "level": "stats"
+  },
+  "t05": {
+    "max": 10,
+    "page": "05-estimation",
+    "level": "stats"
+  },
+  "t06": {
+    "max": 10,
+    "page": "06-testing",
+    "level": "stats"
+  },
+  "t07": {
+    "max": 10,
+    "page": "07-two-groups",
+    "level": "stats"
+  },
+  "t08": {
+    "max": 10,
+    "page": "08-anova",
+    "level": "stats"
+  },
+  "t09": {
+    "max": 10,
+    "page": "09-categorical",
+    "level": "stats"
+  },
+  "t10": {
+    "max": 10,
+    "page": "10-regression",
+    "level": "stats"
+  },
+  "t11": {
+    "max": 10,
+    "page": "11-power-reporting",
+    "level": "stats"
+  },
+  "t13": {
+    "max": 15,
+    "page": "13-final-project",
+    "level": "stats"
+  },
+  "tp1": {
+    "max": 5,
+    "page": "12-practice",
+    "level": "stats"
+  },
+  "tp2": {
+    "max": 5,
+    "page": "12-practice",
+    "level": "stats"
+  },
+  "tp3": {
+    "max": 5,
+    "page": "12-practice",
+    "level": "stats"
+  },
+  "tp4": {
+    "max": 5,
+    "page": "12-practice",
+    "level": "stats"
+  },
+  "tp5": {
+    "max": 5,
+    "page": "12-practice",
+    "level": "stats"
+  },
+  "tp6": {
+    "max": 5,
+    "page": "12-practice",
+    "level": "stats"
+  }
+}

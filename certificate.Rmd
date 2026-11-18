@@ -1,0 +1,8 @@
+---
+title: "[Certificate]{.en}[Certificat]{.fr}"
+pagetitle: "R4Marine Stats · Certificate"
+---
+
+<!-- course.js (PART 9, buildCertificate) draws the certificate of the level
+     given in the address: certificate.html?level=stats -->
+<div id="certificate-box"></div>

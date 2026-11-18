@@ -1,0 +1,342 @@
+---
+title: "[7 · Comparing two groups]{.en}[7 · Comparer deux groupes]{.fr}"
+pagetitle: "R4Marine Stats · Session 7"
+subtitle: "~3 h"
+---
+
+```{r setup, include=FALSE}
+source("R/course_helpers.R")
+library(ggplot2); library(dplyr)
+oc <- read.csv("data/octopus_catch.csv")
+cc <- read.csv("data/coral_tagged_colonies.csv")
+knitr::opts_chunk$set(fig.height = 3.2)
+```
+
+::: objectives
+::: en
+#### By the end of this session you will be able to
+- compare the means of **two independent groups** with the **Welch t-test**, and check its assumptions;
+- analyse a right-skewed variable on the **log scale** and report the result as a **ratio**;
+- use the **Wilcoxon rank-sum** (Mann–Whitney) test when the t-test is not appropriate;
+- recognise **paired** data and analyse them with the **paired t-test** or the **Wilcoxon signed-rank** test;
+- compute an **effect size** (difference with CI, Cohen's d) and write a complete result sentence.
+:::
+::: fr
+#### À la fin de cette séance vous saurez
+- comparer les moyennes de **deux groupes indépendants** avec le **test t de Welch**, et vérifier ses conditions ;
+- analyser une variable asymétrique à droite sur l'**échelle log** et rapporter le résultat comme un **rapport** ;
+- utiliser le test de **Wilcoxon des rangs** (Mann–Whitney) quand le test t ne convient pas ;
+- reconnaître des données **appariées** et les analyser avec le **test t apparié** ou le test des **rangs signés de Wilcoxon** ;
+- calculer une **taille d'effet** (différence avec IC, d de Cohen) et rédiger une phrase de résultat complète.
+:::
+:::
+
+## [Independent groups: octopus weight by area]{.en}[Groupes indépendants : poids des pieuvres par zone]{.fr} {#independent}
+
+::: {.callout .ecology}
+::: en
+**Data:** `octopus_catch.csv` (Session 3). 185 octopuses landed from the **reopened** area (Tsifota) and 160 from **open** areas (Andrevo), on the same day. Each octopus is one independent observation; the two groups contain **different** octopuses → **independent groups**.
+:::
+::: fr
+**Données :** `octopus_catch.csv` (séance 3). 185 pieuvres débarquées de la zone **rouverte** (Tsifota) et 160 des zones **ouvertes** (Andrevo), le même jour. Chaque pieuvre est une observation indépendante ; les deux groupes contiennent des pieuvres **différentes** → **groupes indépendants**.
+:::
+:::
+
+::: en
+**Plot first** (Session 3), then check the assumptions of the t-test:
+
+1. **Independence** — comes from the design (Session 1), not from a test.
+2. **Approximate normality of each group** — or large groups (central limit theorem, Session 5): with ≥ 30–40 per group, moderate skewness is fine; strong skewness or outliers still matter.
+3. **Equal variances** — *not needed* with **Welch's** version, R's default. Keep it.
+:::
+::: fr
+**Tracez d'abord** (séance 3), puis vérifiez les conditions du test t :
+
+1. **Indépendance** — vient du plan d'étude (séance 1), pas d'un test.
+2. **Normalité approximative de chaque groupe** — ou grands groupes (théorème central limite, séance 5) : avec ≥ 30–40 par groupe, une asymétrie modérée ne pose pas problème ; une forte asymétrie ou des valeurs extrêmes comptent encore.
+3. **Variances égales** — *pas nécessaires* avec la version de **Welch**, celle de R par défaut. Gardez-la.
+:::
+
+```{r, fig.height=3.6}
+library(patchwork)
+p1 <- ggplot(oc, aes(area, weight_g)) + geom_boxplot(width = 0.5, fill = "#e9f4f6") + labs(x = NULL, y = "weight (g)") + theme_c(11)
+p2 <- ggplot(oc, aes(sample = log(weight_g))) + stat_qq(colour = "#1b7f8c", size = 1) + stat_qq_line() +
+  facet_wrap(~ area) + labs(x = "theoretical", y = "log(weight)") + theme_c(11)
+p1 + p2 + plot_layout(widths = c(1, 2))
+oc %>% group_by(area) %>% summarise(n = n(), mean = mean(weight_g), sd = sd(weight_g), median = median(weight_g))
+```
+
+```{r, echo=FALSE}
+fa(c("`plot_layout(widths)`", "(patchwork) relative widths of the plots placed side by side", "(patchwork) largeurs relatives des graphiques placés côte à côte", "a numeric vector", "un vecteur numérique"))
+```
+
+::: en
+Weights are right-skewed in both areas; their logs are close to normal. Two valid options — **decide before testing**, do not run both and keep the "best" p-value:
+
+- **A.** Welch t-test on the **raw weights** (large groups, so the mean is still well estimated) → effect = **difference** in grams.
+- **B.** Welch t-test on **log(weight)** → effect = **ratio** of geometric means ("× 1.4"), which suits a multiplicative variable.
+:::
+::: fr
+Les poids sont asymétriques à droite dans les deux zones ; leurs logs sont proches de la normale. Deux options valides — **décidez avant de tester**, ne faites pas les deux pour garder la « meilleure » p-value :
+
+- **A.** Test t de Welch sur les **poids bruts** (grands groupes, la moyenne reste donc bien estimée) → effet = **différence** en grammes.
+- **B.** Test t de Welch sur **log(poids)** → effet = **rapport** des moyennes géométriques (« × 1,4 »), adapté à une variable multiplicative.
+:::
+
+```{r}
+tA <- t.test(weight_g ~ area, data = oc)
+tA
+```
+
+```{r, echo=FALSE}
+fa(c("`t.test(formula, data, var.equal, paired)`", "two-sample t-test", "test t à deux échantillons", "", ""),
+   c("&nbsp;&nbsp;`formula`", "`numeric ~ group`; the group must have exactly 2 values", "`numérique ~ groupe` ; le groupe doit avoir exactement 2 valeurs", "column names", "noms de colonnes"),
+   c("&nbsp;&nbsp;`var.equal`", "`FALSE` (default) = Welch test; `TRUE` = classic Student test with pooled variance", "`FALSE` (défaut) = test de Welch ; `TRUE` = test de Student classique avec variance commune", "`TRUE` / `FALSE`", "`TRUE` / `FALSE`"))
+```
+
+::: en
+**Reading the output.** `mean in group open` and `mean in group reopened`: the two means. The **difference** is computed as **first group − second group**, in the alphabetical order of the levels (`open` − `reopened`), hence a negative CI. To get reopened − open, make `area` a factor with `levels = c("reopened", "open")`. `df` has decimals: the Welch correction.
+:::
+::: fr
+**Lecture de la sortie.** `mean in group open` et `mean in group reopened` : les deux moyennes. La **différence** est calculée **premier groupe − second groupe**, dans l'ordre alphabétique des niveaux (`open` − `reopened`), d'où un IC négatif. Pour obtenir rouverte − ouverte, faites de `area` un facteur avec `levels = c("reopened", "open")`. `df` a des décimales : la correction de Welch.
+:::
+
+```{r}
+oc$area <- factor(oc$area, levels = c("reopened", "open"))
+tA <- t.test(weight_g ~ area, data = oc)
+round(c(diff = diff(rev(tA$estimate)), lower = tA$conf.int[1], upper = tA$conf.int[2]), 1)
+
+tB <- t.test(log(weight_g) ~ area, data = oc)
+ratio <- exp(diff(rev(tB$estimate)))            # ratio of geometric means reopened / open
+round(c(ratio = ratio, lower = exp(tB$conf.int[1]), upper = exp(tB$conf.int[2])), 2)
+tB$p.value
+```
+
+::: en
+Option B in words: octopuses from the reopened area were **`r round(ratio, 2)` times heavier** (geometric means; 95 % CI `r round(exp(tB$conf.int[1]), 2)`–`r round(exp(tB$conf.int[2]), 2)`), i.e. about `r round(100 * (ratio - 1))` % heavier.
+:::
+::: fr
+L'option B en mots : les pieuvres de la zone rouverte étaient **`r round(ratio, 2)` fois plus lourdes** (moyennes géométriques ; IC 95 % `r round(exp(tB$conf.int[1]), 2)`–`r round(exp(tB$conf.int[2]), 2)`), soit environ `r round(100 * (ratio - 1))` % plus lourdes.
+:::
+
+### [Effect size: Cohen's d]{.en}[Taille d'effet : d de Cohen]{.fr}
+
+::: en
+d = (difference of means) / (pooled SD). It has no unit, so it lets you compare effects across studies and is needed for power calculations (Session 11).
+:::
+::: fr
+d = (différence des moyennes) / (ET commun). Il est sans unité, il permet donc de comparer des effets entre études, et il est nécessaire pour les calculs de puissance (séance 11).
+:::
+
+```{r}
+x1 <- oc$weight_g[oc$area == "reopened"]; x2 <- oc$weight_g[oc$area == "open"]
+sd_pooled <- sqrt(((length(x1) - 1) * var(x1) + (length(x2) - 1) * var(x2)) / (length(x1) + length(x2) - 2))
+d <- (mean(x1) - mean(x2)) / sd_pooled
+round(d, 2)
+```
+
+## [The rank-based alternative: Wilcoxon rank-sum]{.en}[L'alternative sur les rangs : Wilcoxon des rangs]{.fr} {#wilcoxon}
+
+::: en
+When groups are **small** and clearly skewed, or have strong outliers, and a log does not help, use the **Wilcoxon rank-sum test** (also called **Mann–Whitney U**). It replaces values by their **ranks** in the pooled data and asks whether one group tends to have higher ranks. It does not assume normality, but it tests a slightly different question: whether values of one group tend to be larger (a "shift"), not whether the **means** differ.
+:::
+::: fr
+Quand les groupes sont **petits** et nettement asymétriques, ou ont de fortes valeurs extrêmes, et qu'un log n'aide pas, utilisez le **test de Wilcoxon des rangs** (aussi appelé **U de Mann–Whitney**). Il remplace les valeurs par leurs **rangs** dans l'ensemble des données et demande si un groupe tend à avoir des rangs plus élevés. Il ne suppose pas la normalité, mais il teste une question un peu différente : si les valeurs d'un groupe tendent à être plus grandes (un « décalage »), pas si les **moyennes** diffèrent.
+:::
+
+```{r}
+wilcox.test(weight_g ~ area, data = oc, conf.int = TRUE)
+```
+
+```{r, echo=FALSE}
+fa(c("`wilcox.test(formula, data, paired, conf.int, exact)`", "Wilcoxon rank-sum test (2 independent groups) or signed-rank test (`paired = TRUE`)", "test de Wilcoxon des rangs (2 groupes indépendants) ou des rangs signés (`paired = TRUE`)", "", ""),
+   c("&nbsp;&nbsp;`conf.int`", "`TRUE` adds an estimate of the shift between groups (Hodges–Lehmann) and its CI", "`TRUE` ajoute une estimation du décalage entre groupes (Hodges–Lehmann) et son IC", "`TRUE` / `FALSE`", "`TRUE` / `FALSE`"),
+   c("&nbsp;&nbsp;`exact`", "exact p-value (small samples, no ties) or normal approximation; with ties R warns and uses the approximation — that is fine", "p-value exacte (petits échantillons, sans ex æquo) ou approximation normale ; avec des ex æquo R avertit et utilise l'approximation — c'est normal", "`TRUE` / `FALSE` / `NULL`", "`TRUE` / `FALSE` / `NULL`"))
+```
+
+::: en
+`W` is the rank statistic. The message "cannot compute exact p-value with ties" appears because several octopuses have the same weight (rounded to 10 g): R then uses an approximation, which is fine.
+:::
+::: fr
+`W` est la statistique des rangs. Le message « cannot compute exact p-value with ties » apparaît parce que plusieurs pieuvres ont le même poids (arrondi à 10 g) : R utilise alors une approximation, ce qui est correct.
+:::
+
+## [Paired data: the same colonies measured twice]{.en}[Données appariées : les mêmes colonies mesurées deux fois]{.fr} {#paired}
+
+::: {.callout .ecology}
+::: en
+**Tagged corals** (`coral_tagged_colonies.csv`, simulated). **20 coral colonies** of four genera were tagged with numbered plates on one reef. Each was photographed from above in **March 2026** (peak of a marine heatwave) and again in **July 2026**; the % of bleached surface was measured on the photos. *One row = one colony, measured twice.* Question: did bleaching decrease between March and July?
+:::
+::: fr
+**Coraux marqués** (`coral_tagged_colonies.csv`, simulé). **20 colonies coralliennes** de quatre genres ont été marquées avec des plaques numérotées sur un récif. Chacune a été photographiée du dessus en **mars 2026** (pic d'une vague de chaleur marine) puis en **juillet 2026** ; le % de surface blanchie a été mesuré sur les photos. *Une ligne = une colonie, mesurée deux fois.* Question : le blanchissement a-t-il diminué entre mars et juillet ?
+:::
+:::
+
+`r dl("coral_tagged_colonies.csv", "coral_tagged_colonies.csv")`
+
+::: en
+The two measurements of a colony are **not independent**: a heavily bleached colony in March tends to be more bleached in July too. Colonies differ a lot from each other (5 % to 70 % in March), but we only care about the **change within each colony**. A **paired test** analyses the 20 **differences** (March − July): it is a one-sample t-test of H0: mean difference = 0.
+:::
+::: fr
+Les deux mesures d'une colonie ne sont **pas indépendantes** : une colonie très blanchie en mars tend à l'être aussi en juillet. Les colonies diffèrent beaucoup entre elles (5 % à 70 % en mars), mais seule nous intéresse la **variation au sein de chaque colonie**. Un **test apparié** analyse les 20 **différences** (mars − juillet) : c'est un test t à un échantillon de H0 : différence moyenne = 0.
+:::
+
+```{r, fig.height=3.4}
+cc <- read.csv("data/coral_tagged_colonies.csv")
+cc$diff <- cc$bleached_march - cc$bleached_july
+summary(cc$diff)
+
+# a "slope graph": one line per colony
+long <- data.frame(colony = rep(cc$colony_id, 2),
+                   month = factor(rep(c("March", "July"), each = 20), levels = c("March", "July")),
+                   bleached = c(cc$bleached_march, cc$bleached_july))
+ggplot(long, aes(month, bleached, group = colony)) +
+  geom_line(colour = "#8a969e") + geom_point(colour = "#1b7f8c", size = 2) +
+  labs(x = NULL, y = "% bleached surface") + theme_c()
+
+t.test(cc$bleached_march, cc$bleached_july, paired = TRUE)
+t.test(cc$diff, mu = 0)$p.value                 # exactly the same test
+```
+
+```{r, echo=FALSE}
+fa(c("`geom_line(aes(group = colony))`", "joins the points of the same colony: one line per colony", "relie les points d'une même colonie : une ligne par colonie", "", ""),
+   c("`t.test(x, y, paired = TRUE)`", "paired t-test: tests the mean of the differences `x − y` row by row", "test t apparié : teste la moyenne des différences `x − y` ligne par ligne", "two vectors of the same length, **same order of units**", "deux vecteurs de même longueur, **même ordre des unités**"))
+```
+
+::: en
+What if we had forgotten the pairing? The between-colony variability is then counted as noise:
+:::
+::: fr
+Et si nous avions oublié l'appariement ? La variabilité entre colonies est alors comptée comme du bruit :
+:::
+
+```{r}
+t.test(cc$bleached_march, cc$bleached_july)$p.value      # WRONG here: treats them as independent
+```
+
+::: en
+The unpaired test gives a much larger p-value: it loses the information that each colony is its own control. Pairing (or "blocking") is a powerful design: measure the **same units** before and after, or compare treatments **within** the same site.
+
+The rank-based paired alternative is the **Wilcoxon signed-rank test**: `wilcox.test(x, y, paired = TRUE)`. Use it with few pairs and strongly skewed or outlying differences. Check the differences with a histogram or QQ plot.
+:::
+::: fr
+Le test non apparié donne une p-value bien plus grande : il perd l'information que chaque colonie est son propre témoin. L'appariement (ou « blocage ») est un plan puissant : mesurer les **mêmes unités** avant et après, ou comparer des traitements **au sein** d'un même site.
+
+L'alternative appariée sur les rangs est le **test des rangs signés de Wilcoxon** : `wilcox.test(x, y, paired = TRUE)`. Utilisez-le avec peu de paires et des différences fortement asymétriques ou avec des valeurs extrêmes. Vérifiez les différences avec un histogramme ou un QQ plot.
+:::
+
+```{r}
+wilcox.test(cc$bleached_march, cc$bleached_july, paired = TRUE)
+```
+
+## [Which test? Summary]{.en}[Quel test ? Résumé]{.fr} {#summary}
+
+::: en
+| Design | Data roughly normal (or large n) | Small n, skewed / outliers |
+|---|---|---|
+| 2 independent groups | Welch t-test `t.test(y ~ g)` (on log(y) if multiplicative) | Wilcoxon rank-sum `wilcox.test(y ~ g)` |
+| Paired (same units twice) | paired t-test `t.test(x, y, paired = TRUE)` | Wilcoxon signed-rank `wilcox.test(x, y, paired = TRUE)` |
+| One group vs a reference value | `t.test(x, mu = …)` | `wilcox.test(x, mu = …)` |
+
+**Write it like this:** "Bleached surface decreased by 8.8 percentage points on average between March and July (95 % CI 5.0–12.7; paired t-test, t = 4.82, df = 19, p < 0.001; n = 20 colonies)."
+:::
+::: fr
+| Plan | Données à peu près normales (ou grand n) | Petit n, asymétrie / valeurs extrêmes |
+|---|---|---|
+| 2 groupes indépendants | test t de Welch `t.test(y ~ g)` (sur log(y) si multiplicatif) | Wilcoxon des rangs `wilcox.test(y ~ g)` |
+| Apparié (mêmes unités deux fois) | test t apparié `t.test(x, y, paired = TRUE)` | rangs signés de Wilcoxon `wilcox.test(x, y, paired = TRUE)` |
+| Un groupe vs une valeur de référence | `t.test(x, mu = …)` | `wilcox.test(x, mu = …)` |
+
+**Rédigez ainsi :** « La surface blanchie a diminué en moyenne de 8,8 points de pourcentage entre mars et juillet (IC 95 % 5,0–12,7 ; test t apparié, t = 4,82, ddl = 19, p < 0,001 ; n = 20 colonies). »
+:::
+
+```{r, include=FALSE}
+tp <- t.test(cc$bleached_march, cc$bleached_july, paired = TRUE)
+stopifnot(round(tp$estimate, 1) == 8.8, round(tp$conf.int[1], 1) == 5.0, round(tp$conf.int[2], 1) == 12.7,
+          round(tp$statistic, 2) == 4.82, tp$p.value < 0.001)
+```
+
+## [Application work & quiz]{.en}[Travail d'application et quiz]{.fr} {#application}
+
+```{r answers07, include=FALSE}
+oc2 <- read.csv("data/octopus_catch.csv")
+re <- oc2[oc2$area == "reopened", ]
+th <- t.test(weight_g ~ sex, data = re)
+h1 <- round(th$estimate[["mean in group F"]] - th$estimate[["mean in group M"]], 1)
+h2 <- round(th$p.value, 4)
+h3 <- round(wilcox.test(weight_g ~ sex, data = re, exact = FALSE)$p.value, 4)
+tl <- t.test(log(weight_g) ~ gear, data = oc2)
+h4 <- round(exp(tl$estimate[[1]] - tl$estimate[[2]]), 3)
+h5 <- round(tl$p.value, 4)
+ac <- cc[cc$genus %in% c("Acropora", "Pocillopora"), ]
+tpp <- t.test(ac$bleached_march, ac$bleached_july, paired = TRUE)
+h6 <- round(tpp$estimate[[1]], 2)
+h7 <- round(tpp$statistic[[1]], 3)
+h8 <- round(tpp$conf.int[1], 2)
+```
+
+::: application
+::: en
+### Application work 7
+
+1. – 2. In the **reopened** area only, compare the weights of **female and male** octopuses (Welch t-test, `weight_g ~ sex`): mean F − mean M (1 decimal) and p-value (4 decimals).
+3. Same comparison with the Wilcoxon rank-sum test (`exact = FALSE`): p-value (4 decimals).
+4. – 5. All octopuses: Welch t-test on **log(weight)** by **gear** (`log(weight_g) ~ gear`). Ratio of geometric means **hook / spear** (`exp` of mean log hook − mean log spear, 3 decimals) and p-value (4 decimals).
+6. – 8. Tagged corals, **Acropora and Pocillopora only** (10 colonies): paired t-test March vs July. Mean difference (2 decimals), *t* (3 decimals), lower limit of the 95 % CI (2 decimals).
+9. – 10. Choosing the test.
+:::
+::: fr
+### Travail d'application 7
+
+1. – 2. Dans la zone **rouverte** seulement, comparez les poids des pieuvres **femelles et mâles** (test t de Welch, `weight_g ~ sex`) : moyenne F − moyenne M (1 décimale) et p-value (4 décimales).
+3. Même comparaison avec le test de Wilcoxon des rangs (`exact = FALSE`) : p-value (4 décimales).
+4. – 5. Toutes les pieuvres : test t de Welch sur **log(poids)** par **engin** (`log(weight_g) ~ gear`). Rapport des moyennes géométriques **hook / spear** (`exp` de moyenne log hook − moyenne log spear, 3 décimales) et p-value (4 décimales).
+6. – 8. Coraux marqués, **Acropora et Pocillopora seulement** (10 colonies) : test t apparié mars vs juillet. Différence moyenne (2 décimales), *t* (3 décimales), limite inférieure de l'IC à 95 % (2 décimales).
+9. – 10. Choisir le test.
+:::
+:::
+
+::: hint
+::: en
+Q4: in `tl <- t.test(log(weight_g) ~ gear, data = oc)`, `tl$estimate` holds the mean log of `hook` then `spear` (alphabetical order). Q6–8: `ac <- cc[cc$genus %in% c("Acropora", "Pocillopora"), ]`.
+:::
+::: fr
+Q4 : dans `tl <- t.test(log(weight_g) ~ gear, data = oc)`, `tl$estimate` contient la moyenne des log de `hook` puis de `spear` (ordre alphabétique). Q6–8 : `ac <- cc[cc$genus %in% c("Acropora", "Pocillopora"), ]`.
+:::
+:::
+
+```{r quiz07, echo=FALSE}
+quiz("t07", list(
+  q_num("1. Mean F − mean M, reopened area (g)?", "1. Moyenne F − moyenne M, zone rouverte (g) ?", h1, tol = 0.06),
+  q_num("2. p-value of the Welch t-test?", "2. p-value du test t de Welch ?", h2, tol = 0.00006),
+  q_num("3. p-value of the Wilcoxon rank-sum test?", "3. p-value du test de Wilcoxon des rangs ?", h3, tol = 0.00006),
+  q_num("4. Ratio of geometric means hook / spear?", "4. Rapport des moyennes géométriques hook / spear ?", h4, tol = 0.0006),
+  q_num("5. p-value (log scale)?", "5. p-value (échelle log) ?", h5, tol = 0.00006),
+  q_num("6. Mean difference March − July (Acropora + Pocillopora)?", "6. Différence moyenne mars − juillet (Acropora + Pocillopora) ?", h6, tol = 0.006),
+  q_num("7. t statistic?", "7. Statistique t ?", h7, tol = 0.0006),
+  q_num("8. Lower limit of the 95 % CI?", "8. Limite inférieure de l'IC à 95 % ?", h8, tol = 0.006),
+  q_mcq("9. Seagrass cover measured in the same 12 quadrats before and after a cyclone. Test?",
+        "9. Recouvrement d'herbier mesuré dans les 12 mêmes quadrats avant et après un cyclone. Test ?",
+        c("Welch t-test", "paired t-test (or Wilcoxon signed-rank)", "Wilcoxon rank-sum", "chi-square test"),
+        c("test t de Welch", "test t apparié (ou rangs signés de Wilcoxon)", "Wilcoxon des rangs", "test du khi-deux"), correct = 2),
+  q_mcq("10. 8 fish per group, one very large outlier, raw lengths. A reasonable test is…",
+        "10. 8 poissons par groupe, une très grande valeur extrême, longueurs brutes. Un test raisonnable est…",
+        c("Student t-test with var.equal = TRUE", "Wilcoxon rank-sum test", "paired t-test", "one-sample t-test"),
+        c("test t de Student avec var.equal = TRUE", "test de Wilcoxon des rangs", "test t apparié", "test t à un échantillon"), correct = 2)
+))
+```
+
+::: {.solution data-quiz="t07"}
+```{r, eval=FALSE}
+oc <- read.csv("data/octopus_catch.csv")
+re <- oc[oc$area == "reopened", ]
+t.test(weight_g ~ sex, data = re)                          # 1 (difference of the two means), 2
+wilcox.test(weight_g ~ sex, data = re, exact = FALSE)      # 3
+tl <- t.test(log(weight_g) ~ gear, data = oc)
+exp(tl$estimate[1] - tl$estimate[2]); tl$p.value           # 4, 5
+cc <- read.csv("data/coral_tagged_colonies.csv")
+ac <- cc[cc$genus %in% c("Acropora", "Pocillopora"), ]
+t.test(ac$bleached_march, ac$bleached_july, paired = TRUE) # 6, 7, 8
+# 9: paired (same quadrats)   10: Wilcoxon rank-sum (small n, outlier)
+```
+:::

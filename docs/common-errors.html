@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>R4Marine Stats · Common errors</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.1/jquery-3.6.1.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<!-- header.html: inserted inside <head> of every page (see _site.yml) -->
+<!-- config.js (settings) and quiz_index.js (made by R/build_site.R) first,
+     then course.js (the behaviour that reads them) -->
+<script src="assets/config.js"></script>
+<script src="assets/quiz_index.js"></script>
+<script src="assets/course.js"></script>
+<meta name="author" content="Aroo Falinirina">
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+
+
+
+
+<link rel="stylesheet" href="assets/course.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">R4Marine Stats</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Sessions
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="00-start.html">0 · Why statistics?</a>
+    </li>
+    <li>
+      <a href="01-design.html">1 · Study design &amp; sampling</a>
+    </li>
+    <li>
+      <a href="02-describe.html">2 · Describing data</a>
+    </li>
+    <li>
+      <a href="03-explore.html">3 · Exploring distributions</a>
+    </li>
+    <li>
+      <a href="04-probability.html">4 · Probability &amp; distributions</a>
+    </li>
+    <li>
+      <a href="05-estimation.html">5 · Standard error &amp; CIs</a>
+    </li>
+    <li>
+      <a href="06-testing.html">6 · Hypothesis tests &amp; p-values</a>
+    </li>
+    <li>
+      <a href="07-two-groups.html">7 · Comparing two groups</a>
+    </li>
+    <li>
+      <a href="08-anova.html">8 · ANOVA &amp; Kruskal–Wallis</a>
+    </li>
+    <li>
+      <a href="09-categorical.html">9 · Proportions &amp; χ²</a>
+    </li>
+    <li>
+      <a href="10-regression.html">10 · Correlation &amp; regression</a>
+    </li>
+    <li>
+      <a href="11-power-reporting.html">11 · Power, multiple tests, reporting</a>
+    </li>
+    <li>
+      <a href="12-practice.html">12 · Practice</a>
+    </li>
+    <li>
+      <a href="13-final-project.html">13 · Final project</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Resources
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="choose-test.html">Which test? (decision guide)</a>
+    </li>
+    <li>
+      <a href="cheatsheet.html">Cheatsheet</a>
+    </li>
+    <li>
+      <a href="glossary.html">Glossary EN–FR</a>
+    </li>
+    <li>
+      <a href="common-errors.html">Common errors &amp; pitfalls</a>
+    </li>
+    <li>
+      <a href="resources.html">To go further</a>
+    </li>
+    <li>
+      <a href="help.html">Need help?</a>
+    </li>
+    <li>
+      <a href="whats-new.html">What's new</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore"><span class="en">Common errors and
+pitfalls</span><span class="fr">Erreurs et pièges fréquents</span></h1>
+<h3 class="subtitle"><span class="en">R messages of statistical
+functions, and the classic statistical mistakes</span><span
+class="fr">Messages de R des fonctions statistiques, et les erreurs
+statistiques classiques</span></h3>
+
+</div>
+
+
+<div class="callout tip">
+<div class="en">
+<p><strong>Method.</strong> Read the <strong>first</strong> message.
+Check the <strong>types</strong> of your columns (<code>str()</code>):
+most errors of statistical functions come from a number stored as text,
+a group with the wrong number of levels, or <code>NA</code>. Then
+restart R and re-run the script from the top.</p>
+</div>
+<div class="fr">
+<p><strong>Méthode.</strong> Lisez le <strong>premier</strong> message.
+Vérifiez les <strong>types</strong> de vos colonnes (<code>str()</code>)
+: la plupart des erreurs des fonctions statistiques viennent d’un nombre
+stocké comme texte, d’un groupe avec un mauvais nombre de niveaux, ou de
+<code>NA</code>. Puis redémarrez R et relancez le script depuis le
+début.</p>
+</div>
+</div>
+<div id="r-messagesmessages-de-r" class="section level2 no-track">
+<h2 class="no-track"><span class="en">R messages</span><span
+class="fr">Messages de R</span></h2>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><span class="en">Message</span><span class="fr">Message</span></th>
+<th><span class="en">What it means</span><span class="fr">Ce que ça veut
+dire</span></th>
+<th><span class="en">How to fix it</span><span class="fr">Comment
+corriger</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>grouping factor must have exactly 2 levels</code></td>
+<td><span class="en"><code>t.test(y ~ g)</code> or
+<code>wilcox.test(y ~ g)</code> with a group of 3+ values (or a typo
+creating an extra level).</span><span
+class="fr"><code>t.test(y ~ g)</code> ou <code>wilcox.test(y ~ g)</code>
+avec un groupe de 3 valeurs ou plus (ou une faute de frappe créant un
+niveau en trop).</span></td>
+<td><span class="en"><code>table(g)</code>; keep 2 groups with
+<code>subset()</code> / <code>filter()</code>, or use ANOVA /
+Kruskal–Wallis.</span><span class="fr"><code>table(g)</code> ; gardez 2
+groupes avec <code>subset()</code> / <code>filter()</code>, ou utilisez
+ANOVA / Kruskal–Wallis.</span></td>
+</tr>
+<tr class="even">
+<td><code>not enough 'x' observations</code></td>
+<td><span class="en">A group has 0 or 1 value (after removing
+<code>NA</code>).</span><span class="fr">Un groupe a 0 ou 1 valeur
+(après suppression des <code>NA</code>).</span></td>
+<td><span class="en">Check <code>table(g)</code> and
+<code>sum(!is.na(y))</code> per group.</span><span class="fr">Vérifiez
+<code>table(g)</code> et <code>sum(!is.na(y))</code> par
+groupe.</span></td>
+</tr>
+<tr class="odd">
+<td><code>data are essentially constant</code></td>
+<td><span class="en">All values identical in a group: no
+variance.</span><span class="fr">Toutes les valeurs identiques dans un
+groupe : pas de variance.</span></td>
+<td><span class="en">Look at the data; a t-test is meaningless
+here.</span><span class="fr">Regardez les données ; un test t n’a pas de
+sens ici.</span></td>
+</tr>
+<tr class="even">
+<td><code>cannot compute exact p-value with ties</code> (warning)</td>
+<td><span class="en">Wilcoxon / Spearman with equal values.</span><span
+class="fr">Wilcoxon / Spearman avec des valeurs égales.</span></td>
+<td><span class="en">Normal; add <code>exact = FALSE</code> to silence
+it.</span><span class="fr">Normal ; ajoutez <code>exact = FALSE</code>
+pour le faire taire.</span></td>
+</tr>
+<tr class="odd">
+<td><code>Chi-squared approximation may be incorrect</code>
+(warning)</td>
+<td><span class="en">Some <strong>expected</strong> counts are below
+5.</span><span class="fr">Certains effectifs <strong>attendus</strong>
+sont sous 5.</span></td>
+<td><span class="en"><code>chisq.test(tab)$expected</code>; use
+<code>fisher.test()</code> or merge rare categories.</span><span
+class="fr"><code>chisq.test(tab)$expected</code> ; utilisez
+<code>fisher.test()</code> ou regroupez des catégories
+rares.</span></td>
+</tr>
+<tr class="even">
+<td><code>'x' and 'y' must have the same length</code></td>
+<td><span class="en">Paired test or correlation with vectors of
+different lengths.</span><span class="fr">Test apparié ou corrélation
+avec des vecteurs de longueurs différentes.</span></td>
+<td><span class="en">Build both from the same rows of the same data
+frame.</span><span class="fr">Construisez les deux à partir des mêmes
+lignes du même data frame.</span></td>
+</tr>
+<tr class="odd">
+<td><code>non-numeric argument</code> /
+<code>'x' must be numeric</code></td>
+<td><span class="en">The response is stored as text.</span><span
+class="fr">La réponse est stockée comme du texte.</span></td>
+<td><span class="en"><code>str(df)</code>; clean and
+<code>as.numeric()</code>.</span><span class="fr"><code>str(df)</code> ;
+nettoyez et <code>as.numeric()</code>.</span></td>
+</tr>
+<tr class="even">
+<td><code>NaNs produced</code> with <code>log()</code></td>
+<td><span class="en">Log of a negative number; <code>log(0)</code> gives
+<code>-Inf</code>.</span><span class="fr">Log d’un nombre négatif ;
+<code>log(0)</code> donne <code>-Inf</code>.</span></td>
+<td><span class="en">Check the minimum; for counts with zeros use
+<code>log1p(x)</code> = log(1 + x).</span><span class="fr">Vérifiez le
+minimum ; pour des comptages avec des zéros utilisez
+<code>log1p(x)</code> = log(1 + x).</span></td>
+</tr>
+<tr class="odd">
+<td><code>object 'x' not found</code> in <code>predict()</code></td>
+<td><span class="en"><code>newdata</code> does not contain a column
+named like the predictor.</span><span class="fr"><code>newdata</code> ne
+contient pas de colonne nommée comme le prédicteur.</span></td>
+<td><span class="en"><code>data.frame(salinity_psu = 35)</code>: exactly
+the same name as in <code>lm()</code>.</span><span
+class="fr"><code>data.frame(salinity_psu = 35)</code> : exactement le
+même nom que dans <code>lm()</code>.</span></td>
+</tr>
+<tr class="even">
+<td><span class="en"><code>TukeyHSD()</code> error: no factors in the
+fitted model</span><span class="fr">Erreur de <code>TukeyHSD()</code> :
+pas de facteur dans le modèle</span></td>
+<td><span class="en">The group was numeric (e.g. codes 1, 2,
+3).</span><span class="fr">Le groupe était numérique (ex. codes 1, 2,
+3).</span></td>
+<td><span class="en"><code>df$g &lt;- factor(df$g)</code> before
+<code>aov()</code>.</span><span
+class="fr"><code>df$g &lt;- factor(df$g)</code> avant
+<code>aov()</code>.</span></td>
+</tr>
+<tr class="odd">
+<td><span class="en">ANOVA table shows Df = 1 for a 4-group
+factor</span><span class="fr">Le tableau d’ANOVA montre Df = 1 pour un
+facteur à 4 groupes</span></td>
+<td><span class="en">The group is numeric: R fitted a
+regression.</span><span class="fr">Le groupe est numérique : R a ajusté
+une régression.</span></td>
+<td><span class="en">Same fix: make it a factor.</span><span
+class="fr">Même correction : en faire un facteur.</span></td>
+</tr>
+<tr class="even">
+<td><span class="en">Different answer after
+<code>set.seed()</code></span><span class="fr">Réponse différente après
+<code>set.seed()</code></span></td>
+<td><span class="en">Another random call ran between the seed and
+<code>sample()</code>, or R &lt; 3.6.</span><span class="fr">Un autre
+appel aléatoire a eu lieu entre la graine et <code>sample()</code>, ou R
+&lt; 3.6.</span></td>
+<td><span class="en">Run the seed immediately before the random code;
+update R.</span><span class="fr">Exécutez la graine juste avant le code
+aléatoire ; mettez R à jour.</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="statistical-pitfallspièges-statistiques"
+class="section level2 no-track">
+<h2 class="no-track"><span class="en">Statistical pitfalls</span><span
+class="fr">Pièges statistiques</span></h2>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><span class="en">Pitfall</span><span class="fr">Piège</span></th>
+<th><span class="en">Why it is wrong</span><span class="fr">Pourquoi
+c’est faux</span></th>
+<th><span class="en">Instead</span><span class="fr">À la
+place</span></th>
+<th><span class="en">Session</span><span class="fr">Séance</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="en">Pseudoreplication</span><span
+class="fr">Pseudo-réplication</span></td>
+<td><span class="en">Quadrats of one site counted as independent
+replicates of a treatment.</span><span class="fr">Les quadrats d’un site
+comptés comme réplicats indépendants d’un traitement.</span></td>
+<td><span class="en">Analyse at the level of the replicate (site means);
+plan several sites per treatment.</span><span class="fr">Analysez au
+niveau du réplicat (moyennes par site) ; prévoyez plusieurs sites par
+traitement.</span></td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td><span class="en">Testing before plotting</span><span
+class="fr">Tester avant de tracer</span></td>
+<td><span class="en">Outliers, curves and errors go unnoticed
+(Anscombe).</span><span class="fr">Valeurs extrêmes, courbes et erreurs
+passent inaperçues (Anscombe).</span></td>
+<td><span class="en">Plot every variable and relationship
+first.</span><span class="fr">Tracez d’abord chaque variable et
+relation.</span></td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td><span class="en">Bars of means ± SE without saying it</span><span
+class="fr">Barres de moyennes ± ES sans le dire</span></td>
+<td><span class="en">Reader cannot tell SD, SE or CI apart; data
+hidden.</span><span class="fr">Le lecteur ne distingue pas ET, ES ou IC
+; données cachées.</span></td>
+<td><span class="en">Points + mean and 95 % CI, stated in the
+caption.</span><span class="fr">Points + moyenne et IC à 95 %, indiqués
+dans la légende.</span></td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td><span class="en">“p &gt; 0.05 so there is no difference”</span><span
+class="fr">« p &gt; 0,05 donc il n’y a pas de différence »</span></td>
+<td><span class="en">Absence of evidence ≠ evidence of absence; low
+power?</span><span class="fr">Absence de preuve ≠ preuve d’absence ;
+faible puissance ?</span></td>
+<td><span class="en">Report the effect and its CI; plan n with a power
+analysis.</span><span class="fr">Donnez l’effet et son IC ; planifiez n
+par une analyse de puissance.</span></td>
+<td>6, 11</td>
+</tr>
+<tr class="odd">
+<td><span class="en">“p &lt; 0.001 so the effect is large”</span><span
+class="fr">« p &lt; 0,001 donc l’effet est grand »</span></td>
+<td><span class="en">With large n, tiny effects are
+significant.</span><span class="fr">Avec un grand n, des effets
+minuscules sont significatifs.</span></td>
+<td><span class="en">Judge the effect size in real units.</span><span
+class="fr">Jugez la taille d’effet en unités réelles.</span></td>
+<td>6</td>
+</tr>
+<tr class="even">
+<td><span class="en">Unpaired test on paired data</span><span
+class="fr">Test non apparié sur données appariées</span></td>
+<td><span class="en">Between-unit variation is counted as noise: power
+lost.</span><span class="fr">La variation entre unités est comptée comme
+du bruit : puissance perdue.</span></td>
+<td><span class="en"><code>paired = TRUE</code>.</span><span
+class="fr"><code>paired = TRUE</code>.</span></td>
+<td>7</td>
+</tr>
+<tr class="odd">
+<td><span class="en">Many t-tests instead of ANOVA</span><span
+class="fr">Beaucoup de tests t au lieu d’une ANOVA</span></td>
+<td><span class="en">False-positive risk grows with the number of
+tests.</span><span class="fr">Le risque de faux positif augmente avec le
+nombre de tests.</span></td>
+<td><span class="en">ANOVA + Tukey, or adjusted p-values.</span><span
+class="fr">ANOVA + Tukey, ou p-values ajustées.</span></td>
+<td>8, 11</td>
+</tr>
+<tr class="even">
+<td><span class="en">Checking normality on the pooled raw
+data</span><span class="fr">Vérifier la normalité sur toutes les données
+brutes réunies</span></td>
+<td><span class="en">Group differences make the pooled data look
+non-normal.</span><span class="fr">Les différences entre groupes rendent
+les données réunies non normales.</span></td>
+<td><span class="en">Check the residuals (or each group).</span><span
+class="fr">Vérifiez les résidus (ou chaque groupe).</span></td>
+<td>8</td>
+</tr>
+<tr class="odd">
+<td><span class="en">χ² on percentages</span><span class="fr">χ² sur des
+pourcentages</span></td>
+<td><span class="en">The test needs counts; % hide n.</span><span
+class="fr">Le test demande des effectifs ; les % cachent n.</span></td>
+<td><span class="en">Use the table of counts.</span><span
+class="fr">Utilisez le tableau d’effectifs.</span></td>
+<td>9</td>
+</tr>
+<tr class="even">
+<td><span class="en">Correlation = causation</span><span
+class="fr">Corrélation = causalité</span></td>
+<td><span class="en">A third variable may drive both.</span><span
+class="fr">Une troisième variable peut agir sur les deux.</span></td>
+<td><span class="en">Say “associated with”; use experiments or careful
+designs.</span><span class="fr">Dites « associé à » ; utilisez des
+expériences ou des plans soigneux.</span></td>
+<td>1, 10</td>
+</tr>
+<tr class="odd">
+<td><span class="en">Extrapolating a regression</span><span
+class="fr">Extrapoler une régression</span></td>
+<td><span class="en">The line is only valid within the observed
+range.</span><span class="fr">La droite n’est valable que dans l’étendue
+observée.</span></td>
+<td><span class="en">Predict inside the range only.</span><span
+class="fr">Prédisez seulement dans l’étendue.</span></td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td><span class="en">Trying tests until p &lt; 0.05</span><span
+class="fr">Essayer des tests jusqu’à p &lt; 0,05</span></td>
+<td><span class="en">p-hacking: false positives become
+likely.</span><span class="fr">p-hacking : les faux positifs deviennent
+probables.</span></td>
+<td><span class="en">Write the analysis plan first; report all
+tests.</span><span class="fr">Écrivez d’abord le plan d’analyse ;
+rapportez tous les tests.</span></td>
+<td>11</td>
+</tr>
+<tr class="odd">
+<td><span class="en">Deleting “outliers” that spoil the
+result</span><span class="fr">Supprimer les « valeurs extrêmes » qui
+gênent</span></td>
+<td><span class="en">Biased results.</span><span class="fr">Résultats
+biaisés.</span></td>
+<td><span class="en">Correct real errors only; otherwise robust methods
+or log; report what you did.</span><span class="fr">Corrigez seulement
+les vraies erreurs ; sinon méthodes robustes ou log ; dites ce que vous
+avez fait.</span></td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

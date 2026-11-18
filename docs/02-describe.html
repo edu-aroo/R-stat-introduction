@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>R4Marine Stats · Session 2</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.1/jquery-3.6.1.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<!-- header.html: inserted inside <head> of every page (see _site.yml) -->
+<!-- config.js (settings) and quiz_index.js (made by R/build_site.R) first,
+     then course.js (the behaviour that reads them) -->
+<script src="assets/config.js"></script>
+<script src="assets/quiz_index.js"></script>
+<script src="assets/course.js"></script>
+<meta name="author" content="Aroo Falinirina">
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<link rel="stylesheet" href="assets/course.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">R4Marine Stats</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Sessions
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="00-start.html">0 · Why statistics?</a>
+    </li>
+    <li>
+      <a href="01-design.html">1 · Study design &amp; sampling</a>
+    </li>
+    <li>
+      <a href="02-describe.html">2 · Describing data</a>
+    </li>
+    <li>
+      <a href="03-explore.html">3 · Exploring distributions</a>
+    </li>
+    <li>
+      <a href="04-probability.html">4 · Probability &amp; distributions</a>
+    </li>
+    <li>
+      <a href="05-estimation.html">5 · Standard error &amp; CIs</a>
+    </li>
+    <li>
+      <a href="06-testing.html">6 · Hypothesis tests &amp; p-values</a>
+    </li>
+    <li>
+      <a href="07-two-groups.html">7 · Comparing two groups</a>
+    </li>
+    <li>
+      <a href="08-anova.html">8 · ANOVA &amp; Kruskal–Wallis</a>
+    </li>
+    <li>
+      <a href="09-categorical.html">9 · Proportions &amp; χ²</a>
+    </li>
+    <li>
+      <a href="10-regression.html">10 · Correlation &amp; regression</a>
+    </li>
+    <li>
+      <a href="11-power-reporting.html">11 · Power, multiple tests, reporting</a>
+    </li>
+    <li>
+      <a href="12-practice.html">12 · Practice</a>
+    </li>
+    <li>
+      <a href="13-final-project.html">13 · Final project</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Resources
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="choose-test.html">Which test? (decision guide)</a>
+    </li>
+    <li>
+      <a href="cheatsheet.html">Cheatsheet</a>
+    </li>
+    <li>
+      <a href="glossary.html">Glossary EN–FR</a>
+    </li>
+    <li>
+      <a href="common-errors.html">Common errors &amp; pitfalls</a>
+    </li>
+    <li>
+      <a href="resources.html">To go further</a>
+    </li>
+    <li>
+      <a href="help.html">Need help?</a>
+    </li>
+    <li>
+      <a href="whats-new.html">What's new</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore"><span class="en">2 · Describing data:
+centre, spread, shape</span><span class="fr">2 · Décrire les données :
+centre, dispersion, forme</span></h1>
+<h3 class="subtitle">~3 h</h3>
+
+</div>
+
+
+<div class="objectives">
+<div id="by-the-end-of-this-session-you-will-be-able-to"
+class="section level4 en">
+<h4>By the end of this session you will be able to</h4>
+<ul>
+<li>summarise the <strong>centre</strong> of a numeric variable (mean,
+median, trimmed mean) and choose between them;</li>
+<li>summarise its <strong>spread</strong> (range, variance, standard
+deviation, IQR, coefficient of variation);</li>
+<li>detect <strong>skewness</strong> and <strong>outliers</strong> (the
+1.5 × IQR rule) and decide what to do with them;</li>
+<li>build a <strong>summary table by group</strong> with
+<code>dplyr</code> (<code>group_by()</code> +
+<code>summarise()</code>);</li>
+<li>summarise <strong>categorical</strong> variables with one- and
+two-way tables of counts and percentages.</li>
+</ul>
+</div>
+<div id="à-la-fin-de-cette-séance-vous-saurez"
+class="section level4 fr">
+<h4>À la fin de cette séance vous saurez</h4>
+<ul>
+<li>résumer le <strong>centre</strong> d’une variable numérique
+(moyenne, médiane, moyenne tronquée) et choisir entre eux ;</li>
+<li>résumer sa <strong>dispersion</strong> (étendue, variance,
+écart-type, écart interquartile, coefficient de variation) ;</li>
+<li>détecter l’<strong>asymétrie</strong> et les <strong>valeurs
+extrêmes</strong> (règle des 1,5 × IQR) et décider quoi en faire ;</li>
+<li>construire un <strong>tableau de synthèse par groupe</strong> avec
+<code>dplyr</code> (<code>group_by()</code> + <code>summarise()</code>)
+;</li>
+<li>résumer des variables <strong>catégorielles</strong> avec des
+tableaux à une et deux entrées, en effectifs et pourcentages.</li>
+</ul>
+</div>
+</div>
+<div class="callout ecology">
+<div class="en">
+<p><strong>Reef fish survey</strong> (<code>reef_fish_sites.csv</code>,
+simulated). October–November 2025, <strong>36 reef sites</strong>: 12 in
+<strong>no-take</strong> reserves, 12 in <strong>LMMAs</strong> (fishing
+with rules) and 12 in <strong>open access</strong>, in two regions. At
+each site, two divers counted and sized fish on three 50 × 5 m belt
+transects; fish biomass was computed from lengths, and the three
+transects were <strong>averaged</strong> (Session 1: the site is the
+replicate). <em>One row = one site</em>: depth (m), live coral cover
+(%), rugosity (chain method, 1 = flat), fish density (fish per 250 m²),
+species richness, total fish biomass (kg/ha), % of herbivores in the
+biomass.</p>
+</div>
+<div class="fr">
+<p><strong>Suivi des poissons récifaux</strong>
+(<code>reef_fish_sites.csv</code>, simulé). Octobre–novembre 2025,
+<strong>36 sites récifaux</strong> : 12 en réserve
+<strong>intégrale</strong> (<em>no-take</em>), 12 en
+<strong>LMMA</strong> (pêche réglementée) et 12 en <strong>libre
+accès</strong>, dans deux régions. Sur chaque site, deux plongeurs ont
+compté et mesuré les poissons sur trois transects-couloirs de 50 × 5 m ;
+la biomasse a été calculée à partir des tailles, et les trois transects
+ont été <strong>moyennés</strong> (séance 1 : le site est le réplicat).
+<em>Une ligne = un site</em> : profondeur (m), recouvrement en corail
+vivant (%), rugosité (méthode de la chaîne, 1 = plat), densité de
+poissons (poissons par 250 m²), richesse spécifique, biomasse totale
+(kg/ha), % d’herbivores dans la biomasse.</p>
+</div>
+</div>
+<p><a class="btn-dl" href="data/reef_fish_sites.csv" download>⇩
+reef_fish_sites.csv</a></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>rf <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/reef_fish_sites.csv&quot;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">head</span>(rf)</span></code></pre></div>
+<pre><code>#&gt;   site management region depth_m coral_cover rugosity biomass_kg_ha
+#&gt; 1  R01    No-take  North     4.6        42.1     1.80           772
+#&gt; 2  R02    No-take  North    10.5        35.7     1.95           380
+#&gt; 3  R03    No-take  North    11.5        39.8     2.00           943
+#&gt; 4  R04    No-take  North     6.2        54.1     1.98           827
+#&gt; 5  R05    No-take  North     5.4        46.1     1.99          1102
+#&gt; 6  R06    No-take  North     4.3        35.6     1.89           507
+#&gt;   fish_density species_richness herbivore_pct
+#&gt; 1          104               41          25.8
+#&gt; 2           44               40          38.4
+#&gt; 3          157               45          24.7
+#&gt; 4          144               51          21.9
+#&gt; 5          129               48          35.0
+#&gt; 6           81               42          20.4</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">summary</span>(rf<span class="sc">$</span>biomass_kg_ha)</span></code></pre></div>
+<pre><code>#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#&gt;   108.0   275.0   415.0   484.8   597.2  1485.0</code></pre>
+<div id="centre" class="section level2">
+<h2><span class="en">The centre: mean, median, trimmed mean</span><span
+class="fr">Le centre : moyenne, médiane, moyenne tronquée</span></h2>
+<div class="en">
+<ul>
+<li>The <strong>mean</strong> x̄ = (sum of the values) / n: the “balance
+point” of the data. It uses every value, so it is <strong>pulled by
+extreme values</strong>.</li>
+<li>The <strong>median</strong> is the middle value once sorted: half of
+the values are below, half above. It ignores how far the extremes
+are.</li>
+<li>The <strong>trimmed mean</strong> removes a share of the smallest
+and largest values before averaging (<code>trim = 0.1</code> removes 10
+% at each end): a compromise.</li>
+</ul>
+</div>
+<div class="fr">
+<ul>
+<li>La <strong>moyenne</strong> x̄ = (somme des valeurs) / n : le « point
+d’équilibre » des données. Elle utilise toutes les valeurs, elle est
+donc <strong>tirée par les valeurs extrêmes</strong>.</li>
+<li>La <strong>médiane</strong> est la valeur du milieu une fois triées
+: la moitié des valeurs est en dessous, la moitié au-dessus. Elle ignore
+à quelle distance sont les extrêmes.</li>
+<li>La <strong>moyenne tronquée</strong> enlève une part des plus
+petites et des plus grandes valeurs avant de moyenner
+(<code>trim = 0.1</code> enlève 10 % à chaque bout) : un compromis.</li>
+</ul>
+</div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>b <span class="ot">&lt;-</span> rf<span class="sc">$</span>biomass_kg_ha</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="fu">mean</span>(b)</span></code></pre></div>
+<pre><code>#&gt; [1] 484.75</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">median</span>(b)</span></code></pre></div>
+<pre><code>#&gt; [1] 415</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">mean</span>(b, <span class="at">trim =</span> <span class="fl">0.1</span>)</span></code></pre></div>
+<pre><code>#&gt; [1] 449.9667</code></pre>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>mean(x, trim, na.rm)</code></td>
+<td>arithmetic mean</td>
+<td>a numeric vector</td>
+</tr>
+<tr class="even">
+<td>  <code>trim</code></td>
+<td>share of values removed at <strong>each</strong> end before
+averaging</td>
+<td>0 (default) to 0.5</td>
+</tr>
+<tr class="odd">
+<td>  <code>na.rm</code></td>
+<td><code>TRUE</code> = ignore missing values (otherwise the result is
+<code>NA</code>)</td>
+<td><code>TRUE</code> / <code>FALSE</code></td>
+</tr>
+<tr class="even">
+<td><code>median(x, na.rm)</code></td>
+<td>middle value of the sorted data</td>
+<td>a numeric vector</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>mean(x, trim, na.rm)</code></td>
+<td>moyenne arithmétique</td>
+<td>un vecteur numérique</td>
+</tr>
+<tr class="even">
+<td>  <code>trim</code></td>
+<td>part des valeurs enlevée à <strong>chaque</strong> bout avant de
+moyenner</td>
+<td>0 (défaut) à 0,5</td>
+</tr>
+<tr class="odd">
+<td>  <code>na.rm</code></td>
+<td><code>TRUE</code> = ignore les valeurs manquantes (sinon le résultat
+est <code>NA</code>)</td>
+<td><code>TRUE</code> / <code>FALSE</code></td>
+</tr>
+<tr class="even">
+<td><code>median(x, na.rm)</code></td>
+<td>valeur du milieu des données triées</td>
+<td>un vecteur numérique</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="en">
+<p>The mean (≈ 485 kg/ha) is above the median (≈ 415): a few sites with
+very high biomass pull the mean up. This is a
+<strong>right-skewed</strong> distribution, typical of biomass,
+abundance, income, catch weight… When mean and median differ a lot,
+<strong>report the median</strong> (or both), or analyse the log of the
+variable (Session 3).</p>
+</div>
+<div class="fr">
+<p>La moyenne (≈ 485 kg/ha) est au-dessus de la médiane (≈ 415) :
+quelques sites à très forte biomasse tirent la moyenne vers le haut.
+C’est une distribution <strong>asymétrique à droite</strong>, typique
+des biomasses, abondances, revenus, poids de capture… Quand moyenne et
+médiane diffèrent beaucoup, <strong>donnez la médiane</strong> (ou les
+deux), ou analysez le log de la variable (séance 3).</p>
+</div>
+</div>
+<div id="spread" class="section level2">
+<h2><span class="en">The spread: how different are the
+values?</span><span class="fr">La dispersion : à quel point les valeurs
+diffèrent-elles ?</span></h2>
+<div class="en">
+<p>Two reefs can have the same mean biomass, one with all sites close to
+it, the other with very rich and very poor sites. The spread is as
+important as the centre.</p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Measure</th>
+<th>Formula / idea</th>
+<th>R</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Range</td>
+<td>max − min (depends only on 2 values)</td>
+<td><code>range(x)</code>, <code>diff(range(x))</code></td>
+</tr>
+<tr class="even">
+<td>Variance s²</td>
+<td>mean squared distance to the mean, dividing by <strong>n −
+1</strong></td>
+<td><code>var(x)</code></td>
+</tr>
+<tr class="odd">
+<td>Standard deviation s</td>
+<td>√variance, in the <strong>units of the data</strong></td>
+<td><code>sd(x)</code></td>
+</tr>
+<tr class="even">
+<td>Interquartile range</td>
+<td>Q3 − Q1: width of the middle 50 %</td>
+<td><code>IQR(x)</code></td>
+</tr>
+<tr class="odd">
+<td>Coefficient of variation</td>
+<td>s / x̄ × 100: spread relative to the mean (no unit)</td>
+<td><code>sd(x) / mean(x) * 100</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p>Deux récifs peuvent avoir la même biomasse moyenne, l’un avec tous
+ses sites proches de cette moyenne, l’autre avec des sites très riches
+et très pauvres. La dispersion est aussi importante que le centre.</p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Mesure</th>
+<th>Formule / idée</th>
+<th>R</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Étendue</td>
+<td>max − min (dépend de 2 valeurs seulement)</td>
+<td><code>range(x)</code>, <code>diff(range(x))</code></td>
+</tr>
+<tr class="even">
+<td>Variance s²</td>
+<td>distance au carré moyenne à la moyenne, en divisant par <strong>n −
+1</strong></td>
+<td><code>var(x)</code></td>
+</tr>
+<tr class="odd">
+<td>Écart-type s</td>
+<td>√variance, dans les <strong>unités des données</strong></td>
+<td><code>sd(x)</code></td>
+</tr>
+<tr class="even">
+<td>Écart interquartile</td>
+<td>Q3 − Q1 : largeur des 50 % centraux</td>
+<td><code>IQR(x)</code></td>
+</tr>
+<tr class="odd">
+<td>Coefficient de variation</td>
+<td>s / x̄ × 100 : dispersion relative à la moyenne (sans unité)</td>
+<td><code>sd(x) / mean(x) * 100</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> rf<span class="sc">$</span>coral_cover</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>dev <span class="ot">&lt;-</span> x <span class="sc">-</span> <span class="fu">mean</span>(x)                        <span class="co"># distance of each site to the mean</span></span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a><span class="fu">sum</span>(dev<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> (<span class="fu">length</span>(x) <span class="sc">-</span> <span class="dv">1</span>)              <span class="co"># variance &quot;by hand&quot;</span></span></code></pre></div>
+<pre><code>#&gt; [1] 71.31621</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">var</span>(x)                                    <span class="co"># the same</span></span></code></pre></div>
+<pre><code>#&gt; [1] 71.31621</code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">sd</span>(x)</span></code></pre></div>
+<pre><code>#&gt; [1] 8.444893</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="fu">quantile</span>(x)</span></code></pre></div>
+<pre><code>#&gt;    0%   25%   50%   75%  100% 
+#&gt; 14.20 28.05 32.25 39.05 54.10</code></pre>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="fu">IQR</span>(x)</span></code></pre></div>
+<pre><code>#&gt; [1] 11</code></pre>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="fu">sd</span>(x) <span class="sc">/</span> <span class="fu">mean</span>(x) <span class="sc">*</span> <span class="dv">100</span>                     <span class="co"># CV (%) of coral cover</span></span></code></pre></div>
+<pre><code>#&gt; [1] 25.49402</code></pre>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a><span class="fu">sd</span>(b) <span class="sc">/</span> <span class="fu">mean</span>(b) <span class="sc">*</span> <span class="dv">100</span>                     <span class="co"># CV (%) of biomass: much more variable</span></span></code></pre></div>
+<pre><code>#&gt; [1] 62.32748</code></pre>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>var(x)</code>, <code>sd(x)</code></td>
+<td>sample variance and standard deviation (dividing by n − 1)</td>
+<td>a numeric vector</td>
+</tr>
+<tr class="even">
+<td><code>quantile(x, probs, type)</code></td>
+<td>values below which a given share of the data lies; default: min, Q1,
+median, Q3, max</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>  <code>type</code></td>
+<td>one of 9 calculation rules; R’s default (7) can differ slightly from
+Excel or SPSS on small samples</td>
+<td>1 to 9</td>
+</tr>
+<tr class="even">
+<td><code>IQR(x)</code></td>
+<td>interquartile range Q3 − Q1</td>
+<td>a numeric vector</td>
+</tr>
+<tr class="odd">
+<td><code>range(x)</code></td>
+<td>minimum and maximum (a vector of 2 values)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>var(x)</code>, <code>sd(x)</code></td>
+<td>variance et écart-type d’échantillon (division par n − 1)</td>
+<td>un vecteur numérique</td>
+</tr>
+<tr class="even">
+<td><code>quantile(x, probs, type)</code></td>
+<td>valeurs sous lesquelles se trouve une part donnée des données ; par
+défaut : min, Q1, médiane, Q3, max</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>  <code>type</code></td>
+<td>une des 9 règles de calcul ; celle de R par défaut (7) peut différer
+légèrement d’Excel ou SPSS sur de petits échantillons</td>
+<td>1 à 9</td>
+</tr>
+<tr class="even">
+<td><code>IQR(x)</code></td>
+<td>écart interquartile Q3 − Q1</td>
+<td>un vecteur numérique</td>
+</tr>
+<tr class="odd">
+<td><code>range(x)</code></td>
+<td>minimum et maximum (un vecteur de 2 valeurs)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="callout tip">
+<div class="en">
+<p><strong>Why n − 1?</strong> The sample mean is, by construction, the
+value closest to the sample’s own data, so distances to x̄ are slightly
+smaller than distances to the true μ. Dividing by n − 1 instead of n
+corrects this underestimate. R’s <code>var()</code> and
+<code>sd()</code> always do it.</p>
+<p><strong>Which pair to report?</strong> Roughly symmetric data:
+<strong>mean ± SD</strong>. Skewed data or outliers: <strong>median
+(Q1–Q3)</strong>. Always give <strong>n</strong>.</p>
+</div>
+<div class="fr">
+<p><strong>Pourquoi n − 1 ?</strong> La moyenne d’échantillon est, par
+construction, la valeur la plus proche des données de l’échantillon
+lui-même, donc les distances à x̄ sont un peu plus petites que les
+distances au vrai μ. Diviser par n − 1 au lieu de n corrige cette
+sous-estimation. <code>var()</code> et <code>sd()</code> de R le font
+toujours.</p>
+<p><strong>Quelle paire rapporter ?</strong> Données à peu près
+symétriques : <strong>moyenne ± ET</strong>. Données asymétriques ou
+valeurs extrêmes : <strong>médiane (Q1–Q3)</strong>. Donnez toujours
+<strong>n</strong>.</p>
+</div>
+</div>
+</div>
+<div id="outliers" class="section level2">
+<h2><span class="en">Shape and outliers</span><span class="fr">Forme et
+valeurs extrêmes</span></h2>
+<div class="en">
+<p>A common rule (Tukey) flags as <strong>potential outliers</strong>
+the values below Q1 − 1.5 × IQR or above Q3 + 1.5 × IQR. These are the
+points drawn individually by a boxplot. <code>boxplot.stats()</code>
+returns them.</p>
+</div>
+<div class="fr">
+<p>Une règle courante (Tukey) signale comme <strong>valeurs extrêmes
+potentielles</strong> les valeurs sous Q1 − 1,5 × IQR ou au-dessus de Q3
++ 1,5 × IQR. Ce sont les points dessinés individuellement par une boîte
+à moustaches. <code>boxplot.stats()</code> les renvoie.</p>
+</div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a>q <span class="ot">&lt;-</span> <span class="fu">quantile</span>(b, <span class="fu">c</span>(<span class="fl">0.25</span>, <span class="fl">0.75</span>))</span>
+<span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a>upper <span class="ot">&lt;-</span> q[[<span class="dv">2</span>]] <span class="sc">+</span> <span class="fl">1.5</span> <span class="sc">*</span> <span class="fu">IQR</span>(b)</span>
+<span id="cb25-3"><a href="#cb25-3" tabindex="-1"></a>upper</span></code></pre></div>
+<pre><code>#&gt; [1] 1080.625</code></pre>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a>b[b <span class="sc">&gt;</span> upper]</span></code></pre></div>
+<pre><code>#&gt; [1] 1102 1485</code></pre>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a><span class="fu">boxplot.stats</span>(b)<span class="sc">$</span>out</span></code></pre></div>
+<pre><code>#&gt; [1] 1485</code></pre>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a>rf[rf<span class="sc">$</span>biomass_kg_ha <span class="sc">&gt;</span> upper, <span class="fu">c</span>(<span class="st">&quot;site&quot;</span>, <span class="st">&quot;management&quot;</span>, <span class="st">&quot;biomass_kg_ha&quot;</span>)]</span></code></pre></div>
+<pre><code>#&gt;    site management biomass_kg_ha
+#&gt; 5   R05    No-take          1102
+#&gt; 11  R11    No-take          1485</code></pre>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>boxplot.stats(x)$out</code></td>
+<td>the values beyond 1.5 × IQR from the box (the boxplot’s individual
+points)</td>
+<td>a numeric vector</td>
+</tr>
+<tr class="even">
+<td><code>q[[2]]</code></td>
+<td>the 2nd value of <code>q</code>, without its name</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>boxplot.stats(x)$out</code></td>
+<td>les valeurs au-delà de 1,5 × IQR de la boîte (les points isolés de
+la boîte à moustaches)</td>
+<td>un vecteur numérique</td>
+</tr>
+<tr class="even">
+<td><code>q[[2]]</code></td>
+<td>la 2e valeur de <code>q</code>, sans son nom</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="callout warning">
+<div class="en">
+<p><strong>An outlier is a question, not an error.</strong> Check it:
+data-entry mistake (an extra zero)? Different unit? Or a real, rare
+value — a very rich no-take site? <strong>Correct</strong> errors;
+<strong>keep</strong> real values and, if they matter, use methods that
+are robust to them (median, rank-based tests in Sessions 7–8) or a log
+scale. Never delete a value only because it makes the result “less
+clean”, and always report what you did.</p>
+</div>
+<div class="fr">
+<p><strong>Une valeur extrême est une question, pas une erreur.</strong>
+Vérifiez-la : erreur de saisie (un zéro en trop) ? Autre unité ? Ou une
+valeur réelle et rare — un site intégral très riche ?
+<strong>Corrigez</strong> les erreurs ; <strong>gardez</strong> les
+valeurs réelles et, si elles comptent, utilisez des méthodes qui y
+résistent (médiane, tests sur les rangs des séances 7–8) ou une échelle
+log. Ne supprimez jamais une valeur seulement parce qu’elle rend le
+résultat « moins propre », et dites toujours ce que vous avez fait.</p>
+</div>
+</div>
+</div>
+<div id="by-group" class="section level2">
+<h2><span class="en">Summary table by group with dplyr</span><span
+class="fr">Tableau de synthèse par groupe avec dplyr</span></h2>
+<div class="en">
+<p>In the R course you used <code>tapply()</code> and
+<code>aggregate()</code>. For a table with several statistics at once,
+<code>dplyr</code> is clearer: <code>group_by()</code> splits the rows,
+<code>summarise()</code> computes one row per group. <code>n()</code>
+counts the rows of each group.</p>
+</div>
+<div class="fr">
+<p>Dans le cours de R vous avez utilisé <code>tapply()</code> et
+<code>aggregate()</code>. Pour un tableau avec plusieurs statistiques à
+la fois, <code>dplyr</code> est plus clair : <code>group_by()</code>
+découpe les lignes, <code>summarise()</code> calcule une ligne par
+groupe. <code>n()</code> compte les lignes de chaque groupe.</p>
+</div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb33-2"><a href="#cb33-2" tabindex="-1"></a>tab <span class="ot">&lt;-</span> rf <span class="sc">%&gt;%</span></span>
+<span id="cb33-3"><a href="#cb33-3" tabindex="-1"></a>  <span class="fu">group_by</span>(management) <span class="sc">%&gt;%</span></span>
+<span id="cb33-4"><a href="#cb33-4" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n      =</span> <span class="fu">n</span>(),</span>
+<span id="cb33-5"><a href="#cb33-5" tabindex="-1"></a>            <span class="at">mean   =</span> <span class="fu">mean</span>(biomass_kg_ha),</span>
+<span id="cb33-6"><a href="#cb33-6" tabindex="-1"></a>            <span class="at">sd     =</span> <span class="fu">sd</span>(biomass_kg_ha),</span>
+<span id="cb33-7"><a href="#cb33-7" tabindex="-1"></a>            <span class="at">median =</span> <span class="fu">median</span>(biomass_kg_ha),</span>
+<span id="cb33-8"><a href="#cb33-8" tabindex="-1"></a>            <span class="at">q1     =</span> <span class="fu">quantile</span>(biomass_kg_ha, <span class="fl">0.25</span>),</span>
+<span id="cb33-9"><a href="#cb33-9" tabindex="-1"></a>            <span class="at">q3     =</span> <span class="fu">quantile</span>(biomass_kg_ha, <span class="fl">0.75</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb33-10"><a href="#cb33-10" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(median))</span>
+<span id="cb33-11"><a href="#cb33-11" tabindex="-1"></a>tab</span></code></pre></div>
+<pre><code>#&gt; # A tibble: 3 × 7
+#&gt;   management      n  mean    sd median    q1    q3
+#&gt;   &lt;chr&gt;       &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 No-take        12  725.  328.   660.  489.  856 
+#&gt; 2 LMMA           12  473.  210.   430.  342.  498.
+#&gt; 3 Open access    12  256.  135.   242.  150.  294.</code></pre>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>df %&gt;% f()</code></td>
+<td>the pipe: passes <code>df</code> as the first argument of
+<code>f()</code>; read it “then”</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>group_by(...)</code></td>
+<td>marks the groups: the next <code>summarise()</code> works group by
+group</td>
+<td>column names</td>
+</tr>
+<tr class="odd">
+<td><code>summarise(name = f(col), ...)</code></td>
+<td>one row per group, one column per statistic</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>n()</code></td>
+<td>number of rows of the group (only inside <code>summarise()</code> /
+<code>mutate()</code>)</td>
+<td>nothing</td>
+</tr>
+<tr class="odd">
+<td><code>arrange(desc(col))</code></td>
+<td>sorts the rows by <code>col</code>, <code>desc()</code> =
+decreasing</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>df %&gt;% f()</code></td>
+<td>le pipe : passe <code>df</code> comme premier argument de
+<code>f()</code> ; lisez « puis »</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>group_by(...)</code></td>
+<td>marque les groupes : le <code>summarise()</code> suivant travaille
+groupe par groupe</td>
+<td>noms de colonnes</td>
+</tr>
+<tr class="odd">
+<td><code>summarise(name = f(col), ...)</code></td>
+<td>une ligne par groupe, une colonne par statistique</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>n()</code></td>
+<td>nombre de lignes du groupe (seulement dans <code>summarise()</code>
+/ <code>mutate()</code>)</td>
+<td>rien</td>
+</tr>
+<tr class="odd">
+<td><code>arrange(desc(col))</code></td>
+<td>trie les lignes selon <code>col</code>, <code>desc()</code> =
+décroissant</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="en">
+<p>To save it for a report, round first:
+<code>tab %&gt;% mutate(across(mean:q3, \(v) round(v)))</code>, then
+<code>write.csv(tab, "outputs/biomass_by_management.csv", row.names = FALSE)</code>.</p>
+</div>
+<div class="fr">
+<p>Pour l’enregistrer dans un rapport, arrondissez d’abord :
+<code>tab %&gt;% mutate(across(mean:q3, \(v) round(v)))</code>, puis
+<code>write.csv(tab, "outputs/biomass_by_management.csv", row.names = FALSE)</code>.</p>
+</div>
+<div class="callout try">
+<div class="en">
+<p><strong>Try it.</strong> Same table for <code>species_richness</code>
+grouped by <code>management</code> <strong>and</strong>
+<code>region</code> (<code>group_by(management, region)</code>). Is
+richness skewed like biomass? Compare mean and median.</p>
+</div>
+<div class="fr">
+<p><strong>À vous.</strong> Même tableau pour
+<code>species_richness</code> groupé par <code>management</code>
+<strong>et</strong> <code>region</code>
+(<code>group_by(management, region)</code>). La richesse est-elle
+asymétrique comme la biomasse ? Comparez moyenne et médiane.</p>
+</div>
+</div>
+</div>
+<div id="categorical" class="section level2">
+<h2><span class="en">Describing categorical variables</span><span
+class="fr">Décrire des variables catégorielles</span></h2>
+<div class="en">
+<p>For categories there is no mean: we report <strong>counts</strong>
+and <strong>percentages</strong>. With two variables, a
+<strong>contingency table</strong> crosses them. Be careful about
+<strong>which total</strong> the percentages refer to:
+<code>prop.table(tab, 1)</code> gives percentages <strong>within each
+row</strong> (they sum to 100 % by row), <code>prop.table(tab, 2)</code>
+<strong>within each column</strong>.</p>
+</div>
+<div class="fr">
+<p>Pour des catégories il n’y a pas de moyenne : on donne des
+<strong>effectifs</strong> et des <strong>pourcentages</strong>. Avec
+deux variables, un <strong>tableau de contingence</strong> les croise.
+Attention au <strong>total</strong> auquel se rapportent les
+pourcentages : <code>prop.table(tab, 1)</code> donne les pourcentages
+<strong>dans chaque ligne</strong> (ils somment à 100 % par ligne),
+<code>prop.table(tab, 2)</code> <strong>dans chaque
+colonne</strong>.</p>
+</div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a>fs <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/fisher_survey.csv&quot;</span>)</span>
+<span id="cb35-2"><a href="#cb35-2" tabindex="-1"></a>tab2 <span class="ot">&lt;-</span> <span class="fu">table</span>(fs<span class="sc">$</span>sex, fs<span class="sc">$</span>main_gear)</span>
+<span id="cb35-3"><a href="#cb35-3" tabindex="-1"></a>tab2</span></code></pre></div>
+<pre><code>#&gt;    
+#&gt;     gleaning line net speargun
+#&gt;   F       44   12   8        6
+#&gt;   M       18   71  51       30</code></pre>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" tabindex="-1"></a><span class="fu">addmargins</span>(tab2)                                  <span class="co"># with totals</span></span></code></pre></div>
+<pre><code>#&gt;      
+#&gt;       gleaning line net speargun Sum
+#&gt;   F         44   12   8        6  70
+#&gt;   M         18   71  51       30 170
+#&gt;   Sum       62   83  59       36 240</code></pre>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" tabindex="-1"></a><span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> <span class="fu">prop.table</span>(tab2, <span class="at">margin =</span> <span class="dv">1</span>), <span class="dv">1</span>)      <span class="co"># % of each gear WITHIN each sex</span></span></code></pre></div>
+<pre><code>#&gt;    
+#&gt;     gleaning line  net speargun
+#&gt;   F     62.9 17.1 11.4      8.6
+#&gt;   M     10.6 41.8 30.0     17.6</code></pre>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" tabindex="-1"></a><span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> <span class="fu">prop.table</span>(tab2, <span class="at">margin =</span> <span class="dv">2</span>), <span class="dv">1</span>)      <span class="co"># % of women and men WITHIN each gear</span></span></code></pre></div>
+<pre><code>#&gt;    
+#&gt;     gleaning line  net speargun
+#&gt;   F     71.0 14.5 13.6     16.7
+#&gt;   M     29.0 85.5 86.4     83.3</code></pre>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>table(a, b)</code></td>
+<td>two-way table of counts: rows = <code>a</code>, columns =
+<code>b</code></td>
+<td>two vectors of the same length</td>
+</tr>
+<tr class="even">
+<td><code>addmargins(tab)</code></td>
+<td>adds the row and column totals (<code>Sum</code>)</td>
+<td>a table</td>
+</tr>
+<tr class="odd">
+<td><code>prop.table(tab, margin)</code></td>
+<td>proportions; <code>margin = 1</code> within rows, <code>2</code>
+within columns, none = of the grand total</td>
+<td>1, 2 or nothing</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>table(a, b)</code></td>
+<td>tableau croisé d’effectifs : lignes = <code>a</code>, colonnes =
+<code>b</code></td>
+<td>deux vecteurs de même longueur</td>
+</tr>
+<tr class="even">
+<td><code>addmargins(tab)</code></td>
+<td>ajoute les totaux de lignes et de colonnes (<code>Sum</code>)</td>
+<td>un tableau</td>
+</tr>
+<tr class="odd">
+<td><code>prop.table(tab, margin)</code></td>
+<td>proportions ; <code>margin = 1</code> dans les lignes,
+<code>2</code> dans les colonnes, rien = du total général</td>
+<td>1, 2 ou rien</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="en">
+<p>Two sentences from the same table, both true, that say different
+things: “<strong>63 %</strong> of women glean” (row %) and “<strong>71
+%</strong> of gleaners are women” (column %). Always say which one you
+give.</p>
+</div>
+<div class="fr">
+<p>Deux phrases tirées du même tableau, toutes deux vraies, qui disent
+des choses différentes : « <strong>63 %</strong> des femmes glanent » (%
+en ligne) et « <strong>71 %</strong> des glaneurs sont des femmes » (%
+en colonne). Dites toujours lequel vous donnez.</p>
+</div>
+</div>
+<div id="application" class="section level2">
+<h2><span class="en">Application work &amp; quiz</span><span
+class="fr">Travail d’application et quiz</span></h2>
+<div class="application">
+<div id="application-work-2" class="section level3 en">
+<h3>Application work 2</h3>
+<p>With <code>reef_fish_sites.csv</code> and
+<code>fisher_survey.csv</code>:</p>
+<ol style="list-style-type: decimal">
+<li>Median fish biomass of the 36 sites (1 decimal).</li>
+<li>Mean biomass <strong>minus</strong> median biomass (1 decimal). What
+does its sign tell you?</li>
+<li>Standard deviation of coral cover (2 decimals).</li>
+<li>Interquartile range of species richness (2 decimals).</li>
+<li>Coefficient of variation of fish density, in % (1 decimal).</li>
+<li>Median biomass of <strong>Open access</strong> sites (1
+decimal).</li>
+<li>SD of biomass of <strong>No-take</strong> sites (1 decimal).</li>
+<li>How many sites are flagged as potential outliers for <strong>fish
+density</strong> by the 1.5 × IQR rule?</li>
+<li>In the fisher survey, percentage of LMMA members <strong>within the
+village of Andrevo</strong> (1 decimal).</li>
+<li>A concept question.</li>
+</ol>
+</div>
+<div id="travail-dapplication-2" class="section level3 fr">
+<h3>Travail d’application 2</h3>
+<p>Avec <code>reef_fish_sites.csv</code> et
+<code>fisher_survey.csv</code> :</p>
+<ol style="list-style-type: decimal">
+<li>Biomasse médiane des 36 sites (1 décimale).</li>
+<li>Biomasse moyenne <strong>moins</strong> biomasse médiane (1
+décimale). Que dit son signe ?</li>
+<li>Écart-type du recouvrement corallien (2 décimales).</li>
+<li>Écart interquartile de la richesse spécifique (2 décimales).</li>
+<li>Coefficient de variation de la densité de poissons, en % (1
+décimale).</li>
+<li>Biomasse médiane des sites en <strong>Open access</strong> (1
+décimale).</li>
+<li>ET de la biomasse des sites <strong>No-take</strong> (1
+décimale).</li>
+<li>Combien de sites sont signalés comme valeurs extrêmes potentielles
+pour la <strong>densité de poissons</strong> par la règle des 1,5 × IQR
+?</li>
+<li>Dans l’enquête pêcheurs, pourcentage de membres de la LMMA
+<strong>dans le village d’Andrevo</strong> (1 décimale).</li>
+<li>Une question de cours.</li>
+</ol>
+</div>
+</div>
+<div class="hint">
+<div class="en">
+<p>Q6–Q7: the <code>dplyr</code> table of this session gives them all at
+once. Q8: <code>length(boxplot.stats(rf$fish_density)$out)</code>. Q9: a
+two-way table village × LMMA member, then
+<code>prop.table(..., 1)</code>.</p>
+</div>
+<div class="fr">
+<p>Q6–Q7 : le tableau <code>dplyr</code> de cette séance les donne tous
+à la fois. Q8 : <code>length(boxplot.stats(rf$fish_density)$out)</code>.
+Q9 : un tableau croisé village × membre LMMA, puis
+<code>prop.table(..., 1)</code>.</p>
+</div>
+</div>
+<div id="quiz-t02" class="quiz" data-quiz-id="t02"
+data-q="W3sidHlwZSI6Im51bSIsImVuIjoiMS4gTWVkaWFuIGJpb21hc3MgKGtnL2hhKT8iLCJmciI6IjEuIEJpb21hc3NlIG3DqWRpYW5lIChrZy9oYSkgPyIsImFuc3dlciI6NDE1LCJ0b2wiOjAuMDYsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibnVtIiwiZW4iOiIyLiBNZWFuIOKIkiBtZWRpYW4gYmlvbWFzcz8iLCJmciI6IjIuIE1veWVubmUg4oiSIG3DqWRpYW5lIGRlIGxhIGJpb21hc3NlID8iLCJhbnN3ZXIiOjY5LjgsInRvbCI6MC4wNiwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJudW0iLCJlbiI6IjMuIFNEIG9mIGNvcmFsIGNvdmVyPyIsImZyIjoiMy4gRVQgZHUgcmVjb3V2cmVtZW50IGNvcmFsbGllbiA/IiwiYW5zd2VyIjo4LjQ0LCJ0b2wiOjAuMDA2LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiNC4gSVFSIG9mIHNwZWNpZXMgcmljaG5lc3M/IiwiZnIiOiI0LiDDiWNhcnQgaW50ZXJxdWFydGlsZSBkZSBsYSByaWNoZXNzZSA/IiwiYW5zd2VyIjo3LjUsInRvbCI6MC4wMDYsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibnVtIiwiZW4iOiI1LiBDViBvZiBmaXNoIGRlbnNpdHkgKCUpPyIsImZyIjoiNS4gQ1YgZGUgbGEgZGVuc2l0w6kgZGUgcG9pc3NvbnMgKCUpID8iLCJhbnN3ZXIiOjY0LjcsInRvbCI6MC4wNiwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJudW0iLCJlbiI6IjYuIE1lZGlhbiBiaW9tYXNzIGluIE9wZW4gYWNjZXNzPyIsImZyIjoiNi4gQmlvbWFzc2UgbcOpZGlhbmUgZW4gT3BlbiBhY2Nlc3MgPyIsImFuc3dlciI6MjQyLjUsInRvbCI6MC4wNiwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJudW0iLCJlbiI6IjcuIFNEIG9mIGJpb21hc3MgaW4gTm8tdGFrZSBzaXRlcz8iLCJmciI6IjcuIEVUIGRlIGxhIGJpb21hc3NlIGRlcyBzaXRlcyBOby10YWtlID8iLCJhbnN3ZXIiOjMyOC4xLCJ0b2wiOjAuMDYsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibnVtIiwiZW4iOiI4LiBOdW1iZXIgb2YgcG90ZW50aWFsIG91dGxpZXJzIGZvciBmaXNoIGRlbnNpdHk/IiwiZnIiOiI4LiBOb21icmUgZGUgdmFsZXVycyBleHRyw6ptZXMgcG90ZW50aWVsbGVzIGRlIGRlbnNpdMOpID8iLCJhbnN3ZXIiOjEsInRvbCI6MCwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJudW0iLCJlbiI6IjkuICUgb2YgTE1NQSBtZW1iZXJzIGluIEFuZHJldm8/IiwiZnIiOiI5LiAlIGRlIG1lbWJyZXMgZGUgbGEgTE1NQSDDoCBBbmRyZXZvID8iLCJhbnN3ZXIiOjE1LCJ0b2wiOjAuMDYsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibWNxIiwiZW4iOiIxMC4gQmlvbWFzcyBpcyBzdHJvbmdseSByaWdodC1za2V3ZWQuIFRoZSBiZXN0IHNob3J0IHN1bW1hcnkgaXPigKYiLCJmciI6IjEwLiBMYSBiaW9tYXNzZSBlc3QgZm9ydGVtZW50IGFzeW3DqXRyaXF1ZSDDoCBkcm9pdGUuIExlIG1laWxsZXVyIHLDqXN1bcOpIGNvdXJ0IGVzdOKApiIsIm9wdGlvbnNfZW4iOlsibWVhbiDCsSBTRCIsIm1lZGlhbiAoUTHigJNRMykgYW5kIG4iLCJ0aGUgcmFuZ2Ugb25seSIsInRoZSBtb2RlIl0sIm9wdGlvbnNfZnIiOlsibW95ZW5uZSDCsSBFVCIsIm3DqWRpYW5lIChRMeKAk1EzKSBldCBuIiwibCfDqXRlbmR1ZSBzZXVsZW1lbnQiLCJsZSBtb2RlIl0sImFuc3dlciI6MX1d">
+
+</div>
+<div class="solution" data-quiz="t02">
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb43-2"><a href="#cb43-2" tabindex="-1"></a>rf <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/reef_fish_sites.csv&quot;</span>)</span>
+<span id="cb43-3"><a href="#cb43-3" tabindex="-1"></a><span class="fu">median</span>(rf<span class="sc">$</span>biomass_kg_ha)                                   <span class="co"># 1</span></span>
+<span id="cb43-4"><a href="#cb43-4" tabindex="-1"></a><span class="fu">mean</span>(rf<span class="sc">$</span>biomass_kg_ha) <span class="sc">-</span> <span class="fu">median</span>(rf<span class="sc">$</span>biomass_kg_ha)          <span class="co"># 2: positive -&gt; right skew</span></span>
+<span id="cb43-5"><a href="#cb43-5" tabindex="-1"></a><span class="fu">sd</span>(rf<span class="sc">$</span>coral_cover)                                         <span class="co"># 3</span></span>
+<span id="cb43-6"><a href="#cb43-6" tabindex="-1"></a><span class="fu">IQR</span>(rf<span class="sc">$</span>species_richness)                                   <span class="co"># 4</span></span>
+<span id="cb43-7"><a href="#cb43-7" tabindex="-1"></a><span class="fu">sd</span>(rf<span class="sc">$</span>fish_density) <span class="sc">/</span> <span class="fu">mean</span>(rf<span class="sc">$</span>fish_density) <span class="sc">*</span> <span class="dv">100</span>          <span class="co"># 5</span></span>
+<span id="cb43-8"><a href="#cb43-8" tabindex="-1"></a>rf <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(management) <span class="sc">%&gt;%</span></span>
+<span id="cb43-9"><a href="#cb43-9" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">median =</span> <span class="fu">median</span>(biomass_kg_ha), <span class="at">sd =</span> <span class="fu">sd</span>(biomass_kg_ha))   <span class="co"># 6, 7</span></span>
+<span id="cb43-10"><a href="#cb43-10" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">boxplot.stats</span>(rf<span class="sc">$</span>fish_density)<span class="sc">$</span>out)                 <span class="co"># 8</span></span>
+<span id="cb43-11"><a href="#cb43-11" tabindex="-1"></a>fs <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/fisher_survey.csv&quot;</span>)</span>
+<span id="cb43-12"><a href="#cb43-12" tabindex="-1"></a><span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> <span class="fu">prop.table</span>(<span class="fu">table</span>(fs<span class="sc">$</span>village, fs<span class="sc">$</span>lmma_member), <span class="dv">1</span>), <span class="dv">1</span>)      <span class="co"># 9</span></span></code></pre></div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

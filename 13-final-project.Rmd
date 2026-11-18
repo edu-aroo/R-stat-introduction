@@ -1,0 +1,200 @@
+---
+title: "[13 · Final project: seagrass and sea urchins]{.en}[13 · Projet final : herbiers et oursins]{.fr}"
+pagetitle: "R4Marine Stats · Session 13"
+subtitle: "~4.5 h"
+---
+
+```{r setup, include=FALSE}
+source("R/course_helpers.R")
+library(ggplot2); library(dplyr)
+su <- read.csv("data/seagrass_urchins.csv")
+```
+
+::: objectives
+::: en
+#### What this project is for
+A complete analysis, from the question to the written result, on a dataset you have not seen. You decide the test for each question, justify it, run it, and report it. The quiz checks your numbers; the **short report** (step 8) is for you — and for me if you want feedback.
+:::
+::: fr
+#### À quoi sert ce projet
+Une analyse complète, de la question au résultat rédigé, sur un jeu de données que vous n'avez pas encore vu. Vous choisissez le test de chaque question, le justifiez, l'exécutez et le rédigez. Le quiz vérifie vos nombres ; le **court rapport** (étape 8) est pour vous — et pour moi si vous voulez un retour.
+:::
+:::
+
+::: {.callout .ecology}
+::: en
+**Seagrass and sea urchins in a lagoon** (`seagrass_urchins.csv`, simulated). In April 2026, a monitoring team placed **80 stations at random** over a seagrass lagoon, **stratified by protection**: 40 inside the **no-take zone** of an LMMA (created in 2021) and 40 outside. At each station they laid **one 1 m² quadrat** and recorded: depth (dive computer, m), sediment type (`sand`, `muddy sand`, `rubble`), % seagrass cover (visual estimate), canopy height (cm, mean of 5 shoots) and the number of collector sea urchins *Tripneustes gratilla*, which graze seagrass and are harvested by gleaners. *One row = one station.*
+
+**The management questions:** (1) What is the seagrass cover of the lagoon? (2) Is cover higher inside the no-take zone? (3) Are there more or fewer urchins inside? (4) Does cover depend on the sediment? (5) Are urchins present at a different share of stations inside and outside? (6) Are urchins more abundant where seagrass is denser? (7) How does cover change with depth? (8) How many stations would be needed next year?
+:::
+::: fr
+**Herbiers et oursins dans un lagon** (`seagrass_urchins.csv`, simulé). En avril 2026, une équipe de suivi a placé **80 stations au hasard** dans un lagon à herbiers, **stratifiées par protection** : 40 dans la **zone de non-prélèvement** d'une LMMA (créée en 2021) et 40 à l'extérieur. À chaque station, elle a posé **un quadrat de 1 m²** et noté : profondeur (ordinateur de plongée, m), type de sédiment (`sand`, `muddy sand`, `rubble`), % de recouvrement d'herbier (estimation visuelle), hauteur de canopée (cm, moyenne de 5 pousses) et nombre d'oursins collecteurs *Tripneustes gratilla*, qui broutent l'herbier et sont récoltés par les glaneurs. *Une ligne = une station.*
+
+**Les questions de gestion :** (1) Quel est le recouvrement d'herbier du lagon ? (2) Le recouvrement est-il plus élevé dans la zone de non-prélèvement ? (3) Y a-t-il plus ou moins d'oursins à l'intérieur ? (4) Le recouvrement dépend-il du sédiment ? (5) Les oursins sont-ils présents dans une part différente des stations à l'intérieur et à l'extérieur ? (6) Les oursins sont-ils plus abondants là où l'herbier est plus dense ? (7) Comment le recouvrement change-t-il avec la profondeur ? (8) Combien de stations faudrait-il l'année prochaine ?
+:::
+:::
+
+`r dl("seagrass_urchins.csv", "seagrass_urchins.csv")` `r dl("final_project_template.R", "final_project_template.R", dir = "templates")`
+
+## [Step 1 — Plan before you look]{.en}[Étape 1 — Planifier avant de regarder]{.fr} {#plan}
+
+::: en
+Open `final_project_template.R`. Before running anything, fill in the **analysis plan** at the top: for each question, the response variable and its type, the grouping variable or predictor, independent or paired, the test you expect to use, and what you will do if its conditions are not met (Session 11). The sampling unit is the **station**.
+:::
+::: fr
+Ouvrez `final_project_template.R`. Avant d'exécuter quoi que ce soit, remplissez le **plan d'analyse** en haut : pour chaque question, la variable réponse et son type, la variable de groupe ou le prédicteur, indépendant ou apparié, le test prévu, et ce que vous ferez si ses conditions ne sont pas remplies (séance 11). L'unité d'échantillonnage est la **station**.
+:::
+:::
+
+## [Step 2 — Import, check, describe]{.en}[Étape 2 — Importer, vérifier, décrire]{.fr} {#describe}
+
+::: en
+Import the data, check the types (`str()`), make `protection` and `sediment` factors, look for missing values and impossible values (cover > 100, negative counts). Build a summary table by protection (n, mean, SD, median, IQR) for cover, canopy and urchins (Session 2). Plot each variable (Session 3): which are roughly normal, which are skewed?
+:::
+::: fr
+Importez les données, vérifiez les types (`str()`), transformez `protection` et `sediment` en facteurs, cherchez les valeurs manquantes et impossibles (recouvrement > 100, comptages négatifs). Construisez un tableau de synthèse par protection (n, moyenne, ET, médiane, IQR) pour le recouvrement, la canopée et les oursins (séance 2). Tracez chaque variable (séance 3) : lesquelles sont à peu près normales, lesquelles sont asymétriques ?
+:::
+
+## [Step 3 — Estimate the lagoon's cover (Q1)]{.en}[Étape 3 — Estimer le recouvrement du lagon (Q1)]{.fr} {#estimate}
+
+::: en
+Mean cover of all 80 stations with its 95 % CI (Session 5). (The two strata have the same size, so the plain mean is fine.)
+:::
+::: fr
+Recouvrement moyen des 80 stations avec son IC à 95 % (séance 5). (Les deux strates ont la même taille, la moyenne simple convient donc.)
+:::
+
+## [Step 4 — Inside versus outside (Q2, Q3, Q5)]{.en}[Étape 4 — Intérieur contre extérieur (Q2, Q3, Q5)]{.fr} {#protection}
+
+::: en
+- **Cover** (Q2): choose between a Welch t-test and a Wilcoxon test from your plots; give the difference **Inside − Outside** with its CI.
+- **Urchins** (Q3): counts with many zeros and a long tail — which test?
+- **Presence of urchins** (Q5): create `present <- su$urchins > 0`, cross it with protection and test the association (Session 9).
+:::
+::: fr
+- **Recouvrement** (Q2) : choisissez entre un test t de Welch et un test de Wilcoxon d'après vos graphiques ; donnez la différence **Inside − Outside** avec son IC.
+- **Oursins** (Q3) : des comptages avec beaucoup de zéros et une longue queue — quel test ?
+- **Présence d'oursins** (Q5) : créez `present <- su$urchins > 0`, croisez-le avec la protection et testez l'association (séance 9).
+:::
+
+## [Step 5 — Sediment (Q4)]{.en}[Étape 5 — Sédiment (Q4)]{.fr} {#sediment}
+
+::: en
+One-way ANOVA of cover by sediment, check the residuals, then Tukey HSD (Session 8). Keep the sediment levels in alphabetical order (`muddy sand`, `rubble`, `sand`) so that your Tukey labels match the quiz.
+:::
+::: fr
+ANOVA à un facteur du recouvrement par sédiment, vérification des résidus, puis HSD de Tukey (séance 8). Gardez les niveaux du sédiment dans l'ordre alphabétique (`muddy sand`, `rubble`, `sand`) pour que vos étiquettes de Tukey correspondent au quiz.
+:::
+
+## [Step 6 — Relationships (Q6, Q7)]{.en}[Étape 6 — Relations (Q6, Q7)]{.fr} {#relationships}
+
+::: en
+- Urchins vs cover (Q6): which correlation coefficient suits counts with many zeros?
+- Cover vs depth (Q7): simple linear regression, residual plots, slope with its CI, R² (Session 10).
+:::
+::: fr
+- Oursins vs recouvrement (Q6) : quel coefficient de corrélation convient à des comptages avec beaucoup de zéros ?
+- Recouvrement vs profondeur (Q7) : régression linéaire simple, graphiques des résidus, pente avec son IC, R² (séance 10).
+:::
+
+## [Step 7 — Next year's design (Q8)]{.en}[Étape 7 — Le plan de l'année prochaine (Q8)]{.fr} {#power}
+
+::: en
+The LMMA wants to detect a difference of **5 %** in seagrass cover between inside and outside with 80 % power. Using the SD of cover of all 80 stations, how many stations per zone are needed (Session 11)?
+:::
+::: fr
+La LMMA veut détecter une différence de **5 %** de recouvrement entre l'intérieur et l'extérieur avec 80 % de puissance. Avec l'ET du recouvrement des 80 stations, combien de stations par zone faut-il (séance 11) ?
+:::
+
+## [Step 8 — Write it up]{.en}[Étape 8 — Rédiger]{.fr} {#report}
+
+::: en
+In a text file or a Word document (one page): a **methods** paragraph (design, n, variables, tests and why, software) and **one result sentence per question**, in the format of Session 11, plus **two figures** (cover by protection with the raw points; cover against depth with the regression line). End with two sentences for the LMMA committee: what the data show, and what they cannot show (Session 1: is the no-take zone the *cause*?).
+:::
+::: fr
+Dans un fichier texte ou un document Word (une page) : un paragraphe de **méthodes** (plan, n, variables, tests et pourquoi, logiciel) et **une phrase de résultat par question**, au format de la séance 11, plus **deux figures** (recouvrement par protection avec les points bruts ; recouvrement selon la profondeur avec la droite de régression). Terminez par deux phrases pour le comité de la LMMA : ce que montrent les données, et ce qu'elles ne peuvent pas montrer (séance 1 : la zone de non-prélèvement est-elle la *cause* ?).
+:::
+
+## [Quiz]{.en}[Quiz]{.fr} {#quiz}
+
+```{r answers13, include=FALSE}
+su$protection <- factor(su$protection)
+su$sediment <- factor(su$sediment)
+ci <- t.test(su$seagrass_cover)$conf.int
+m1 <- round(mean(su$seagrass_cover), 2); m2 <- round(ci[1], 2); m3 <- round(ci[2], 2)
+tt <- t.test(seagrass_cover ~ protection, data = su)
+m4 <- round(tt$estimate[[1]] - tt$estimate[[2]], 2)
+m5 <- round(tt$p.value, 4)
+m6 <- median(su$urchins[su$protection == "Outside"])
+m7 <- round(wilcox.test(urchins ~ protection, data = su, exact = FALSE)$p.value, 4)
+fa_ <- aov(seagrass_cover ~ sediment, data = su)
+m8 <- round(summary(fa_)[[1]][1, "F value"], 3)
+m9 <- round(TukeyHSD(fa_)$sediment["sand-rubble", "diff"], 2)
+m10 <- round(chisq.test(table(su$protection, su$urchins > 0))$p.value, 4)
+m11 <- round(cor(su$urchins, su$seagrass_cover, method = "spearman"), 3)
+lm7 <- lm(seagrass_cover ~ depth_m, data = su)
+m12 <- round(coef(lm7)[[2]], 3)
+m13 <- round(summary(lm7)$r.squared, 3)
+m15 <- ceiling(power.t.test(delta = 5, sd = sd(su$seagrass_cover), power = 0.8)$n)
+```
+
+```{r quiz13, echo=FALSE}
+quiz("t13", list(
+  q_num("1. Mean seagrass cover of the 80 stations (%)?", "1. Recouvrement moyen des 80 stations (%) ?", m1, tol = 0.006),
+  q_num("2. Lower limit of its 95 % CI?", "2. Limite inférieure de son IC à 95 % ?", m2, tol = 0.006),
+  q_num("3. Upper limit of its 95 % CI?", "3. Limite supérieure de son IC à 95 % ?", m3, tol = 0.006),
+  q_num("4. Welch t-test: mean cover Inside − Outside?", "4. Test t de Welch : recouvrement moyen Inside − Outside ?", m4, tol = 0.006),
+  q_num("5. Its p-value?", "5. Sa p-value ?", m5, tol = 0.00006),
+  q_num("6. Median number of urchins Outside?", "6. Nombre médian d'oursins Outside ?", m6, tol = 0),
+  q_num("7. Wilcoxon rank-sum p-value, urchins by protection (exact = FALSE)?", "7. p-value du Wilcoxon des rangs, oursins par protection (exact = FALSE) ?", m7, tol = 0.00006),
+  q_num("8. ANOVA F value, cover by sediment?", "8. Valeur de F de l'ANOVA, recouvrement par sédiment ?", m8, tol = 0.0006),
+  q_num("9. Tukey difference sand − rubble?", "9. Différence de Tukey sand − rubble ?", m9, tol = 0.006),
+  q_num("10. χ² p-value, urchin presence × protection (default correction)?", "10. p-value du χ², présence d'oursins × protection (correction par défaut) ?", m10, tol = 0.00006),
+  q_num("11. Spearman ρ, urchins vs cover?", "11. ρ de Spearman, oursins vs recouvrement ?", m11, tol = 0.0006),
+  q_num("12. Regression slope of cover on depth (% per m)?", "12. Pente de la régression du recouvrement sur la profondeur (% par m) ?", m12, tol = 0.0006),
+  q_num("13. R² of this regression?", "13. R² de cette régression ?", m13, tol = 0.0006),
+  q_mcq("14. Cover is higher inside the no-take zone. The most accurate statement is…",
+        "14. Le recouvrement est plus élevé dans la zone de non-prélèvement. L'énoncé le plus juste est…",
+        c("protection caused the higher cover",
+          "cover is higher inside; because the zone was not placed at random, other differences (e.g. sediment, depth) could explain part of it",
+          "the difference is due to chance", "the stations are pseudoreplicates, so nothing can be concluded"),
+        c("la protection a causé le recouvrement plus élevé",
+          "le recouvrement est plus élevé à l'intérieur ; comme la zone n'a pas été placée au hasard, d'autres différences (ex. sédiment, profondeur) pourraient en expliquer une partie",
+          "la différence est due au hasard", "les stations sont des pseudo-réplicats, on ne peut donc rien conclure"), correct = 2),
+  q_num("15. Stations per zone needed to detect 5 % (80 % power)?", "15. Stations par zone nécessaires pour détecter 5 % (puissance 80 %) ?", m15, tol = 0)
+))
+```
+
+::: {.solution data-quiz="t13"}
+```{r, eval=FALSE}
+library(dplyr); library(ggplot2)
+su <- read.csv("data/seagrass_urchins.csv")
+su$protection <- factor(su$protection); su$sediment <- factor(su$sediment)
+str(su); summary(su)
+su %>% group_by(protection) %>%
+  summarise(n = n(), mean_cover = mean(seagrass_cover), sd_cover = sd(seagrass_cover),
+            median_urchins = median(urchins), iqr_urchins = IQR(urchins))      # 6
+# Q1
+mean(su$seagrass_cover); t.test(su$seagrass_cover)$conf.int                    # 1-3
+# Q2: cover is roughly normal in each group (QQ plots) -> Welch t-test
+ggplot(su, aes(protection, seagrass_cover)) + geom_boxplot() + geom_jitter(width = 0.1, height = 0)
+t.test(seagrass_cover ~ protection, data = su)                                 # 4, 5
+# Q3: counts, many zeros, skewed -> Wilcoxon rank-sum
+wilcox.test(urchins ~ protection, data = su, exact = FALSE)                    # 7
+# Q4
+fit <- aov(seagrass_cover ~ sediment, data = su)
+summary(fit); plot(fit, which = 1:2); TukeyHSD(fit)                            # 8, 9
+# Q5
+present <- su$urchins > 0
+tab <- table(su$protection, present); tab; prop.table(tab, 1)
+chisq.test(tab)                                                                # 10
+# Q6
+cor.test(su$urchins, su$seagrass_cover, method = "spearman", exact = FALSE)    # 11
+# Q7
+lm7 <- lm(seagrass_cover ~ depth_m, data = su)
+summary(lm7); confint(lm7); plot(lm7, which = 1:2)                             # 12, 13
+# Q8
+ceiling(power.t.test(delta = 5, sd = sd(su$seagrass_cover), power = 0.8)$n)    # 15
+# 14: association; the zone was not assigned at random (observational comparison)
+```
+:::

@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>R4Marine Stats · Session 11</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.1/jquery-3.6.1.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<!-- header.html: inserted inside <head> of every page (see _site.yml) -->
+<!-- config.js (settings) and quiz_index.js (made by R/build_site.R) first,
+     then course.js (the behaviour that reads them) -->
+<script src="assets/config.js"></script>
+<script src="assets/quiz_index.js"></script>
+<script src="assets/course.js"></script>
+<meta name="author" content="Aroo Falinirina">
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<link rel="stylesheet" href="assets/course.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">R4Marine Stats</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Sessions
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="00-start.html">0 · Why statistics?</a>
+    </li>
+    <li>
+      <a href="01-design.html">1 · Study design &amp; sampling</a>
+    </li>
+    <li>
+      <a href="02-describe.html">2 · Describing data</a>
+    </li>
+    <li>
+      <a href="03-explore.html">3 · Exploring distributions</a>
+    </li>
+    <li>
+      <a href="04-probability.html">4 · Probability &amp; distributions</a>
+    </li>
+    <li>
+      <a href="05-estimation.html">5 · Standard error &amp; CIs</a>
+    </li>
+    <li>
+      <a href="06-testing.html">6 · Hypothesis tests &amp; p-values</a>
+    </li>
+    <li>
+      <a href="07-two-groups.html">7 · Comparing two groups</a>
+    </li>
+    <li>
+      <a href="08-anova.html">8 · ANOVA &amp; Kruskal–Wallis</a>
+    </li>
+    <li>
+      <a href="09-categorical.html">9 · Proportions &amp; χ²</a>
+    </li>
+    <li>
+      <a href="10-regression.html">10 · Correlation &amp; regression</a>
+    </li>
+    <li>
+      <a href="11-power-reporting.html">11 · Power, multiple tests, reporting</a>
+    </li>
+    <li>
+      <a href="12-practice.html">12 · Practice</a>
+    </li>
+    <li>
+      <a href="13-final-project.html">13 · Final project</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Resources
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="choose-test.html">Which test? (decision guide)</a>
+    </li>
+    <li>
+      <a href="cheatsheet.html">Cheatsheet</a>
+    </li>
+    <li>
+      <a href="glossary.html">Glossary EN–FR</a>
+    </li>
+    <li>
+      <a href="common-errors.html">Common errors &amp; pitfalls</a>
+    </li>
+    <li>
+      <a href="resources.html">To go further</a>
+    </li>
+    <li>
+      <a href="help.html">Need help?</a>
+    </li>
+    <li>
+      <a href="whats-new.html">What's new</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore"><span class="en">11 · Power, multiple tests
+and reporting</span><span class="fr">11 · Puissance, tests multiples et
+rédaction</span></h1>
+<h3 class="subtitle">~2.5 h</h3>
+
+</div>
+
+
+<div class="objectives">
+<div id="by-the-end-of-this-session-you-will-be-able-to"
+class="section level4 en">
+<h4>By the end of this session you will be able to</h4>
+<ul>
+<li>explain what determines the <strong>power</strong> of a test (effect
+size, variability, n, α);</li>
+<li>compute the <strong>sample size</strong> needed for a study with
+<code>power.t.test()</code> and <code>power.prop.test()</code>, and
+estimate power <strong>by simulation</strong>;</li>
+<li>explain why many tests inflate false positives, and adjust p-values
+with <code>p.adjust()</code> (Holm, Benjamini–Hochberg);</li>
+<li>recognise <strong>p-hacking</strong> and protect your analysis with
+a plan written before the data;</li>
+<li><strong>report</strong> a statistical result completely: methods
+sentence, result sentence, table and figure, and the information that
+makes it reproducible.</li>
+</ul>
+</div>
+<div id="à-la-fin-de-cette-séance-vous-saurez"
+class="section level4 fr">
+<h4>À la fin de cette séance vous saurez</h4>
+<ul>
+<li>expliquer ce qui détermine la <strong>puissance</strong> d’un test
+(taille d’effet, variabilité, n, α) ;</li>
+<li>calculer la <strong>taille d’échantillon</strong> nécessaire à une
+étude avec <code>power.t.test()</code> et
+<code>power.prop.test()</code>, et estimer la puissance <strong>par
+simulation</strong> ;</li>
+<li>expliquer pourquoi de nombreux tests gonflent les faux positifs, et
+ajuster les p-values avec <code>p.adjust()</code> (Holm,
+Benjamini–Hochberg) ;</li>
+<li>reconnaître le <strong>p-hacking</strong> et protéger votre analyse
+par un plan écrit avant les données ;</li>
+<li><strong>rédiger</strong> un résultat statistique complètement :
+phrase de méthode, phrase de résultat, tableau et figure, et les
+informations qui le rendent reproductible.</li>
+</ul>
+</div>
+</div>
+<div id="power" class="section level2">
+<h2><span class="en">Power: will my study detect the effect?</span><span
+class="fr">Puissance : mon étude détectera-t-elle l’effet ?</span></h2>
+<div class="en">
+<p><strong>Power</strong> = the probability that a test detects an
+effect <strong>that really exists</strong> (rejects H0 when H1 is true).
+A common target is 80 %. Power increases when:</p>
+<ul>
+<li>the <strong>effect</strong> is larger (a 300 g difference is easier
+to detect than 50 g);</li>
+<li>the <strong>variability</strong> is smaller (good protocol,
+homogeneous units, pairing or stratification);</li>
+<li><strong>n</strong> is larger;</li>
+<li>α is larger (but this also increases false positives — not a
+solution).</li>
+</ul>
+<p>Power is computed <strong>before</strong> collecting data, to choose
+n. A study with 30 % power will usually find “no significant difference”
+even when the effect is real — a waste of field time and money.</p>
+</div>
+<div class="fr">
+<p>La <strong>puissance</strong> = la probabilité qu’un test détecte un
+effet <strong>qui existe réellement</strong> (rejette H0 quand H1 est
+vraie). Un objectif courant est 80 %. La puissance augmente quand :</p>
+<ul>
+<li>l’<strong>effet</strong> est plus grand (une différence de 300 g est
+plus facile à détecter que 50 g) ;</li>
+<li>la <strong>variabilité</strong> est plus faible (bon protocole,
+unités homogènes, appariement ou stratification) ;</li>
+<li><strong>n</strong> est plus grand ;</li>
+<li>α est plus grand (mais cela augmente aussi les faux positifs — ce
+n’est pas une solution).</li>
+</ul>
+<p>La puissance se calcule <strong>avant</strong> de collecter les
+données, pour choisir n. Une étude avec 30 % de puissance trouvera en
+général « pas de différence significative » même quand l’effet est réel
+— une perte de temps de terrain et d’argent.</p>
+</div>
+<div
+id="sample-size-for-comparing-two-meanstaille-déchantillon-pour-comparer-deux-moyennes"
+class="section level3">
+<h3><span class="en">Sample size for comparing two means</span><span
+class="fr">Taille d’échantillon pour comparer deux moyennes</span></h3>
+<div class="en">
+<p>Next year, the LMMA wants to check whether a new closure increases
+the mean octopus weight by at least <strong>150 g</strong>. From this
+year’s data, the SD of weights is about 320 g. How many octopuses per
+village should be weighed?</p>
+</div>
+<div class="fr">
+<p>L’année prochaine, la LMMA veut vérifier si une nouvelle fermeture
+augmente le poids moyen des pieuvres d’au moins <strong>150 g</strong>.
+D’après les données de cette année, l’ET des poids est d’environ 320 g.
+Combien de pieuvres faut-il peser par village ?</p>
+</div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>s_open <span class="ot">&lt;-</span> <span class="fu">sd</span>(oc<span class="sc">$</span>weight_g[oc<span class="sc">$</span>area <span class="sc">==</span> <span class="st">&quot;open&quot;</span>])</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">power.t.test</span>(<span class="at">delta =</span> <span class="dv">150</span>, <span class="at">sd =</span> s_open, <span class="at">sig.level =</span> <span class="fl">0.05</span>, <span class="at">power =</span> <span class="fl">0.80</span>)</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt;      Two-sample t test power calculation 
+#&gt; 
+#&gt;               n = 70.48363
+#&gt;           delta = 150
+#&gt;              sd = 315.6436
+#&gt;       sig.level = 0.05
+#&gt;           power = 0.8
+#&gt;     alternative = two.sided
+#&gt; 
+#&gt; NOTE: n is number in *each* group</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">power.t.test</span>(<span class="at">n =</span> <span class="dv">30</span>, <span class="at">delta =</span> <span class="dv">150</span>, <span class="at">sd =</span> s_open)<span class="sc">$</span>power        <span class="co"># power with only 30 per village</span></span></code></pre></div>
+<pre><code>#&gt; [1] 0.4404059</code></pre>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>power.t.test(n, delta, sd, sig.level, power, type)</code></td>
+<td>power or sample size of a t-test: give all arguments <strong>but
+one</strong>, R computes the missing one</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>  <code>delta</code></td>
+<td>the smallest difference of means worth detecting (in the units of
+the data)</td>
+<td>a number</td>
+</tr>
+<tr class="odd">
+<td>  <code>sd</code></td>
+<td>expected standard deviation (from a pilot study, earlier data or the
+literature)</td>
+<td>a number</td>
+</tr>
+<tr class="even">
+<td>  <code>n</code></td>
+<td>number <strong>per group</strong></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>  <code>type</code></td>
+<td><code>"two.sample"</code> (default), <code>"paired"</code>,
+<code>"one.sample"</code></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>power.prop.test(n, p1, p2, power)</code></td>
+<td>the same for comparing two proportions</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>power.t.test(n, delta, sd, sig.level, power, type)</code></td>
+<td>puissance ou taille d’échantillon d’un test t : donnez tous les
+arguments <strong>sauf un</strong>, R calcule celui qui manque</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>  <code>delta</code></td>
+<td>la plus petite différence de moyennes qui vaut la peine d’être
+détectée (dans les unités des données)</td>
+<td>un nombre</td>
+</tr>
+<tr class="odd">
+<td>  <code>sd</code></td>
+<td>écart-type attendu (étude pilote, données antérieures ou
+littérature)</td>
+<td>un nombre</td>
+</tr>
+<tr class="even">
+<td>  <code>n</code></td>
+<td>nombre <strong>par groupe</strong></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>  <code>type</code></td>
+<td><code>"two.sample"</code> (défaut), <code>"paired"</code>,
+<code>"one.sample"</code></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>power.prop.test(n, p1, p2, power)</code></td>
+<td>la même chose pour comparer deux proportions</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="en">
+<p><code>n</code> is per group, rounded <strong>up</strong>. Add a
+margin for lost data (10–20 %).</p>
+<p><strong>Two proportions.</strong> To detect a fall of undersized
+octopuses from 15 % to 5 %:</p>
+</div>
+<div class="fr">
+<p><code>n</code> est par groupe, arrondi <strong>au-dessus</strong>.
+Ajoutez une marge pour les données perdues (10–20 %).</p>
+<p><strong>Deux proportions.</strong> Pour détecter une baisse des
+pieuvres trop petites de 15 % à 5 % :</p>
+</div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">power.prop.test</span>(<span class="at">p1 =</span> <span class="fl">0.15</span>, <span class="at">p2 =</span> <span class="fl">0.05</span>, <span class="at">power =</span> <span class="fl">0.80</span>)</span></code></pre></div>
+<pre><code>#&gt; 
+#&gt;      Two-sample comparison of proportions power calculation 
+#&gt; 
+#&gt;               n = 140.0951
+#&gt;              p1 = 0.15
+#&gt;              p2 = 0.05
+#&gt;       sig.level = 0.05
+#&gt;           power = 0.8
+#&gt;     alternative = two.sided
+#&gt; 
+#&gt; NOTE: n is number in *each* group</code></pre>
+</div>
+<div id="power-by-simulationpuissance-par-simulation"
+class="section level3">
+<h3><span class="en">Power by simulation</span><span
+class="fr">Puissance par simulation</span></h3>
+<div class="en">
+<p>For designs without a formula (Wilcoxon test, skewed data, unequal
+groups), <strong>simulate</strong>: generate many fake datasets that
+contain the effect you expect, run the planned test on each, and count
+how often p &lt; 0.05. Here with log-normal weights and a Wilcoxon test,
+60 octopuses per village:</p>
+</div>
+<div class="fr">
+<p>Pour les plans sans formule (test de Wilcoxon, données asymétriques,
+groupes inégaux), <strong>simulez</strong> : générez de nombreux jeux de
+données fictifs contenant l’effet attendu, faites le test prévu sur
+chacun, et comptez la fréquence de p &lt; 0,05. Ici avec des poids
+log-normaux et un test de Wilcoxon, 60 pieuvres par village :</p>
+</div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>lw <span class="ot">&lt;-</span> <span class="fu">log</span>(oc<span class="sc">$</span>weight_g[oc<span class="sc">$</span>area <span class="sc">==</span> <span class="st">&quot;open&quot;</span>])</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>power_sim <span class="ot">&lt;-</span> <span class="cf">function</span>(n, ratio, <span class="at">nsim =</span> <span class="dv">1000</span>) {</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">replicate</span>(nsim, {</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>    a <span class="ot">&lt;-</span> <span class="fu">rlnorm</span>(n, <span class="fu">mean</span>(lw), <span class="fu">sd</span>(lw))                    <span class="co"># open area</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>    b <span class="ot">&lt;-</span> <span class="fu">rlnorm</span>(n, <span class="fu">mean</span>(lw) <span class="sc">+</span> <span class="fu">log</span>(ratio), <span class="fu">sd</span>(lw))       <span class="co"># closure: weights x ratio</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>    <span class="fu">wilcox.test</span>(a, b, <span class="at">exact =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>p.value</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>  })</span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>  <span class="fu">mean</span>(p <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>}</span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">11</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a><span class="fu">power_sim</span>(<span class="at">n =</span> <span class="dv">60</span>, <span class="at">ratio =</span> <span class="fl">1.25</span>)          <span class="co"># +25 % in weight, 60 per group</span></span></code></pre></div>
+<pre><code>#&gt; [1] 0.629</code></pre>
+<div class="callout warning">
+<div class="en">
+<p><strong>No “post-hoc power”.</strong> Computing the power of a study
+<em>after</em> a non-significant result, using the observed effect, adds
+nothing: it is just another way of writing the p-value. Instead, report
+the <strong>CI of the effect</strong>: it shows which effects your data
+can and cannot exclude.</p>
+</div>
+<div class="fr">
+<p><strong>Pas de « puissance a posteriori ».</strong> Calculer la
+puissance d’une étude <em>après</em> un résultat non significatif, avec
+l’effet observé, n’apporte rien : c’est juste une autre façon d’écrire
+la p-value. Donnez plutôt l’<strong>IC de l’effet</strong> : il montre
+quels effets vos données peuvent exclure ou non.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="multiple" class="section level2">
+<h2><span class="en">Many tests, many false positives</span><span
+class="fr">Beaucoup de tests, beaucoup de faux positifs</span></h2>
+<div class="en">
+<p>Session 6: with α = 0.05, 1 test in 20 on pure noise is significant.
+A survey with 12 variables compared between LMMA members and non-members
+gives 12 tests: even if nothing differs, the chance of at least one
+“significant” result is 1 − 0.95¹² = 0.46.</p>
+<p><strong>Adjust the p-values</strong> for the number of tests of the
+same question (“family”):</p>
+<ul>
+<li><strong>Bonferroni:</strong> multiply each p by the number of tests
+m (very conservative);</li>
+<li><strong>Holm:</strong> step-down version of Bonferroni, always at
+least as powerful — a good default to control the risk of
+<strong>any</strong> false positive;</li>
+<li><strong>Benjamini–Hochberg (BH)</strong> controls the <strong>false
+discovery rate</strong> (the expected share of false positives among the
+significant results) — suited to screening many variables.</li>
+</ul>
+</div>
+<div class="fr">
+<p>Séance 6 : avec α = 0,05, 1 test sur 20 sur du pur bruit est
+significatif. Une enquête avec 12 variables comparées entre membres et
+non-membres de la LMMA donne 12 tests : même si rien ne diffère, la
+probabilité d’au moins un résultat « significatif » vaut 1 − 0,95¹² =
+0.46.</p>
+<p><strong>Ajustez les p-values</strong> pour le nombre de tests d’une
+même question (« famille ») :</p>
+<ul>
+<li><strong>Bonferroni :</strong> multiplie chaque p par le nombre de
+tests m (très conservateur) ;</li>
+<li><strong>Holm :</strong> version séquentielle de Bonferroni, toujours
+au moins aussi puissante — un bon choix par défaut pour contrôler le
+risque d’<strong>un seul</strong> faux positif ;</li>
+<li><strong>Benjamini–Hochberg (BH)</strong> contrôle le <strong>taux de
+fausses découvertes</strong> (la part attendue de faux positifs parmi
+les résultats significatifs) — adapté au criblage de nombreuses
+variables.</li>
+</ul>
+</div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>fs <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/fisher_survey.csv&quot;</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;age&quot;</span>, <span class="st">&quot;years_fishing&quot;</span>, <span class="st">&quot;household_size&quot;</span>, <span class="st">&quot;trips_per_week&quot;</span>, <span class="st">&quot;monthly_catch_kg&quot;</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>p_raw <span class="ot">&lt;-</span> <span class="fu">sapply</span>(vars, <span class="cf">function</span>(v) <span class="fu">wilcox.test</span>(fs[[v]] <span class="sc">~</span> fs<span class="sc">$</span>lmma_member, <span class="at">exact =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>p.value)</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">cbind</span>(<span class="at">raw =</span> p_raw,</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>            <span class="at">bonferroni =</span> <span class="fu">p.adjust</span>(p_raw, <span class="st">&quot;bonferroni&quot;</span>),</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>            <span class="at">holm =</span> <span class="fu">p.adjust</span>(p_raw, <span class="st">&quot;holm&quot;</span>),</span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>            <span class="at">BH =</span> <span class="fu">p.adjust</span>(p_raw, <span class="st">&quot;BH&quot;</span>)), <span class="dv">3</span>)</span></code></pre></div>
+<pre><code>#&gt;                    raw bonferroni  holm    BH
+#&gt; age              0.140      0.699 0.699 0.441
+#&gt; years_fishing    0.176      0.882 0.706 0.441
+#&gt; household_size   0.308      1.000 0.923 0.513
+#&gt; trips_per_week   0.588      1.000 1.000 0.734
+#&gt; monthly_catch_kg 0.926      1.000 1.000 0.926</code></pre>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>p.adjust(p, method)</code></td>
+<td>adjusts a vector of p-values for multiple testing</td>
+<td>a numeric vector of p-values</td>
+</tr>
+<tr class="even">
+<td>  <code>method</code></td>
+<td><code>"holm"</code> (default), <code>"bonferroni"</code>,
+<code>"BH"</code> (false discovery rate), <code>"none"</code>…</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><code>fs[[v]]</code></td>
+<td>the column whose name is stored in the text <code>v</code> (here
+inside a loop over names)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>p.adjust(p, method)</code></td>
+<td>ajuste un vecteur de p-values pour les tests multiples</td>
+<td>un vecteur numérique de p-values</td>
+</tr>
+<tr class="even">
+<td>  <code>method</code></td>
+<td><code>"holm"</code> (défaut), <code>"bonferroni"</code>,
+<code>"BH"</code> (taux de fausses découvertes),
+<code>"none"</code>…</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><code>fs[[v]]</code></td>
+<td>la colonne dont le nom est stocké dans le texte <code>v</code> (ici
+dans une boucle sur des noms)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div
+id="p-hacking-and-the-analysis-planle-p-hacking-et-le-plan-danalyse"
+class="section level3">
+<h3><span class="en">p-hacking and the analysis plan</span><span
+class="fr">Le p-hacking et le plan d’analyse</span></h3>
+<div class="en">
+<p><strong>p-hacking</strong> is trying analyses until something is
+significant: removing “outliers” that hurt, adding sites until p &lt;
+0.05, testing ten subgroups, switching from t-test to Wilcoxon to log…
+Each choice looks innocent; together they make false positives very
+likely. The protection is simple: <strong>write your analysis plan
+before seeing the data</strong> (question, response, groups, test, how
+outliers and missing values are handled), follow it, and label anything
+else as <em>exploratory</em>.</p>
+</div>
+<div class="fr">
+<p>Le <strong>p-hacking</strong> consiste à essayer des analyses jusqu’à
+ce que quelque chose soit significatif : retirer les « valeurs extrêmes
+» qui gênent, ajouter des sites jusqu’à p &lt; 0,05, tester dix
+sous-groupes, passer du test t à Wilcoxon puis au log… Chaque choix
+semble innocent ; ensemble ils rendent les faux positifs très probables.
+La protection est simple : <strong>écrivez votre plan d’analyse avant de
+voir les données</strong> (question, réponse, groupes, test, traitement
+des valeurs extrêmes et manquantes), suivez-le, et présentez tout le
+reste comme <em>exploratoire</em>.</p>
+</div>
+</div>
+</div>
+<div id="choose" class="section level2">
+<h2><span class="en">Choosing a test: the whole course on one
+page</span><span class="fr">Choisir un test : tout le cours sur une
+page</span></h2>
+<div class="en">
+<p>The <strong><a href="choose-test.html">decision guide</a></strong>
+(menu <em>Resources</em>) summarises Sessions 5–10: start from the
+question and the type of the variables, then the design (independent or
+paired), then the shape of the data.</p>
+</div>
+<div class="fr">
+<p>Le <strong><a href="choose-test.html">guide de décision</a></strong>
+(menu <em>Ressources</em>) résume les séances 5–10 : partez de la
+question et du type des variables, puis du plan (indépendant ou
+apparié), puis de la forme des données.</p>
+</div>
+<figure class="svg-fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 600" role="img" aria-label="Choosing a test" font-family="Source Sans 3, Arial, sans-serif">
+<defs><marker id="arc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#5d6b75"/></marker></defs>
+<rect x="330" y="8" width="280" height="44" rx="9" fill="#0b3d5c" stroke="#0b3d5c" stroke-width="1.8"/><text class="en" x="470.0" y="35.0" text-anchor="middle" font-weight="700" font-size="16" fill="#fff">What is your question?</text><text class="fr" x="470.0" y="35.0" text-anchor="middle" font-weight="700" font-size="16" fill="#fff">Quelle est votre question ?</text>
+<path d="M470 52 L98.0 86" stroke="#5d6b75" stroke-width="1.6" fill="none" marker-end="url(#arc)"/>
+<rect x="10" y="88" width="176" height="48" rx="9" fill="#f6f1e7" stroke="#b08a4a" stroke-width="1.8"/><text class="en" x="98.0" y="108.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">1 group vs a value</text><text class="en" x="98.0" y="125.5" text-anchor="middle" font-size="13.5" fill="#0b3d5c">numeric</text><text class="fr" x="98.0" y="108.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">1 groupe vs une valeur</text><text class="fr" x="98.0" y="125.5" text-anchor="middle" font-size="13.5" fill="#0b3d5c">numérique</text>
+<path d="M470 52 L284.0 86" stroke="#5d6b75" stroke-width="1.6" fill="none" marker-end="url(#arc)"/>
+<rect x="196" y="88" width="176" height="48" rx="9" fill="#f6f1e7" stroke="#b08a4a" stroke-width="1.8"/><text class="en" x="284.0" y="108.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Compare 2 groups</text><text class="en" x="284.0" y="125.5" text-anchor="middle" font-size="13.5" fill="#0b3d5c">numeric response</text><text class="fr" x="284.0" y="108.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Comparer 2 groupes</text><text class="fr" x="284.0" y="125.5" text-anchor="middle" font-size="13.5" fill="#0b3d5c">réponse numérique</text>
+<path d="M470 52 L470.0 86" stroke="#5d6b75" stroke-width="1.6" fill="none" marker-end="url(#arc)"/>
+<rect x="382" y="88" width="176" height="48" rx="9" fill="#f6f1e7" stroke="#b08a4a" stroke-width="1.8"/><text class="en" x="470.0" y="108.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Compare 3+ groups</text><text class="en" x="470.0" y="125.5" text-anchor="middle" font-size="13.5" fill="#0b3d5c">numeric response</text><text class="fr" x="470.0" y="108.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Comparer 3+ groupes</text><text class="fr" x="470.0" y="125.5" text-anchor="middle" font-size="13.5" fill="#0b3d5c">réponse numérique</text>
+<path d="M470 52 L656.0 86" stroke="#5d6b75" stroke-width="1.6" fill="none" marker-end="url(#arc)"/>
+<rect x="568" y="88" width="176" height="48" rx="9" fill="#f6f1e7" stroke="#b08a4a" stroke-width="1.8"/><text class="en" x="656.0" y="108.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Categorical data</text><text class="en" x="656.0" y="125.5" text-anchor="middle" font-size="13.5" fill="#0b3d5c">counts, proportions</text><text class="fr" x="656.0" y="108.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Données catégorielles</text><text class="fr" x="656.0" y="125.5" text-anchor="middle" font-size="13.5" fill="#0b3d5c">effectifs, proportions</text>
+<path d="M470 52 L842.0 86" stroke="#5d6b75" stroke-width="1.6" fill="none" marker-end="url(#arc)"/>
+<rect x="754" y="88" width="176" height="48" rx="9" fill="#f6f1e7" stroke="#b08a4a" stroke-width="1.8"/><text class="en" x="842.0" y="108.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Relationship</text><text class="en" x="842.0" y="125.5" text-anchor="middle" font-size="13.5" fill="#0b3d5c">2 numeric variables</text><text class="fr" x="842.0" y="108.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Relation</text><text class="fr" x="842.0" y="125.5" text-anchor="middle" font-size="13.5" fill="#0b3d5c">2 variables numériques</text>
+<path d="M98.0 136 L98.0 160" stroke="#5d6b75" stroke-width="1.6" fill="none" marker-end="url(#arc)"/>
+<rect x="10" y="162" width="176" height="62" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"/><text class="en" x="98.0" y="189.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">one-sample t-test</text><text class="en" x="98.0" y="206.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">t.test(x, mu = m)</text><text class="fr" x="98.0" y="189.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">test t à 1 échantillon</text><text class="fr" x="98.0" y="206.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">t.test(x, mu = m)</text>
+<rect x="10" y="236" width="176" height="62" rx="9" fill="#fdf0eb" stroke="#d9694a" stroke-width="1.8"/><text class="en" x="98.0" y="263.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Wilcoxon signed-rank</text><text class="en" x="98.0" y="280.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">wilcox.test(x, mu = m)</text><text class="fr" x="98.0" y="263.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">rangs signés Wilcoxon</text><text class="fr" x="98.0" y="280.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">wilcox.test(x, mu = m)</text>
+<path d="M284.0 136 L284.0 164" stroke="#5d6b75" stroke-width="1.6" fill="none" marker-end="url(#arc)"/>
+<text class="en" x="284" y="178" text-anchor="middle" font-size="12.5" font-style="italic" fill="#5d6b75">independent groups</text><text class="fr" x="284" y="178" text-anchor="middle" font-size="12.5" font-style="italic" fill="#5d6b75">groupes indépendants</text>
+<text class="en" x="284" y="322" text-anchor="middle" font-size="12.5" font-style="italic" fill="#5d6b75">paired: same units twice</text><text class="fr" x="284" y="322" text-anchor="middle" font-size="12.5" font-style="italic" fill="#5d6b75">apparié : mêmes unités 2 fois</text>
+<rect x="196" y="184" width="176" height="56" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"/><text class="en" x="284.0" y="208.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Welch t-test</text><text class="en" x="284.0" y="225.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">t.test(y ~ g)</text><text class="fr" x="284.0" y="208.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">test t de Welch</text><text class="fr" x="284.0" y="225.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">t.test(y ~ g)</text>
+<rect x="196" y="244" width="176" height="56" rx="9" fill="#fdf0eb" stroke="#d9694a" stroke-width="1.8"/><text class="en" x="284.0" y="268.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Wilcoxon rank-sum</text><text class="en" x="284.0" y="285.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">wilcox.test(y ~ g)</text><text class="fr" x="284.0" y="268.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Wilcoxon des rangs</text><text class="fr" x="284.0" y="285.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">wilcox.test(y ~ g)</text>
+<rect x="196" y="330" width="176" height="56" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"/><text class="en" x="284.0" y="354.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">paired t-test</text><text class="en" x="284.0" y="371.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">paired = TRUE</text><text class="fr" x="284.0" y="354.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">test t apparié</text><text class="fr" x="284.0" y="371.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">paired = TRUE</text>
+<rect x="196" y="390" width="176" height="56" rx="9" fill="#fdf0eb" stroke="#d9694a" stroke-width="1.8"/><text class="en" x="284.0" y="414.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Wilcoxon signed-rank</text><text class="en" x="284.0" y="431.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">paired = TRUE</text><text class="fr" x="284.0" y="414.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">rangs signés Wilcoxon</text><text class="fr" x="284.0" y="431.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">paired = TRUE</text>
+<path d="M470.0 136 L470.0 160" stroke="#5d6b75" stroke-width="1.6" fill="none" marker-end="url(#arc)"/>
+<rect x="382" y="162" width="176" height="74" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"/><text class="en" x="470.0" y="187.0" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">one-way ANOVA</text><text class="en" x="470.0" y="204.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">aov(y ~ g)</text><text class="en" x="470.0" y="221.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">TukeyHSD(fit)</text><text class="fr" x="470.0" y="187.0" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">ANOVA à 1 facteur</text><text class="fr" x="470.0" y="204.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">aov(y ~ g)</text><text class="fr" x="470.0" y="221.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">TukeyHSD(fit)</text>
+<rect x="382" y="244" width="176" height="56" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"/><text class="en" x="470.0" y="268.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">unequal variances</text><text class="en" x="470.0" y="285.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">oneway.test(y ~ g)</text><text class="fr" x="470.0" y="268.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">variances inégales</text><text class="fr" x="470.0" y="285.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">oneway.test(y ~ g)</text>
+<rect x="382" y="308" width="176" height="74" rx="9" fill="#fdf0eb" stroke="#d9694a" stroke-width="1.8"/><text class="en" x="470.0" y="333.0" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Kruskal–Wallis</text><text class="en" x="470.0" y="350.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">kruskal.test(y ~ g)</text><text class="en" x="470.0" y="367.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">pairwise.wilcox.test()</text><text class="fr" x="470.0" y="333.0" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Kruskal–Wallis</text><text class="fr" x="470.0" y="350.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">kruskal.test(y ~ g)</text><text class="fr" x="470.0" y="367.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">pairwise.wilcox.test()</text>
+<path d="M656.0 136 L656.0 160" stroke="#5d6b75" stroke-width="1.6" fill="none" marker-end="url(#arc)"/>
+<rect x="568" y="162" width="176" height="56" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"/><text class="en" x="656.0" y="186.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">1 proportion</text><text class="en" x="656.0" y="203.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">binom.test(x, n, p)</text><text class="fr" x="656.0" y="186.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">1 proportion</text><text class="fr" x="656.0" y="203.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">binom.test(x, n, p)</text>
+<rect x="568" y="224" width="176" height="56" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"/><text class="en" x="656.0" y="248.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">counts vs expected %</text><text class="en" x="656.0" y="265.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">chisq.test(tab, p = )</text><text class="fr" x="656.0" y="248.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">effectifs vs % attendus</text><text class="fr" x="656.0" y="265.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">chisq.test(tab, p = )</text>
+<rect x="568" y="286" width="176" height="56" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"/><text class="en" x="656.0" y="310.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">2 proportions</text><text class="en" x="656.0" y="327.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">prop.test(x, n)</text><text class="fr" x="656.0" y="310.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">2 proportions</text><text class="fr" x="656.0" y="327.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">prop.test(x, n)</text>
+<rect x="568" y="348" width="176" height="56" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"/><text class="en" x="656.0" y="372.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">2 categorical variables</text><text class="en" x="656.0" y="389.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">chisq.test(table(a, b))</text><text class="fr" x="656.0" y="372.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">2 variables catégorielles</text><text class="fr" x="656.0" y="389.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">chisq.test(table(a, b))</text>
+<rect x="568" y="410" width="176" height="60" rx="9" fill="#fdf0eb" stroke="#d9694a" stroke-width="1.8"/><text class="en" x="656.0" y="436.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">expected counts &lt; 5</text><text class="en" x="656.0" y="453.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">fisher.test(tab)</text><text class="fr" x="656.0" y="436.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">effectifs attendus &lt; 5</text><text class="fr" x="656.0" y="453.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">fisher.test(tab)</text>
+<path d="M842.0 136 L842.0 160" stroke="#5d6b75" stroke-width="1.6" fill="none" marker-end="url(#arc)"/>
+<rect x="754" y="162" width="176" height="56" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"/><text class="en" x="842.0" y="186.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Pearson correlation</text><text class="en" x="842.0" y="203.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">cor.test(x, y)</text><text class="fr" x="842.0" y="186.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">corrélation de Pearson</text><text class="fr" x="842.0" y="203.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">cor.test(x, y)</text>
+<rect x="754" y="224" width="176" height="56" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"/><text class="en" x="842.0" y="248.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">linear regression</text><text class="en" x="842.0" y="265.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">lm(y ~ x)</text><text class="fr" x="842.0" y="248.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">régression linéaire</text><text class="fr" x="842.0" y="265.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">lm(y ~ x)</text>
+<rect x="754" y="286" width="176" height="74" rx="9" fill="#fdf0eb" stroke="#d9694a" stroke-width="1.8"/><text class="en" x="842.0" y="311.0" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Spearman correlation</text><text class="en" x="842.0" y="328.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">cor.test(x, y,</text><text class="en" x="842.0" y="345.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">method = "spearman")</text><text class="fr" x="842.0" y="311.0" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">corrélation de Spearman</text><text class="fr" x="842.0" y="328.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">cor.test(x, y,</text><text class="fr" x="842.0" y="345.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">method = "spearman")</text>
+<rect x="10" y="500" width="22" height="16" rx="4" fill="#e9f4f6" stroke="#1b7f8c"/><rect x="10" y="530" width="22" height="16" rx="4" fill="#fdf0eb" stroke="#d9694a"/>
+<text class="en" x="40" y="513" font-size="14" fill="#3c4a52">parametric: data (or residuals) roughly normal, or large n without strong outliers — log-transform multiplicative variables first</text>
+<text class="fr" x="40" y="513" font-size="14" fill="#3c4a52">paramétrique : données (ou résidus) à peu près normales, ou grand n sans fortes valeurs extrêmes — log-transformez d'abord les variables multiplicatives</text>
+<text class="en" x="40" y="543" font-size="14" fill="#3c4a52">rank-based or exact alternative: small n with skew or outliers, ordinal data, small expected counts</text>
+<text class="fr" x="40" y="543" font-size="14" fill="#3c4a52">alternative sur les rangs ou exacte : petit n avec asymétrie ou valeurs extrêmes, données ordinales, petits effectifs attendus</text>
+<text class="en" x="10" y="580" font-size="14" font-weight="700" fill="#d9694a">Always: independent units (Session 1), plot first (Session 3), report the effect size with its CI (Session 11).</text>
+<text class="fr" x="10" y="580" font-size="14" font-weight="700" fill="#d9694a">Toujours : unités indépendantes (séance 1), tracer d'abord (séance 3), rapporter la taille d'effet avec son IC (séance 11).</text>
+</svg><figcaption><span class="en">Which test? Blue: parametric test; orange: rank-based or exact alternative.</span><span class="fr">Quel test ? Bleu : test paramétrique ; orange : alternative sur les rangs ou exacte.</span></figcaption></figure>
+</div>
+<div id="reporting" class="section level2">
+<h2><span class="en">Reporting a result</span><span class="fr">Rédiger
+un résultat</span></h2>
+<div class="en">
+<p>A reader must be able to understand <strong>what you did</strong> and
+<strong>what you found</strong>, and to <strong>check</strong> it. A
+complete report contains:</p>
+<p><strong>In the Methods</strong></p>
+<ul>
+<li>the design: sampling unit, n, how units were selected or treatments
+assigned (Session 1);</li>
+<li>the response variables, transformations (log…) and how outliers /
+missing values were handled;</li>
+<li>each test, with its justification, and α; the adjustment for
+multiple tests if any;</li>
+<li>the software: “Analyses were done in R version 4.x (R Core Team
+2025)”. Get the exact references with <code>citation()</code> and
+<code>citation("ggplot2")</code>.</li>
+</ul>
+<p><strong>In the Results</strong>, for each test: <strong>descriptive
+statistics</strong> (mean ± SD or median and IQR, n), the <strong>effect
+size with its CI</strong>, the <strong>test statistic, df and exact
+p-value</strong>:</p>
+<blockquote>
+<p><em>“Octopuses from the reopened area were heavier than those from
+open areas (geometric means 860 vs 560 g; ratio 1.54, 95 % CI 1.38–1.71;
+Welch t-test on log weight, t = 7.78, df = 340, p &lt; 0.001; n = 185
+and 160).”</em></p>
+</blockquote>
+<p><strong>In figures</strong>: show the data (points), say in the
+caption what the bars are (SD, SE, CI) and give n.</p>
+</div>
+<div class="fr">
+<p>Un lecteur doit pouvoir comprendre <strong>ce que vous avez
+fait</strong> et <strong>ce que vous avez trouvé</strong>, et le
+<strong>vérifier</strong>. Un compte rendu complet contient :</p>
+<p><strong>Dans les Méthodes</strong></p>
+<ul>
+<li>le plan : unité d’échantillonnage, n, comment les unités ont été
+choisies ou les traitements attribués (séance 1) ;</li>
+<li>les variables réponses, les transformations (log…) et le traitement
+des valeurs extrêmes / manquantes ;</li>
+<li>chaque test, avec sa justification, et α ; l’ajustement pour tests
+multiples s’il y en a ;</li>
+<li>le logiciel : « Les analyses ont été faites avec R version 4.x (R
+Core Team 2025) ». Obtenez les références exactes avec
+<code>citation()</code> et <code>citation("ggplot2")</code>.</li>
+</ul>
+<p><strong>Dans les Résultats</strong>, pour chaque test : les
+<strong>statistiques descriptives</strong> (moyenne ± ET ou médiane et
+IQR, n), la <strong>taille d’effet avec son IC</strong>, la
+<strong>statistique de test, les ddl et la p-value exacte</strong> :</p>
+<blockquote>
+<p><em>« Les pieuvres de la zone rouverte étaient plus lourdes que
+celles des zones ouvertes (moyennes géométriques 860 contre 560 g ;
+rapport 1,54, IC 95 % 1,38–1,71 ; test t de Welch sur le log du poids, t
+= 7,78, ddl = 340, p &lt; 0,001 ; n = 185 et 160). »</em></p>
+</blockquote>
+<p><strong>Dans les figures</strong> : montrez les données (points),
+dites dans la légende ce que représentent les barres (ET, ES, IC) et
+donnez n.</p>
+</div>
+<div class="en">
+<p><strong>Make it reproducible:</strong> one script that runs from raw
+data to every number and figure; <code>set.seed()</code> before anything
+random; the R and package versions (<code>sessionInfo()</code>); the raw
+data kept unchanged. The <em>R4Marine</em> advanced level (R Markdown,
+Quarto, Git) shows how to turn this into automatic reports.</p>
+</div>
+<div class="fr">
+<p><strong>Rendez-le reproductible :</strong> un script qui va des
+données brutes à chaque nombre et figure ; <code>set.seed()</code> avant
+tout ce qui est aléatoire ; les versions de R et des packages
+(<code>sessionInfo()</code>) ; les données brutes conservées sans
+modification. Le niveau avancé de <em>R4Marine</em> (R Markdown, Quarto,
+Git) montre comment en faire des rapports automatiques.</p>
+</div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">citation</span>()              <span class="co"># how to cite R</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="fu">sessionInfo</span>()           <span class="co"># versions of R and of the packages loaded</span></span></code></pre></div>
+<div class="fa-box">
+<div class="en">
+<p><strong>Functions and arguments used here</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function / argument</th>
+<th>What it does</th>
+<th>Value it expects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>citation(package)</code></td>
+<td>the reference to cite R (no argument) or a package</td>
+<td>a package name in quotes</td>
+</tr>
+<tr class="even">
+<td><code>sessionInfo()</code></td>
+<td>R version, operating system and versions of loaded packages</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fr">
+<p><strong>Fonctions et arguments utilisés ici</strong></p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Fonction / argument</th>
+<th>Ce qu’il fait</th>
+<th>Valeur attendue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>citation(package)</code></td>
+<td>la référence pour citer R (sans argument) ou un package</td>
+<td>un nom de package entre guillemets</td>
+</tr>
+<tr class="even">
+<td><code>sessionInfo()</code></td>
+<td>version de R, système d’exploitation et versions des packages
+chargés</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="application" class="section level2">
+<h2><span class="en">Application work &amp; quiz</span><span
+class="fr">Travail d’application et quiz</span></h2>
+<div class="application">
+<div id="application-work-11" class="section level3 en">
+<h3>Application work 11</h3>
+<ol style="list-style-type: decimal">
+<li>Seagrass cover: SD between quadrats ≈ 12 %. How many quadrats
+<strong>per site</strong> to detect a difference of <strong>5 %</strong>
+between two sites with 80 % power (two-sample t-test, α = 0.05, rounded
+up)?</li>
+<li>Power of the same comparison with only <strong>20</strong> quadrats
+per site (3 decimals)?</li>
+<li>Same as Q1 but <strong>paired</strong> quadrats (the same quadrats
+before and after), assuming the SD of the differences is also 12 %
+(rounded up)?</li>
+<li>Fishers per group needed to detect a difference in support for
+closures of <strong>55 % vs 75 %</strong> (80 % power, rounded up)?</li>
+<li>– 7. Six p-values from one study:
+<code>c(0.004, 0.012, 0.030, 0.041, 0.20, 0.62)</code>. Holm-adjusted
+value of the <strong>second</strong> one (3 decimals); number still &lt;
+0.05 after <strong>BH</strong>; number still &lt; 0.05 after
+<strong>Bonferroni</strong>.</li>
+<li>– 10. Concepts.</li>
+</ol>
+</div>
+<div id="travail-dapplication-11" class="section level3 fr">
+<h3>Travail d’application 11</h3>
+<ol style="list-style-type: decimal">
+<li>Recouvrement d’herbier : ET entre quadrats ≈ 12 %. Combien de
+quadrats <strong>par site</strong> pour détecter une différence de
+<strong>5 %</strong> entre deux sites avec 80 % de puissance (test t à
+deux échantillons, α = 0,05, arrondi au-dessus) ?</li>
+<li>Puissance de la même comparaison avec seulement <strong>20</strong>
+quadrats par site (3 décimales) ?</li>
+<li>Comme Q1 mais avec des quadrats <strong>appariés</strong> (les mêmes
+quadrats avant et après), en supposant que l’ET des différences vaut
+aussi 12 % (arrondi au-dessus) ?</li>
+<li>Pêcheurs par groupe nécessaires pour détecter une différence de
+soutien aux fermetures de <strong>55 % contre 75 %</strong> (puissance
+80 %, arrondi au-dessus) ?</li>
+<li>– 7. Six p-values d’une même étude :
+<code>c(0.004, 0.012, 0.030, 0.041, 0.20, 0.62)</code>. Valeur ajustée
+par Holm de la <strong>deuxième</strong> (3 décimales) ; nombre encore
+&lt; 0,05 après <strong>BH</strong> ; nombre encore &lt; 0,05 après
+<strong>Bonferroni</strong>.</li>
+<li>– 10. Questions de cours.</li>
+</ol>
+</div>
+</div>
+<div class="hint">
+<div class="en">
+<p>Round sample sizes <strong>up</strong> with <code>ceiling()</code>.
+Q3: <code>type = "paired"</code> (n is then the number of pairs). Q6–7:
+<code>sum(p.adjust(pv, "BH") &lt; 0.05)</code>.</p>
+</div>
+<div class="fr">
+<p>Arrondissez les tailles d’échantillon <strong>au-dessus</strong> avec
+<code>ceiling()</code>. Q3 : <code>type = "paired"</code> (n est alors
+le nombre de paires). Q6–7 :
+<code>sum(p.adjust(pv, "BH") &lt; 0.05)</code>.</p>
+</div>
+</div>
+<div id="quiz-t11" class="quiz" data-quiz-id="t11"
+data-q="W3sidHlwZSI6Im51bSIsImVuIjoiMS4gUXVhZHJhdHMgcGVyIHNpdGUgKHR3by1zYW1wbGUpPyIsImZyIjoiMS4gUXVhZHJhdHMgcGFyIHNpdGUgKGRldXggw6ljaGFudGlsbG9ucykgPyIsImFuc3dlciI6OTIsInRvbCI6MCwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJudW0iLCJlbiI6IjIuIFBvd2VyIHdpdGggMjAgcXVhZHJhdHMgcGVyIHNpdGU/IiwiZnIiOiIyLiBQdWlzc2FuY2UgYXZlYyAyMCBxdWFkcmF0cyBwYXIgc2l0ZSA/IiwiYW5zd2VyIjowLjI1LCJ0b2wiOjAuMDAwNiwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJudW0iLCJlbiI6IjMuIE51bWJlciBvZiBwYWlycyAocGFpcmVkIGRlc2lnbik/IiwiZnIiOiIzLiBOb21icmUgZGUgcGFpcmVzIChwbGFuIGFwcGFyacOpKSA/IiwiYW5zd2VyIjo0OCwidG9sIjowLCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiNC4gRmlzaGVycyBwZXIgZ3JvdXAgKDU1ICUgdnMgNzUgJSk/IiwiZnIiOiI0LiBQw6pjaGV1cnMgcGFyIGdyb3VwZSAoNTUgJSBjb250cmUgNzUgJSkgPyIsImFuc3dlciI6ODksInRvbCI6MCwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJudW0iLCJlbiI6IjUuIEhvbG0tYWRqdXN0ZWQgMm5kIHAtdmFsdWU/IiwiZnIiOiI1LiAyZSBwLXZhbHVlIGFqdXN0w6llIHBhciBIb2xtID8iLCJhbnN3ZXIiOjAuMDYsInRvbCI6MC4wMDA2LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiNi4gTnVtYmVyIDwgMC4wNSBhZnRlciBCSD8iLCJmciI6IjYuIE5vbWJyZSA8IDAsMDUgYXByw6hzIEJIID8iLCJhbnN3ZXIiOjIsInRvbCI6MCwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJudW0iLCJlbiI6IjcuIE51bWJlciA8IDAuMDUgYWZ0ZXIgQm9uZmVycm9uaT8iLCJmciI6IjcuIE5vbWJyZSA8IDAsMDUgYXByw6hzIEJvbmZlcnJvbmkgPyIsImFuc3dlciI6MSwidG9sIjowLCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im1jcSIsImVuIjoiOC4gV2hpY2ggY2hhbmdlIGRvZXMgTk9UIGluY3JlYXNlIHRoZSBwb3dlciBvZiBhIGNvbXBhcmlzb24/IiwiZnIiOiI4LiBRdWVsIGNoYW5nZW1lbnQgTidhdWdtZW50ZSBQQVMgbGEgcHVpc3NhbmNlIGQndW5lIGNvbXBhcmFpc29uID8iLCJvcHRpb25zX2VuIjpbIm1vcmUgc2FtcGxpbmcgdW5pdHMiLCJhIG1vcmUgcHJlY2lzZSBtZWFzdXJpbmcgcHJvdG9jb2wiLCJwYWlyaW5nIHRoZSBtZWFzdXJlbWVudHMiLCJjb21wdXRpbmcgdGhlIHBvd2VyIGFmdGVyIGEgbm9uLXNpZ25pZmljYW50IHJlc3VsdCJdLCJvcHRpb25zX2ZyIjpbInBsdXMgZCd1bml0w6lzIGQnw6ljaGFudGlsbG9ubmFnZSIsInVuIHByb3RvY29sZSBkZSBtZXN1cmUgcGx1cyBwcsOpY2lzIiwiYXBwYXJpZXIgbGVzIG1lc3VyZXMiLCJjYWxjdWxlciBsYSBwdWlzc2FuY2UgYXByw6hzIHVuIHLDqXN1bHRhdCBub24gc2lnbmlmaWNhdGlmIl0sImFuc3dlciI6M30seyJ0eXBlIjoibWNxIiwiZW4iOiI5LiBXaGljaCBwcmFjdGljZSBpcyBwLWhhY2tpbmc/IiwiZnIiOiI5LiBRdWVsbGUgcHJhdGlxdWUgZXN0IGR1IHAtaGFja2luZyA/Iiwib3B0aW9uc19lbiI6WyJkZWNpZGluZyB0aGUgdGVzdCBiZWZvcmUgY29sbGVjdGluZyBkYXRhIiwicmVtb3ZpbmcgdHdvIHNpdGVzIGFmdGVyIHNlZWluZyB0aGV5IG1ha2UgcCA+IDAuMDUiLCJyZXBvcnRpbmcgYWxsIHRlc3RzIGRvbmUsIHdpdGggYWRqdXN0ZWQgcC12YWx1ZXMiLCJzaG93aW5nIHRoZSByYXcgZGF0YSBpbiBhIGZpZ3VyZSJdLCJvcHRpb25zX2ZyIjpbImTDqWNpZGVyIGxlIHRlc3QgYXZhbnQgZGUgY29sbGVjdGVyIGxlcyBkb25uw6llcyIsInJldGlyZXIgZGV1eCBzaXRlcyBhcHLDqHMgYXZvaXIgdnUgcXUnaWxzIHJlbmRlbnQgcCA+IDAsMDUiLCJyYXBwb3J0ZXIgdG91cyBsZXMgdGVzdHMgZmFpdHMsIGF2ZWMgZGVzIHAtdmFsdWVzIGFqdXN0w6llcyIsIm1vbnRyZXIgbGVzIGRvbm7DqWVzIGJydXRlcyBkYW5zIHVuZSBmaWd1cmUiXSwiYW5zd2VyIjoxfSx7InR5cGUiOiJtY3EiLCJlbiI6IjEwLiBXaGljaCByZXN1bHQgc2VudGVuY2UgaXMgY29tcGxldGU/IiwiZnIiOiIxMC4gUXVlbGxlIHBocmFzZSBkZSByw6lzdWx0YXQgZXN0IGNvbXBsw6h0ZSA/Iiwib3B0aW9uc19lbiI6WyJUaGUgZGlmZmVyZW5jZSB3YXMgc2lnbmlmaWNhbnQgKHAgPCAwLjA1KS4iLCJHcm93dGggd2FzIGhpZ2hlciB3aXRoIHRoZSBtaXhlZCBmZWVkICgrMC4zNyBnL2RheSwgOTUgJSBDSSAwLjE14oCTMC41OTsgVHVrZXkgSFNELCBwIDwgMC4wMDE7IG4gPSA2IHBlbnMgcGVyIGZlZWQpLiIsIk1peGVkIGZlZWQgaXMgdGhlIGJlc3QgKCoqKikuIiwiQU5PVkE6IEYgPSA4LjE5LiJdLCJvcHRpb25zX2ZyIjpbIkxhIGRpZmbDqXJlbmNlIMOpdGFpdCBzaWduaWZpY2F0aXZlIChwIDwgMCwwNSkuIiwiTGEgY3JvaXNzYW5jZSDDqXRhaXQgcGx1cyBmb3J0ZSBhdmVjIGwnYWxpbWVudCBtaXh0ZSAoKzAsMzcgZy9qb3VyLCBJQyA5NSAlIDAsMTXigJMwLDU5IDsgSFNEIGRlIFR1a2V5LCBwIDwgMCwwMDEgOyBuID0gNiBlbmNsb3MgcGFyIGFsaW1lbnQpLiIsIkwnYWxpbWVudCBtaXh0ZSBlc3QgbGUgbWVpbGxldXIgKCoqKikuIiwiQU5PVkEgOiBGID0gOCwxOS4iXSwiYW5zd2VyIjoxfV0=">
+
+</div>
+<div class="solution" data-quiz="t11">
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">ceiling</span>(<span class="fu">power.t.test</span>(<span class="at">delta =</span> <span class="dv">5</span>, <span class="at">sd =</span> <span class="dv">12</span>, <span class="at">power =</span> <span class="fl">0.8</span>)<span class="sc">$</span>n)                    <span class="co"># 1</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="fu">power.t.test</span>(<span class="at">n =</span> <span class="dv">20</span>, <span class="at">delta =</span> <span class="dv">5</span>, <span class="at">sd =</span> <span class="dv">12</span>)<span class="sc">$</span>power                              <span class="co"># 2</span></span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a><span class="fu">ceiling</span>(<span class="fu">power.t.test</span>(<span class="at">delta =</span> <span class="dv">5</span>, <span class="at">sd =</span> <span class="dv">12</span>, <span class="at">power =</span> <span class="fl">0.8</span>, <span class="at">type =</span> <span class="st">&quot;paired&quot;</span>)<span class="sc">$</span>n)   <span class="co"># 3</span></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="fu">ceiling</span>(<span class="fu">power.prop.test</span>(<span class="at">p1 =</span> <span class="fl">0.55</span>, <span class="at">p2 =</span> <span class="fl">0.75</span>, <span class="at">power =</span> <span class="fl">0.8</span>)<span class="sc">$</span>n)               <span class="co"># 4</span></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>pv <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.004</span>, <span class="fl">0.012</span>, <span class="fl">0.030</span>, <span class="fl">0.041</span>, <span class="fl">0.20</span>, <span class="fl">0.62</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a><span class="fu">p.adjust</span>(pv, <span class="st">&quot;holm&quot;</span>)                                                        <span class="co"># 5 (2nd value)</span></span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">p.adjust</span>(pv, <span class="st">&quot;BH&quot;</span>) <span class="sc">&lt;</span> <span class="fl">0.05</span>); <span class="fu">sum</span>(<span class="fu">p.adjust</span>(pv, <span class="st">&quot;bonferroni&quot;</span>) <span class="sc">&lt;</span> <span class="fl">0.05</span>)     <span class="co"># 6, 7</span></span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a><span class="co"># 8: post-hoc power adds nothing   9: removing sites after seeing p   10: the second sentence</span></span></code></pre></div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

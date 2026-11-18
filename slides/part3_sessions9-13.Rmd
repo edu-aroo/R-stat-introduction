@@ -1,0 +1,122 @@
+---
+title: "Introduction aux statistiques avec R"
+subtitle: "Partie 3 · Séances 9 à 13 — Proportions, régression, puissance, rédaction"
+author: "Aroo Falinirina"
+output:
+  html_document:
+    theme: null
+    highlight: tango
+    mathjax: null
+    self_contained: true
+    css: slides.css
+    includes:
+      in_header: slides-engine.html
+---
+
+```{r, include=FALSE}
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+```{r, include=FALSE}
+source("slides/_setup.R")
+```
+
+## Rappel des parties 1 et 2
+
+- IC = précision d'une estimation · p-value = surprise sous H0
+- Deux groupes : Welch / Wilcoxon / apparié · Plusieurs : ANOVA + Tukey / Kruskal–Wallis
+
+<div class="box tip">
+Aujourd'hui : les **effectifs**, les **relations**, et comment **planifier** et **rédiger**.
+</div>
+
+## Séance 9 — Proportions et χ² {.segue}
+
+## Deux proportions
+
+```{r}
+small <- tapply(oc$weight_g < 350, oc$area, sum)
+prop.test(small, table(oc$area))$conf.int
+```
+
+## Deux variables catégorielles
+
+```{r}
+tab <- table(fs$lmma_member, fs$supports_closure)
+round(100 * prop.table(tab, 1))
+ct <- chisq.test(tab); ct$p.value
+fisher.test(tab[c("yes", "no"), c("yes", "no")])$estimate     # odds ratio
+```
+
+<div class="box warn">
+Effectifs **attendus** < 5 → `fisher.test()` · Association ≠ causalité.
+</div>
+
+## Séance 10 — Corrélation et régression {.segue}
+
+## r de Pearson, ρ de Spearman
+
+`r fig_svg("correlation-examples")`
+
+## La régression linéaire simple
+
+`r fig_svg("regression-anatomy")`
+
+## Dans R
+
+```{r}
+fit <- lm(tree_height_m ~ salinity_psu, data = mp)
+round(cbind(coef = coef(fit), confint(fit)), 3)
+summary(fit)$r.squared
+predict(fit, data.frame(salinity_psu = 40), interval = "prediction")
+```
+
+<div class="notes">
+Montrer plot(fit, which = 1:2). Interdit d'extrapoler au-delà de 29–50 PSU.
+</div>
+
+## Séance 11 — Puissance, tests multiples, rédaction {.segue}
+
+## Combien d'unités ?
+
+```{r}
+power.t.test(delta = 150, sd = sd(oc$weight_g[oc$area == "open"]), power = 0.8)$n
+power.prop.test(p1 = 0.15, p2 = 0.05, power = 0.8)$n
+```
+
+- Plus d'effet, moins de variabilité, plus de n → plus de puissance
+- Pas de « puissance a posteriori » : donnez l'**IC de l'effet**
+
+## Tests multiples et p-hacking
+
+```{r}
+p.adjust(c(0.004, 0.012, 0.030, 0.041, 0.20, 0.62), "holm")
+```
+
+<div class="box warn">
+Écrivez le **plan d'analyse avant** de voir les données.
+</div>
+
+## Quel test ?
+
+`r fig_svg("choose-test")`
+
+## Rédiger un résultat
+
+> « Les pieuvres de la zone rouverte étaient plus lourdes (moyennes géométriques 860 contre 560 g ; rapport 1,54, IC 95 % 1,38–1,71 ; test t de Welch sur le log du poids, t = 7,78, ddl = 340, p < 0,001 ; n = 185 et 160). »
+
+- Statistiques descriptives + **effet et IC** + test, ddl, p exacte + n
+- Figures avec les points ; dire ce que sont les barres
+- `citation()`, `sessionInfo()`, `set.seed()`
+
+## Séances 12 et 13 {.segue}
+
+## Exercices et projet final
+
+- **12** : six exercices indépendants, un par grand thème
+- **13** : herbiers et oursins — 80 stations aléatoires, dans et hors d'une zone de non-prélèvement
+  - plan d'analyse **d'abord** · 8 questions de gestion · un rapport d'une page
+
+<div class="box tip">
+La question finale : la zone de non-prélèvement est-elle **la cause** de l'herbier plus dense ?
+</div>

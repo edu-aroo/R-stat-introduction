@@ -1,0 +1,20 @@
+---
+title: "[What's new]{.en}[Nouveautés]{.fr}"
+pagetitle: "R4Marine Stats · What's new"
+---
+
+<!-- Add a section at the TOP each time you publish a new version, and change
+     "version" and "versionDate" in assets/config.js -->
+
+## v1.0 — 2026-11 {.no-track}
+
+::: en
+- First version of **R4Marine Stats – Introduction to Statistics using R**: 14 sessions (≈ 43 h) from study design to simple linear regression, a practice session (6 exercises) and a final project.
+- 8 simulated datasets with their collection context (fisher survey, lagoon census, reef fish, octopus landings, tagged corals, sea-cucumber experiment, mangrove plots, seagrass and urchins).
+- Decision guide "Which test?", cheatsheet, EN–FR glossary, common errors and pitfalls, reading list.
+:::
+::: fr
+- Première version de **R4Marine Stats – Introduction aux statistiques avec R** : 14 séances (≈ 43 h) du plan d'étude à la régression linéaire simple, une séance d'exercices (6 exercices) et un projet final.
+- 8 jeux de données simulés avec leur contexte de collecte (enquête pêcheurs, recensement d'un lagon, poissons récifaux, débarquements de pieuvres, coraux marqués, expérience sur les holothuries, placettes de mangrove, herbiers et oursins).
+- Guide de décision « Quel test ? », aide-mémoire, glossaire EN–FR, erreurs et pièges fréquents, liste de lectures.
+:::

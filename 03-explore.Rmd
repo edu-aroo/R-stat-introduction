@@ -1,0 +1,335 @@
+---
+title: "[3 · Exploring distributions with graphs]{.en}[3 · Explorer les distributions en graphiques]{.fr}"
+pagetitle: "R4Marine Stats · Session 3"
+subtitle: "~2.5 h"
+---
+
+```{r setup, include=FALSE}
+source("R/course_helpers.R")
+library(ggplot2); library(dplyr)
+oc <- read.csv("data/octopus_catch.csv")
+rf <- read.csv("data/reef_fish_sites.csv")
+knitr::opts_chunk$set(fig.height = 3.4)
+```
+
+::: objectives
+::: en
+#### By the end of this session you will be able to
+- explain why we **always plot before computing a test** (Anscombe's quartet);
+- show the distribution of a numeric variable with a **histogram**, a **density curve**, a **boxplot** and the **raw points**, and choose between them;
+- recognise **symmetric**, **right-skewed**, **bimodal** distributions and outliers on a graph;
+- read a **normal QQ plot**;
+- use a **log scale** for right-skewed data, and compute a **geometric mean**.
+:::
+::: fr
+#### À la fin de cette séance vous saurez
+- expliquer pourquoi on **trace toujours avant de calculer un test** (le quartet d'Anscombe) ;
+- montrer la distribution d'une variable numérique avec un **histogramme**, une **courbe de densité**, une **boîte à moustaches** et les **points bruts**, et choisir entre eux ;
+- reconnaître sur un graphique les distributions **symétriques**, **asymétriques à droite**, **bimodales** et les valeurs extrêmes ;
+- lire un **diagramme quantile-quantile (QQ plot)** normal ;
+- utiliser une **échelle log** pour des données asymétriques à droite, et calculer une **moyenne géométrique**.
+:::
+:::
+
+## [Why plot first: Anscombe's quartet]{.en}[Pourquoi tracer d'abord : le quartet d'Anscombe]{.fr} {#anscombe}
+
+::: en
+In 1973 the statistician Frank Anscombe built four small datasets that have **the same means, the same standard deviations and the same correlation** — and look completely different. They are in R as `anscombe`.
+:::
+::: fr
+En 1973, le statisticien Frank Anscombe a construit quatre petits jeux de données qui ont **les mêmes moyennes, les mêmes écarts-types et la même corrélation** — et qui sont complètement différents. Ils sont dans R sous le nom `anscombe`.
+:::
+
+```{r, fig.height=4.6}
+sapply(anscombe, mean)
+round(c(cor(anscombe$x1, anscombe$y1), cor(anscombe$x2, anscombe$y2),
+        cor(anscombe$x3, anscombe$y3), cor(anscombe$x4, anscombe$y4)), 3)
+
+# long format: one row per point, with its set number (1 to 4)
+ans <- data.frame(set = rep(paste("set", 1:4), each = 11),
+                  x = c(anscombe$x1, anscombe$x2, anscombe$x3, anscombe$x4),
+                  y = c(anscombe$y1, anscombe$y2, anscombe$y3, anscombe$y4))
+ggplot(ans, aes(x, y)) + geom_point(colour = "#0b3d5c", size = 2) +
+  geom_smooth(method = "lm", se = FALSE, colour = "#d9694a", formula = y ~ x) +
+  facet_wrap(~ set) + theme_c()
+```
+
+```{r, echo=FALSE}
+fa(c("`cor(x, y)`", "correlation coefficient (Session 10)", "coefficient de corrélation (séance 10)", "two numeric vectors", "deux vecteurs numériques"),
+   c("`geom_smooth(method = \"lm\", se, formula)`", "adds a straight fitted line (linear model, Session 10); `se = FALSE` hides the confidence band", "ajoute une droite ajustée (modèle linéaire, séance 10) ; `se = FALSE` cache la bande de confiance", "", ""),
+   c("`facet_wrap(~ var)`", "one small panel per value of `var`", "un petit panneau par valeur de `var`", "a formula `~ column`", "une formule `~ colonne`"))
+```
+
+::: en
+Set 1 is a reasonable straight-line relationship; set 2 is a curve; set 3 is a perfect line spoiled by one outlier; in set 4 one single point creates the whole "correlation". The numbers alone cannot tell them apart. **Every analysis in this course starts with a graph.**
+:::
+::: fr
+Le jeu 1 est une relation linéaire raisonnable ; le jeu 2 est une courbe ; le jeu 3 est une droite parfaite gâchée par une valeur extrême ; dans le jeu 4 un seul point crée toute la « corrélation ». Les chiffres seuls ne peuvent pas les distinguer. **Chaque analyse de ce cours commence par un graphique.**
+:::
+
+## [Octopus weights on reopening day]{.en}[Poids des pieuvres le jour de la réouverture]{.fr} {#data}
+
+::: {.callout .ecology}
+::: en
+**Octopus landings** (`octopus_catch.csv`, simulated). On **14 March 2026**, a 3-month temporary closure of an octopus fishing area ended. That day, trained community data collectors weighed (spring balance, to the nearest 10 g) and sexed **every octopus landed** in two villages: **Tsifota**, whose fishers fished in the area that had just **reopened**, and **Andrevo**, whose fishers fished in **open** areas only. They also noted the gear (spear or hook) and the sex of the fisher. *One row = one octopus* (345 octopuses).
+:::
+::: fr
+**Débarquements de pieuvres** (`octopus_catch.csv`, simulé). Le **14 mars 2026**, une fermeture temporaire de 3 mois d'une zone de pêche au poulpe a pris fin. Ce jour-là, des collecteurs communautaires formés ont pesé (peson, à 10 g près) et sexé **chaque pieuvre débarquée** dans deux villages : **Tsifota**, dont les pêcheurs ont pêché dans la zone qui venait d'être **rouverte**, et **Andrevo**, dont les pêcheurs ont pêché dans des zones **ouvertes** uniquement. Ils ont aussi noté l'engin (harpon ou crochet) et le sexe du pêcheur. *Une ligne = une pieuvre* (345 pieuvres).
+:::
+:::
+
+`r dl("octopus_catch.csv", "octopus_catch.csv")`
+
+```{r}
+oc <- read.csv("data/octopus_catch.csv")
+str(oc)
+```
+
+## [Histograms and densities]{.en}[Histogrammes et densités]{.fr} {#histogram}
+
+::: en
+A **histogram** cuts the range into intervals (*bins*) and counts the values in each. The width of the bins changes the picture: too wide hides the shape, too narrow shows noise. Try two or three widths.
+:::
+::: fr
+Un **histogramme** découpe l'étendue en intervalles (*classes*) et compte les valeurs dans chacun. La largeur des classes change l'image : trop larges cachent la forme, trop étroites montrent du bruit. Essayez deux ou trois largeurs.
+:::
+
+```{r}
+ggplot(oc, aes(weight_g)) +
+  geom_histogram(binwidth = 100, fill = "#1b7f8c", colour = "white") +
+  labs(x = "weight (g)", y = "number of octopuses") + theme_c()
+```
+
+```{r, echo=FALSE}
+fa(c("`geom_histogram(binwidth, bins, boundary)`", "histogram of one numeric variable (`aes(x)`)", "histogramme d'une variable numérique (`aes(x)`)", "", ""),
+   c("&nbsp;&nbsp;`binwidth`", "width of each bin, in the units of x", "largeur de chaque classe, dans les unités de x", "a number", "un nombre"),
+   c("&nbsp;&nbsp;`bins`", "or: the number of bins (default 30); give `binwidth` **or** `bins`", "ou : le nombre de classes (défaut 30) ; donnez `binwidth` **ou** `bins`", "a whole number", "un entier"),
+   c("&nbsp;&nbsp;`boundary`", "where a bin starts (e.g. `0`): bins then cover 0–100, 100–200…", "où commence une classe (ex. `0`) : les classes couvrent alors 0–100, 100–200…", "a number", "un nombre"))
+```
+
+::: en
+The distribution is **right-skewed**: most octopuses weigh 400–1,000 g, and a long tail goes up to 3 kg. Weights, lengths of large animals, abundances, incomes are often like this, because they result from **multiplicative** processes (growth is a percentage of the current size).
+
+A **density curve** is a smoothed histogram; its area is 1. It is convenient to **compare groups** on one graph:
+:::
+::: fr
+La distribution est **asymétrique à droite** : la plupart des pieuvres pèsent 400–1 000 g, et une longue queue monte jusqu'à 3 kg. Les poids, les tailles des grands animaux, les abondances, les revenus sont souvent ainsi, parce qu'ils résultent de processus **multiplicatifs** (la croissance est un pourcentage de la taille actuelle).
+
+Une **courbe de densité** est un histogramme lissé ; son aire vaut 1. Elle est pratique pour **comparer des groupes** sur un seul graphique :
+:::
+
+```{r}
+ggplot(oc, aes(weight_g, fill = area)) +
+  geom_density(alpha = 0.5) +
+  scale_fill_manual(values = c(open = "#e8c27a", reopened = "#1b7f8c")) +
+  labs(x = "weight (g)", y = "density") + theme_c()
+```
+
+```{r, echo=FALSE}
+fa(c("`geom_density(alpha, adjust)`", "smoothed distribution; `alpha` = transparency; `adjust` > 1 smooths more, < 1 less", "distribution lissée ; `alpha` = transparence ; `adjust` > 1 lisse plus, < 1 moins", "", ""),
+   c("`scale_fill_manual(values)`", "chooses the fill colour of each group", "choisit la couleur de remplissage de chaque groupe", "a named vector `c(group = \"colour\")`", "un vecteur nommé `c(groupe = \"couleur\")`"))
+```
+
+## [Boxplots and the raw points]{.en}[Boîtes à moustaches et points bruts]{.fr} {#boxplot}
+
+`r fig_svg("boxplot-anatomy", "How to read a boxplot. The whiskers stop at the most extreme values within 1.5 × IQR of the box; points beyond are drawn individually (Session 2).", "Comment lire une boîte à moustaches. Les moustaches s'arrêtent aux valeurs les plus extrêmes situées à moins de 1,5 × IQR de la boîte ; les points au-delà sont dessinés individuellement (séance 2).")`
+
+::: en
+A boxplot summarises 5 numbers; it hides the **number of points** and shapes such as two peaks. With fewer than ~50 points per group, **add the raw points** (`geom_jitter()` spreads them sideways so they do not overlap).
+:::
+::: fr
+Une boîte à moustaches résume 5 nombres ; elle cache le **nombre de points** et des formes comme deux pics. Avec moins de ~50 points par groupe, **ajoutez les points bruts** (`geom_jitter()` les écarte sur le côté pour qu'ils ne se superposent pas).
+:::
+
+```{r}
+ggplot(rf, aes(management, biomass_kg_ha)) +
+  geom_boxplot(outlier.shape = NA, width = 0.5, fill = "#e9f4f6") +
+  geom_jitter(width = 0.12, height = 0, colour = "#0b3d5c", alpha = 0.7) +
+  labs(x = NULL, y = "fish biomass (kg/ha)") + theme_c()
+```
+
+```{r, echo=FALSE}
+fa(c("&nbsp;&nbsp;`outlier.shape = NA` (in `geom_boxplot()`)", "does not draw the outliers of the box, because `geom_jitter()` already draws every point (otherwise they appear twice)", "ne dessine pas les valeurs extrêmes de la boîte, car `geom_jitter()` dessine déjà chaque point (sinon ils apparaissent deux fois)", "", ""),
+   c("`geom_jitter(width, height)`", "points moved randomly a little: sideways by up to `width`, vertically by `height` (keep **0** so values are not changed)", "points déplacés un peu au hasard : sur le côté jusqu'à `width`, verticalement de `height` (gardez **0** pour ne pas modifier les valeurs)", "numbers", "des nombres"))
+```
+
+## [Is it close to a normal distribution? The QQ plot]{.en}[Est-ce proche d'une loi normale ? Le QQ plot]{.fr} {#qq}
+
+::: en
+Many tests of Sessions 5–10 assume that data (or model residuals) are roughly **normal** — the symmetric bell curve of Session 4. A **normal QQ plot** compares the sorted data with the values a normal distribution would give: **if the data are normal, the points fall on a straight line.**
+
+- Points curving **upwards** at the right end (a "banana") → **right skew**;
+- an S-shape → tails heavier or lighter than normal;
+- a few points far off the line at the ends → outliers.
+:::
+::: fr
+Beaucoup de tests des séances 5–10 supposent que les données (ou les résidus d'un modèle) sont à peu près **normales** — la courbe en cloche symétrique de la séance 4. Un **QQ plot normal** compare les données triées aux valeurs que donnerait une loi normale : **si les données sont normales, les points tombent sur une droite.**
+
+- Points qui **remontent** à l'extrémité droite (une « banane ») → **asymétrie à droite** ;
+- une forme en S → queues plus lourdes ou plus légères que la normale ;
+- quelques points loin de la droite aux extrémités → valeurs extrêmes.
+:::
+
+```{r, fig.height=3.6}
+library(patchwork)   # optional: places two ggplots side by side with "+"
+p1 <- ggplot(oc, aes(sample = weight_g)) + stat_qq(colour = "#1b7f8c") + stat_qq_line() +
+  labs(title = "weight (g)", x = "theoretical quantiles", y = "sample quantiles") + theme_c(11)
+p2 <- ggplot(oc, aes(sample = log(weight_g))) + stat_qq(colour = "#1b7f8c") + stat_qq_line() +
+  labs(title = "log(weight)", x = "theoretical quantiles", y = "sample quantiles") + theme_c(11)
+p1 + p2
+```
+
+```{r, echo=FALSE}
+fa(c("`aes(sample = x)`", "for QQ plots, the variable goes in `sample`, not in `x`", "pour les QQ plots, la variable va dans `sample`, pas dans `x`", "", ""),
+   c("`stat_qq()`, `stat_qq_line()`", "the points of the QQ plot, and the reference line through Q1 and Q3", "les points du QQ plot, et la droite de référence passant par Q1 et Q3", "", ""),
+   c("`p1 + p2`", "with the **patchwork** package: two plots side by side (`p1 / p2` = one above the other)", "avec le package **patchwork** : deux graphiques côte à côte (`p1 / p2` = l'un au-dessus de l'autre)", "", ""),
+   c("`qqnorm(x); qqline(x)`", "the same in base R, without ggplot2", "la même chose en R de base, sans ggplot2", "a numeric vector", "un vecteur numérique"))
+```
+
+::: en
+The raw weights bend upwards (right skew); the **log** of the weights follows the line well. Session 4 explains why (the *log-normal* distribution). You may meet the Shapiro–Wilk test (`shapiro.test()`) to "test normality": use it with care — with large samples it rejects normality for tiny, harmless departures, with small samples it misses big ones. **The QQ plot and your knowledge of the variable are more informative.**
+:::
+::: fr
+Les poids bruts se courbent vers le haut (asymétrie à droite) ; le **log** des poids suit bien la droite. La séance 4 explique pourquoi (la loi *log-normale*). Vous rencontrerez le test de Shapiro–Wilk (`shapiro.test()`) pour « tester la normalité » : utilisez-le avec prudence — avec de grands échantillons il rejette la normalité pour des écarts minimes et sans conséquence, avec de petits échantillons il rate de gros écarts. **Le QQ plot et votre connaissance de la variable sont plus informatifs.**
+:::
+
+## [Log scale and geometric mean]{.en}[Échelle log et moyenne géométrique]{.fr} {#log}
+
+::: en
+On a log scale, equal distances mean equal **ratios** (×2, ×10) instead of equal differences. For right-skewed data it spreads the crowded small values and pulls in the long tail. Two ways:
+
+1. keep the data and change the **axis**: `scale_x_log10()` — the labels stay in grams;
+2. analyse the **log of the variable**: `log(weight_g)` (natural log). The back-transformed mean, `exp(mean(log(x)))`, is the **geometric mean**: a "typical value" that is not pulled by the tail, close to the median.
+:::
+::: fr
+Sur une échelle log, des distances égales signifient des **rapports** égaux (×2, ×10) au lieu de différences égales. Pour des données asymétriques à droite, elle écarte les petites valeurs entassées et rapproche la longue queue. Deux façons :
+
+1. garder les données et changer l'**axe** : `scale_x_log10()` — les étiquettes restent en grammes ;
+2. analyser le **log de la variable** : `log(weight_g)` (log népérien). La moyenne retransformée, `exp(mean(log(x)))`, est la **moyenne géométrique** : une « valeur typique » qui n'est pas tirée par la queue, proche de la médiane.
+:::
+
+```{r}
+ggplot(oc, aes(weight_g)) +
+  geom_histogram(bins = 25, fill = "#1b7f8c", colour = "white") +
+  scale_x_log10() + labs(x = "weight (g, log scale)", y = "number") + theme_c()
+
+w <- oc$weight_g
+c(mean = mean(w), median = median(w), geometric_mean = exp(mean(log(w))))
+```
+
+```{r, echo=FALSE}
+fa(c("`scale_x_log10()`, `scale_y_log10()`", "log scale on an axis; the data are not changed, only the axis", "échelle log sur un axe ; les données ne changent pas, seulement l'axe", "", ""),
+   c("`log(x)`, `exp(x)`", "natural logarithm and its inverse: `exp(log(x))` = x", "logarithme népérien et son inverse : `exp(log(x))` = x", "positive numbers for `log()`", "des nombres positifs pour `log()`"),
+   c("`log10(x)`, `log1p(x)`", "log base 10; `log(1 + x)`, for counts that include **zeros** (log(0) = −Inf)", "log en base 10 ; `log(1 + x)`, pour des comptages qui contiennent des **zéros** (log(0) = −Inf)", "", ""))
+```
+
+## [Categorical variables: bar charts of percentages]{.en}[Variables catégorielles : diagrammes en barres de pourcentages]{.fr} {#bars}
+
+::: en
+To compare the **composition** of groups of different sizes, show percentages, not counts: `position = "fill"` stacks the bars to 100 %.
+:::
+::: fr
+Pour comparer la **composition** de groupes de tailles différentes, montrez des pourcentages, pas des effectifs : `position = "fill"` empile les barres jusqu'à 100 %.
+:::
+
+```{r}
+ggplot(oc, aes(area, fill = gear)) +
+  geom_bar(position = "fill", width = 0.6) +
+  scale_y_continuous(labels = function(p) paste0(100 * p, " %")) +
+  scale_fill_manual(values = c(hook = "#e8c27a", spear = "#0b3d5c")) +
+  labs(x = NULL, y = "share of octopuses") + theme_c()
+```
+
+```{r, echo=FALSE}
+fa(c("`geom_bar(position = \"fill\")`", "counts the rows of each category; `\"fill\"` turns each bar into proportions (0 to 1)", "compte les lignes de chaque catégorie ; `\"fill\"` transforme chaque barre en proportions (0 à 1)", "`\"stack\"` (default), `\"dodge\"`, `\"fill\"`", "`\"stack\"` (défaut), `\"dodge\"`, `\"fill\"`"),
+   c("`scale_y_continuous(labels = f)`", "changes the labels of the y axis with a function (here 0.25 → \"25 %\")", "change les étiquettes de l'axe y avec une fonction (ici 0.25 → « 25 % »)", "a function", "une fonction"))
+```
+
+## [Application work & quiz]{.en}[Travail d'application et quiz]{.fr} {#application}
+
+```{r answers03, include=FALSE}
+d1 <- round(mean(anscombe$y4), 2)
+d2 <- round(exp(mean(log(oc$weight_g))), 1)
+d3 <- round(exp(mean(log(oc$weight_g[oc$area == "reopened"]))), 1)
+d4 <- sum(oc$weight_g >= 2000)
+d5 <- round(median(oc$weight_g[oc$area == "open"]), 1)
+d6 <- round(100 * mean(oc$gear[oc$area == "open"] == "hook"), 1)
+```
+
+::: application
+::: en
+### Application work 3
+
+1. Mean of `y4` in `anscombe` (2 decimals).
+2. Geometric mean of all octopus weights (1 decimal).
+3. Geometric mean of the weights in the **reopened** area (1 decimal).
+4. How many octopuses weigh **2,000 g or more**?
+5. Median weight in the **open** area (1 decimal).
+6. Percentage of octopuses caught with a **hook** in the open area (1 decimal).
+7. Draw the histogram of `herbivore_pct` (reef sites) and its QQ plot. Then answer questions 7 – 10.
+:::
+::: fr
+### Travail d'application 3
+
+1. Moyenne de `y4` dans `anscombe` (2 décimales).
+2. Moyenne géométrique de tous les poids de pieuvres (1 décimale).
+3. Moyenne géométrique des poids dans la zone **rouverte** (`reopened`, 1 décimale).
+4. Combien de pieuvres pèsent **2 000 g ou plus** ?
+5. Poids médian dans la zone **ouverte** (`open`, 1 décimale).
+6. Pourcentage de pieuvres capturées au **crochet** (`hook`) dans la zone ouverte (1 décimale).
+7. Tracez l'histogramme de `herbivore_pct` (sites récifaux) et son QQ plot. Puis répondez aux questions 7 – 10.
+:::
+:::
+
+::: hint
+::: en
+Q2–Q3: `exp(mean(log(x)))`. Q4: `sum(oc$weight_g >= 2000)`. Q6: select the gear of the open area first.
+:::
+::: fr
+Q2–Q3 : `exp(mean(log(x)))`. Q4 : `sum(oc$weight_g >= 2000)`. Q6 : sélectionnez d'abord l'engin de la zone ouverte.
+:::
+:::
+
+```{r quiz03, echo=FALSE}
+quiz("t03", list(
+  q_num("1. Mean of anscombe$y4?", "1. Moyenne de anscombe$y4 ?", d1, tol = 0.006),
+  q_num("2. Geometric mean of all weights (g)?", "2. Moyenne géométrique de tous les poids (g) ?", d2, tol = 0.06),
+  q_num("3. Geometric mean in the reopened area (g)?", "3. Moyenne géométrique dans la zone rouverte (g) ?", d3, tol = 0.06),
+  q_num("4. Number of octopuses of 2,000 g or more?", "4. Nombre de pieuvres de 2 000 g ou plus ?", d4, tol = 0),
+  q_num("5. Median weight in the open area (g)?", "5. Poids médian dans la zone ouverte (g) ?", d5, tol = 0.06),
+  q_num("6. % caught with a hook in the open area?", "6. % capturées au crochet dans la zone ouverte ?", d6, tol = 0.06),
+  q_mcq("7. On a normal QQ plot, the points bend upwards at the right end. The data are…",
+        "7. Sur un QQ plot normal, les points remontent à l'extrémité droite. Les données sont…",
+        c("normal", "right-skewed", "left-skewed", "bimodal"),
+        c("normales", "asymétriques à droite", "asymétriques à gauche", "bimodales"), correct = 2),
+  q_mcq("8. For right-skewed data, which value is closest to the median?",
+        "8. Pour des données asymétriques à droite, quelle valeur est la plus proche de la médiane ?",
+        c("the arithmetic mean", "the geometric mean", "the maximum", "the standard deviation"),
+        c("la moyenne arithmétique", "la moyenne géométrique", "le maximum", "l'écart-type"), correct = 2),
+  q_mcq("9. 12 sites per group: which graph shows the data most honestly?",
+        "9. 12 sites par groupe : quel graphique montre les données le plus honnêtement ?",
+        c("a bar chart of the means", "a boxplot with the raw points (jitter)", "a pie chart", "a line chart"),
+        c("un diagramme en barres des moyennes", "une boîte à moustaches avec les points bruts (jitter)", "un camembert", "un graphique en lignes"), correct = 2),
+  q_mcq("10. What does Anscombe's quartet show?", "10. Que montre le quartet d'Anscombe ?",
+        c("Correlation proves causation", "Identical summary statistics can hide very different data: plot first",
+          "The mean is always better than the median", "Small samples are always normal"),
+        c("La corrélation prouve la causalité", "Des statistiques résumées identiques peuvent cacher des données très différentes : tracez d'abord",
+          "La moyenne est toujours meilleure que la médiane", "Les petits échantillons sont toujours normaux"), correct = 2)
+))
+```
+
+::: {.solution data-quiz="t03"}
+```{r, eval=FALSE}
+mean(anscombe$y4)                                            # 1
+oc <- read.csv("data/octopus_catch.csv")
+exp(mean(log(oc$weight_g)))                                  # 2
+tapply(oc$weight_g, oc$area, function(w) exp(mean(log(w))))  # 3
+sum(oc$weight_g >= 2000)                                     # 4
+tapply(oc$weight_g, oc$area, median)                         # 5
+round(100 * prop.table(table(oc$area, oc$gear), 1), 1)       # 6
+rf <- read.csv("data/reef_fish_sites.csv")
+ggplot(rf, aes(herbivore_pct)) + geom_histogram(binwidth = 2.5)
+ggplot(rf, aes(sample = herbivore_pct)) + stat_qq() + stat_qq_line()
+# 7: right skew   8: the geometric mean   9: boxplot + points   10: plot first
+```
+:::

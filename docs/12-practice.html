@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>R4Marine Stats · Session 12</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.1/jquery-3.6.1.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<!-- header.html: inserted inside <head> of every page (see _site.yml) -->
+<!-- config.js (settings) and quiz_index.js (made by R/build_site.R) first,
+     then course.js (the behaviour that reads them) -->
+<script src="assets/config.js"></script>
+<script src="assets/quiz_index.js"></script>
+<script src="assets/course.js"></script>
+<meta name="author" content="Aroo Falinirina">
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #204a87; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #204a87; font-weight: bold; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<link rel="stylesheet" href="assets/course.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">R4Marine Stats</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Sessions
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="00-start.html">0 · Why statistics?</a>
+    </li>
+    <li>
+      <a href="01-design.html">1 · Study design &amp; sampling</a>
+    </li>
+    <li>
+      <a href="02-describe.html">2 · Describing data</a>
+    </li>
+    <li>
+      <a href="03-explore.html">3 · Exploring distributions</a>
+    </li>
+    <li>
+      <a href="04-probability.html">4 · Probability &amp; distributions</a>
+    </li>
+    <li>
+      <a href="05-estimation.html">5 · Standard error &amp; CIs</a>
+    </li>
+    <li>
+      <a href="06-testing.html">6 · Hypothesis tests &amp; p-values</a>
+    </li>
+    <li>
+      <a href="07-two-groups.html">7 · Comparing two groups</a>
+    </li>
+    <li>
+      <a href="08-anova.html">8 · ANOVA &amp; Kruskal–Wallis</a>
+    </li>
+    <li>
+      <a href="09-categorical.html">9 · Proportions &amp; χ²</a>
+    </li>
+    <li>
+      <a href="10-regression.html">10 · Correlation &amp; regression</a>
+    </li>
+    <li>
+      <a href="11-power-reporting.html">11 · Power, multiple tests, reporting</a>
+    </li>
+    <li>
+      <a href="12-practice.html">12 · Practice</a>
+    </li>
+    <li>
+      <a href="13-final-project.html">13 · Final project</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Resources
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="choose-test.html">Which test? (decision guide)</a>
+    </li>
+    <li>
+      <a href="cheatsheet.html">Cheatsheet</a>
+    </li>
+    <li>
+      <a href="glossary.html">Glossary EN–FR</a>
+    </li>
+    <li>
+      <a href="common-errors.html">Common errors &amp; pitfalls</a>
+    </li>
+    <li>
+      <a href="resources.html">To go further</a>
+    </li>
+    <li>
+      <a href="help.html">Need help?</a>
+    </li>
+    <li>
+      <a href="whats-new.html">What's new</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore"><span class="en">12 · Practice
+session</span><span class="fr">12 · Séance d’exercices</span></h1>
+<h3 class="subtitle">~3.5 h</h3>
+
+</div>
+
+
+<div class="objectives">
+<div id="what-this-session-is-for" class="section level4 en">
+<h4>What this session is for</h4>
+<p>No new concepts: six independent exercises to
+<strong>practise</strong> Sessions 1 to 11 before the final project.
+Each exercise has its own quiz (<strong>two attempts</strong>, the best
+one counts) and its own solution. The final project opens when the six
+exercises together reach 75 % of their points.</p>
+<ul>
+<li>Write everything in one script <code>scripts/s12_practice.R</code>,
+one section per exercise (<strong>Ctrl + Shift + R</strong>).</li>
+<li><strong>Before</strong> each test, write in a comment: the question,
+H0, the type of variables, independent or paired, and the test you
+choose.</li>
+<li>If you get less than 70 % on an exercise, re-read the session
+indicated.</li>
+</ul>
+</div>
+<div id="à-quoi-sert-cette-séance" class="section level4 fr">
+<h4>À quoi sert cette séance</h4>
+<p>Pas de nouvelle notion : six exercices indépendants pour
+<strong>pratiquer</strong> les séances 1 à 11 avant le projet final.
+Chaque exercice a son propre quiz (<strong>deux tentatives</strong>, la
+meilleure compte) et sa propre solution. Le projet final s’ouvre quand
+les six exercices réunis atteignent 75 % de leurs points.</p>
+<ul>
+<li>Écrivez tout dans un seul script
+<code>scripts/s12_practice.R</code>, une section par exercice
+(<strong>Ctrl + Maj + R</strong>).</li>
+<li><strong>Avant</strong> chaque test, écrivez en commentaire : la
+question, H0, le type des variables, indépendant ou apparié, et le test
+choisi.</li>
+<li>Si vous obtenez moins de 70 % à un exercice, relisez la séance
+indiquée.</li>
+</ul>
+</div>
+</div>
+<div id="p1" class="section level2">
+<h2><span class="en">Exercise 1 — Describing reef sites</span><span
+class="fr">Exercice 1 — Décrire les sites récifaux</span></h2>
+<div class="en">
+<p><em>Revise: Sessions 2–3.</em> Data: <code>reef_fish_sites.csv</code>
+(36 sites, one row per site).</p>
+<ol style="list-style-type: decimal">
+<li>Median % of herbivores in the <strong>North</strong> region (2
+decimals).</li>
+<li>Standard deviation of <strong>rugosity</strong> (3 decimals).</li>
+<li>Interquartile range of <strong>depth</strong> (3 decimals).</li>
+<li>Coefficient of variation of <strong>species richness</strong>, in %
+(2 decimals).</li>
+<li>Pearson correlation between <strong>rugosity</strong> and
+<strong>coral cover</strong> (3 decimals). Plot it first!</li>
+</ol>
+</div>
+<div class="fr">
+<p><em>Révision : séances 2–3.</em> Données :
+<code>reef_fish_sites.csv</code> (36 sites, une ligne par site).</p>
+<ol style="list-style-type: decimal">
+<li>% médian d’herbivores dans la région <strong>North</strong> (2
+décimales).</li>
+<li>Écart-type de la <strong>rugosité</strong> (3 décimales).</li>
+<li>Écart interquartile de la <strong>profondeur</strong> (3
+décimales).</li>
+<li>Coefficient de variation de la <strong>richesse spécifique</strong>,
+en % (2 décimales).</li>
+<li>Corrélation de Pearson entre <strong>rugosité</strong> et
+<strong>recouvrement corallien</strong> (3 décimales). Tracez d’abord
+!</li>
+</ol>
+</div>
+<div id="quiz-tp1" class="quiz" data-quiz-id="tp1"
+data-title-en="Exercise 1" data-title-fr="Exercice 1"
+data-q="W3sidHlwZSI6Im51bSIsImVuIjoiMS4gTWVkaWFuICUgaGVyYml2b3JlcywgTm9ydGg/IiwiZnIiOiIxLiAlIG3DqWRpYW4gZCdoZXJiaXZvcmVzLCBOb3J0aCA/IiwiYW5zd2VyIjoyNy4zNSwidG9sIjowLjAwNiwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJudW0iLCJlbiI6IjIuIFNEIG9mIHJ1Z29zaXR5PyIsImZyIjoiMi4gRVQgZGUgbGEgcnVnb3NpdMOpID8iLCJhbnN3ZXIiOjAuMTcyLCJ0b2wiOjAuMDAwNiwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJudW0iLCJlbiI6IjMuIElRUiBvZiBkZXB0aD8iLCJmciI6IjMuIMOJY2FydCBpbnRlcnF1YXJ0aWxlIGRlIGxhIHByb2ZvbmRldXIgPyIsImFuc3dlciI6My44MjUsInRvbCI6MC4wMDA2LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiNC4gQ1Ygb2Ygc3BlY2llcyByaWNobmVzcyAoJSk/IiwiZnIiOiI0LiBDViBkZSBsYSByaWNoZXNzZSAoJSkgPyIsImFuc3dlciI6MTIuOTQsInRvbCI6MC4wMDYsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibnVtIiwiZW4iOiI1LiByIHJ1Z29zaXR54oCTY29yYWwgY292ZXI/IiwiZnIiOiI1LiByIHJ1Z29zaXTDqeKAk2NvcmFpbCA/IiwiYW5zd2VyIjowLjY3NiwidG9sIjowLjAwMDYsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn1d">
+
+</div>
+<div class="solution" data-quiz="tp1">
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>rf <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/reef_fish_sites.csv&quot;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">tapply</span>(rf<span class="sc">$</span>herbivore_pct, rf<span class="sc">$</span>region, median)                    <span class="co"># 1</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">sd</span>(rf<span class="sc">$</span>rugosity); <span class="fu">IQR</span>(rf<span class="sc">$</span>depth_m)                               <span class="co"># 2, 3</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="dv">100</span> <span class="sc">*</span> <span class="fu">sd</span>(rf<span class="sc">$</span>species_richness) <span class="sc">/</span> <span class="fu">mean</span>(rf<span class="sc">$</span>species_richness)      <span class="co"># 4</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">plot</span>(rf<span class="sc">$</span>coral_cover, rf<span class="sc">$</span>rugosity); <span class="fu">cor</span>(rf<span class="sc">$</span>rugosity, rf<span class="sc">$</span>coral_cover)   <span class="co"># 5</span></span></code></pre></div>
+</div>
+</div>
+<div id="p2" class="section level2">
+<h2><span class="en">Exercise 2 — Probability</span><span
+class="fr">Exercice 2 — Probabilités</span></h2>
+<div class="en">
+<p><em>Revise: Session 4.</em> Probabilities with 4 decimals.</p>
+<ol style="list-style-type: decimal">
+<li>10 % of tagged sea turtles lose their tag within a year. Out of 12
+tagged turtles, probability that <strong>exactly 2</strong> lose
+it?</li>
+<li>… that <strong>3 or more</strong> lose it?</li>
+<li>Dugongs are seen at a mean rate of 0.7 per survey day (Poisson).
+Probability of <strong>no</strong> dugong on a given day?</li>
+<li>Carapace length of juvenile green turtles in a foraging area is
+normal, with mean 35 cm and SD 4 cm. Probability that a turtle measures
+<strong>more than 42 cm</strong>?</li>
+<li>Length below which the <strong>10 %</strong> smallest turtles lie (2
+decimals)?</li>
+</ol>
+</div>
+<div class="fr">
+<p><em>Révision : séance 4.</em> Probabilités avec 4 décimales.</p>
+<ol style="list-style-type: decimal">
+<li>10 % des tortues marines marquées perdent leur bague en un an. Sur
+12 tortues marquées, probabilité qu’<strong>exactement 2</strong> la
+perdent ?</li>
+<li>… que <strong>3 ou plus</strong> la perdent ?</li>
+<li>On observe des dugongs au rythme moyen de 0,7 par jour de suivi
+(Poisson). Probabilité de <strong>n’en voir aucun</strong> un jour donné
+?</li>
+<li>La longueur de carapace des tortues vertes juvéniles d’une zone
+d’alimentation suit une loi normale de moyenne 35 cm et d’ET 4 cm.
+Probabilité qu’une tortue mesure <strong>plus de 42 cm</strong> ?</li>
+<li>Longueur sous laquelle se trouvent les <strong>10 %</strong> de
+tortues les plus petites (2 décimales) ?</li>
+</ol>
+</div>
+<div id="quiz-tp2" class="quiz" data-quiz-id="tp2"
+data-title-en="Exercise 2" data-title-fr="Exercice 2"
+data-q="W3sidHlwZSI6Im51bSIsImVuIjoiMS4gUChleGFjdGx5IDIgb2YgMTIpPyIsImZyIjoiMS4gUChleGFjdGVtZW50IDIgc3VyIDEyKSA/IiwiYW5zd2VyIjowLjIzMDEsInRvbCI6NmUtMDUsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibnVtIiwiZW4iOiIyLiBQKDMgb3IgbW9yZSBvZiAxMik/IiwiZnIiOiIyLiBQKDMgb3UgcGx1cyBzdXIgMTIpID8iLCJhbnN3ZXIiOjAuMTEwOSwidG9sIjo2ZS0wNSwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJudW0iLCJlbiI6IjMuIFAobm8gZHVnb25nKT8iLCJmciI6IjMuIFAoYXVjdW4gZHVnb25nKSA/IiwiYW5zd2VyIjowLjQ5NjYsInRvbCI6NmUtMDUsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibnVtIiwiZW4iOiI0LiBQKGxlbmd0aCA+IDQyIGNtKT8iLCJmciI6IjQuIFAobG9uZ3VldXIgPiA0MiBjbSkgPyIsImFuc3dlciI6MC4wNDAxLCJ0b2wiOjZlLTA1LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiNS4gMTAgJSBxdWFudGlsZSAoY20pPyIsImZyIjoiNS4gUXVhbnRpbGUgMTAgJSAoY20pID8iLCJhbnN3ZXIiOjI5Ljg3LCJ0b2wiOjAuMDA2LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9XQ==">
+
+</div>
+<div class="solution" data-quiz="tp2">
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">dbinom</span>(<span class="dv">2</span>, <span class="dv">12</span>, <span class="fl">0.10</span>); <span class="dv">1</span> <span class="sc">-</span> <span class="fu">pbinom</span>(<span class="dv">2</span>, <span class="dv">12</span>, <span class="fl">0.10</span>)     <span class="co"># 1, 2</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">dpois</span>(<span class="dv">0</span>, <span class="fl">0.7</span>)                                     <span class="co"># 3</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">pnorm</span>(<span class="dv">42</span>, <span class="dv">35</span>, <span class="dv">4</span>); <span class="fu">qnorm</span>(<span class="fl">0.10</span>, <span class="dv">35</span>, <span class="dv">4</span>)          <span class="co"># 4, 5</span></span></code></pre></div>
+</div>
+</div>
+<div id="p3" class="section level2">
+<h2><span class="en">Exercise 3 — A sample from the lagoon</span><span
+class="fr">Exercice 3 — Un échantillon du lagon</span></h2>
+<div class="en">
+<p><em>Revise: Sessions 1 and 5.</em> Draw a simple random sample of
+<strong>50 cells</strong>: run exactly
+<code>set.seed(303); s3 &lt;- lag[sample(1:nrow(lag), 50), ]</code>.</p>
+<ol style="list-style-type: decimal">
+<li>Sample mean of seagrass cover (2 decimals).</li>
+<li>– 3. Lower and upper limits of its 95 % CI (2 decimals). Does it
+contain the true mean of Session 1?</li>
+<li>Number of cells of the sample <strong>without any
+urchin</strong>.</li>
+<li>Upper limit of the exact 95 % CI (<code>binom.test()</code>) of the
+proportion of cells without urchins (3 decimals).</li>
+</ol>
+</div>
+<div class="fr">
+<p><em>Révision : séances 1 et 5.</em> Tirez un échantillon aléatoire
+simple de <strong>50 cellules</strong> : exécutez exactement
+<code>set.seed(303); s3 &lt;- lag[sample(1:nrow(lag), 50), ]</code>.</p>
+<ol style="list-style-type: decimal">
+<li>Moyenne d’échantillon du recouvrement d’herbier (2 décimales).</li>
+<li>– 3. Limites inférieure et supérieure de son IC à 95 % (2
+décimales). Contient-il la vraie moyenne de la séance 1 ?</li>
+<li>Nombre de cellules de l’échantillon <strong>sans aucun
+oursin</strong>.</li>
+<li>Limite supérieure de l’IC exact à 95 % (<code>binom.test()</code>)
+de la proportion de cellules sans oursins (3 décimales).</li>
+</ol>
+</div>
+<div id="quiz-tp3" class="quiz" data-quiz-id="tp3"
+data-title-en="Exercise 3" data-title-fr="Exercice 3"
+data-q="W3sidHlwZSI6Im51bSIsImVuIjoiMS4gU2FtcGxlIG1lYW4gY292ZXI/IiwiZnIiOiIxLiBSZWNvdXZyZW1lbnQgbW95ZW4gZGUgbCfDqWNoYW50aWxsb24gPyIsImFuc3dlciI6NDQuNDQsInRvbCI6MC4wMDYsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibnVtIiwiZW4iOiIyLiBMb3dlciBsaW1pdCBvZiB0aGUgOTUgJSBDST8iLCJmciI6IjIuIExpbWl0ZSBpbmbDqXJpZXVyZSBkZSBsJ0lDIMOgIDk1ICUgPyIsImFuc3dlciI6MzguNTksInRvbCI6MC4wMDYsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibnVtIiwiZW4iOiIzLiBVcHBlciBsaW1pdCBvZiB0aGUgOTUgJSBDST8iLCJmciI6IjMuIExpbWl0ZSBzdXDDqXJpZXVyZSBkZSBsJ0lDIMOgIDk1ICUgPyIsImFuc3dlciI6NTAuMjksInRvbCI6MC4wMDYsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibnVtIiwiZW4iOiI0LiBDZWxscyB3aXRob3V0IHVyY2hpbnM/IiwiZnIiOiI0LiBDZWxsdWxlcyBzYW5zIG91cnNpbnMgPyIsImFuc3dlciI6NCwidG9sIjowLCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiNS4gVXBwZXIgbGltaXQsIGV4YWN0IENJIG9mIHRoZSBwcm9wb3J0aW9uPyIsImZyIjoiNS4gTGltaXRlIHN1cMOpcmlldXJlLCBJQyBleGFjdCBkZSBsYSBwcm9wb3J0aW9uID8iLCJhbnN3ZXIiOjAuMTkyLCJ0b2wiOjAuMDAwNiwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifV0=">
+
+</div>
+<div class="solution" data-quiz="tp3">
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>lag <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/lagoon_population.csv&quot;</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">303</span>); s3 <span class="ot">&lt;-</span> lag[<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(lag), <span class="dv">50</span>), ]</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="fu">mean</span>(s3<span class="sc">$</span>seagrass_cover); <span class="fu">t.test</span>(s3<span class="sc">$</span>seagrass_cover)<span class="sc">$</span>conf.int     <span class="co"># 1, 2, 3</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="fu">mean</span>(lag<span class="sc">$</span>seagrass_cover)                                         <span class="co"># true mean, for comparison</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">sum</span>(s3<span class="sc">$</span>urchins <span class="sc">==</span> <span class="dv">0</span>); x                                     <span class="co"># 4</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="fu">binom.test</span>(x, <span class="dv">50</span>)<span class="sc">$</span>conf.int                                       <span class="co"># 5</span></span></code></pre></div>
+</div>
+</div>
+<div id="p4" class="section level2">
+<h2><span class="en">Exercise 4 — Two groups</span><span
+class="fr">Exercice 4 — Deux groupes</span></h2>
+<div class="en">
+<p><em>Revise: Session 7.</em> Data: <code>fisher_survey.csv</code> and
+<code>coral_tagged_colonies.csv</code>.</p>
+<ol style="list-style-type: decimal">
+<li>– 2. Declared <strong>monthly catch</strong> is right-skewed. Welch
+t-test on <code>log(monthly_catch_kg) ~ sex</code>: ratio of geometric
+means <strong>F / M</strong> (3 decimals) and the <em>t</em> statistic
+(3 decimals).</li>
+<li><strong>Trips per week</strong> (a count from 0 to 7) by
+<strong>boat</strong> ownership: Wilcoxon rank-sum test
+(<code>exact = FALSE</code>), p-value (4 decimals).</li>
+<li>– 5. Tagged corals deeper than <strong>5 m</strong>: how many
+colonies? Wilcoxon signed-rank test March vs July
+(<code>paired = TRUE, exact = FALSE</code>): p-value (4 decimals).</li>
+</ol>
+</div>
+<div class="fr">
+<p><em>Révision : séance 7.</em> Données :
+<code>fisher_survey.csv</code> et
+<code>coral_tagged_colonies.csv</code>.</p>
+<ol style="list-style-type: decimal">
+<li>– 2. La <strong>capture mensuelle</strong> déclarée est asymétrique
+à droite. Test t de Welch sur <code>log(monthly_catch_kg) ~ sex</code> :
+rapport des moyennes géométriques <strong>F / M</strong> (3 décimales)
+et statistique <em>t</em> (3 décimales).</li>
+<li><strong>Sorties par semaine</strong> (un comptage de 0 à 7) selon la
+possession d’une <strong>pirogue</strong> (<code>boat</code>) : test de
+Wilcoxon des rangs (<code>exact = FALSE</code>), p-value (4
+décimales).</li>
+<li>– 5. Coraux marqués à plus de <strong>5 m</strong> : combien de
+colonies ? Test des rangs signés de Wilcoxon mars vs juillet
+(<code>paired = TRUE, exact = FALSE</code>) : p-value (4
+décimales).</li>
+</ol>
+</div>
+<div id="quiz-tp4" class="quiz" data-quiz-id="tp4"
+data-title-en="Exercise 4" data-title-fr="Exercice 4"
+data-q="W3sidHlwZSI6Im51bSIsImVuIjoiMS4gUmF0aW8gb2YgZ2VvbWV0cmljIG1lYW5zIEYgLyBNPyIsImZyIjoiMS4gUmFwcG9ydCBkZXMgbW95ZW5uZXMgZ8Opb23DqXRyaXF1ZXMgRiAvIE0gPyIsImFuc3dlciI6MC43MDEsInRvbCI6MC4wMDA2LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiMi4gdCBzdGF0aXN0aWM/IiwiZnIiOiIyLiBTdGF0aXN0aXF1ZSB0ID8iLCJhbnN3ZXIiOi00LjMyNiwidG9sIjowLjAwMDYsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibnVtIiwiZW4iOiIzLiBwLXZhbHVlLCB0cmlwcyBieSBib2F0PyIsImZyIjoiMy4gcC12YWx1ZSwgc29ydGllcyBzZWxvbiBwaXJvZ3VlID8iLCJhbnN3ZXIiOjAuMzMyOCwidG9sIjo2ZS0wNSwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJudW0iLCJlbiI6IjQuIENvbG9uaWVzIGRlZXBlciB0aGFuIDUgbT8iLCJmciI6IjQuIENvbG9uaWVzIMOgIHBsdXMgZGUgNSBtID8iLCJhbnN3ZXIiOjksInRvbCI6MCwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJudW0iLCJlbiI6IjUuIHAtdmFsdWUsIHNpZ25lZC1yYW5rIHRlc3Q/IiwiZnIiOiI1LiBwLXZhbHVlLCByYW5ncyBzaWduw6lzID8iLCJhbnN3ZXIiOjAuMDc1NiwidG9sIjo2ZS0wNSwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifV0=">
+
+</div>
+<div class="solution" data-quiz="tp4">
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>fs <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/fisher_survey.csv&quot;</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>t4 <span class="ot">&lt;-</span> <span class="fu">t.test</span>(<span class="fu">log</span>(monthly_catch_kg) <span class="sc">~</span> sex, <span class="at">data =</span> fs)</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="fu">exp</span>(t4<span class="sc">$</span>estimate[<span class="dv">1</span>] <span class="sc">-</span> t4<span class="sc">$</span>estimate[<span class="dv">2</span>]); t4<span class="sc">$</span>statistic              <span class="co"># 1, 2</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="fu">wilcox.test</span>(trips_per_week <span class="sc">~</span> boat, <span class="at">data =</span> fs, <span class="at">exact =</span> <span class="cn">FALSE</span>)    <span class="co"># 3</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>cc <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/coral_tagged_colonies.csv&quot;</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>deep <span class="ot">&lt;-</span> cc[cc<span class="sc">$</span>depth_m <span class="sc">&gt;</span> <span class="dv">5</span>, ]; <span class="fu">nrow</span>(deep)                        <span class="co"># 4</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="fu">wilcox.test</span>(deep<span class="sc">$</span>bleached_march, deep<span class="sc">$</span>bleached_july, <span class="at">paired =</span> <span class="cn">TRUE</span>, <span class="at">exact =</span> <span class="cn">FALSE</span>)   <span class="co"># 5</span></span></code></pre></div>
+</div>
+</div>
+<div id="p5" class="section level2">
+<h2><span class="en">Exercise 5 — Several groups</span><span
+class="fr">Exercice 5 — Plusieurs groupes</span></h2>
+<div class="en">
+<p><em>Revise: Session 8.</em></p>
+<ol style="list-style-type: decimal">
+<li>ANOVA of <strong>rugosity</strong> by <strong>management</strong>
+(reef sites): <em>F</em> value (3 decimals).</li>
+<li>Tukey HSD: difference <strong>Open access − No-take</strong> (3
+decimals).</li>
+<li>Tukey HSD: adjusted p-value of <strong>Open access − LMMA</strong>
+(4 decimals).</li>
+<li>Sea-cucumber pens: ANOVA of the <strong>initial weight</strong> by
+treatment. p-value (3 decimals). (What should we expect, if treatments
+were assigned at random?)</li>
+<li>Kruskal–Wallis test of <strong>herbivore_pct</strong> by management:
+p-value (4 decimals).</li>
+</ol>
+</div>
+<div class="fr">
+<p><em>Révision : séance 8.</em></p>
+<ol style="list-style-type: decimal">
+<li>ANOVA de la <strong>rugosité</strong> par <strong>gestion</strong>
+(sites récifaux) : valeur de <em>F</em> (3 décimales).</li>
+<li>HSD de Tukey : différence <strong>Open access − No-take</strong> (3
+décimales).</li>
+<li>HSD de Tukey : p-value ajustée de <strong>Open access −
+LMMA</strong> (4 décimales).</li>
+<li>Enclos d’holothuries : ANOVA du <strong>poids initial</strong> par
+traitement. p-value (3 décimales). (À quoi faut-il s’attendre, si les
+traitements ont été attribués au hasard ?)</li>
+<li>Test de Kruskal–Wallis de <strong>herbivore_pct</strong> par gestion
+: p-value (4 décimales).</li>
+</ol>
+</div>
+<div id="quiz-tp5" class="quiz" data-quiz-id="tp5"
+data-title-en="Exercise 5" data-title-fr="Exercice 5"
+data-q="W3sidHlwZSI6Im51bSIsImVuIjoiMS4gRiB2YWx1ZSwgcnVnb3NpdHk/IiwiZnIiOiIxLiBWYWxldXIgZGUgRiwgcnVnb3NpdMOpID8iLCJhbnN3ZXIiOjEwLjU4MywidG9sIjowLjAwMDYsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibnVtIiwiZW4iOiIyLiBEaWZmZXJlbmNlIE9wZW4gYWNjZXNzIOKIkiBOby10YWtlPyIsImZyIjoiMi4gRGlmZsOpcmVuY2UgT3BlbiBhY2Nlc3Mg4oiSIE5vLXRha2UgPyIsImFuc3dlciI6LTAuMjQ5LCJ0b2wiOjAuMDAwNiwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJudW0iLCJlbiI6IjMuIEFkanVzdGVkIHAsIE9wZW4gYWNjZXNzIOKIkiBMTU1BPyIsImZyIjoiMy4gcCBhanVzdMOpZSwgT3BlbiBhY2Nlc3Mg4oiSIExNTUEgPyIsImFuc3dlciI6MC41NDQzLCJ0b2wiOjZlLTA1LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiNC4gcC12YWx1ZSwgaW5pdGlhbCB3ZWlnaHQgYnkgdHJlYXRtZW50PyIsImZyIjoiNC4gcC12YWx1ZSwgcG9pZHMgaW5pdGlhbCBwYXIgdHJhaXRlbWVudCA/IiwiYW5zd2VyIjowLjk3OSwidG9sIjowLjAwMDYsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibnVtIiwiZW4iOiI1LiBLcnVza2Fs4oCTV2FsbGlzIHAtdmFsdWUsIGhlcmJpdm9yZXM/IiwiZnIiOiI1LiBwLXZhbHVlIGRlIEtydXNrYWzigJNXYWxsaXMsIGhlcmJpdm9yZXMgPyIsImFuc3dlciI6MC4wOTg3LCJ0b2wiOjZlLTA1LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9XQ==">
+
+</div>
+<div class="solution" data-quiz="tp5">
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>rf <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/reef_fish_sites.csv&quot;</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>f5 <span class="ot">&lt;-</span> <span class="fu">aov</span>(rugosity <span class="sc">~</span> management, <span class="at">data =</span> rf)</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="fu">summary</span>(f5); <span class="fu">TukeyHSD</span>(f5)                                        <span class="co"># 1, 2, 3</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>sc <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/sea_cucumber_pens.csv&quot;</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">aov</span>(initial_weight_g <span class="sc">~</span> treatment, <span class="at">data =</span> sc))            <span class="co"># 4: large p, as expected with random assignment</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="fu">kruskal.test</span>(herbivore_pct <span class="sc">~</span> management, <span class="at">data =</span> rf)              <span class="co"># 5</span></span></code></pre></div>
+</div>
+</div>
+<div id="p6" class="section level2">
+<h2><span class="en">Exercise 6 — Association and regression</span><span
+class="fr">Exercice 6 — Association et régression</span></h2>
+<div class="en">
+<p><em>Revise: Sessions 9–10.</em></p>
+<ol style="list-style-type: decimal">
+<li>– 2. χ² test of independence between <strong>education</strong> and
+<strong>support for closures</strong>: χ² (3 decimals) and p-value (4
+decimals).</li>
+<li>– 4. Reef sites: <code>lm(species_richness ~ coral_cover)</code>:
+slope (4 decimals) and R² (4 decimals).</li>
+<li>Predicted species richness for a site with <strong>40 %</strong>
+coral cover (2 decimals).</li>
+</ol>
+</div>
+<div class="fr">
+<p><em>Révision : séances 9–10.</em></p>
+<ol style="list-style-type: decimal">
+<li>– 2. Test du χ² d’indépendance entre <strong>éducation</strong> et
+<strong>soutien aux fermetures</strong> : χ² (3 décimales) et p-value (4
+décimales).</li>
+<li>– 4. Sites récifaux :
+<code>lm(species_richness ~ coral_cover)</code> : pente (4 décimales) et
+R² (4 décimales).</li>
+<li>Richesse spécifique prédite pour un site à <strong>40 %</strong> de
+corail (2 décimales).</li>
+</ol>
+</div>
+<div id="quiz-tp6" class="quiz" data-quiz-id="tp6"
+data-title-en="Exercise 6" data-title-fr="Exercice 6"
+data-q="W3sidHlwZSI6Im51bSIsImVuIjoiMS4gz4fCsiBlZHVjYXRpb24gw5cgc3VwcG9ydD8iLCJmciI6IjEuIM+HwrIgw6lkdWNhdGlvbiDDlyBzb3V0aWVuID8iLCJhbnN3ZXIiOjAuNTk3LCJ0b2wiOjAuMDAwNiwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJudW0iLCJlbiI6IjIuIHAtdmFsdWU/IiwiZnIiOiIyLiBwLXZhbHVlID8iLCJhbnN3ZXIiOjAuNzQyMSwidG9sIjo2ZS0wNSwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifSx7InR5cGUiOiJudW0iLCJlbiI6IjMuIFNsb3BlIG9mIHJpY2huZXNzIG9uIGNvcmFsIGNvdmVyPyIsImZyIjoiMy4gUGVudGUgZGUgbGEgcmljaGVzc2Ugc3VyIGxlIGNvcmFpbCA/IiwiYW5zd2VyIjowLjI4OTMsInRvbCI6NmUtMDUsImhpbnRfZW4iOiIiLCJoaW50X2ZyIjoiIn0seyJ0eXBlIjoibnVtIiwiZW4iOiI0LiBSwrI/IiwiZnIiOiI0LiBSwrIgPyIsImFuc3dlciI6MC4xNzIyLCJ0b2wiOjZlLTA1LCJoaW50X2VuIjoiIiwiaGludF9mciI6IiJ9LHsidHlwZSI6Im51bSIsImVuIjoiNS4gUHJlZGljdGVkIHJpY2huZXNzIGF0IDQwICUgY29yYWw/IiwiZnIiOiI1LiBSaWNoZXNzZSBwcsOpZGl0ZSDDoCA0MCAlIGRlIGNvcmFpbCA/IiwiYW5zd2VyIjo0Ny40OSwidG9sIjowLjAwNiwiaGludF9lbiI6IiIsImhpbnRfZnIiOiIifV0=">
+
+</div>
+<div class="solution" data-quiz="tp6">
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>fs <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/fisher_survey.csv&quot;</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="fu">chisq.test</span>(<span class="fu">table</span>(fs<span class="sc">$</span>education, fs<span class="sc">$</span>supports_closure))             <span class="co"># 1, 2</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>rf <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/reef_fish_sites.csv&quot;</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>l6 <span class="ot">&lt;-</span> <span class="fu">lm</span>(species_richness <span class="sc">~</span> coral_cover, <span class="at">data =</span> rf)</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="fu">coef</span>(l6); <span class="fu">summary</span>(l6)<span class="sc">$</span>r.squared                                  <span class="co"># 3, 4</span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="fu">predict</span>(l6, <span class="fu">data.frame</span>(<span class="at">coral_cover =</span> <span class="dv">40</span>))                        <span class="co"># 5</span></span></code></pre></div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

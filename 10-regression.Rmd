@@ -1,0 +1,330 @@
+---
+title: "[10 · Correlation and simple linear regression]{.en}[10 · Corrélation et régression linéaire simple]{.fr}"
+pagetitle: "R4Marine Stats · Session 10"
+subtitle: "~3.5 h"
+---
+
+```{r setup, include=FALSE}
+source("R/course_helpers.R")
+library(ggplot2)
+mp <- read.csv("data/mangrove_plots.csv")
+rf <- read.csv("data/reef_fish_sites.csv")
+knitr::opts_chunk$set(fig.height = 3.3)
+```
+
+::: objectives
+::: en
+#### By the end of this session you will be able to
+- describe the relationship between two numeric variables with a **scatterplot** and a **correlation coefficient** (Pearson *r* or Spearman ρ), and test it with `cor.test()`;
+- explain why **correlation is not causation**, and how outliers and restricted ranges distort *r*;
+- fit a **simple linear regression** with `lm()`, and interpret the **intercept**, the **slope** and its CI, and **R²**;
+- check the regression assumptions with **residual plots**;
+- **predict** new values with a confidence or prediction interval, without extrapolating;
+- interpret a slope on a **log-transformed** response as a % change.
+:::
+::: fr
+#### À la fin de cette séance vous saurez
+- décrire la relation entre deux variables numériques avec un **nuage de points** et un **coefficient de corrélation** (*r* de Pearson ou ρ de Spearman), et la tester avec `cor.test()` ;
+- expliquer pourquoi **corrélation n'est pas causalité**, et comment les valeurs extrêmes et les étendues restreintes faussent *r* ;
+- ajuster une **régression linéaire simple** avec `lm()`, et interpréter l'**ordonnée à l'origine**, la **pente** et son IC, et le **R²** ;
+- vérifier les conditions de la régression avec les **graphiques des résidus** ;
+- **prédire** de nouvelles valeurs avec un intervalle de confiance ou de prédiction, sans extrapoler ;
+- interpréter une pente sur une réponse **transformée en log** comme une variation en %.
+:::
+:::
+
+::: {.callout .ecology}
+::: en
+**Mangrove plots** (`mangrove_plots.csv`, simulated). In 2025, a team placed **40 plots of 10 × 10 m**, every 25 m along **4 transects** running from the sea front to the landward edge of a mangrove. In each plot: distance from the sea front (m), pore-water salinity (refractometer, PSU), mean tree height (clinometer, m), mean trunk diameter at breast height (DBH, cm) and number of seedlings. *One row = one plot.* (Plots of the same transect are spatially close; for this course we treat them as independent — the *Statistical modelling* course shows how to account for transects.)
+:::
+::: fr
+**Placettes de mangrove** (`mangrove_plots.csv`, simulé). En 2025, une équipe a placé **40 placettes de 10 × 10 m**, tous les 25 m le long de **4 transects** allant du front de mer à la limite terrestre d'une mangrove. Dans chaque placette : distance au front de mer (m), salinité de l'eau interstitielle (réfractomètre, PSU), hauteur moyenne des arbres (clinomètre, m), diamètre moyen à hauteur de poitrine (DHP, cm) et nombre de plantules. *Une ligne = une placette.* (Les placettes d'un même transect sont proches dans l'espace ; dans ce cours nous les traitons comme indépendantes — le cours *Modélisation statistique* montre comment tenir compte des transects.)
+:::
+:::
+
+`r dl("mangrove_plots.csv", "mangrove_plots.csv")`
+
+## [Correlation]{.en}[Corrélation]{.fr} {#correlation}
+
+::: en
+**Pearson's r** measures the strength and direction of a **linear** relationship, from −1 (perfect decreasing line) through 0 (no linear relationship) to +1 (perfect increasing line). It has no unit and is symmetric (cor(x, y) = cor(y, x)).
+:::
+::: fr
+Le **r de Pearson** mesure la force et le sens d'une relation **linéaire**, de −1 (droite décroissante parfaite) à +1 (droite croissante parfaite), en passant par 0 (pas de relation linéaire). Il est sans unité et symétrique (cor(x, y) = cor(y, x)).
+:::
+
+`r fig_svg("correlation-examples", "What different values of r look like. r measures LINEAR association only: the last panel has a strong relationship and r ≈ 0.", "À quoi ressemblent différentes valeurs de r. r ne mesure que l'association LINÉAIRE : le dernier panneau montre une relation forte avec r ≈ 0.")`
+
+```{r}
+mp <- read.csv("data/mangrove_plots.csv")
+ggplot(mp, aes(salinity_psu, tree_height_m)) + geom_point(colour = "#4a7d3a", size = 2) +
+  labs(x = "pore-water salinity (PSU)", y = "mean tree height (m)") + theme_c()
+cor(mp$salinity_psu, mp$tree_height_m)
+cor.test(mp$salinity_psu, mp$tree_height_m)
+```
+
+```{r, echo=FALSE}
+fa(c("`cor(x, y, method)`", "correlation coefficient", "coefficient de corrélation", "two numeric vectors", "deux vecteurs numériques"),
+   c("&nbsp;&nbsp;`method`", "`\"pearson\"` (default, linear), `\"spearman\"` (ranks, monotonic)", "`\"pearson\"` (défaut, linéaire), `\"spearman\"` (rangs, monotone)", "", ""),
+   c("&nbsp;&nbsp;`use = \"complete.obs\"`", "ignores pairs with `NA` (otherwise the result is `NA`)", "ignore les paires avec des `NA` (sinon le résultat est `NA`)", "", ""),
+   c("`cor.test(x, y, method, exact)`", "tests H0: correlation = 0; gives the CI of r (Pearson)", "teste H0 : corrélation = 0 ; donne l'IC de r (Pearson)", "", ""))
+```
+
+::: en
+**Spearman's ρ** is Pearson's r computed on the **ranks**: it measures a **monotonic** relationship (always increasing or always decreasing, not necessarily straight) and resists outliers. Use it for counts with many small values, ordinal variables, or curved but monotonic relationships — e.g. seedling counts:
+:::
+::: fr
+Le **ρ de Spearman** est le r de Pearson calculé sur les **rangs** : il mesure une relation **monotone** (toujours croissante ou toujours décroissante, pas forcément droite) et résiste aux valeurs extrêmes. Utilisez-le pour des comptages avec beaucoup de petites valeurs, des variables ordinales, ou des relations courbes mais monotones — ex. les comptages de plantules :
+:::
+
+```{r}
+cor.test(mp$salinity_psu, mp$seedlings, method = "spearman", exact = FALSE)
+```
+
+::: {.callout .warning}
+::: en
+**Four traps.** (1) **Causation:** salinity and height are correlated, but both also change with distance from the sea; a correlation alone does not tell which causes which. (2) **Outliers** can create or hide a correlation (Anscombe, Session 3) — always plot. (3) **Restricted range:** sampling only the seaward 50 m would show a much weaker correlation. (4) **Non-linear** relationships can have r ≈ 0.
+:::
+::: fr
+**Quatre pièges.** (1) **Causalité :** salinité et hauteur sont corrélées, mais toutes deux changent aussi avec la distance à la mer ; une corrélation seule ne dit pas qui cause quoi. (2) Les **valeurs extrêmes** peuvent créer ou cacher une corrélation (Anscombe, séance 3) — tracez toujours. (3) **Étendue restreinte :** échantillonner seulement les 50 m côté mer montrerait une corrélation bien plus faible. (4) Les relations **non linéaires** peuvent avoir r ≈ 0.
+:::
+:::
+
+## [Simple linear regression]{.en}[Régression linéaire simple]{.fr} {#regression}
+
+::: en
+Correlation says "how strongly"; **regression** says "**by how much**": how much does tree height change per PSU of salinity? It fits the straight line
+
+**height = β₀ + β₁ × salinity + error**
+
+that minimises the sum of squared vertical distances between points and line (**least squares**). Unlike correlation, regression is **not symmetric**: y is the **response**, x the **predictor**.
+:::
+::: fr
+La corrélation dit « avec quelle force » ; la **régression** dit « **de combien** » : de combien la hauteur des arbres change-t-elle par PSU de salinité ? Elle ajuste la droite
+
+**hauteur = β₀ + β₁ × salinité + erreur**
+
+qui minimise la somme des carrés des distances verticales entre les points et la droite (**moindres carrés**). Contrairement à la corrélation, la régression n'est **pas symétrique** : y est la **réponse**, x le **prédicteur**.
+:::
+
+```{r}
+fit <- lm(tree_height_m ~ salinity_psu, data = mp)
+summary(fit)
+confint(fit)
+```
+
+```{r, echo=FALSE}
+fa(c("`lm(formula, data)`", "fits a linear model by least squares", "ajuste un modèle linéaire par moindres carrés", "", ""),
+   c("&nbsp;&nbsp;`formula`", "`response ~ predictor`", "`réponse ~ prédicteur`", "column names", "noms de colonnes"),
+   c("`summary(fit)`", "coefficients with SE, t and p-values, residual SE, R², F test", "coefficients avec ES, t et p-values, ES résiduelle, R², test F", "", ""),
+   c("`confint(fit, level)`", "confidence intervals of the coefficients", "intervalles de confiance des coefficients", "", ""),
+   c("`coef(fit)`", "the estimated coefficients β₀ and β₁", "les coefficients estimés β₀ et β₁", "", ""))
+```
+
+`r fig_svg("regression-anatomy", "Anatomy of a simple linear regression: the slope is the change in y for +1 unit of x; residuals are the vertical distances from the points to the line.", "Anatomie d'une régression linéaire simple : la pente est la variation de y pour +1 unité de x ; les résidus sont les distances verticales des points à la droite.")`
+
+::: en
+**Reading `summary(fit)`:**
+
+- `(Intercept)` β₀ = `r round(coef(fit)[1], 2)` m: predicted height at salinity **0** — outside the data (salinities about 29–50), so it has no ecological meaning here; it just positions the line.
+- `salinity_psu` β₁ = `r round(coef(fit)[2], 3)`: each extra PSU of salinity is associated with trees **`r abs(round(coef(fit)[2], 2))` m shorter** on average (95 % CI `r round(confint(fit)[2, 1], 2)` to `r round(confint(fit)[2, 2], 2)`). The p-value tests H0: β₁ = 0 (no linear relationship); with one predictor it equals the p-value of `cor.test()`.
+- `Residual standard error` (`r round(summary(fit)$sigma, 2)` m): typical distance of the points to the line.
+- `Multiple R-squared` = `r round(summary(fit)$r.squared, 2)`: salinity "explains" `r round(100 * summary(fit)$r.squared)` % of the variance of height. With one predictor, R² = r².
+:::
+::: fr
+**Lecture de `summary(fit)` :**
+
+- `(Intercept)` β₀ = `r round(coef(fit)[1], 2)` m : hauteur prédite pour une salinité **0** — hors des données (salinités d’environ 29–50), elle n'a donc pas de sens écologique ici ; elle positionne seulement la droite.
+- `salinity_psu` β₁ = `r round(coef(fit)[2], 3)` : chaque PSU de salinité en plus est associé à des arbres **plus petits de `r abs(round(coef(fit)[2], 2))` m** en moyenne (IC 95 % `r round(confint(fit)[2, 1], 2)` à `r round(confint(fit)[2, 2], 2)`). La p-value teste H0 : β₁ = 0 (pas de relation linéaire) ; avec un seul prédicteur, elle est égale à celle de `cor.test()`.
+- `Residual standard error` (`r round(summary(fit)$sigma, 2)` m) : distance typique des points à la droite.
+- `Multiple R-squared` = `r round(summary(fit)$r.squared, 2)` : la salinité « explique » `r round(100 * summary(fit)$r.squared)` % de la variance de la hauteur. Avec un seul prédicteur, R² = r².
+:::
+
+```{r}
+ggplot(mp, aes(salinity_psu, tree_height_m)) +
+  geom_point(colour = "#4a7d3a", size = 2) +
+  geom_smooth(method = "lm", formula = y ~ x, colour = "#0b3d5c", fill = "#bfdfe4") +
+  labs(x = "pore-water salinity (PSU)", y = "mean tree height (m)") + theme_c()
+```
+
+## [Checking the assumptions: residuals]{.en}[Vérifier les conditions : les résidus]{.fr} {#diagnostics}
+
+::: en
+Like ANOVA (which is in fact a linear model), regression assumes: (1) **independent** observations; (2) a **linear** relationship; (3) **constant spread** of residuals along the line; (4) roughly **normal residuals** (least important with large n). Check (2)–(4) on the residual plots:
+:::
+::: fr
+Comme l'ANOVA (qui est en fait un modèle linéaire), la régression suppose : (1) des observations **indépendantes** ; (2) une relation **linéaire** ; (3) une **dispersion constante** des résidus le long de la droite ; (4) des **résidus à peu près normaux** (le moins important avec un grand n). Vérifiez (2)–(4) sur les graphiques des résidus :
+:::
+
+```{r, fig.height=3.4}
+par(mfrow = c(1, 2))
+plot(fit, which = 1)     # residuals vs fitted: no curve, no funnel
+plot(fit, which = 2)     # QQ plot of residuals
+par(mfrow = c(1, 1))
+```
+
+::: en
+| Pattern in "Residuals vs Fitted" | Problem | What to do |
+|---|---|---|
+| a **curve** (U or ∩) | relationship not linear | transform x or y, add a curve (*Modelling* course) |
+| a **funnel** (spread grows with fitted values) | non-constant variance | log-transform y (often fixes both skew and funnel) |
+| one point far away | outlier / influential point | check it; report results with and without |
+
+Here: no pattern, residuals close to the QQ line → the model is adequate.
+:::
+::: fr
+| Motif dans « Residuals vs Fitted » | Problème | Que faire |
+|---|---|---|
+| une **courbe** (U ou ∩) | relation non linéaire | transformer x ou y, ajouter une courbe (cours *Modélisation*) |
+| un **entonnoir** (la dispersion augmente avec les valeurs ajustées) | variance non constante | log-transformer y (corrige souvent asymétrie et entonnoir) |
+| un point très éloigné | valeur extrême / point influent | le vérifier ; donner les résultats avec et sans |
+
+Ici : pas de motif, résidus proches de la droite du QQ plot → le modèle convient.
+:::
+
+## [Prediction]{.en}[Prédiction]{.fr} {#predict}
+
+::: en
+`predict()` gives the fitted height for new salinities, with two kinds of interval:
+
+- **confidence interval** (`interval = "confidence"`): where the **mean** height of all plots at that salinity lies — narrow;
+- **prediction interval** (`interval = "prediction"`): where **one new plot** will probably fall — wide, because it adds the scatter of individual plots.
+:::
+::: fr
+`predict()` donne la hauteur ajustée pour de nouvelles salinités, avec deux sortes d'intervalle :
+
+- **intervalle de confiance** (`interval = "confidence"`) : où se trouve la hauteur **moyenne** de toutes les placettes à cette salinité — étroit ;
+- **intervalle de prédiction** (`interval = "prediction"`) : où tombera probablement **une nouvelle placette** — large, car il ajoute la dispersion des placettes individuelles.
+:::
+
+```{r}
+new <- data.frame(salinity_psu = c(35, 45))
+predict(fit, newdata = new, interval = "confidence")
+predict(fit, newdata = new, interval = "prediction")
+```
+
+```{r, echo=FALSE}
+fa(c("`predict(fit, newdata, interval, level)`", "predicted values of a model for new x values", "valeurs prédites d'un modèle pour de nouvelles valeurs de x", "", ""),
+   c("&nbsp;&nbsp;`newdata`", "a data frame with a column **named exactly like the predictor**", "un data frame avec une colonne **nommée exactement comme le prédicteur**", "a data frame", "un data frame"),
+   c("&nbsp;&nbsp;`interval`", "`\"none\"`, `\"confidence\"` (mean) or `\"prediction\"` (one new observation)", "`\"none\"`, `\"confidence\"` (moyenne) ou `\"prediction\"` (une nouvelle observation)", "", ""))
+```
+
+::: {.callout .warning}
+::: en
+**Do not extrapolate.** The data cover salinities of about `r round(min(mp$salinity_psu))`–`r round(max(mp$salinity_psu))` PSU. Predicting at 100 PSU would give a negative height: the straight line is only a good description **within** the observed range.
+:::
+::: fr
+**N'extrapolez pas.** Les données couvrent des salinités d'environ `r round(min(mp$salinity_psu))`–`r round(max(mp$salinity_psu))` PSU. Prédire à 100 PSU donnerait une hauteur négative : la droite n'est une bonne description qu'**à l'intérieur** de l'étendue observée.
+:::
+:::
+
+## [A log-transformed response: fish biomass and coral cover]{.en}[Une réponse transformée en log : biomasse de poissons et corail]{.fr} {#log-response}
+
+::: en
+Fish biomass is right-skewed and its spread grows with its level (Sessions 2–3). Regressing **log(biomass)** on coral cover often gives straight, evenly spread residuals. The slope then means a **proportional** change: each extra % of coral multiplies biomass by exp(β₁), i.e. a change of 100 × (exp(β₁) − 1) %.
+:::
+::: fr
+La biomasse de poissons est asymétrique à droite et sa dispersion augmente avec son niveau (séances 2–3). Régresser **log(biomasse)** sur le recouvrement corallien donne souvent des résidus alignés et de dispersion régulière. La pente signifie alors une variation **proportionnelle** : chaque % de corail en plus multiplie la biomasse par exp(β₁), soit une variation de 100 × (exp(β₁) − 1) %.
+:::
+
+```{r}
+rf <- read.csv("data/reef_fish_sites.csv")
+fit_rf <- lm(log(biomass_kg_ha) ~ coral_cover, data = rf)
+coef(fit_rf)
+100 * (exp(coef(fit_rf)[2]) - 1)                    # % change in biomass per +1 % coral
+100 * (exp(confint(fit_rf)[2, ]) - 1)
+summary(fit_rf)$r.squared
+```
+
+::: en
+Each extra percentage point of coral cover is associated with about `r round(100 * (exp(coef(fit_rf)[2]) - 1), 1)` % more fish biomass. But R² is only `r round(summary(fit_rf)$r.squared, 2)`, and management (Session 8) is also related to both coral and fish: to separate them we need a model with **several predictors** — the starting point of the *Statistical modelling with R* course.
+:::
+::: fr
+Chaque point de pourcentage de corail en plus est associé à environ `r round(100 * (exp(coef(fit_rf)[2]) - 1), 1)` % de biomasse de poissons en plus. Mais le R² n'est que de `r round(summary(fit_rf)$r.squared, 2)`, et la gestion (séance 8) est aussi liée au corail et aux poissons : pour les séparer il faut un modèle à **plusieurs prédicteurs** — le point de départ du cours *Modélisation statistique avec R*.
+:::
+
+## [Application work & quiz]{.en}[Travail d'application et quiz]{.fr} {#application}
+
+```{r answers10, include=FALSE}
+k1 <- round(cor(mp$tree_height_m, mp$dbh_cm), 3)
+k2 <- round(cor(mp$distance_m, mp$seedlings, method = "spearman"), 3)
+f2 <- lm(dbh_cm ~ tree_height_m, data = mp)
+k3 <- round(coef(f2)[[2]], 3)
+k4 <- round(confint(f2)[2, 1], 3)
+k5 <- round(summary(f2)$r.squared, 3)
+k6 <- round(predict(f2, data.frame(tree_height_m = 8))[[1]], 2)
+k7 <- round(predict(f2, data.frame(tree_height_m = 8), interval = "prediction")[1, "upr"], 2)
+f3 <- lm(salinity_psu ~ distance_m, data = mp)
+k8 <- round(coef(f3)[[2]] * 100, 2)
+```
+
+::: application
+::: en
+### Application work 10
+
+With `mangrove_plots.csv`:
+
+1. Pearson correlation between **tree height** and **DBH** (3 decimals).
+2. Spearman correlation between **distance** and **seedlings** (3 decimals).
+3. – 5. Regression `lm(dbh_cm ~ tree_height_m)`: slope (3 decimals), lower limit of its 95 % CI (3 decimals), R² (3 decimals).
+6. – 7. Predicted DBH for a tree height of **8 m** (2 decimals), and the **upper** limit of the 95 % **prediction** interval (2 decimals).
+8. Regression `lm(salinity_psu ~ distance_m)`: by how many PSU does salinity increase per **100 m** inland (2 decimals)?
+9. – 10. Interpretation.
+:::
+::: fr
+### Travail d'application 10
+
+Avec `mangrove_plots.csv` :
+
+1. Corrélation de Pearson entre **hauteur des arbres** et **DHP** (3 décimales).
+2. Corrélation de Spearman entre **distance** et **plantules** (3 décimales).
+3. – 5. Régression `lm(dbh_cm ~ tree_height_m)` : pente (3 décimales), limite inférieure de son IC à 95 % (3 décimales), R² (3 décimales).
+6. – 7. DHP prédit pour une hauteur d'arbre de **8 m** (2 décimales), et la limite **supérieure** de l'intervalle de **prédiction** à 95 % (2 décimales).
+8. Régression `lm(salinity_psu ~ distance_m)` : de combien de PSU la salinité augmente-t-elle tous les **100 m** vers l'intérieur (2 décimales) ?
+9. – 10. Interprétation.
+:::
+:::
+
+::: hint
+::: en
+Q2: `cor(x, y, method = "spearman")`. Q6–7: `predict(fit, data.frame(tree_height_m = 8), interval = "prediction")`. Q8: the slope is per metre; multiply by 100.
+:::
+::: fr
+Q2 : `cor(x, y, method = "spearman")`. Q6–7 : `predict(fit, data.frame(tree_height_m = 8), interval = "prediction")`. Q8 : la pente est par mètre ; multipliez par 100.
+:::
+:::
+
+```{r quiz10, echo=FALSE}
+quiz("t10", list(
+  q_num("1. Pearson r, height–DBH?", "1. r de Pearson, hauteur–DHP ?", k1, tol = 0.0006),
+  q_num("2. Spearman ρ, distance–seedlings?", "2. ρ de Spearman, distance–plantules ?", k2, tol = 0.0006),
+  q_num("3. Slope of DBH on height (cm per m)?", "3. Pente du DHP sur la hauteur (cm par m) ?", k3, tol = 0.0006),
+  q_num("4. Lower limit of the slope's 95 % CI?", "4. Limite inférieure de l'IC à 95 % de la pente ?", k4, tol = 0.0006),
+  q_num("5. R²?", "5. R² ?", k5, tol = 0.0006),
+  q_num("6. Predicted DBH at 8 m (cm)?", "6. DHP prédit à 8 m (cm) ?", k6, tol = 0.006),
+  q_num("7. Upper limit of the prediction interval (cm)?", "7. Limite supérieure de l'intervalle de prédiction (cm) ?", k7, tol = 0.006),
+  q_num("8. Salinity increase per 100 m (PSU)?", "8. Augmentation de salinité par 100 m (PSU) ?", k8, tol = 0.006),
+  q_mcq("9. The residuals vs fitted plot shows a funnel opening to the right. The best first step is…",
+        "9. Le graphique résidus vs valeurs ajustées montre un entonnoir qui s'ouvre vers la droite. La meilleure première étape est…",
+        c("ignore it if p < 0.05", "log-transform the response", "remove the largest values", "use Spearman instead of a regression"),
+        c("l'ignorer si p < 0,05", "log-transformer la réponse", "supprimer les plus grandes valeurs", "utiliser Spearman au lieu d'une régression"), correct = 2),
+  q_mcq("10. In log(biomass) = 5.2 + 0.03 × coral, +1 % coral is associated with…",
+        "10. Dans log(biomasse) = 5,2 + 0,03 × corail, +1 % de corail est associé à…",
+        c("+0.03 kg/ha of biomass", "about +3 % of biomass", "+30 % of biomass", "+5.2 kg/ha"),
+        c("+0,03 kg/ha de biomasse", "environ +3 % de biomasse", "+30 % de biomasse", "+5,2 kg/ha"), correct = 2)
+))
+```
+
+::: {.solution data-quiz="t10"}
+```{r, eval=FALSE}
+mp <- read.csv("data/mangrove_plots.csv")
+cor(mp$tree_height_m, mp$dbh_cm)                                  # 1
+cor(mp$distance_m, mp$seedlings, method = "spearman")             # 2
+f2 <- lm(dbh_cm ~ tree_height_m, data = mp)
+coef(f2); confint(f2); summary(f2)$r.squared                      # 3, 4, 5
+predict(f2, data.frame(tree_height_m = 8), interval = "prediction")   # 6, 7
+f3 <- lm(salinity_psu ~ distance_m, data = mp)
+coef(f3)[2] * 100                                                 # 8
+# 9: log-transform y   10: exp(0.03) = 1.03 -> about +3 %
+```
+:::

@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Aroo Falinirina" />
+
+
+<title>Introduction aux statistiques avec R</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+<!-- ===========================================================================
+  slides-engine.html — turns a normal R Markdown html_document into slides.
+  Inserted in <head> by the YAML of each deck (includes: in_header).
+  In the .Rmd:  "## Title" = one slide · "## Title {.segue}" = section divider
+                <div class="notes"> ... </div> = speaker notes (press N)
+  Keys: → / Space / PageDown = next · ← / PageUp = previous · Home / End
+        F = full screen · N = show/hide notes · O = overview of all slides
+  Each slide is a 1280 × 720 box scaled to the window, so it looks the same on
+  any screen or projector. Content that is too long is shrunk automatically.
+=========================================================================== -->
+<script>
+(function () {
+  "use strict";
+  let slides = [], cur = 0;
+
+  function build() {
+    document.body.classList.add("deck");
+    const stage = document.createElement("div");
+    stage.id = "stage";
+    // slide 0 = the title block made by R Markdown (#header)
+    // (theme: null puts h1.title / h3.subtitle / h4.author directly in <body>)
+    const header = document.getElementById("header");
+    const titleParts = header ? [header]
+      : Array.from(document.querySelectorAll("h1.title, h3.subtitle, h4.author, h4.date"));
+    if (titleParts.length) { const s = wrap(titleParts); s.classList.add("title-slide"); stage.appendChild(s); }
+    // every "## Title" section = one slide
+    document.querySelectorAll("div.section.level2").forEach(sec => {
+      const s = wrap([sec]);
+      if (sec.classList.contains("segue")) s.classList.add("segue");
+      stage.appendChild(s);
+    });
+    document.body.innerHTML = "";
+    document.body.appendChild(stage);
+    slides = Array.from(stage.children);
+
+    const bar = document.createElement("div");
+    bar.id = "deck-bar";
+    document.body.appendChild(bar);
+    const sig = document.createElement("div");
+    sig.id = "deck-sign"; sig.textContent = "by Aroo Falinirina";
+    document.body.appendChild(sig);
+
+    const n = parseInt(location.hash.replace("#", ""), 10);
+    show(isNaN(n) ? 0 : Math.min(Math.max(n - 1, 0), slides.length - 1));
+    window.addEventListener("resize", scale);
+    scale();
+    slides.forEach(fit);
+  }
+
+  function wrap(nodes) {
+    const s = document.createElement("section");
+    s.className = "slide";
+    const inner = document.createElement("div");
+    inner.className = "slide-inner";
+    nodes.forEach(n => inner.appendChild(n));
+    s.appendChild(inner);
+    return s;
+  }
+
+  // scale the 1280 x 720 slide to the window
+  function scale() {
+    const k = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+    document.documentElement.style.setProperty("--k", k);
+  }
+
+  // shrink the font of a slide until its content fits in the box
+  function fit(s) {
+    const inner = s.querySelector(".slide-inner");
+    let size = 100;
+    s.style.display = "block";
+    const base = parseFloat(getComputedStyle(inner).fontSize);   // 27px in slides.css
+    while (inner.scrollHeight > inner.clientHeight + 2 && size > 62) {
+      size -= 4; inner.style.fontSize = (base * size / 100) + "px";
+    }
+    s.style.display = "";
+  }
+
+  function show(i) {
+    if (i < 0 || i >= slides.length) return;
+    slides[cur].classList.remove("current");
+    cur = i;
+    slides[cur].classList.add("current");
+    history.replaceState(null, "", "#" + (cur + 1));
+    const bar = document.getElementById("deck-bar");
+    bar.textContent = (cur + 1) + " / " + slides.length;
+    bar.style.setProperty("--p", ((cur + 1) / slides.length * 100) + "%");
+  }
+
+  document.addEventListener("keydown", e => {
+    if (["ArrowRight", "PageDown", " ", "Enter"].includes(e.key)) { e.preventDefault(); show(cur + 1); }
+    else if (["ArrowLeft", "PageUp", "Backspace"].includes(e.key)) { e.preventDefault(); show(cur - 1); }
+    else if (e.key === "Home") show(0);
+    else if (e.key === "End") show(slides.length - 1);
+    else if (e.key === "f" || e.key === "F") {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen();
+    }
+    else if (e.key === "n" || e.key === "N") document.body.classList.toggle("show-notes");
+    else if (e.key === "o" || e.key === "O") document.body.classList.toggle("overview");
+  });
+  // click on a slide in overview mode jumps to it; otherwise click = next
+  document.addEventListener("click", e => {
+    const s = e.target.closest(".slide");
+    if (document.body.classList.contains("overview") && s) {
+      document.body.classList.remove("overview"); show(slides.indexOf(s)); return;
+    }
+    if (e.target.closest("a, pre, code, button")) return;
+    if (e.clientX > window.innerWidth * 0.5) show(cur + 1); else show(cur - 1);
+  });
+
+  document.addEventListener("DOMContentLoaded", build);
+})();
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } 
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } 
+code span.at { color: #204a87; } 
+code span.bn { color: #0000cf; } 
+code span.cf { color: #204a87; font-weight: bold; } 
+code span.ch { color: #4e9a06; } 
+code span.cn { color: #8f5902; } 
+code span.co { color: #8f5902; font-style: italic; } 
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } 
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } 
+code span.dt { color: #204a87; } 
+code span.dv { color: #0000cf; } 
+code span.er { color: #a40000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #0000cf; } 
+code span.fu { color: #204a87; font-weight: bold; } 
+code span.im { } 
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } 
+code span.kw { color: #204a87; font-weight: bold; } 
+code span.op { color: #ce5c00; font-weight: bold; } 
+code span.ot { color: #8f5902; } 
+code span.pp { color: #8f5902; font-style: italic; } 
+code span.sc { color: #ce5c00; font-weight: bold; } 
+code span.ss { color: #4e9a06; } 
+code span.st { color: #4e9a06; } 
+code span.va { color: #000000; } 
+code span.vs { color: #4e9a06; } 
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">
+:root { --ocean: #0b3d5c; --lagoon: #1b7f8c; --seagrass: #4a7d3a; --coral: #d9694a;
+--sand: #f6f1e7; --ink: #1f2a33; --muted: #5d6b75; --k: 1; }
+
+.en { display: none !important; }
+html, body { margin: 0; height: 100%; background: #0f1d26; overflow: hidden; }
+body.deck { font-family: "Source Sans 3", "Segoe UI", Calibri, Arial, sans-serif; color: var(--ink); }
+
+.slide { display: none; position: absolute; left: 50%; top: 50%; width: 1280px; height: 720px;
+transform: translate(-50%, -50%) scale(var(--k)); background: #fff;
+box-shadow: 0 10px 40px rgba(0,0,0,.4); overflow: hidden; }
+.slide.current { display: block; }
+.slide-inner { box-sizing: border-box; height: 100%; padding: 46px 70px 56px; font-size: 100%; overflow: hidden; }
+.slide::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 7px;
+background: linear-gradient(90deg, var(--seagrass), var(--lagoon), var(--coral)); }
+
+.slide-inner { font-size: 27px; line-height: 1.4; }
+.slide h2 { font-family: "Source Serif 4", Georgia, "Times New Roman", serif; color: var(--ocean);
+font-size: 1.65em; font-weight: 600; margin: 0 0 .45em; padding-bottom: .2em; border-bottom: 2px solid #e3e9ec; }
+.slide h3 { color: var(--lagoon); font-size: 1.1em; margin: .4em 0 .2em; }
+.slide p { margin: .35em 0; }
+.slide ul, .slide ol { margin: .3em 0; padding-left: 1.3em; }
+.slide li { margin: .22em 0; }
+.slide a { color: var(--lagoon); }
+.slide strong { color: var(--ocean); }
+
+.slide.title-slide { background: linear-gradient(135deg, #0b3d5c 0%, #1b7f8c 70%, #4a7d3a 100%); }
+.slide.title-slide .slide-inner { display: flex; flex-direction: column; justify-content: center; padding: 80px 100px; }
+.slide.title-slide h1 { font-family: "Source Serif 4", Georgia, serif; color: #fff; font-size: 64px; margin: 0 0 20px; line-height: 1.1; }
+.slide.title-slide .subtitle { color: #d8eef1; font-size: 30px; font-weight: 400; margin: 0 0 40px; }
+.slide.title-slide .author { color: #fff; font-family: Georgia, serif; font-style: italic; font-size: 26px; font-weight: 400; margin: 0; }
+
+.slide.segue { background: var(--ocean); }
+.slide.segue .slide-inner { display: flex; align-items: center; }
+.slide.segue h2 { color: #fff; border: 0; font-size: 2.3em; }
+
+pre, code { font-family: "JetBrains Mono", Consolas, "Courier New", monospace; }
+.slide pre { font-size: .66em; line-height: 1.35; background: #f7f9fa; border: 1px solid #dde3e6;
+border-left: 5px solid var(--lagoon); border-radius: 6px; padding: 8px 14px; margin: .35em 0; white-space: pre-wrap; }
+.slide pre:not(.r) { border-left-color: #b9c4ca; background: #fbfcfc; }
+.slide :not(pre) > code { background: #eef4f5; color: #0d4f63; padding: 0 5px; border-radius: 4px; font-size: .9em; }
+.slide img { max-width: 100%; max-height: 420px; display: block; margin: 6px auto; }
+.slide .svg-fig { margin: 0 auto; text-align: center; }
+.slide .svg-fig svg { max-height: 540px; width: auto; max-width: 100%; }
+
+.slide table { border-collapse: collapse; margin: .4em 0; font-size: .8em; }
+.slide th { background: var(--ocean); color: #fff; padding: 6px 12px; text-align: left; }
+.slide td { padding: 5px 12px; border-bottom: 1px solid #dde3e6; }
+
+.box { border-radius: 10px; padding: 8px 18px; margin: 12px 0; background: var(--sand); font-size: .92em; }
+.box.tip { background: #eef5ea; border-left: 6px solid var(--seagrass); }
+.box.warn { background: #fdf0eb; border-left: 6px solid var(--coral); }
+.box.eco { background: #e9f4f6; border-left: 6px solid var(--lagoon); }
+
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.cols > .c > p:first-child { margin: 0; font-weight: 700; font-size: .7em; letter-spacing: .06em; text-transform: uppercase; }
+.cols > .base > p:first-child { color: #8a6a32; }
+.cols > .pkg > p:first-child { color: var(--lagoon); }
+.cols img { max-height: 330px; }
+
+.notes { display: none; }
+body.show-notes .notes { display: block; position: absolute; left: 0; right: 0; bottom: 0; max-height: 40%; overflow: auto;
+background: #fff7e6; border-top: 3px solid #e3b04b; padding: 10px 70px; font-size: 20px; color: #5a4a20; }
+
+#deck-bar { --p: 0%; position: fixed; left: 0; right: 0; bottom: 0; height: 22px; color: #9fb3bd; font-size: 13px;
+text-align: right; padding-right: 12px; line-height: 22px;
+background: linear-gradient(90deg, var(--lagoon) var(--p), transparent var(--p)) no-repeat bottom / 100% 3px; }
+#deck-sign { position: fixed; left: 14px; bottom: 3px; color: #9fb3bd; font-family: Georgia, serif; font-style: italic; font-size: 13px; }
+
+body.overview { overflow: auto; }
+body.overview #stage { display: grid; grid-template-columns: repeat(auto-fill, 330px); gap: 16px; padding: 16px; }
+body.overview .slide { display: block; position: relative; left: auto; top: auto; transform: scale(.25);
+transform-origin: top left; width: 1280px; height: 720px; margin: 0 -960px -540px 0; cursor: pointer; }
+body.overview .slide.current { outline: 12px solid var(--coral); }
+
+@media print {
+@page { size: 1280px 720px; margin: 0; }
+html, body { overflow: visible; background: #fff; }
+.slide { display: block !important; position: relative; left: 0; top: 0; transform: none; box-shadow: none; page-break-after: always; }
+#deck-bar, #deck-sign { display: none; }
+}
+.slide pre code { white-space: pre-wrap; }
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction aux statistiques avec R</h1>
+<h3 class="subtitle">Partie 3 · Séances 9 à 13 — Proportions,
+régression, puissance, rédaction</h3>
+<h4 class="author">Aroo Falinirina</h4>
+
+
+
+<div id="rappel-des-parties-1-et-2" class="section level2">
+<h2>Rappel des parties 1 et 2</h2>
+<ul>
+<li>IC = précision d’une estimation · p-value = surprise sous H0</li>
+<li>Deux groupes : Welch / Wilcoxon / apparié · Plusieurs : ANOVA +
+Tukey / Kruskal–Wallis</li>
+</ul>
+<div class="box tip">
+<p>Aujourd’hui : les <strong>effectifs</strong>, les
+<strong>relations</strong>, et comment <strong>planifier</strong> et
+<strong>rédiger</strong>.</p>
+</div>
+</div>
+<div id="séance-9-proportions-et-χ²" class="section level2 segue">
+<h2 class="segue">Séance 9 — Proportions et χ²</h2>
+</div>
+<div id="deux-proportions" class="section level2">
+<h2>Deux proportions</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>small <span class="ot">&lt;-</span> <span class="fu">tapply</span>(oc<span class="sc">$</span>weight_g <span class="sc">&lt;</span> <span class="dv">350</span>, oc<span class="sc">$</span>area, sum)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">prop.test</span>(small, <span class="fu">table</span>(oc<span class="sc">$</span>area))<span class="sc">$</span>conf.int</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="co">#&gt; [1] 0.03135281 0.17303908</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;conf.level&quot;)</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="co">#&gt; [1] 0.95</span></span></code></pre></div>
+</div>
+<div id="deux-variables-catégorielles" class="section level2">
+<h2>Deux variables catégorielles</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">table</span>(fs<span class="sc">$</span>lmma_member, fs<span class="sc">$</span>supports_closure)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> <span class="fu">prop.table</span>(tab, <span class="dv">1</span>))</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#&gt;      </span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt;       no yes</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt;   no  46  54</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt;   yes 16  84</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>ct <span class="ot">&lt;-</span> <span class="fu">chisq.test</span>(tab); ct<span class="sc">$</span>p.value</span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt; [1] 1.064744e-05</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="fu">fisher.test</span>(tab[<span class="fu">c</span>(<span class="st">&quot;yes&quot;</span>, <span class="st">&quot;no&quot;</span>), <span class="fu">c</span>(<span class="st">&quot;yes&quot;</span>, <span class="st">&quot;no&quot;</span>)])<span class="sc">$</span>estimate     <span class="co"># odds ratio</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt; odds ratio </span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt;   4.261454</span></span></code></pre></div>
+<div class="box warn">
+<p>Effectifs <strong>attendus</strong> &lt; 5 →
+<code>fisher.test()</code> · Association ≠ causalité.</p>
+</div>
+</div>
+<div id="séance-10-corrélation-et-régression" class="section level2 segue">
+<h2 class="segue">Séance 10 — Corrélation et régression</h2>
+</div>
+<div id="r-de-pearson-ρ-de-spearman" class="section level2">
+<h2>r de Pearson, ρ de Spearman</h2>
+<figure class="svg-fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 210" role="img" aria-label="Examples of correlations" font-family="Source Sans 3, Arial, sans-serif">
+<rect x="10" y="30" width="160" height="150" fill="#fff" stroke="#c9d3d8"></rect>
+<circle cx="46.7" cy="133.4" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="62.7" cy="109.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="58.1" cy="119.7" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="67.1" cy="94.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="100.7" cy="82.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="22.1" cy="139.1" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="66.6" cy="117.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="61.8" cy="112.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="49.0" cy="137.1" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="73.7" cy="123.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="77.5" cy="100.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="157.1" cy="55.8" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="87.2" cy="102.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="77.2" cy="92.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="105.4" cy="62.9" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="43.7" cy="127.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="58.1" cy="122.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="95.3" cy="80.2" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="61.3" cy="103.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="45.7" cy="120.4" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="58.8" cy="126.9" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="33.8" cy="141.4" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="114.4" cy="62.7" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="118.3" cy="84.7" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="162.0" cy="38.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="68.1" cy="95.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="70.1" cy="96.1" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="71.1" cy="115.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="94.7" cy="93.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="77.9" cy="104.8" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="103.0" cy="96.4" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="67.5" cy="109.2" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="31.5" cy="147.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="128.8" cy="56.7" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="61.5" cy="127.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="114.8" cy="81.9" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="66.6" cy="117.9" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="82.1" cy="98.7" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="23.9" cy="172.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="46.0" cy="115.2" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="90.2" cy="95.7" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="96.6" cy="86.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="69.9" cy="93.7" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="82.1" cy="98.9" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="18.0" cy="142.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="78.7" cy="100.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="55.7" cy="109.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="44.1" cy="119.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="88.7" cy="80.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="63.0" cy="114.2" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="49.0" cy="136.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="64.7" cy="109.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="64.8" cy="125.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="68.1" cy="109.8" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="79.8" cy="104.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="63.1" cy="138.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="106.8" cy="84.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="128.0" cy="76.1" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="109.9" cy="93.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="66.4" cy="131.9" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<text class="en" x="90.0" y="20" text-anchor="middle" font-size="15" font-weight="700" fill="#0b3d5c">r = 0.91</text>
+<text class="fr" x="90.0" y="20" text-anchor="middle" font-size="15" font-weight="700" fill="#0b3d5c">r = 0,91</text>
+<rect x="188" y="30" width="160" height="150" fill="#fff" stroke="#c9d3d8"></rect>
+<circle cx="287.6" cy="93.1" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="293.3" cy="66.7" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="240.1" cy="127.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="242.6" cy="80.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="248.9" cy="128.4" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="242.5" cy="106.1" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="291.5" cy="113.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="243.7" cy="104.7" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="302.6" cy="97.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="200.7" cy="155.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="218.5" cy="111.2" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="298.8" cy="106.8" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="261.8" cy="86.7" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="211.2" cy="172.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="340.0" cy="38.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="294.2" cy="90.2" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="283.0" cy="56.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="196.0" cy="110.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="299.8" cy="84.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="271.7" cy="100.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="266.4" cy="107.8" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="259.7" cy="85.8" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="217.3" cy="120.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="235.6" cy="139.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="284.8" cy="94.9" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="301.4" cy="72.8" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="292.4" cy="84.7" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="284.4" cy="84.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="278.3" cy="82.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="288.0" cy="137.8" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="339.2" cy="64.8" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="274.5" cy="62.7" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="225.0" cy="102.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="286.1" cy="95.8" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="262.0" cy="121.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="239.3" cy="119.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="234.2" cy="70.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="295.7" cy="94.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="251.8" cy="91.2" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="266.3" cy="98.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="246.1" cy="91.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="307.3" cy="105.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="259.9" cy="139.1" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="259.5" cy="107.4" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="226.1" cy="110.4" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="234.6" cy="162.7" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="305.6" cy="87.2" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="242.2" cy="103.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="303.9" cy="87.2" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="288.5" cy="97.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="283.4" cy="130.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="280.1" cy="110.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="273.6" cy="118.9" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="308.7" cy="66.1" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="277.2" cy="89.4" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="231.2" cy="102.2" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="265.0" cy="132.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="321.2" cy="103.7" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="237.9" cy="105.1" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="273.1" cy="96.7" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<text class="en" x="268.0" y="20" text-anchor="middle" font-size="15" font-weight="700" fill="#0b3d5c">r = 0.56</text>
+<text class="fr" x="268.0" y="20" text-anchor="middle" font-size="15" font-weight="700" fill="#0b3d5c">r = 0,56</text>
+<rect x="366" y="30" width="160" height="150" fill="#fff" stroke="#c9d3d8"></rect>
+<circle cx="492.5" cy="56.7" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="443.6" cy="64.1" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="443.0" cy="101.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="485.4" cy="70.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="436.2" cy="128.4" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="447.7" cy="141.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="497.6" cy="128.1" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="508.6" cy="41.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="449.6" cy="121.4" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="421.0" cy="119.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="445.7" cy="97.1" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="374.0" cy="93.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="486.3" cy="69.1" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="510.9" cy="56.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="472.9" cy="97.2" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="435.9" cy="104.9" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="429.6" cy="113.9" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="448.7" cy="117.4" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="471.8" cy="118.4" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="490.9" cy="106.2" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="501.0" cy="87.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="518.0" cy="66.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="477.1" cy="74.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="500.2" cy="96.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="386.8" cy="69.7" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="426.0" cy="119.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="468.5" cy="45.9" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="433.4" cy="68.9" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="453.9" cy="38.2" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="467.5" cy="86.8" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="485.4" cy="126.7" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="469.1" cy="38.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="469.9" cy="96.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="457.8" cy="119.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="479.8" cy="152.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="499.2" cy="152.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="448.4" cy="83.4" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="475.6" cy="75.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="469.2" cy="105.7" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="457.9" cy="41.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="434.7" cy="92.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="442.3" cy="71.1" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="449.6" cy="121.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="477.2" cy="117.8" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="476.8" cy="124.4" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="487.0" cy="74.9" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="461.3" cy="89.7" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="426.9" cy="92.1" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="471.3" cy="83.2" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="399.8" cy="91.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="489.6" cy="82.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="515.7" cy="172.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="433.3" cy="72.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="445.4" cy="72.7" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="397.7" cy="62.2" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="455.5" cy="89.9" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="450.3" cy="113.9" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="469.2" cy="126.9" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="475.4" cy="63.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="457.0" cy="113.8" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<text class="en" x="446.0" y="20" text-anchor="middle" font-size="15" font-weight="700" fill="#0b3d5c">r = −0.03</text>
+<text class="fr" x="446.0" y="20" text-anchor="middle" font-size="15" font-weight="700" fill="#0b3d5c">r = −0,03</text>
+<rect x="544" y="30" width="160" height="150" fill="#fff" stroke="#c9d3d8"></rect>
+<circle cx="661.3" cy="172.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="639.1" cy="132.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="595.1" cy="99.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="635.9" cy="114.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="678.1" cy="145.2" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="638.6" cy="126.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="569.6" cy="63.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="631.5" cy="112.1" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="618.1" cy="130.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="638.1" cy="103.4" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="625.2" cy="79.7" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="650.3" cy="123.2" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="606.8" cy="120.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="632.6" cy="84.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="667.1" cy="117.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="648.8" cy="162.4" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="638.4" cy="113.7" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="640.9" cy="123.8" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="669.4" cy="80.9" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="667.0" cy="130.2" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="650.9" cy="146.7" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="564.4" cy="58.8" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="580.9" cy="56.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="603.4" cy="132.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="628.3" cy="107.8" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="588.5" cy="93.1" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="569.2" cy="55.4" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="623.9" cy="95.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="593.7" cy="104.4" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="589.7" cy="80.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="599.7" cy="90.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="591.1" cy="121.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="634.5" cy="135.7" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="658.2" cy="103.7" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="613.6" cy="80.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="591.6" cy="38.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="649.9" cy="117.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="599.7" cy="78.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="618.6" cy="131.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="611.4" cy="68.9" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="605.4" cy="119.4" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="696.0" cy="162.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="650.8" cy="110.1" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="673.6" cy="150.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="677.3" cy="73.7" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="636.2" cy="126.1" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="552.0" cy="97.8" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="651.2" cy="126.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="656.5" cy="104.9" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="570.9" cy="96.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="598.4" cy="68.9" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="674.0" cy="109.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="651.6" cy="158.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="662.8" cy="114.1" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="595.5" cy="87.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="654.1" cy="117.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="623.6" cy="98.1" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="652.6" cy="108.1" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="574.1" cy="86.9" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="620.8" cy="92.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<text class="en" x="624.0" y="20" text-anchor="middle" font-size="15" font-weight="700" fill="#0b3d5c">r = −0.60</text>
+<text class="fr" x="624.0" y="20" text-anchor="middle" font-size="15" font-weight="700" fill="#0b3d5c">r = −0,60</text>
+<rect x="722" y="30" width="160" height="150" fill="#fff" stroke="#c9d3d8"></rect>
+<circle cx="777.7" cy="148.9" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="814.7" cy="160.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="751.8" cy="96.2" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="799.6" cy="143.2" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="780.9" cy="157.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="730.0" cy="38.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="827.1" cy="140.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="802.0" cy="161.1" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="841.9" cy="122.2" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="856.5" cy="95.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="736.3" cy="57.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="832.9" cy="140.2" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="795.9" cy="168.2" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="856.1" cy="96.1" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="746.0" cy="103.9" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="851.0" cy="104.4" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="791.6" cy="160.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="742.7" cy="81.9" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="796.3" cy="151.8" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="856.5" cy="94.2" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="739.9" cy="81.4" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="784.2" cy="160.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="740.9" cy="100.2" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="730.3" cy="52.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="849.2" cy="125.4" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="809.2" cy="159.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="812.1" cy="165.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="859.7" cy="81.7" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="741.6" cy="81.1" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="866.3" cy="82.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="838.5" cy="137.9" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="852.7" cy="109.2" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="847.6" cy="109.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="786.4" cy="154.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="732.7" cy="58.9" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="874.0" cy="55.1" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="821.1" cy="155.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="832.5" cy="149.9" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="830.2" cy="136.3" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="772.6" cy="139.8" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="824.6" cy="157.2" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="794.7" cy="163.4" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="762.2" cy="121.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="801.8" cy="142.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="797.1" cy="172.0" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="773.1" cy="150.4" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="838.0" cy="122.5" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="861.1" cy="82.4" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="816.0" cy="153.7" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="732.7" cy="50.7" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="808.3" cy="167.2" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="820.8" cy="150.2" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="847.6" cy="115.4" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="773.3" cy="149.4" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="763.3" cy="116.8" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="783.5" cy="159.9" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="752.6" cy="124.1" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="842.3" cy="125.8" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="733.2" cy="74.8" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<circle cx="811.2" cy="165.6" r="3" fill="#1b7f8c" fill-opacity="0.75"></circle>
+<text class="en" x="802.0" y="20" text-anchor="middle" font-size="15" font-weight="700" fill="#0b3d5c">r = −0.23</text>
+<text class="fr" x="802.0" y="20" text-anchor="middle" font-size="15" font-weight="700" fill="#0b3d5c">r = −0,23</text>
+<text class="en" x="90" y="200" text-anchor="middle" font-size="13" fill="#5d6b75">strong +</text>
+<text class="fr" x="90" y="200" text-anchor="middle" font-size="13" fill="#5d6b75">forte +</text>
+<text class="en" x="268" y="200" text-anchor="middle" font-size="13" fill="#5d6b75">moderate +</text>
+<text class="fr" x="268" y="200" text-anchor="middle" font-size="13" fill="#5d6b75">modérée +</text>
+<text class="en" x="446" y="200" text-anchor="middle" font-size="13" fill="#5d6b75">none</text>
+<text class="fr" x="446" y="200" text-anchor="middle" font-size="13" fill="#5d6b75">aucune</text>
+<text class="en" x="624" y="200" text-anchor="middle" font-size="13" fill="#5d6b75">strong −</text>
+<text class="fr" x="624" y="200" text-anchor="middle" font-size="13" fill="#5d6b75">forte −</text>
+<text class="en" x="802" y="200" text-anchor="middle" font-size="13" fill="#d9694a">curved, r ≈ 0!</text>
+<text class="fr" x="802" y="200" text-anchor="middle" font-size="13" fill="#d9694a">courbe, r ≈ 0 !</text>
+</svg></figure>
+</div>
+<div id="la-régression-linéaire-simple" class="section level2">
+<h2>La régression linéaire simple</h2>
+<figure class="svg-fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 330" role="img" aria-label="Simple linear regression" font-family="Source Sans 3, Arial, sans-serif">
+<defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#5d6b75"></path></marker></defs>
+<line x1="70" y1="290" x2="490" y2="290" stroke="#5d6b75" marker-end="url(#arr)"></line>
+<line x1="70" y1="290" x2="70" y2="30" stroke="#5d6b75" marker-end="url(#arr)"></line>
+<text x="490" y="312" text-anchor="end" font-size="14" fill="#3c4a52">x</text><text x="56" y="40" font-size="14" fill="#3c4a52">y</text>
+<line x1="70" y1="230.0" x2="470" y2="30.0" stroke="#0b3d5c" stroke-width="2.5"></line>
+<line x1="100" y1="214.0" x2="100" y2="215.0" stroke="#8a969e" stroke-dasharray="3 2" stroke-width="1"></line>
+<circle cx="100" cy="214.0" r="4.5" fill="#1b7f8c"></circle>
+<line x1="130" y1="188.4" x2="130" y2="200.0" stroke="#8a969e" stroke-dasharray="3 2" stroke-width="1"></line>
+<circle cx="130" cy="188.4" r="4.5" fill="#1b7f8c"></circle>
+<line x1="160" y1="196.5" x2="160" y2="185.0" stroke="#8a969e" stroke-dasharray="3 2" stroke-width="1"></line>
+<circle cx="160" cy="196.5" r="4.5" fill="#1b7f8c"></circle>
+<line x1="190" y1="161.2" x2="190" y2="170.0" stroke="#8a969e" stroke-dasharray="3 2" stroke-width="1"></line>
+<circle cx="190" cy="161.2" r="4.5" fill="#1b7f8c"></circle>
+<line x1="220" y1="131.8" x2="220" y2="155.0" stroke="#8a969e" stroke-dasharray="3 2" stroke-width="1"></line>
+<circle cx="220" cy="131.8" r="4.5" fill="#1b7f8c"></circle>
+<line x1="250" y1="129.7" x2="250" y2="140.0" stroke="#8a969e" stroke-dasharray="3 2" stroke-width="1"></line>
+<circle cx="250" cy="129.7" r="4.5" fill="#1b7f8c"></circle>
+<line x1="280" y1="85.9" x2="280" y2="125.0" stroke="#8a969e" stroke-dasharray="3 2" stroke-width="1"></line>
+<circle cx="280" cy="85.9" r="4.5" fill="#1b7f8c"></circle>
+<line x1="310" y1="132.1" x2="310" y2="110.0" stroke="#d9694a" stroke-dasharray="3 2" stroke-width="2"></line>
+<circle cx="310" cy="132.1" r="4.5" fill="#1b7f8c"></circle>
+<line x1="340" y1="93.3" x2="340" y2="95.0" stroke="#8a969e" stroke-dasharray="3 2" stroke-width="1"></line>
+<circle cx="340" cy="93.3" r="4.5" fill="#1b7f8c"></circle>
+<line x1="370" y1="97.6" x2="370" y2="80.0" stroke="#8a969e" stroke-dasharray="3 2" stroke-width="1"></line>
+<circle cx="370" cy="97.6" r="4.5" fill="#1b7f8c"></circle>
+<line x1="400" y1="84.6" x2="400" y2="65.0" stroke="#8a969e" stroke-dasharray="3 2" stroke-width="1"></line>
+<circle cx="400" cy="84.6" r="4.5" fill="#1b7f8c"></circle>
+<line x1="430" y1="54.6" x2="430" y2="50.0" stroke="#8a969e" stroke-dasharray="3 2" stroke-width="1"></line>
+<circle cx="430" cy="54.6" r="4.5" fill="#1b7f8c"></circle>
+<line x1="460" y1="29.5" x2="460" y2="35.0" stroke="#8a969e" stroke-dasharray="3 2" stroke-width="1"></line>
+<circle cx="460" cy="29.5" r="4.5" fill="#1b7f8c"></circle>
+<path d="M170 180.0 L250 180.0 L250 140.0" fill="none" stroke="#4a7d3a" stroke-width="2"></path>
+<text class="en" x="210.0" y="198.0" text-anchor="middle" font-size="13" fill="#4a7d3a">+1 unit of x</text><text class="fr" x="210.0" y="198.0" text-anchor="middle" font-size="13" fill="#4a7d3a">+1 unité de x</text>
+<text x="256" y="165.0" font-size="14" font-weight="700" fill="#4a7d3a">β₁</text>
+<circle cx="70" cy="230.0" r="5" fill="#0b3d5c"></circle><text x="78" y="250.0" font-size="14" font-weight="700" fill="#0b3d5c">β₀</text>
+<text class="en" x="318" y="125.1" font-size="13" fill="#d9694a">residual</text><text class="fr" x="318" y="125.1" font-size="13" fill="#d9694a">résidu</text>
+<text class="en" x="520" y="60" font-weight="700" font-size="17" fill="#0b3d5c">ŷ = β₀ + β₁ x</text><text class="fr" x="520" y="60" font-weight="700" font-size="17" fill="#0b3d5c">ŷ = β₀ + β₁ x</text>
+<text class="en" x="520" y="87" font-size="14" fill="#0b3d5c">β₀ intercept: y when x = 0</text><text class="fr" x="520" y="87" font-size="14" fill="#0b3d5c">β₀ ordonnée à l&#39;origine : y quand x = 0</text>
+<text class="en" x="520" y="114" font-size="14" fill="#4a7d3a">β₁ slope: change of y</text><text class="fr" x="520" y="114" font-size="14" fill="#4a7d3a">β₁ pente : variation de y</text>
+<text class="en" x="520" y="141" font-size="14" fill="#4a7d3a">    for +1 unit of x</text><text class="fr" x="520" y="141" font-size="14" fill="#4a7d3a">    pour +1 unité de x</text>
+<text class="en" x="520" y="168" font-size="14" fill="#d9694a">residual = observed − fitted</text><text class="fr" x="520" y="168" font-size="14" fill="#d9694a">résidu = observé − ajusté</text>
+<text class="en" x="520" y="195" font-size="14" fill="#3c4a52">least squares: the line that</text><text class="fr" x="520" y="195" font-size="14" fill="#3c4a52">moindres carrés : la droite qui</text>
+<text class="en" x="520" y="222" font-size="14" fill="#3c4a52">    minimises Σ residual²</text><text class="fr" x="520" y="222" font-size="14" fill="#3c4a52">    minimise Σ résidu²</text>
+<text class="en" x="520" y="249" font-size="14" fill="#3c4a52">R²: share of the variance of y</text><text class="fr" x="520" y="249" font-size="14" fill="#3c4a52">R² : part de la variance de y</text>
+<text class="en" x="520" y="276" font-size="14" fill="#3c4a52">    explained by the line</text><text class="fr" x="520" y="276" font-size="14" fill="#3c4a52">    expliquée par la droite</text>
+</svg></figure>
+</div>
+<div id="dans-r" class="section level2">
+<h2>Dans R</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(tree_height_m <span class="sc">~</span> salinity_psu, <span class="at">data =</span> mp)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">cbind</span>(<span class="at">coef =</span> <span class="fu">coef</span>(fit), <span class="fu">confint</span>(fit)), <span class="dv">3</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt;                coef  2.5 % 97.5 %</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt; (Intercept)  14.001 11.633 16.368</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt; salinity_psu -0.174 -0.235 -0.113</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="fu">summary</span>(fit)<span class="sc">$</span>r.squared</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; [1] 0.4679304</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="fu">predict</span>(fit, <span class="fu">data.frame</span>(<span class="at">salinity_psu =</span> <span class="dv">40</span>), <span class="at">interval =</span> <span class="st">&quot;prediction&quot;</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt;        fit      lwr      upr</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt; 1 7.031919 4.926947 9.136891</span></span></code></pre></div>
+<div class="notes">
+<p>Montrer plot(fit, which = 1:2). Interdit d’extrapoler au-delà de
+29–50 PSU.</p>
+</div>
+</div>
+<div id="séance-11-puissance-tests-multiples-rédaction" class="section level2 segue">
+<h2 class="segue">Séance 11 — Puissance, tests multiples, rédaction</h2>
+</div>
+<div id="combien-dunités" class="section level2">
+<h2>Combien d’unités ?</h2>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">power.t.test</span>(<span class="at">delta =</span> <span class="dv">150</span>, <span class="at">sd =</span> <span class="fu">sd</span>(oc<span class="sc">$</span>weight_g[oc<span class="sc">$</span>area <span class="sc">==</span> <span class="st">&quot;open&quot;</span>]), <span class="at">power =</span> <span class="fl">0.8</span>)<span class="sc">$</span>n</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co">#&gt; [1] 70.48363</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="fu">power.prop.test</span>(<span class="at">p1 =</span> <span class="fl">0.15</span>, <span class="at">p2 =</span> <span class="fl">0.05</span>, <span class="at">power =</span> <span class="fl">0.8</span>)<span class="sc">$</span>n</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt; [1] 140.0951</span></span></code></pre></div>
+<ul>
+<li>Plus d’effet, moins de variabilité, plus de n → plus de
+puissance</li>
+<li>Pas de « puissance a posteriori » : donnez l’<strong>IC de
+l’effet</strong></li>
+</ul>
+</div>
+<div id="tests-multiples-et-p-hacking" class="section level2">
+<h2>Tests multiples et p-hacking</h2>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">p.adjust</span>(<span class="fu">c</span>(<span class="fl">0.004</span>, <span class="fl">0.012</span>, <span class="fl">0.030</span>, <span class="fl">0.041</span>, <span class="fl">0.20</span>, <span class="fl">0.62</span>), <span class="st">&quot;holm&quot;</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="co">#&gt; [1] 0.024 0.060 0.120 0.123 0.400 0.620</span></span></code></pre></div>
+<div class="box warn">
+<p>Écrivez le <strong>plan d’analyse avant</strong> de voir les
+données.</p>
+</div>
+</div>
+<div id="quel-test" class="section level2">
+<h2>Quel test ?</h2>
+<figure class="svg-fig"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 600" role="img" aria-label="Choosing a test" font-family="Source Sans 3, Arial, sans-serif">
+<defs><marker id="arc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#5d6b75"></path></marker></defs>
+<rect x="330" y="8" width="280" height="44" rx="9" fill="#0b3d5c" stroke="#0b3d5c" stroke-width="1.8"></rect><text class="en" x="470.0" y="35.0" text-anchor="middle" font-weight="700" font-size="16" fill="#fff">What is your question?</text><text class="fr" x="470.0" y="35.0" text-anchor="middle" font-weight="700" font-size="16" fill="#fff">Quelle est votre question ?</text>
+<path d="M470 52 L98.0 86" stroke="#5d6b75" stroke-width="1.6" fill="none" marker-end="url(#arc)"></path>
+<rect x="10" y="88" width="176" height="48" rx="9" fill="#f6f1e7" stroke="#b08a4a" stroke-width="1.8"></rect><text class="en" x="98.0" y="108.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">1 group vs a value</text><text class="en" x="98.0" y="125.5" text-anchor="middle" font-size="13.5" fill="#0b3d5c">numeric</text><text class="fr" x="98.0" y="108.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">1 groupe vs une valeur</text><text class="fr" x="98.0" y="125.5" text-anchor="middle" font-size="13.5" fill="#0b3d5c">numérique</text>
+<path d="M470 52 L284.0 86" stroke="#5d6b75" stroke-width="1.6" fill="none" marker-end="url(#arc)"></path>
+<rect x="196" y="88" width="176" height="48" rx="9" fill="#f6f1e7" stroke="#b08a4a" stroke-width="1.8"></rect><text class="en" x="284.0" y="108.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Compare 2 groups</text><text class="en" x="284.0" y="125.5" text-anchor="middle" font-size="13.5" fill="#0b3d5c">numeric response</text><text class="fr" x="284.0" y="108.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Comparer 2 groupes</text><text class="fr" x="284.0" y="125.5" text-anchor="middle" font-size="13.5" fill="#0b3d5c">réponse numérique</text>
+<path d="M470 52 L470.0 86" stroke="#5d6b75" stroke-width="1.6" fill="none" marker-end="url(#arc)"></path>
+<rect x="382" y="88" width="176" height="48" rx="9" fill="#f6f1e7" stroke="#b08a4a" stroke-width="1.8"></rect><text class="en" x="470.0" y="108.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Compare 3+ groups</text><text class="en" x="470.0" y="125.5" text-anchor="middle" font-size="13.5" fill="#0b3d5c">numeric response</text><text class="fr" x="470.0" y="108.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Comparer 3+ groupes</text><text class="fr" x="470.0" y="125.5" text-anchor="middle" font-size="13.5" fill="#0b3d5c">réponse numérique</text>
+<path d="M470 52 L656.0 86" stroke="#5d6b75" stroke-width="1.6" fill="none" marker-end="url(#arc)"></path>
+<rect x="568" y="88" width="176" height="48" rx="9" fill="#f6f1e7" stroke="#b08a4a" stroke-width="1.8"></rect><text class="en" x="656.0" y="108.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Categorical data</text><text class="en" x="656.0" y="125.5" text-anchor="middle" font-size="13.5" fill="#0b3d5c">counts, proportions</text><text class="fr" x="656.0" y="108.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Données catégorielles</text><text class="fr" x="656.0" y="125.5" text-anchor="middle" font-size="13.5" fill="#0b3d5c">effectifs, proportions</text>
+<path d="M470 52 L842.0 86" stroke="#5d6b75" stroke-width="1.6" fill="none" marker-end="url(#arc)"></path>
+<rect x="754" y="88" width="176" height="48" rx="9" fill="#f6f1e7" stroke="#b08a4a" stroke-width="1.8"></rect><text class="en" x="842.0" y="108.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Relationship</text><text class="en" x="842.0" y="125.5" text-anchor="middle" font-size="13.5" fill="#0b3d5c">2 numeric variables</text><text class="fr" x="842.0" y="108.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Relation</text><text class="fr" x="842.0" y="125.5" text-anchor="middle" font-size="13.5" fill="#0b3d5c">2 variables numériques</text>
+<path d="M98.0 136 L98.0 160" stroke="#5d6b75" stroke-width="1.6" fill="none" marker-end="url(#arc)"></path>
+<rect x="10" y="162" width="176" height="62" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"></rect><text class="en" x="98.0" y="189.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">one-sample t-test</text><text class="en" x="98.0" y="206.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">t.test(x, mu = m)</text><text class="fr" x="98.0" y="189.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">test t à 1 échantillon</text><text class="fr" x="98.0" y="206.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">t.test(x, mu = m)</text>
+<rect x="10" y="236" width="176" height="62" rx="9" fill="#fdf0eb" stroke="#d9694a" stroke-width="1.8"></rect><text class="en" x="98.0" y="263.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Wilcoxon signed-rank</text><text class="en" x="98.0" y="280.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">wilcox.test(x, mu = m)</text><text class="fr" x="98.0" y="263.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">rangs signés Wilcoxon</text><text class="fr" x="98.0" y="280.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">wilcox.test(x, mu = m)</text>
+<path d="M284.0 136 L284.0 164" stroke="#5d6b75" stroke-width="1.6" fill="none" marker-end="url(#arc)"></path>
+<text class="en" x="284" y="178" text-anchor="middle" font-size="12.5" font-style="italic" fill="#5d6b75">independent groups</text><text class="fr" x="284" y="178" text-anchor="middle" font-size="12.5" font-style="italic" fill="#5d6b75">groupes indépendants</text>
+<text class="en" x="284" y="322" text-anchor="middle" font-size="12.5" font-style="italic" fill="#5d6b75">paired: same units twice</text><text class="fr" x="284" y="322" text-anchor="middle" font-size="12.5" font-style="italic" fill="#5d6b75">apparié : mêmes unités 2 fois</text>
+<rect x="196" y="184" width="176" height="56" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"></rect><text class="en" x="284.0" y="208.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Welch t-test</text><text class="en" x="284.0" y="225.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">t.test(y ~ g)</text><text class="fr" x="284.0" y="208.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">test t de Welch</text><text class="fr" x="284.0" y="225.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">t.test(y ~ g)</text>
+<rect x="196" y="244" width="176" height="56" rx="9" fill="#fdf0eb" stroke="#d9694a" stroke-width="1.8"></rect><text class="en" x="284.0" y="268.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Wilcoxon rank-sum</text><text class="en" x="284.0" y="285.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">wilcox.test(y ~ g)</text><text class="fr" x="284.0" y="268.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Wilcoxon des rangs</text><text class="fr" x="284.0" y="285.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">wilcox.test(y ~ g)</text>
+<rect x="196" y="330" width="176" height="56" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"></rect><text class="en" x="284.0" y="354.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">paired t-test</text><text class="en" x="284.0" y="371.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">paired = TRUE</text><text class="fr" x="284.0" y="354.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">test t apparié</text><text class="fr" x="284.0" y="371.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">paired = TRUE</text>
+<rect x="196" y="390" width="176" height="56" rx="9" fill="#fdf0eb" stroke="#d9694a" stroke-width="1.8"></rect><text class="en" x="284.0" y="414.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Wilcoxon signed-rank</text><text class="en" x="284.0" y="431.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">paired = TRUE</text><text class="fr" x="284.0" y="414.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">rangs signés Wilcoxon</text><text class="fr" x="284.0" y="431.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">paired = TRUE</text>
+<path d="M470.0 136 L470.0 160" stroke="#5d6b75" stroke-width="1.6" fill="none" marker-end="url(#arc)"></path>
+<rect x="382" y="162" width="176" height="74" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"></rect><text class="en" x="470.0" y="187.0" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">one-way ANOVA</text><text class="en" x="470.0" y="204.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">aov(y ~ g)</text><text class="en" x="470.0" y="221.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">TukeyHSD(fit)</text><text class="fr" x="470.0" y="187.0" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">ANOVA à 1 facteur</text><text class="fr" x="470.0" y="204.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">aov(y ~ g)</text><text class="fr" x="470.0" y="221.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">TukeyHSD(fit)</text>
+<rect x="382" y="244" width="176" height="56" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"></rect><text class="en" x="470.0" y="268.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">unequal variances</text><text class="en" x="470.0" y="285.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">oneway.test(y ~ g)</text><text class="fr" x="470.0" y="268.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">variances inégales</text><text class="fr" x="470.0" y="285.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">oneway.test(y ~ g)</text>
+<rect x="382" y="308" width="176" height="74" rx="9" fill="#fdf0eb" stroke="#d9694a" stroke-width="1.8"></rect><text class="en" x="470.0" y="333.0" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Kruskal–Wallis</text><text class="en" x="470.0" y="350.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">kruskal.test(y ~ g)</text><text class="en" x="470.0" y="367.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">pairwise.wilcox.test()</text><text class="fr" x="470.0" y="333.0" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Kruskal–Wallis</text><text class="fr" x="470.0" y="350.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">kruskal.test(y ~ g)</text><text class="fr" x="470.0" y="367.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">pairwise.wilcox.test()</text>
+<path d="M656.0 136 L656.0 160" stroke="#5d6b75" stroke-width="1.6" fill="none" marker-end="url(#arc)"></path>
+<rect x="568" y="162" width="176" height="56" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"></rect><text class="en" x="656.0" y="186.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">1 proportion</text><text class="en" x="656.0" y="203.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">binom.test(x, n, p)</text><text class="fr" x="656.0" y="186.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">1 proportion</text><text class="fr" x="656.0" y="203.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">binom.test(x, n, p)</text>
+<rect x="568" y="224" width="176" height="56" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"></rect><text class="en" x="656.0" y="248.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">counts vs expected %</text><text class="en" x="656.0" y="265.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">chisq.test(tab, p = )</text><text class="fr" x="656.0" y="248.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">effectifs vs % attendus</text><text class="fr" x="656.0" y="265.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">chisq.test(tab, p = )</text>
+<rect x="568" y="286" width="176" height="56" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"></rect><text class="en" x="656.0" y="310.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">2 proportions</text><text class="en" x="656.0" y="327.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">prop.test(x, n)</text><text class="fr" x="656.0" y="310.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">2 proportions</text><text class="fr" x="656.0" y="327.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">prop.test(x, n)</text>
+<rect x="568" y="348" width="176" height="56" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"></rect><text class="en" x="656.0" y="372.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">2 categorical variables</text><text class="en" x="656.0" y="389.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">chisq.test(table(a, b))</text><text class="fr" x="656.0" y="372.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">2 variables catégorielles</text><text class="fr" x="656.0" y="389.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">chisq.test(table(a, b))</text>
+<rect x="568" y="410" width="176" height="60" rx="9" fill="#fdf0eb" stroke="#d9694a" stroke-width="1.8"></rect><text class="en" x="656.0" y="436.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">expected counts &lt; 5</text><text class="en" x="656.0" y="453.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">fisher.test(tab)</text><text class="fr" x="656.0" y="436.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">effectifs attendus &lt; 5</text><text class="fr" x="656.0" y="453.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">fisher.test(tab)</text>
+<path d="M842.0 136 L842.0 160" stroke="#5d6b75" stroke-width="1.6" fill="none" marker-end="url(#arc)"></path>
+<rect x="754" y="162" width="176" height="56" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"></rect><text class="en" x="842.0" y="186.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Pearson correlation</text><text class="en" x="842.0" y="203.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">cor.test(x, y)</text><text class="fr" x="842.0" y="186.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">corrélation de Pearson</text><text class="fr" x="842.0" y="203.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">cor.test(x, y)</text>
+<rect x="754" y="224" width="176" height="56" rx="9" fill="#e9f4f6" stroke="#1b7f8c" stroke-width="1.8"></rect><text class="en" x="842.0" y="248.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">linear regression</text><text class="en" x="842.0" y="265.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">lm(y ~ x)</text><text class="fr" x="842.0" y="248.5" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">régression linéaire</text><text class="fr" x="842.0" y="265.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">lm(y ~ x)</text>
+<rect x="754" y="286" width="176" height="74" rx="9" fill="#fdf0eb" stroke="#d9694a" stroke-width="1.8"></rect><text class="en" x="842.0" y="311.0" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">Spearman correlation</text><text class="en" x="842.0" y="328.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">cor.test(x, y,</text><text class="en" x="842.0" y="345.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">method = &quot;spearman&quot;)</text><text class="fr" x="842.0" y="311.0" text-anchor="middle" font-weight="700" font-size="13.5" fill="#0b3d5c">corrélation de Spearman</text><text class="fr" x="842.0" y="328.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">cor.test(x, y,</text><text class="fr" x="842.0" y="345.0" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11.5" fill="#0b3d5c">method = &quot;spearman&quot;)</text>
+<rect x="10" y="500" width="22" height="16" rx="4" fill="#e9f4f6" stroke="#1b7f8c"></rect><rect x="10" y="530" width="22" height="16" rx="4" fill="#fdf0eb" stroke="#d9694a"></rect>
+<text class="en" x="40" y="513" font-size="14" fill="#3c4a52">parametric: data (or residuals) roughly normal, or large n without strong outliers — log-transform multiplicative variables first</text>
+<text class="fr" x="40" y="513" font-size="14" fill="#3c4a52">paramétrique : données (ou résidus) à peu près normales, ou grand n sans fortes valeurs extrêmes — log-transformez d&#39;abord les variables multiplicatives</text>
+<text class="en" x="40" y="543" font-size="14" fill="#3c4a52">rank-based or exact alternative: small n with skew or outliers, ordinal data, small expected counts</text>
+<text class="fr" x="40" y="543" font-size="14" fill="#3c4a52">alternative sur les rangs ou exacte : petit n avec asymétrie ou valeurs extrêmes, données ordinales, petits effectifs attendus</text>
+<text class="en" x="10" y="580" font-size="14" font-weight="700" fill="#d9694a">Always: independent units (Session 1), plot first (Session 3), report the effect size with its CI (Session 11).</text>
+<text class="fr" x="10" y="580" font-size="14" font-weight="700" fill="#d9694a">Toujours : unités indépendantes (séance 1), tracer d&#39;abord (séance 3), rapporter la taille d&#39;effet avec son IC (séance 11).</text>
+</svg></figure>
+</div>
+<div id="rédiger-un-résultat" class="section level2">
+<h2>Rédiger un résultat</h2>
+<blockquote>
+<p>« Les pieuvres de la zone rouverte étaient plus lourdes (moyennes
+géométriques 860 contre 560 g ; rapport 1,54, IC 95 % 1,38–1,71 ; test t
+de Welch sur le log du poids, t = 7,78, ddl = 340, p &lt; 0,001 ; n =
+185 et 160). »</p>
+</blockquote>
+<ul>
+<li>Statistiques descriptives + <strong>effet et IC</strong> + test,
+ddl, p exacte + n</li>
+<li>Figures avec les points ; dire ce que sont les barres</li>
+<li><code>citation()</code>, <code>sessionInfo()</code>,
+<code>set.seed()</code></li>
+</ul>
+</div>
+<div id="séances-12-et-13" class="section level2 segue">
+<h2 class="segue">Séances 12 et 13</h2>
+</div>
+<div id="exercices-et-projet-final" class="section level2">
+<h2>Exercices et projet final</h2>
+<ul>
+<li><strong>12</strong> : six exercices indépendants, un par grand
+thème</li>
+<li><strong>13</strong> : herbiers et oursins — 80 stations aléatoires,
+dans et hors d’une zone de non-prélèvement
+<ul>
+<li>plan d’analyse <strong>d’abord</strong> · 8 questions de gestion ·
+un rapport d’une page</li>
+</ul></li>
+</ul>
+<div class="box tip">
+<p>La question finale : la zone de non-prélèvement est-elle <strong>la
+cause</strong> de l’herbier plus dense ?</p>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+
+</body>
+</html>

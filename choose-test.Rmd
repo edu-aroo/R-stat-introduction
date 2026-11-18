@@ -1,0 +1,66 @@
+---
+title: "[Which test? A decision guide]{.en}[Quel test ? Un guide de décision]{.fr}"
+pagetitle: "R4Marine Stats · Which test?"
+---
+
+```{r setup, include=FALSE}
+source("R/course_helpers.R")
+```
+
+## [Four questions, in this order]{.en}[Quatre questions, dans cet ordre]{.fr} {.no-track}
+
+::: en
+1. **What is my question?** Estimate a value, compare groups, or describe a relationship? Write it in one sentence.
+2. **What type are my variables?** Numeric (continuous or count) or categorical (nominal or ordinal)? Which one is the response? (Session 0)
+3. **What is my sampling unit, and are the measurements independent or paired?** (Sessions 1 and 7)
+4. **What do the data look like?** Roughly normal, or skewed, with outliers, many zeros? How large is n? (Sessions 3 and 5)
+
+Questions 1–3 decide the **family** of the test; question 4 decides between the **parametric** version (blue) and the **rank-based or exact** alternative (orange). Decide **before** looking at p-values (Session 11).
+:::
+::: fr
+1. **Quelle est ma question ?** Estimer une valeur, comparer des groupes, ou décrire une relation ? Écrivez-la en une phrase.
+2. **De quel type sont mes variables ?** Numérique (continue ou comptage) ou catégorielle (nominale ou ordinale) ? Laquelle est la réponse ? (Séance 0)
+3. **Quelle est mon unité d'échantillonnage, et les mesures sont-elles indépendantes ou appariées ?** (Séances 1 et 7)
+4. **À quoi ressemblent les données ?** À peu près normales, ou asymétriques, avec des valeurs extrêmes, beaucoup de zéros ? Quel est n ? (Séances 3 et 5)
+
+Les questions 1–3 décident de la **famille** du test ; la question 4 décide entre la version **paramétrique** (bleu) et l'alternative **sur les rangs ou exacte** (orange). Décidez **avant** de regarder les p-values (séance 11).
+:::
+
+`r fig_svg("choose-test", "Decision chart of the course. Blue: parametric test; orange: rank-based or exact alternative.", "Schéma de décision du cours. Bleu : test paramétrique ; orange : alternative sur les rangs ou exacte.")`
+
+## [The same in a table]{.en}[La même chose en tableau]{.fr} {.no-track}
+
+::: en
+| Question | Response | Design | Parametric | Alternative | Session |
+|---|---|---|---|---|---|
+| Estimate a mean | numeric | one sample | `t.test(x)$conf.int` | bootstrap, `median()` + bootstrap | 5 |
+| Estimate a proportion | yes/no | one sample | `prop.test(x, n)` | `binom.test(x, n)` (exact) | 5, 9 |
+| Mean vs reference value | numeric | one sample | `t.test(x, mu = m)` | `wilcox.test(x, mu = m)` | 6 |
+| Compare 2 groups | numeric | independent | `t.test(y ~ g)` (Welch) | `wilcox.test(y ~ g)` | 7 |
+| Compare 2 conditions | numeric | paired | `t.test(x1, x2, paired = TRUE)` | `wilcox.test(x1, x2, paired = TRUE)` | 7 |
+| Compare 3+ groups | numeric | independent | `aov(y ~ g)` + `TukeyHSD()`; `oneway.test()` | `kruskal.test(y ~ g)` + `pairwise.wilcox.test()` | 8 |
+| Counts vs expected proportions | categorical | one sample | `chisq.test(table(x), p = …)` | `binom.test()` (2 categories) | 9 |
+| Compare 2 proportions | yes/no | independent | `prop.test(c(x1, x2), c(n1, n2))` | `fisher.test()` | 9 |
+| Association of 2 categorical variables | categorical | independent | `chisq.test(table(a, b))` | `fisher.test(table(a, b))` | 9 |
+| Linear relationship | 2 numeric | — | `cor.test(x, y)`, `lm(y ~ x)` | `cor.test(x, y, method = "spearman")` | 10 |
+| Plan the sample size | — | — | `power.t.test()`, `power.prop.test()` | simulation | 11 |
+
+**Not in this course** (→ *Statistical modelling with R*): several predictors at once (multiple regression, ANCOVA, two-way ANOVA), counts and proportions as responses (GLM: Poisson, negative binomial, binomial), repeated measures and nested designs (mixed models).
+:::
+::: fr
+| Question | Réponse | Plan | Paramétrique | Alternative | Séance |
+|---|---|---|---|---|---|
+| Estimer une moyenne | numérique | un échantillon | `t.test(x)$conf.int` | bootstrap, `median()` + bootstrap | 5 |
+| Estimer une proportion | oui/non | un échantillon | `prop.test(x, n)` | `binom.test(x, n)` (exact) | 5, 9 |
+| Moyenne vs valeur de référence | numérique | un échantillon | `t.test(x, mu = m)` | `wilcox.test(x, mu = m)` | 6 |
+| Comparer 2 groupes | numérique | indépendant | `t.test(y ~ g)` (Welch) | `wilcox.test(y ~ g)` | 7 |
+| Comparer 2 conditions | numérique | apparié | `t.test(x1, x2, paired = TRUE)` | `wilcox.test(x1, x2, paired = TRUE)` | 7 |
+| Comparer 3+ groupes | numérique | indépendant | `aov(y ~ g)` + `TukeyHSD()` ; `oneway.test()` | `kruskal.test(y ~ g)` + `pairwise.wilcox.test()` | 8 |
+| Effectifs vs proportions attendues | catégorielle | un échantillon | `chisq.test(table(x), p = …)` | `binom.test()` (2 catégories) | 9 |
+| Comparer 2 proportions | oui/non | indépendant | `prop.test(c(x1, x2), c(n1, n2))` | `fisher.test()` | 9 |
+| Association de 2 variables catégorielles | catégorielle | indépendant | `chisq.test(table(a, b))` | `fisher.test(table(a, b))` | 9 |
+| Relation linéaire | 2 numériques | — | `cor.test(x, y)`, `lm(y ~ x)` | `cor.test(x, y, method = "spearman")` | 10 |
+| Planifier la taille d'échantillon | — | — | `power.t.test()`, `power.prop.test()` | simulation | 11 |
+
+**Pas dans ce cours** (→ *Modélisation statistique avec R*) : plusieurs prédicteurs à la fois (régression multiple, ANCOVA, ANOVA à deux facteurs), comptages et proportions comme réponses (GLM : Poisson, binomiale négative, binomiale), mesures répétées et plans emboîtés (modèles mixtes).
+:::

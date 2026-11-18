@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>R4Marine Stats · Cheatsheet</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.1/jquery-3.6.1.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<!-- header.html: inserted inside <head> of every page (see _site.yml) -->
+<!-- config.js (settings) and quiz_index.js (made by R/build_site.R) first,
+     then course.js (the behaviour that reads them) -->
+<script src="assets/config.js"></script>
+<script src="assets/quiz_index.js"></script>
+<script src="assets/course.js"></script>
+<meta name="author" content="Aroo Falinirina">
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+
+
+
+
+<link rel="stylesheet" href="assets/course.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">R4Marine Stats</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Sessions
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="00-start.html">0 · Why statistics?</a>
+    </li>
+    <li>
+      <a href="01-design.html">1 · Study design &amp; sampling</a>
+    </li>
+    <li>
+      <a href="02-describe.html">2 · Describing data</a>
+    </li>
+    <li>
+      <a href="03-explore.html">3 · Exploring distributions</a>
+    </li>
+    <li>
+      <a href="04-probability.html">4 · Probability &amp; distributions</a>
+    </li>
+    <li>
+      <a href="05-estimation.html">5 · Standard error &amp; CIs</a>
+    </li>
+    <li>
+      <a href="06-testing.html">6 · Hypothesis tests &amp; p-values</a>
+    </li>
+    <li>
+      <a href="07-two-groups.html">7 · Comparing two groups</a>
+    </li>
+    <li>
+      <a href="08-anova.html">8 · ANOVA &amp; Kruskal–Wallis</a>
+    </li>
+    <li>
+      <a href="09-categorical.html">9 · Proportions &amp; χ²</a>
+    </li>
+    <li>
+      <a href="10-regression.html">10 · Correlation &amp; regression</a>
+    </li>
+    <li>
+      <a href="11-power-reporting.html">11 · Power, multiple tests, reporting</a>
+    </li>
+    <li>
+      <a href="12-practice.html">12 · Practice</a>
+    </li>
+    <li>
+      <a href="13-final-project.html">13 · Final project</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Resources
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="choose-test.html">Which test? (decision guide)</a>
+    </li>
+    <li>
+      <a href="cheatsheet.html">Cheatsheet</a>
+    </li>
+    <li>
+      <a href="glossary.html">Glossary EN–FR</a>
+    </li>
+    <li>
+      <a href="common-errors.html">Common errors &amp; pitfalls</a>
+    </li>
+    <li>
+      <a href="resources.html">To go further</a>
+    </li>
+    <li>
+      <a href="help.html">Need help?</a>
+    </li>
+    <li>
+      <a href="whats-new.html">What's new</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore"><span class="en">Cheatsheet</span><span
+class="fr">Aide-mémoire</span></h1>
+<h3 class="subtitle"><span class="en">Every function of the course, by
+task</span><span class="fr">Toutes les fonctions du cours, par
+tâche</span></h3>
+
+</div>
+
+
+<div id="variables-and-datavariables-et-données"
+class="section level2 no-track">
+<h2 class="no-track"><span class="en">Variables and data</span><span
+class="fr">Variables et données</span></h2>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Code</th>
+<th><span class="en">What it does</span><span class="fr">Ce qu’il
+fait</span></th>
+<th><span class="en">Session</span><span class="fr">Séance</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>str(df)</code>, <code>sapply(df, class)</code></td>
+<td><span class="en">type of every column</span><span class="fr">type de
+chaque colonne</span></td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td><code>factor(x, levels = c(...), ordered = TRUE)</code></td>
+<td><span class="en">categorical (ordinal) variable with a fixed
+order</span><span class="fr">variable catégorielle (ordinale) avec un
+ordre fixé</span></td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td><code>table(x)</code>, <code>table(a, b)</code>,
+<code>addmargins()</code></td>
+<td><span class="en">counts, two-way table, totals</span><span
+class="fr">effectifs, tableau croisé, totaux</span></td>
+<td>0, 2</td>
+</tr>
+<tr class="even">
+<td><code>prop.table(tab, 1)</code> /
+<code>prop.table(tab, 2)</code></td>
+<td><span class="en">% within rows / within columns</span><span
+class="fr">% dans les lignes / dans les colonnes</span></td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td><code>mean(x == "yes")</code></td>
+<td><span class="en">proportion of “yes”</span><span
+class="fr">proportion de « yes »</span></td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td><code>set.seed(1); sample(x, n)</code></td>
+<td><span class="en">reproducible random sample</span><span
+class="fr">échantillon aléatoire reproductible</span></td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td><code>replicate(1000, expr)</code></td>
+<td><span class="en">repeat a simulation</span><span class="fr">répéter
+une simulation</span></td>
+<td>1, 5</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="describingdécrire" class="section level2 no-track">
+<h2 class="no-track"><span class="en">Describing</span><span
+class="fr">Décrire</span></h2>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Code</th>
+<th><span class="en">What it does</span><span class="fr">Ce qu’il
+fait</span></th>
+<th><span class="en">Session</span><span class="fr">Séance</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>mean(x, na.rm = TRUE)</code>, <code>median(x)</code>,
+<code>mean(x, trim = 0.1)</code></td>
+<td><span class="en">centre</span><span class="fr">centre</span></td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td><code>sd(x)</code>, <code>var(x)</code>, <code>IQR(x)</code>,
+<code>range(x)</code>, <code>quantile(x, probs)</code></td>
+<td><span class="en">spread and position</span><span
+class="fr">dispersion et position</span></td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td><code>sd(x) / mean(x) * 100</code></td>
+<td><span class="en">coefficient of variation (%)</span><span
+class="fr">coefficient de variation (%)</span></td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td><code>boxplot.stats(x)$out</code></td>
+<td><span class="en">potential outliers (1.5 × IQR rule)</span><span
+class="fr">valeurs extrêmes potentielles (règle 1,5 × IQR)</span></td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td><code>df %&gt;% group_by(g) %&gt;% summarise(n = n(), m = mean(y))</code></td>
+<td><span class="en">summary table by group</span><span
+class="fr">tableau de synthèse par groupe</span></td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td><code>exp(mean(log(x)))</code></td>
+<td><span class="en">geometric mean</span><span class="fr">moyenne
+géométrique</span></td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td><code>scale(x)</code></td>
+<td><span class="en">z-scores</span><span class="fr">scores
+z</span></td>
+<td>4</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="plotting-distributionsreprésenter-des-distributions"
+class="section level2 no-track">
+<h2 class="no-track"><span class="en">Plotting distributions</span><span
+class="fr">Représenter des distributions</span></h2>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Code</th>
+<th><span class="en">What it does</span><span class="fr">Ce qu’il
+fait</span></th>
+<th><span class="en">Session</span><span class="fr">Séance</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>geom_histogram(binwidth = )</code>,
+<code>geom_density()</code></td>
+<td><span class="en">shape of one variable</span><span class="fr">forme
+d’une variable</span></td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td><code>geom_boxplot(outlier.shape = NA) + geom_jitter(width = 0.1, height = 0)</code></td>
+<td><span class="en">groups with raw points</span><span
+class="fr">groupes avec points bruts</span></td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td><code>ggplot(df, aes(sample = y)) + stat_qq() + stat_qq_line()</code></td>
+<td><span class="en">normal QQ plot</span><span class="fr">QQ plot
+normal</span></td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td><code>scale_x_log10()</code></td>
+<td><span class="en">log axis</span><span class="fr">axe log</span></td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td><code>geom_bar(position = "fill")</code></td>
+<td><span class="en">composition (%) of groups</span><span
+class="fr">composition (%) des groupes</span></td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td><code>geom_pointrange(aes(ymin = lower, ymax = upper))</code></td>
+<td><span class="en">means with CIs</span><span class="fr">moyennes avec
+IC</span></td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td><code>geom_smooth(method = "lm", formula = y ~ x)</code></td>
+<td><span class="en">regression line with its CI band</span><span
+class="fr">droite de régression avec sa bande d’IC</span></td>
+<td>10</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="distributionslois-de-distribution"
+class="section level2 no-track">
+<h2 class="no-track"><span class="en">Distributions</span><span
+class="fr">Lois de distribution</span></h2>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><span class="en">Distribution</span><span class="fr">Loi</span></th>
+<th>d / p / q / r</th>
+<th><span class="en">Use</span><span class="fr">Usage</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="en">binomial</span><span
+class="fr">binomiale</span></td>
+<td><code>dbinom(x, size, prob)</code>, <code>pbinom()</code>,
+<code>qbinom()</code>, <code>rbinom()</code></td>
+<td><span class="en">successes out of n trials</span><span
+class="fr">succès sur n essais</span></td>
+</tr>
+<tr class="even">
+<td>Poisson</td>
+<td><code>dpois(x, lambda)</code>, <code>ppois()</code>,
+<code>rpois()</code></td>
+<td><span class="en">counts per unit area / time</span><span
+class="fr">comptages par unité de surface / temps</span></td>
+</tr>
+<tr class="odd">
+<td><span class="en">normal</span><span class="fr">normale</span></td>
+<td><code>dnorm(x, mean, sd)</code>, <code>pnorm()</code>,
+<code>qnorm()</code>, <code>rnorm()</code></td>
+<td><span class="en">measurements, means</span><span class="fr">mesures,
+moyennes</span></td>
+</tr>
+<tr class="even">
+<td><span class="en">log-normal</span><span
+class="fr">log-normale</span></td>
+<td><code>plnorm(q, meanlog, sdlog)</code>, <code>rlnorm()</code></td>
+<td><span class="en">positive, right-skewed</span><span
+class="fr">positives, asymétriques à droite</span></td>
+</tr>
+<tr class="odd">
+<td><em>t</em>, χ², F</td>
+<td><code>qt(0.975, df)</code>, <code>pt()</code>,
+<code>pchisq()</code>, <code>pf()</code></td>
+<td><span class="en">test statistics</span><span class="fr">statistiques
+de test</span></td>
+</tr>
+</tbody>
+</table>
+<p><span class="en"><code>p…(q)</code> = P(X ≤ q). For “q or more” with
+counts: <code>1 - p…(q - 1)</code>.</span><span
+class="fr"><code>p…(q)</code> = P(X ≤ q). Pour « q ou plus » avec des
+comptages : <code>1 - p…(q - 1)</code>.</span></p>
+</div>
+<div id="estimatingestimer" class="section level2 no-track">
+<h2 class="no-track"><span class="en">Estimating</span><span
+class="fr">Estimer</span></h2>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Code</th>
+<th><span class="en">What it does</span><span class="fr">Ce qu’il
+fait</span></th>
+<th><span class="en">Session</span><span class="fr">Séance</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>sd(x) / sqrt(length(x))</code></td>
+<td><span class="en">standard error of the mean</span><span
+class="fr">erreur standard de la moyenne</span></td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td><code>t.test(x, conf.level = 0.95)$conf.int</code></td>
+<td><span class="en">CI of a mean</span><span class="fr">IC d’une
+moyenne</span></td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td><code>binom.test(x, n)$conf.int</code>,
+<code>prop.test(x, n)$conf.int</code></td>
+<td><span class="en">CI of a proportion</span><span class="fr">IC d’une
+proportion</span></td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td><code>quantile(replicate(5000, median(sample(x, replace = TRUE))), c(0.025, 0.975))</code></td>
+<td><span class="en">bootstrap CI (here of a median)</span><span
+class="fr">IC bootstrap (ici d’une médiane)</span></td>
+<td>5</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="testingtester" class="section level2 no-track">
+<h2 class="no-track"><span class="en">Testing</span><span
+class="fr">Tester</span></h2>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Code</th>
+<th><span class="en">What it does</span><span class="fr">Ce qu’il
+fait</span></th>
+<th><span class="en">Session</span><span class="fr">Séance</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>t.test(x, mu = m)</code></td>
+<td><span class="en">one-sample t-test</span><span class="fr">test t à
+un échantillon</span></td>
+<td>6</td>
+</tr>
+<tr class="even">
+<td><code>t.test(y ~ g, data = df)</code></td>
+<td><span class="en">Welch two-sample t-test</span><span class="fr">test
+t de Welch à deux échantillons</span></td>
+<td>7</td>
+</tr>
+<tr class="odd">
+<td><code>t.test(x1, x2, paired = TRUE)</code></td>
+<td><span class="en">paired t-test</span><span class="fr">test t
+apparié</span></td>
+<td>7</td>
+</tr>
+<tr class="even">
+<td><code>wilcox.test(y ~ g)</code>,
+<code>wilcox.test(x1, x2, paired = TRUE)</code></td>
+<td><span class="en">rank-sum / signed-rank tests</span><span
+class="fr">tests des rangs / des rangs signés</span></td>
+<td>7</td>
+</tr>
+<tr class="odd">
+<td><code>fit &lt;- aov(y ~ g, data = df); summary(fit); TukeyHSD(fit)</code></td>
+<td><span class="en">one-way ANOVA + all pairs</span><span
+class="fr">ANOVA à un facteur + toutes les paires</span></td>
+<td>8</td>
+</tr>
+<tr class="even">
+<td><code>oneway.test(y ~ g)</code></td>
+<td><span class="en">Welch ANOVA (unequal variances)</span><span
+class="fr">ANOVA de Welch (variances inégales)</span></td>
+<td>8</td>
+</tr>
+<tr class="odd">
+<td><code>kruskal.test(y ~ g)</code>;
+<code>pairwise.wilcox.test(y, g, p.adjust.method = "holm")</code></td>
+<td><span class="en">rank-based ANOVA + pairs</span><span
+class="fr">ANOVA sur les rangs + paires</span></td>
+<td>8</td>
+</tr>
+<tr class="even">
+<td><code>plot(fit, which = 1:2)</code></td>
+<td><span class="en">residual diagnostics (aov, lm)</span><span
+class="fr">diagnostic des résidus (aov, lm)</span></td>
+<td>8, 10</td>
+</tr>
+<tr class="odd">
+<td><code>binom.test(x, n, p = )</code></td>
+<td><span class="en">one proportion vs reference</span><span
+class="fr">une proportion vs référence</span></td>
+<td>9</td>
+</tr>
+<tr class="even">
+<td><code>chisq.test(table(x), p = )</code></td>
+<td><span class="en">goodness of fit</span><span
+class="fr">ajustement</span></td>
+<td>9</td>
+</tr>
+<tr class="odd">
+<td><code>prop.test(c(x1, x2), c(n1, n2))</code></td>
+<td><span class="en">two proportions</span><span class="fr">deux
+proportions</span></td>
+<td>9</td>
+</tr>
+<tr class="even">
+<td><code>chisq.test(table(a, b))</code>; <code>$expected</code>,
+<code>$stdres</code></td>
+<td><span class="en">independence test, expected counts,
+residuals</span><span class="fr">test d’indépendance, effectifs
+attendus, résidus</span></td>
+<td>9</td>
+</tr>
+<tr class="odd">
+<td><code>fisher.test(tab)</code></td>
+<td><span class="en">exact test; odds ratio for 2 × 2</span><span
+class="fr">test exact ; odds ratio pour 2 × 2</span></td>
+<td>9</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="relationshipsrelations" class="section level2 no-track">
+<h2 class="no-track"><span class="en">Relationships</span><span
+class="fr">Relations</span></h2>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Code</th>
+<th><span class="en">What it does</span><span class="fr">Ce qu’il
+fait</span></th>
+<th><span class="en">Session</span><span class="fr">Séance</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>cor(x, y)</code>, <code>cor.test(x, y)</code></td>
+<td><span class="en">Pearson correlation and test</span><span
+class="fr">corrélation de Pearson et test</span></td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td><code>cor.test(x, y, method = "spearman", exact = FALSE)</code></td>
+<td><span class="en">Spearman (ranks)</span><span class="fr">Spearman
+(rangs)</span></td>
+<td>10</td>
+</tr>
+<tr class="odd">
+<td><code>fit &lt;- lm(y ~ x, data = df); summary(fit); confint(fit)</code></td>
+<td><span class="en">simple linear regression</span><span
+class="fr">régression linéaire simple</span></td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td><code>predict(fit, newdata, interval = "confidence" / "prediction")</code></td>
+<td><span class="en">predictions with intervals</span><span
+class="fr">prédictions avec intervalles</span></td>
+<td>10</td>
+</tr>
+<tr class="odd">
+<td><code>100 * (exp(coef(fit)[2]) - 1)</code></td>
+<td><span class="en">% change per unit of x when y was
+logged</span><span class="fr">% de variation par unité de x quand y a
+été logué</span></td>
+<td>10</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="planning-and-reportingplanifier-et-rédiger"
+class="section level2 no-track">
+<h2 class="no-track"><span class="en">Planning and reporting</span><span
+class="fr">Planifier et rédiger</span></h2>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Code</th>
+<th><span class="en">What it does</span><span class="fr">Ce qu’il
+fait</span></th>
+<th><span class="en">Session</span><span class="fr">Séance</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>power.t.test(delta, sd, power = 0.8)</code></td>
+<td><span class="en">n per group for a t-test</span><span class="fr">n
+par groupe pour un test t</span></td>
+<td>11</td>
+</tr>
+<tr class="even">
+<td><code>power.prop.test(p1, p2, power = 0.8)</code></td>
+<td><span class="en">n per group for two proportions</span><span
+class="fr">n par groupe pour deux proportions</span></td>
+<td>11</td>
+</tr>
+<tr class="odd">
+<td><code>p.adjust(p, "holm")</code>, <code>"BH"</code>,
+<code>"bonferroni"</code></td>
+<td><span class="en">adjust for multiple tests</span><span
+class="fr">ajuster pour tests multiples</span></td>
+<td>11</td>
+</tr>
+<tr class="even">
+<td><code>citation()</code>, <code>sessionInfo()</code></td>
+<td><span class="en">cite R; record versions</span><span
+class="fr">citer R ; noter les versions</span></td>
+<td>11</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="reporting-templatesmodèles-de-rédaction"
+class="section level2 no-track">
+<h2 class="no-track"><span class="en">Reporting templates</span><span
+class="fr">Modèles de rédaction</span></h2>
+<div class="en">
+<ul>
+<li><strong>Mean with CI:</strong> “Mean weight was 631 g (95 % CI
+581–680 g, n = 160).”</li>
+<li><strong>Two groups:</strong> “X was higher in A than in B (mean 54.7
+vs 45.8 %; difference 8.9, 95 % CI 1.2–16.7; Welch t-test, t = 2.30, df
+= 78.0, p = 0.024).”</li>
+<li><strong>ANOVA:</strong> “Y differed among groups (one-way ANOVA,
+F₃,₂₀ = 8.19, p &lt; 0.001, η² = 0.55); only C differed from D (Tukey
+HSD, …).”</li>
+<li><strong>χ²:</strong> “The share of A was higher among B (68 % vs 45
+%; χ² = 19.4, df = 1, p &lt; 0.001; odds ratio 4.3, 95 % CI …).”</li>
+<li><strong>Regression:</strong> “Height decreased by 0.17 m per PSU of
+salinity (95 % CI −0.24 to −0.11; R² = 0.47, n = 40).”</li>
+</ul>
+</div>
+<div class="fr">
+<ul>
+<li><strong>Moyenne avec IC :</strong> « Le poids moyen était de 631 g
+(IC 95 % 581–680 g, n = 160). »</li>
+<li><strong>Deux groupes :</strong> « X était plus élevé en A qu’en B
+(moyenne 54,7 contre 45,8 % ; différence 8,9, IC 95 % 1,2–16,7 ; test t
+de Welch, t = 2,30, ddl = 78,0, p = 0,024). »</li>
+<li><strong>ANOVA :</strong> « Y différait entre groupes (ANOVA à un
+facteur, F₃,₂₀ = 8,19, p &lt; 0,001, η² = 0,55) ; seul C différait de D
+(HSD de Tukey, …). »</li>
+<li><strong>χ² :</strong> « La part de A était plus élevée chez B (68 %
+contre 45 % ; χ² = 19,4, ddl = 1, p &lt; 0,001 ; odds ratio 4,3, IC 95 %
+…). »</li>
+<li><strong>Régression :</strong> « La hauteur diminuait de 0,17 m par
+PSU de salinité (IC 95 % −0,24 à −0,11 ; R² = 0,47, n = 40). »</li>
+</ul>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

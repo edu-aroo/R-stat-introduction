@@ -1,0 +1,329 @@
+---
+title: "[11 · Power, multiple tests and reporting]{.en}[11 · Puissance, tests multiples et rédaction]{.fr}"
+pagetitle: "R4Marine Stats · Session 11"
+subtitle: "~2.5 h"
+---
+
+```{r setup, include=FALSE}
+source("R/course_helpers.R")
+library(ggplot2)
+oc <- read.csv("data/octopus_catch.csv")
+fs <- read.csv("data/fisher_survey.csv")
+knitr::opts_chunk$set(fig.height = 3.2)
+```
+
+::: objectives
+::: en
+#### By the end of this session you will be able to
+- explain what determines the **power** of a test (effect size, variability, n, α);
+- compute the **sample size** needed for a study with `power.t.test()` and `power.prop.test()`, and estimate power **by simulation**;
+- explain why many tests inflate false positives, and adjust p-values with `p.adjust()` (Holm, Benjamini–Hochberg);
+- recognise **p-hacking** and protect your analysis with a plan written before the data;
+- **report** a statistical result completely: methods sentence, result sentence, table and figure, and the information that makes it reproducible.
+:::
+::: fr
+#### À la fin de cette séance vous saurez
+- expliquer ce qui détermine la **puissance** d'un test (taille d'effet, variabilité, n, α) ;
+- calculer la **taille d'échantillon** nécessaire à une étude avec `power.t.test()` et `power.prop.test()`, et estimer la puissance **par simulation** ;
+- expliquer pourquoi de nombreux tests gonflent les faux positifs, et ajuster les p-values avec `p.adjust()` (Holm, Benjamini–Hochberg) ;
+- reconnaître le **p-hacking** et protéger votre analyse par un plan écrit avant les données ;
+- **rédiger** un résultat statistique complètement : phrase de méthode, phrase de résultat, tableau et figure, et les informations qui le rendent reproductible.
+:::
+:::
+
+## [Power: will my study detect the effect?]{.en}[Puissance : mon étude détectera-t-elle l'effet ?]{.fr} {#power}
+
+::: en
+**Power** = the probability that a test detects an effect **that really exists** (rejects H0 when H1 is true). A common target is 80 %. Power increases when:
+
+- the **effect** is larger (a 300 g difference is easier to detect than 50 g);
+- the **variability** is smaller (good protocol, homogeneous units, pairing or stratification);
+- **n** is larger;
+- α is larger (but this also increases false positives — not a solution).
+
+Power is computed **before** collecting data, to choose n. A study with 30 % power will usually find "no significant difference" even when the effect is real — a waste of field time and money.
+:::
+::: fr
+La **puissance** = la probabilité qu'un test détecte un effet **qui existe réellement** (rejette H0 quand H1 est vraie). Un objectif courant est 80 %. La puissance augmente quand :
+
+- l'**effet** est plus grand (une différence de 300 g est plus facile à détecter que 50 g) ;
+- la **variabilité** est plus faible (bon protocole, unités homogènes, appariement ou stratification) ;
+- **n** est plus grand ;
+- α est plus grand (mais cela augmente aussi les faux positifs — ce n'est pas une solution).
+
+La puissance se calcule **avant** de collecter les données, pour choisir n. Une étude avec 30 % de puissance trouvera en général « pas de différence significative » même quand l'effet est réel — une perte de temps de terrain et d'argent.
+:::
+
+### [Sample size for comparing two means]{.en}[Taille d'échantillon pour comparer deux moyennes]{.fr}
+
+::: en
+Next year, the LMMA wants to check whether a new closure increases the mean octopus weight by at least **150 g**. From this year's data, the SD of weights is about `r round(sd(oc$weight_g[oc$area == "open"]), -1)` g. How many octopuses per village should be weighed?
+:::
+::: fr
+L'année prochaine, la LMMA veut vérifier si une nouvelle fermeture augmente le poids moyen des pieuvres d'au moins **150 g**. D'après les données de cette année, l'ET des poids est d'environ `r round(sd(oc$weight_g[oc$area == "open"]), -1)` g. Combien de pieuvres faut-il peser par village ?
+:::
+
+```{r}
+s_open <- sd(oc$weight_g[oc$area == "open"])
+power.t.test(delta = 150, sd = s_open, sig.level = 0.05, power = 0.80)
+power.t.test(n = 30, delta = 150, sd = s_open)$power        # power with only 30 per village
+```
+
+```{r, echo=FALSE}
+fa(c("`power.t.test(n, delta, sd, sig.level, power, type)`", "power or sample size of a t-test: give all arguments **but one**, R computes the missing one", "puissance ou taille d'échantillon d'un test t : donnez tous les arguments **sauf un**, R calcule celui qui manque", "", ""),
+   c("&nbsp;&nbsp;`delta`", "the smallest difference of means worth detecting (in the units of the data)", "la plus petite différence de moyennes qui vaut la peine d'être détectée (dans les unités des données)", "a number", "un nombre"),
+   c("&nbsp;&nbsp;`sd`", "expected standard deviation (from a pilot study, earlier data or the literature)", "écart-type attendu (étude pilote, données antérieures ou littérature)", "a number", "un nombre"),
+   c("&nbsp;&nbsp;`n`", "number **per group**", "nombre **par groupe**", "", ""),
+   c("&nbsp;&nbsp;`type`", "`\"two.sample\"` (default), `\"paired\"`, `\"one.sample\"`", "`\"two.sample\"` (défaut), `\"paired\"`, `\"one.sample\"`", "", ""),
+   c("`power.prop.test(n, p1, p2, power)`", "the same for comparing two proportions", "la même chose pour comparer deux proportions", "", ""))
+```
+
+::: en
+`n` is per group, rounded **up**. Add a margin for lost data (10–20 %).
+
+**Two proportions.** To detect a fall of undersized octopuses from 15 % to 5 %:
+:::
+::: fr
+`n` est par groupe, arrondi **au-dessus**. Ajoutez une marge pour les données perdues (10–20 %).
+
+**Deux proportions.** Pour détecter une baisse des pieuvres trop petites de 15 % à 5 % :
+:::
+
+```{r}
+power.prop.test(p1 = 0.15, p2 = 0.05, power = 0.80)
+```
+
+### [Power by simulation]{.en}[Puissance par simulation]{.fr}
+
+::: en
+For designs without a formula (Wilcoxon test, skewed data, unequal groups), **simulate**: generate many fake datasets that contain the effect you expect, run the planned test on each, and count how often p < 0.05. Here with log-normal weights and a Wilcoxon test, 60 octopuses per village:
+:::
+::: fr
+Pour les plans sans formule (test de Wilcoxon, données asymétriques, groupes inégaux), **simulez** : générez de nombreux jeux de données fictifs contenant l'effet attendu, faites le test prévu sur chacun, et comptez la fréquence de p < 0,05. Ici avec des poids log-normaux et un test de Wilcoxon, 60 pieuvres par village :
+:::
+
+```{r}
+lw <- log(oc$weight_g[oc$area == "open"])
+power_sim <- function(n, ratio, nsim = 1000) {
+  p <- replicate(nsim, {
+    a <- rlnorm(n, mean(lw), sd(lw))                    # open area
+    b <- rlnorm(n, mean(lw) + log(ratio), sd(lw))       # closure: weights x ratio
+    wilcox.test(a, b, exact = FALSE)$p.value
+  })
+  mean(p < 0.05)
+}
+set.seed(11)
+power_sim(n = 60, ratio = 1.25)          # +25 % in weight, 60 per group
+```
+
+::: {.callout .warning}
+::: en
+**No "post-hoc power".** Computing the power of a study *after* a non-significant result, using the observed effect, adds nothing: it is just another way of writing the p-value. Instead, report the **CI of the effect**: it shows which effects your data can and cannot exclude.
+:::
+::: fr
+**Pas de « puissance a posteriori ».** Calculer la puissance d'une étude *après* un résultat non significatif, avec l'effet observé, n'apporte rien : c'est juste une autre façon d'écrire la p-value. Donnez plutôt l'**IC de l'effet** : il montre quels effets vos données peuvent exclure ou non.
+:::
+:::
+
+## [Many tests, many false positives]{.en}[Beaucoup de tests, beaucoup de faux positifs]{.fr} {#multiple}
+
+::: en
+Session 6: with α = 0.05, 1 test in 20 on pure noise is significant. A survey with 12 variables compared between LMMA members and non-members gives 12 tests: even if nothing differs, the chance of at least one "significant" result is 1 − 0.95¹² = `r round(1 - 0.95^12, 2)`.
+
+**Adjust the p-values** for the number of tests of the same question ("family"):
+
+- **Bonferroni:** multiply each p by the number of tests m (very conservative);
+- **Holm:** step-down version of Bonferroni, always at least as powerful — a good default to control the risk of **any** false positive;
+- **Benjamini–Hochberg (BH)** controls the **false discovery rate** (the expected share of false positives among the significant results) — suited to screening many variables.
+:::
+::: fr
+Séance 6 : avec α = 0,05, 1 test sur 20 sur du pur bruit est significatif. Une enquête avec 12 variables comparées entre membres et non-membres de la LMMA donne 12 tests : même si rien ne diffère, la probabilité d'au moins un résultat « significatif » vaut 1 − 0,95¹² = `r round(1 - 0.95^12, 2)`.
+
+**Ajustez les p-values** pour le nombre de tests d'une même question (« famille ») :
+
+- **Bonferroni :** multiplie chaque p par le nombre de tests m (très conservateur) ;
+- **Holm :** version séquentielle de Bonferroni, toujours au moins aussi puissante — un bon choix par défaut pour contrôler le risque d'**un seul** faux positif ;
+- **Benjamini–Hochberg (BH)** contrôle le **taux de fausses découvertes** (la part attendue de faux positifs parmi les résultats significatifs) — adapté au criblage de nombreuses variables.
+:::
+
+```{r}
+fs <- read.csv("data/fisher_survey.csv")
+vars <- c("age", "years_fishing", "household_size", "trips_per_week", "monthly_catch_kg")
+p_raw <- sapply(vars, function(v) wilcox.test(fs[[v]] ~ fs$lmma_member, exact = FALSE)$p.value)
+round(cbind(raw = p_raw,
+            bonferroni = p.adjust(p_raw, "bonferroni"),
+            holm = p.adjust(p_raw, "holm"),
+            BH = p.adjust(p_raw, "BH")), 3)
+```
+
+```{r, echo=FALSE}
+fa(c("`p.adjust(p, method)`", "adjusts a vector of p-values for multiple testing", "ajuste un vecteur de p-values pour les tests multiples", "a numeric vector of p-values", "un vecteur numérique de p-values"),
+   c("&nbsp;&nbsp;`method`", "`\"holm\"` (default), `\"bonferroni\"`, `\"BH\"` (false discovery rate), `\"none\"`…", "`\"holm\"` (défaut), `\"bonferroni\"`, `\"BH\"` (taux de fausses découvertes), `\"none\"`…", "", ""),
+   c("`fs[[v]]`", "the column whose name is stored in the text `v` (here inside a loop over names)", "la colonne dont le nom est stocké dans le texte `v` (ici dans une boucle sur des noms)", "", ""))
+```
+
+### [p-hacking and the analysis plan]{.en}[Le p-hacking et le plan d'analyse]{.fr}
+
+::: en
+**p-hacking** is trying analyses until something is significant: removing "outliers" that hurt, adding sites until p < 0.05, testing ten subgroups, switching from t-test to Wilcoxon to log… Each choice looks innocent; together they make false positives very likely. The protection is simple: **write your analysis plan before seeing the data** (question, response, groups, test, how outliers and missing values are handled), follow it, and label anything else as *exploratory*.
+:::
+::: fr
+Le **p-hacking** consiste à essayer des analyses jusqu'à ce que quelque chose soit significatif : retirer les « valeurs extrêmes » qui gênent, ajouter des sites jusqu'à p < 0,05, tester dix sous-groupes, passer du test t à Wilcoxon puis au log… Chaque choix semble innocent ; ensemble ils rendent les faux positifs très probables. La protection est simple : **écrivez votre plan d'analyse avant de voir les données** (question, réponse, groupes, test, traitement des valeurs extrêmes et manquantes), suivez-le, et présentez tout le reste comme *exploratoire*.
+:::
+
+## [Choosing a test: the whole course on one page]{.en}[Choisir un test : tout le cours sur une page]{.fr} {#choose}
+
+::: en
+The **[decision guide](choose-test.html)** (menu *Resources*) summarises Sessions 5–10: start from the question and the type of the variables, then the design (independent or paired), then the shape of the data.
+:::
+::: fr
+Le **[guide de décision](choose-test.html)** (menu *Ressources*) résume les séances 5–10 : partez de la question et du type des variables, puis du plan (indépendant ou apparié), puis de la forme des données.
+:::
+
+`r fig_svg("choose-test", "Which test? Blue: parametric test; orange: rank-based or exact alternative.", "Quel test ? Bleu : test paramétrique ; orange : alternative sur les rangs ou exacte.")`
+
+## [Reporting a result]{.en}[Rédiger un résultat]{.fr} {#reporting}
+
+::: en
+A reader must be able to understand **what you did** and **what you found**, and to **check** it. A complete report contains:
+
+**In the Methods**
+
+- the design: sampling unit, n, how units were selected or treatments assigned (Session 1);
+- the response variables, transformations (log…) and how outliers / missing values were handled;
+- each test, with its justification, and α; the adjustment for multiple tests if any;
+- the software: "Analyses were done in R version 4.x (R Core Team 2025)". Get the exact references with `citation()` and `citation("ggplot2")`.
+
+**In the Results**, for each test: **descriptive statistics** (mean ± SD or median and IQR, n), the **effect size with its CI**, the **test statistic, df and exact p-value**:
+
+> *"Octopuses from the reopened area were heavier than those from open areas (geometric means 860 vs 560 g; ratio 1.54, 95 % CI 1.38–1.71; Welch t-test on log weight, t = 7.78, df = 340, p < 0.001; n = 185 and 160)."*
+
+**In figures**: show the data (points), say in the caption what the bars are (SD, SE, CI) and give n.
+:::
+::: fr
+Un lecteur doit pouvoir comprendre **ce que vous avez fait** et **ce que vous avez trouvé**, et le **vérifier**. Un compte rendu complet contient :
+
+**Dans les Méthodes**
+
+- le plan : unité d'échantillonnage, n, comment les unités ont été choisies ou les traitements attribués (séance 1) ;
+- les variables réponses, les transformations (log…) et le traitement des valeurs extrêmes / manquantes ;
+- chaque test, avec sa justification, et α ; l'ajustement pour tests multiples s'il y en a ;
+- le logiciel : « Les analyses ont été faites avec R version 4.x (R Core Team 2025) ». Obtenez les références exactes avec `citation()` et `citation("ggplot2")`.
+
+**Dans les Résultats**, pour chaque test : les **statistiques descriptives** (moyenne ± ET ou médiane et IQR, n), la **taille d'effet avec son IC**, la **statistique de test, les ddl et la p-value exacte** :
+
+> *« Les pieuvres de la zone rouverte étaient plus lourdes que celles des zones ouvertes (moyennes géométriques 860 contre 560 g ; rapport 1,54, IC 95 % 1,38–1,71 ; test t de Welch sur le log du poids, t = 7,78, ddl = 340, p < 0,001 ; n = 185 et 160). »*
+
+**Dans les figures** : montrez les données (points), dites dans la légende ce que représentent les barres (ET, ES, IC) et donnez n.
+:::
+
+```{r, include=FALSE}
+tb <- t.test(log(weight_g) ~ factor(area, levels = c("reopened", "open")), data = oc)
+gm <- exp(tb$estimate)
+stopifnot(round(gm[1], -1) == 860, round(gm[2], -1) == 560, round(exp(diff(rev(tb$estimate))), 2) == 1.54,
+          round(exp(tb$conf.int[1]), 2) == 1.38, round(exp(tb$conf.int[2]), 2) == 1.71,
+          round(tb$statistic, 2) == 7.78, round(tb$parameter) == 340)
+```
+
+::: en
+**Make it reproducible:** one script that runs from raw data to every number and figure; `set.seed()` before anything random; the R and package versions (`sessionInfo()`); the raw data kept unchanged. The *R4Marine* advanced level (R Markdown, Quarto, Git) shows how to turn this into automatic reports.
+:::
+::: fr
+**Rendez-le reproductible :** un script qui va des données brutes à chaque nombre et figure ; `set.seed()` avant tout ce qui est aléatoire ; les versions de R et des packages (`sessionInfo()`) ; les données brutes conservées sans modification. Le niveau avancé de *R4Marine* (R Markdown, Quarto, Git) montre comment en faire des rapports automatiques.
+:::
+
+```{r, eval=FALSE}
+citation()              # how to cite R
+sessionInfo()           # versions of R and of the packages loaded
+```
+
+```{r, echo=FALSE}
+fa(c("`citation(package)`", "the reference to cite R (no argument) or a package", "la référence pour citer R (sans argument) ou un package", "a package name in quotes", "un nom de package entre guillemets"),
+   c("`sessionInfo()`", "R version, operating system and versions of loaded packages", "version de R, système d'exploitation et versions des packages chargés", "", ""))
+```
+
+## [Application work & quiz]{.en}[Travail d'application et quiz]{.fr} {#application}
+
+```{r answers11, include=FALSE}
+l1 <- ceiling(power.t.test(delta = 5, sd = 12, power = 0.8)$n)
+l2 <- round(power.t.test(n = 20, delta = 5, sd = 12)$power, 3)
+l3 <- ceiling(power.t.test(delta = 5, sd = 12, power = 0.8, type = "paired")$n)
+l4 <- ceiling(power.prop.test(p1 = 0.55, p2 = 0.75, power = 0.8)$n)
+pv <- c(0.004, 0.012, 0.030, 0.041, 0.20, 0.62)
+l5 <- round(p.adjust(pv, "holm")[2], 3)
+l6 <- sum(p.adjust(pv, "BH") < 0.05)
+l7 <- sum(p.adjust(pv, "bonferroni") < 0.05)
+```
+
+::: application
+::: en
+### Application work 11
+
+1. Seagrass cover: SD between quadrats ≈ 12 %. How many quadrats **per site** to detect a difference of **5 %** between two sites with 80 % power (two-sample t-test, α = 0.05, rounded up)?
+2. Power of the same comparison with only **20** quadrats per site (3 decimals)?
+3. Same as Q1 but **paired** quadrats (the same quadrats before and after), assuming the SD of the differences is also 12 % (rounded up)?
+4. Fishers per group needed to detect a difference in support for closures of **55 % vs 75 %** (80 % power, rounded up)?
+5. – 7. Six p-values from one study: `c(0.004, 0.012, 0.030, 0.041, 0.20, 0.62)`. Holm-adjusted value of the **second** one (3 decimals); number still < 0.05 after **BH**; number still < 0.05 after **Bonferroni**.
+8. – 10. Concepts.
+:::
+::: fr
+### Travail d'application 11
+
+1. Recouvrement d'herbier : ET entre quadrats ≈ 12 %. Combien de quadrats **par site** pour détecter une différence de **5 %** entre deux sites avec 80 % de puissance (test t à deux échantillons, α = 0,05, arrondi au-dessus) ?
+2. Puissance de la même comparaison avec seulement **20** quadrats par site (3 décimales) ?
+3. Comme Q1 mais avec des quadrats **appariés** (les mêmes quadrats avant et après), en supposant que l'ET des différences vaut aussi 12 % (arrondi au-dessus) ?
+4. Pêcheurs par groupe nécessaires pour détecter une différence de soutien aux fermetures de **55 % contre 75 %** (puissance 80 %, arrondi au-dessus) ?
+5. – 7. Six p-values d'une même étude : `c(0.004, 0.012, 0.030, 0.041, 0.20, 0.62)`. Valeur ajustée par Holm de la **deuxième** (3 décimales) ; nombre encore < 0,05 après **BH** ; nombre encore < 0,05 après **Bonferroni**.
+8. – 10. Questions de cours.
+:::
+:::
+
+::: hint
+::: en
+Round sample sizes **up** with `ceiling()`. Q3: `type = "paired"` (n is then the number of pairs). Q6–7: `sum(p.adjust(pv, "BH") < 0.05)`.
+:::
+::: fr
+Arrondissez les tailles d'échantillon **au-dessus** avec `ceiling()`. Q3 : `type = "paired"` (n est alors le nombre de paires). Q6–7 : `sum(p.adjust(pv, "BH") < 0.05)`.
+:::
+:::
+
+```{r quiz11, echo=FALSE}
+quiz("t11", list(
+  q_num("1. Quadrats per site (two-sample)?", "1. Quadrats par site (deux échantillons) ?", l1, tol = 0),
+  q_num("2. Power with 20 quadrats per site?", "2. Puissance avec 20 quadrats par site ?", l2, tol = 0.0006),
+  q_num("3. Number of pairs (paired design)?", "3. Nombre de paires (plan apparié) ?", l3, tol = 0),
+  q_num("4. Fishers per group (55 % vs 75 %)?", "4. Pêcheurs par groupe (55 % contre 75 %) ?", l4, tol = 0),
+  q_num("5. Holm-adjusted 2nd p-value?", "5. 2e p-value ajustée par Holm ?", l5, tol = 0.0006),
+  q_num("6. Number < 0.05 after BH?", "6. Nombre < 0,05 après BH ?", l6, tol = 0),
+  q_num("7. Number < 0.05 after Bonferroni?", "7. Nombre < 0,05 après Bonferroni ?", l7, tol = 0),
+  q_mcq("8. Which change does NOT increase the power of a comparison?",
+        "8. Quel changement N'augmente PAS la puissance d'une comparaison ?",
+        c("more sampling units", "a more precise measuring protocol", "pairing the measurements", "computing the power after a non-significant result"),
+        c("plus d'unités d'échantillonnage", "un protocole de mesure plus précis", "apparier les mesures", "calculer la puissance après un résultat non significatif"), correct = 4),
+  q_mcq("9. Which practice is p-hacking?", "9. Quelle pratique est du p-hacking ?",
+        c("deciding the test before collecting data", "removing two sites after seeing they make p > 0.05",
+          "reporting all tests done, with adjusted p-values", "showing the raw data in a figure"),
+        c("décider le test avant de collecter les données", "retirer deux sites après avoir vu qu'ils rendent p > 0,05",
+          "rapporter tous les tests faits, avec des p-values ajustées", "montrer les données brutes dans une figure"), correct = 2),
+  q_mcq("10. Which result sentence is complete?", "10. Quelle phrase de résultat est complète ?",
+        c("The difference was significant (p < 0.05).",
+          "Growth was higher with the mixed feed (+0.37 g/day, 95 % CI 0.15–0.59; Tukey HSD, p < 0.001; n = 6 pens per feed).",
+          "Mixed feed is the best (***).", "ANOVA: F = 8.19."),
+        c("La différence était significative (p < 0,05).",
+          "La croissance était plus forte avec l'aliment mixte (+0,37 g/jour, IC 95 % 0,15–0,59 ; HSD de Tukey, p < 0,001 ; n = 6 enclos par aliment).",
+          "L'aliment mixte est le meilleur (***).", "ANOVA : F = 8,19."), correct = 2)
+))
+```
+
+::: {.solution data-quiz="t11"}
+```{r, eval=FALSE}
+ceiling(power.t.test(delta = 5, sd = 12, power = 0.8)$n)                    # 1
+power.t.test(n = 20, delta = 5, sd = 12)$power                              # 2
+ceiling(power.t.test(delta = 5, sd = 12, power = 0.8, type = "paired")$n)   # 3
+ceiling(power.prop.test(p1 = 0.55, p2 = 0.75, power = 0.8)$n)               # 4
+pv <- c(0.004, 0.012, 0.030, 0.041, 0.20, 0.62)
+p.adjust(pv, "holm")                                                        # 5 (2nd value)
+sum(p.adjust(pv, "BH") < 0.05); sum(p.adjust(pv, "bonferroni") < 0.05)     # 6, 7
+# 8: post-hoc power adds nothing   9: removing sites after seeing p   10: the second sentence
+```
+:::

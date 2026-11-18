@@ -1,0 +1,138 @@
+---
+title: "Introduction aux statistiques avec R"
+subtitle: "Partie 2 · Séances 5 à 8 — Estimation, tests, deux groupes, ANOVA"
+author: "Aroo Falinirina"
+output:
+  html_document:
+    theme: null
+    highlight: tango
+    mathjax: null
+    self_contained: true
+    css: slides.css
+    includes:
+      in_header: slides-engine.html
+---
+
+```{r, include=FALSE}
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+```{r, include=FALSE}
+source("slides/_setup.R")
+```
+
+## Rappel de la partie 1
+
+- Population / échantillon, paramètre / statistique
+- Plan d'étude : unité d'échantillonnage, tirage aléatoire, pseudo-réplication
+- Décrire (médiane, IQR…), tracer d'abord, lois de distribution
+
+<div class="box tip">
+Aujourd'hui : **quelle confiance** accorder à une estimation, et **comment tester** une différence.
+</div>
+
+## Séance 5 — Erreur standard et IC {.segue}
+
+## La distribution d'échantillonnage
+
+```{r, echo=FALSE, fig.height=3.2}
+set.seed(5)
+s <- do.call(rbind, lapply(c(1, 5, 20, 80), function(n)
+  data.frame(n = paste("n =", n), m = replicate(2000, mean(sample(lag$urchins, n))))))
+s$n <- factor(s$n, levels = paste("n =", c(1, 5, 20, 80)))
+ggplot(s, aes(m)) + geom_histogram(bins = 30, fill = "#1b7f8c", colour = "white") +
+  facet_wrap(~ n, nrow = 1, scales = "free_y") + labs(x = "moyenne d'oursins", y = NULL) + theme_c(11)
+```
+
+- Centrée sur μ · dispersion = **σ / √n** · forme → **normale** (théorème central limite)
+
+## ET, ES, IC
+
+- **ET** : variabilité des données · **ES = s / √n** : précision de la moyenne
+- **IC à 95 %** = estimation ± t × ES
+
+```{r}
+w <- oc$weight_g[oc$area == "open"]
+t.test(w)$conf.int
+binom.test(sum(w < 350), length(w))$conf.int
+```
+
+<div class="box warn">
+« 95 % » qualifie la **méthode** : 95 % des intervalles contiennent μ.
+</div>
+
+## Séance 6 — Tests et p-values {.segue}
+
+## La logique d'un test (permutation)
+
+```{r}
+re <- oc[oc$area == "reopened", ]
+obs <- diff(rev(tapply(re$weight_g, re$fisher_sex, mean)))
+set.seed(6)
+perm <- replicate(5000, { s <- sample(re$fisher_sex)
+  mean(re$weight_g[s == "F"]) - mean(re$weight_g[s == "M"]) })
+mean(abs(perm) >= abs(obs))     # p-value
+```
+
+## Ce qu'est (et n'est pas) une p-value
+
+- **Est** : P(données au moins aussi extrêmes **si H0 était vraie**)
+- **N'est pas** : la probabilité que H0 soit vraie, ni la taille de l'effet
+- p > 0,05 ≠ « pas d'effet » · p < 0,001 ≠ « grand effet »
+
+`r fig_svg("test-errors")`
+
+## Séance 7 — Comparer deux groupes {.segue}
+
+## Indépendants : Welch, log, Wilcoxon
+
+```{r}
+oc$area <- factor(oc$area, levels = c("reopened", "open"))
+tb <- t.test(log(weight_g) ~ area, data = oc)
+exp(diff(rev(tb$estimate)))             # rapport des moyennes géométriques
+exp(tb$conf.int)
+wilcox.test(weight_g ~ area, data = oc, exact = FALSE)$p.value
+```
+
+## Appariés : les mêmes colonies
+
+```{r}
+t.test(cc$bleached_march, cc$bleached_july, paired = TRUE)$conf.int
+t.test(cc$bleached_march, cc$bleached_july)$p.value     # FAUX ici : non apparié
+```
+
+<div class="box tip">
+Chaque colonie est son propre témoin → beaucoup plus de puissance.
+</div>
+
+## Séance 8 — ANOVA et Kruskal–Wallis {.segue}
+
+## L'expérience des holothuries
+
+```{r, echo=FALSE, fig.height=3.2}
+sc$treatment <- factor(sc$treatment, levels = c("control", "seaweed", "manure", "mixed"))
+ggplot(sc, aes(treatment, growth_g_day)) + geom_boxplot(outlier.shape = NA, fill = "#eef5ea") +
+  geom_jitter(width = .1, height = 0) + labs(x = NULL, y = "croissance (g/j)") + theme_c()
+```
+
+## ANOVA, conditions, Tukey
+
+```{r}
+fit <- aov(growth_g_day ~ treatment, data = sc)
+summary(fit)
+TukeyHSD(fit)$treatment["mixed-control", ]
+oneway.test(growth_g_day ~ treatment, data = sc)$p.value   # Welch : variances inégales
+```
+
+<div class="notes">
+Montrer plot(fit, which = 1:2) en direct. Rapport des ET ≈ 5 : vérifier avec Welch.
+</div>
+
+## Sur les rangs
+
+```{r}
+kruskal.test(survival_pct ~ treatment, data = sc)$p.value
+```
+
+- Puis `pairwise.wilcox.test(…, p.adjust.method = "holm")`
+- Ne jamais remplacer une ANOVA par 6 tests t
